@@ -68,6 +68,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.optimize import curve_fit
+from datetime import datetime, timedelta
 import cv2
 
 import sys
@@ -111,13 +112,60 @@ def main_menu():
    if cmd == "3":
       this_state = input("Enter state code or ALL to do all states.").upper()
       show = input("Show plot as you go? Press enter for NO or 1 for yes.")
-      if show != "1":
-         show = 0
+      if show == "1":
+         show = 1 
       else:
-         show = 1
+         show = 0
       
       print ("Making plots for .", this_state)
       make_all_plots(this_state,show)
+   if cmd == "4":
+      this_state = input("Enter state code or ALL to do all states.").upper()
+      make_state_pages(this_state)
+
+def make_state_page(this_state):
+   sjs = load_json_file("./json/" + this_state + ".json")
+
+   fp = open("templates/state.html", "r")
+   template = ""
+   for line in fp:
+      template += line
+
+   template = template.replace("{STATE_NAME}", sjs['summary_info']['state_name'])
+   template = template.replace("{STATE_CODE}", sjs['summary_info']['state_code'])
+   template = template.replace("{STATE_CODE_L}", sjs['summary_info']['state_code'].lower())
+   template = template.replace("{POPULATION}", str(int(sjs['summary_info']['state_population'] * 1000000)))
+   template = template.replace("{CASES}", str(sjs['summary_info']['cases']))
+   template = template.replace("{DEATHS}", str(sjs['summary_info']['deaths']))
+   template = template.replace("{CPM}", str(int(sjs['summary_info']['cpm'])))
+   template = template.replace("{DPM}", str(int(sjs['summary_info']['dpm'])))
+   template = template.replace("{CASE_INCREASE}", str(sjs['summary_info']['new_cases']))
+   template = template.replace("{DEATH_INCREASE}", str(sjs['summary_info']['new_deaths']))
+   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_last'],2)))
+   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_last'],2)))
+   template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2)))
+   template = template.replace("{TESTS}", str(sjs['summary_info']['tests']))
+   template = template.replace("{TPM}", str(int(sjs['summary_info']['tpm'])))
+   template = template.replace("{STATE_LAST_UPDATE}", str(sjs['summary_info']['state_data_last_updated']))
+   template = template.replace("{COUNTY_LAST_UPDATE}", str(sjs['summary_info']['county_data_last_updated']))
+   template = template.replace("{PAGE_LAST_UPATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+   print(sjs['county_pop'])
+
+   #county_table = make_county_table(sjs['county_data'], sjs['county_pop'])
+   #template = template.replace("{COUNTY_TABLE}", county_table)
+
+   if cfe("html/",1) == 0:
+      os.makedirs("html")
+   outfp = open("html/" + this_state + ".html", "w")
+   print("Saved html/" + this_state + ".html")
+   outfp.write(template)
+   outfp.close()
+
+def make_state_pages(this_state):
+   if this_state != "ALL":
+      make_state_page(this_state)
+   else:
+      print("Make all state pages.")
 
 def make_all_plots(this_state,show=0):
    if this_state != "ALL":
@@ -152,13 +200,19 @@ def make_state_plots(this_state_code, show=0):
    plot_data['gr']['xs'] = [] 
    plot_data['gr']['ys1'] = [] 
    plot_data['gr']['ys2'] = [] 
+
    plot_data['mt'] = {}
    plot_data['mt']['xs'] = [] 
    plot_data['mt']['ys1'] = [] 
    plot_data['mt']['ys2'] = [] 
 
+   plot_data['dk'] = {}
+   plot_data['dk']['xs'] = [] 
+   plot_data['dk']['ys1'] = [] 
+   plot_data['dk']['ys2'] = [] 
+
    for sobj in sj['state_stats']:
-      l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
+      #l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
       plot_data['cases_deaths']['xs'].append(sobj['zero_day'])
       plot_data['cases_deaths']['ys1'].append(sobj['cases'])
       plot_data['cases_deaths']['ys2'].append(sobj['deaths'])
@@ -183,15 +237,23 @@ def make_state_plots(this_state_code, show=0):
       plot_data['mt']['ys1'].append(sobj['mortality'])
       plot_data['mt']['ys2'].append(sobj['mortality'])
 
-   make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd")
-   make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm")
-   make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in")
-   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "in")
-   make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr")
-   make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt")
+      plot_data['dk']['xs'].append(sobj['zero_day'])
+      plot_data['dk']['ys1'].append(sobj['cg_med_decay'])
+      plot_data['dk']['ys2'].append(sobj['dg_med_decay'])
+
+   make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
+   make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
+   make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
+   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "in", show)
+   make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
+   make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
+   make_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
       
 
-def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type):
+def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,show=0):
+   print("DAYS:", bin_days) 
+   print("SUMS:", bin_sums) 
+   print("SUMS2:", bin_sums2) 
    fig, ax1 = plt.subplots()
    print("make_plot")
    width = .35
@@ -303,7 +365,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
    plot_file = "plots/" + state + "-" + plot_type + ".png"
    plt.savefig(plot_file)
    print("SAVED:", plot_file)
-   plt.show()
+   if show == 1:
+      plt.show()
 
 def curve_func(x, a, b, c):
    return a * np.exp(-(x-b)**2/(2*c**2))
@@ -502,7 +565,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    level2_data = add_enhanced_growth_stats("MD", level2_data)
    #(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) 
 
-   cj = enhance_cdata(this_state_code, cdata, cj)
+   cj,last_c_date = enhance_cdata(this_state_code, cdata, cj)
 
    #print("state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay") 
 
@@ -560,6 +623,13 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    state_obj['summary_info']['dg_med'] = dg_med
    state_obj['summary_info']['cg_med_decay'] = cg_med_decay
    state_obj['summary_info']['dg_med_decay'] = dg_med_decay
+   state_obj['summary_info']['mortality'] = mortality
+   state_obj['summary_info']['state_data_last_updated'] = level2_data[-1][2] 
+   if last_c_date is not None:
+      state_obj['summary_info']['county_data_last_updated'] = last_c_date.replace("-", "")
+   else:
+      state_obj['summary_info']['county_data_last_updated'] = "NA"
+
    state_obj['county_pop'] = county_pop
    state_obj['state_stats'] = state_stats
    state_obj['county_stats'] = cj
@@ -573,6 +643,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    #   print(stobj)
 
 def enhance_county(this_state_code, this_county, data, cj):
+   last_day = None
    if this_state_code not in cj:
       cj[this_state_code] = {}
    if this_county not in cj[this_state_code]:
@@ -609,6 +680,7 @@ def enhance_county(this_state_code, this_county, data, cj):
    gr = [] 
    last_cases = 0 
    last_deaths = 0 
+   day = None
    for zz in zd:
       (day,zero_day,cases,deaths,pm_cases,pm_deaths,mortality) = zz
       new_cases = cases - last_cases
@@ -686,20 +758,22 @@ def enhance_county(this_state_code, this_county, data, cj):
       cd_obj['dg_med_decay'] = dg_med_decay
       (day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay) = ggg
       cd_objs.append(cd_obj)
+      last_day = day
 
    sorted_cd_objs = cd_objs.sort(key=sort_date,reverse=False)
 
-   return(ggg,cd_objs)
+   return(ggg,cd_objs,last_day)
 
 def sort_date(json):
    return(int(json['zero_day']))
  
 def enhance_cdata(this_state_code, cdata,cj):
    # add growth vars, zero day, decay 
+   last_date = None
    for key in cdata:
-      cd_data, cd_objs = enhance_county(this_state_code, key,cdata[key],cj)
+      cd_data, cd_objs,last_date = enhance_county(this_state_code, key,cdata[key],cj)
       cj[this_state_code][key]['county_stats'] = cd_objs 
-   return(cj)
+   return(cj,last_date)
 
 def add_enhanced_growth_stats(state_code, l2s):
    extra = []
