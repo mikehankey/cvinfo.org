@@ -110,14 +110,27 @@ def main_menu():
 
 
 def make_level2_data():
+
+   this_state_code = "NY"
    state_data,state_pop = load_state_data()
    #state_data structure: [date,cases,deaths,case_increase,death_increase,tests])
 
-   level2_data = analyze_data_for_state("NY", state_data,state_pop)
+   state_names, state_codes = load_state_names()
+
+   state_pop = load_state_pop()
+   county_pops = load_county_pop(state_codes)
+   county_pop = county_pops[this_state_code]
+   acdata = load_county_data()
+   cdata = acdata[this_state_code]
+
+   level2_data = analyze_data_for_state(this_state_code, state_data,state_pop)
    #(this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm)
 
    level2_data = add_enhanced_growth_stats("MD", level2_data)
    #(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) 
+
+   level2_cdata = enhance_cdata(cdata)
+   exit()
 
    #print("state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay") 
 
@@ -155,8 +168,8 @@ def make_level2_data():
    state_obj = {}
    state_obj['summary_info'] = {}
    state_obj['summary_info']['state_code'] = state_code
-   state_obj['summary_info']['state_name'] = state_name
-   state_obj['summary_info']['state_population'] = state_population
+   state_obj['summary_info']['state_name'] = state_names[state_code]
+   state_obj['summary_info']['state_population'] = state_pop[state_code]
    state_obj['summary_info']['cases'] = cases
    state_obj['summary_info']['deaths'] = deaths
    state_obj['summary_info']['new_cases'] = new_cases
@@ -173,16 +186,118 @@ def make_level2_data():
    state_obj['summary_info']['dg_med'] = dg_med
    state_obj['summary_info']['cg_med_decay'] = cg_med_decay
    state_obj['summary_info']['dg_med_decay'] = dg_med_decay
+   state_obj['county_pop'] = county_pop
    state_obj['state_stats'] = state_stats
+   state_obj['cdata'] = cdata 
    if cfe("./json", 1) == 0:
       os.makedirs("./json")
-   save_json_file("./json/" + state_code + ".json")
+   save_json_file("./json/" + state_code + ".json", state_obj)
    print("Saved: ./json/" + state_code + ".json")
 
    for stobj in state_stats:
       print(stobj)
+
+def enhance_county(data):
+   #print("ENHANCE:", data['cd_data'])
+   # add growth (last,avg,med)
+   # add growth decay (med)
+   # zero day growth decay (med)
+   first_death_day = None 
+
+   dc = 0
+   for d in data['cd_data']:
+      (day,cases,deaths,pm_cases,pm_deaths,mortality) = d
+      if first_death_day == None and int(deaths) > 0:
+         first_death_day = dc
+         print(day,cases)
+      dc += 1
+
+   # ADD ZERO DAY
+   dc = 0
+   zd = []
+   for d in data['cd_data']:
+      (day,cases,deaths,pm_cases,pm_deaths,mortality) = d
+      zero_day = dc - first_death_day
+      zd.append( (day,zero_day,int(cases),int(deaths),int(pm_cases),int(pm_deaths),round(mortality,2)) )
+      dc += 1
+
+   # ADD GROWTH
+   cgr_last = []
+   dgr_last = []
+   gr = [] 
+   last_cases = 0 
+   last_deaths = 0 
+   for zz in zd:
+      (day,zero_day,cases,deaths,pm_cases,pm_deaths,mortality) = zz
+      new_cases = cases - last_cases
+      new_deaths = deaths - last_deaths
+      print("CASES:", cases)
+      if int(cases) > 0:
+         case_growth = (1 - (int(last_cases) / int(cases))) * 100
+         case_growth = round(case_growth,2)
+         print("CASE GR:", case_growth)
+      else: 
+         print("CASES IS 0")
+         case_growth = 0
+      if deaths != 0:
+         death_growth = (1 - (last_deaths / deaths)) * 100
+         death_growth = round(death_growth,2)
+      else:
+         death_growth = 0
+         #print(deaths, " / ", last_deaths)
+      if case_growth > 0:
+         cgr_last.append(case_growth) 
+         dgr_last.append(death_growth) 
+      if len(cgr_last) > 3:
+         cgr_avg = np.mean(cgr_last)
+         cgr_med = np.median(cgr_last)
+      else:
+          cgr_avg = 0
+          cgr_med = 0
+      if len(dgr_last) > 3:
+         dgr_avg = np.mean(dgr_last)
+         dgr_med = np.median(dgr_last)
+      else:
+         dgr_avg = 0
+         dgr_med = 0
+      gr.append((day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,round(case_growth,2),round(death_growth,2),round(cgr_avg,2),round(dgr_avg,2),round(cgr_med,2),round(dgr_med,2)))
+      last_cases = cases
+      last_deaths = deaths
+
+   # Add cgr/dgr growth decay
+   decay = []
+   last_cg_med = 0
+   last_dg_med = 0
+   for zz in gr:
+      (day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) = zz
+
+      if cases > 0:
+         cg_med_decay = round(cg_med - last_cg_med,2)
+      else:
+         cg_med_decay = 0
+      if deaths > 0:
+         dg_med_decay = round(dg_med - last_dg_med,2)
+      else:
+         dg_med_decay = 0
+      
+      decay.append((day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay))
+
+
+
+   for ggg in decay:
+      print(ggg)
+
  
-   
+def enhance_cdata(cdata):
+   # add growth vars, zero day, decay 
+   for key in cdata:
+      print(key, cdata[key])   
+      en_data = enhance_county(cdata[key])
+      exit()
+     # need to add zero day, growth and decay but not here?
+     #cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
+   print("ECD")
+   exit()
 
 def add_enhanced_growth_stats(state_code, l2s):
    extra = []
@@ -318,7 +433,7 @@ def load_state_data():
 
 
 
-   fp = open("data/state-pop.txt", "r")
+   fp = open("./data/state-pop.txt", "r")
    state_pop = {}
    for line in fp:
       line = line.replace("\n", "")
@@ -376,6 +491,107 @@ def load_state_data():
 
    return(state_data, state_pop)
 
+def load_county_pop(state_codes):
+   fp = open("./data/county-pop.txt", "r")
+   county_pop = {}
+   for line in fp:
+      line = line.replace("\n", "")
+      
+      data = line.split("\t")
+      state = data[0]
+      if state in state_codes:
+         state_code = state_codes[state]
+         count = data[1]
+         pop = data[2]
+         pop = pop.replace(",", "")
+         if state_code not in county_pop:
+            county_pop[state_code] = {}
+         county_pop[state_code][count] = int(pop)
+      #else: 
+      #   print("BAD:", state)
+   return(county_pop)
+
+
+def load_county_data():
+  state_names, state_codes = load_state_names()
+  state_pop = load_state_pop()
+  county_pop = load_county_pop(state_codes)
+  # ['2020-03-30', 'Washakie', 'Wyoming', '56043', '1', '0']
+  cj = {}
+  cfile = "covid-19-data/us-counties.csv"
+  fp = open(cfile, "r")
+  for line in fp:
+     line = line.replace("\n", "")
+     day, county, state_name, fips, cases, deaths = line.split(",")
+     if state_name == 'state' or county == "county":
+        continue
+     if "Puerto" in state_name or "Islands" in state_name or "Guam" in state_name or "District" in state_name:
+        continue
+     else:
+        state_code = state_codes[state_name]
+     if state_code not in cj:
+        cj[state_code] = {}
+
+
+     if county not in cj[state_code]:
+        cj[state_code][county] = {}
+        cj[state_code][county]['state_code'] = state_code
+        cj[state_code][county]['state_name'] = state_name
+        cj[state_code][county]['county'] = county
+        cj[state_code][county]['fips'] = fips
+        cj[state_code][county]['cd_data'] = []
+
+
+     if county in county_pop[state_code]:
+        cpop = county_pop[state_code][county]
+     else:
+        cpop = 0
+
+     cj[state_code][county]['population'] = cpop
+     if cpop != 0:
+        pm_cases = int(cases) / (cpop / 1000000)
+        pm_deaths = int(deaths) / (cpop / 1000000)
+     else:
+        #print("CPOP PROBLEM!", state_code, county )
+        pm_cases = 0
+        pm_deaths = 0
+        if county != 'Unknown': 
+           print("MISSING COUNTY:", county)
+           exit()
+
+     if pm_cases > 0 and pm_deaths > 0:
+        mortality = pm_deaths / pm_cases
+     else:
+        mortality = 0
+     #cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
+     # need to add zero day, growth and decay but not here?
+     cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
+  print("SAVED: json/county-level2.json")
+  save_json_file("./json/county-level2.json", cj)
+  return(cj)
+
+
+def load_state_names():
+   fp = open("./data/state-names.txt", "r")
+   state_names = {}
+   state_codes = {}
+   for line in fp:
+      line = line.replace("\n", "")
+      name,st = line.split(",")
+      state_names[st] = name
+      state_codes[name] = st 
+   return(state_names, state_codes)
+
+def load_state_pop():
+   fp = open("data/state-pop.txt", "r")
+   state_pop = {}
+   for line in fp:
+      line = line.replace("\n", "")
+      state, pop = line.split("\t")
+      pop = pop.replace(",", "")
+      state_pop[state] = int(pop) / 1000000
+   fp.close()
+   return(state_pop)
 
 def copy_wasabi(state_code, mode=0):
    print("Copy " + state_code + ".html to wasabi")
