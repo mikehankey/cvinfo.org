@@ -109,13 +109,25 @@ def main_menu():
       print ("Making Level 2 Data.")
       make_all_level2_data()
    if cmd == "3":
-      print ("Making plots.")
-      make_all_plots()
+      this_state = input("Enter state code or ALL to do all states.").upper()
+      show = input("Show plot as you go? Press enter for NO or 1 for yes.")
+      if show != "1":
+         show = 0
+      else:
+         show = 1
+      
+      print ("Making plots for .", this_state)
+      make_all_plots(this_state,show)
 
-def make_all_plots():
-   make_state_plots("NY")
+def make_all_plots(this_state,show=0):
+   if this_state != "ALL":
+      make_state_plots(this_state,show)
+   else:
+      state_names, state_codes = load_state_names()
+      for st in state_names:
+         make_state_plots(st,show)
 
-def make_state_plots(this_state_code):
+def make_state_plots(this_state_code, show=0):
    sj = load_json_file("json/" + this_state_code + ".json")
    
    l2_state_data = []
@@ -124,6 +136,26 @@ def make_state_plots(this_state_code):
    plot_data['cases_deaths']['xs'] = [] 
    plot_data['cases_deaths']['ys1'] = [] 
    plot_data['cases_deaths']['ys2'] = [] 
+   plot_data['cdpm'] = {}
+   plot_data['cdpm']['xs'] = [] 
+   plot_data['cdpm']['ys1'] = [] 
+   plot_data['cdpm']['ys2'] = [] 
+   plot_data['in'] = {}
+   plot_data['in']['xs'] = [] 
+   plot_data['in']['ys1'] = [] 
+   plot_data['in']['ys2'] = [] 
+   plot_data['ts'] = {}
+   plot_data['ts']['xs'] = [] 
+   plot_data['ts']['ys1'] = [] 
+   plot_data['ts']['ys2'] = [] 
+   plot_data['gr'] = {}
+   plot_data['gr']['xs'] = [] 
+   plot_data['gr']['ys1'] = [] 
+   plot_data['gr']['ys2'] = [] 
+   plot_data['mt'] = {}
+   plot_data['mt']['xs'] = [] 
+   plot_data['mt']['ys1'] = [] 
+   plot_data['mt']['ys2'] = [] 
 
    for sobj in sj['state_stats']:
       l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
@@ -131,7 +163,32 @@ def make_state_plots(this_state_code):
       plot_data['cases_deaths']['ys1'].append(sobj['cases'])
       plot_data['cases_deaths']['ys2'].append(sobj['deaths'])
 
+      plot_data['cdpm']['xs'].append(sobj['zero_day'])
+      plot_data['cdpm']['ys1'].append(sobj['cpm'])
+      plot_data['cdpm']['ys2'].append(sobj['dpm'])
+
+      plot_data['in']['xs'].append(sobj['zero_day'])
+      plot_data['in']['ys1'].append(sobj['new_cases'])
+      plot_data['in']['ys2'].append(sobj['new_deaths'])
+
+      plot_data['ts']['xs'].append(sobj['zero_day'])
+      plot_data['ts']['ys1'].append(sobj['tests'])
+      plot_data['ts']['ys2'].append(sobj['tpm'])
+
+      plot_data['gr']['xs'].append(sobj['zero_day'])
+      plot_data['gr']['ys1'].append(sobj['cg_med'])
+      plot_data['gr']['ys2'].append(sobj['dg_med'])
+
+      plot_data['mt']['xs'].append(sobj['zero_day'])
+      plot_data['mt']['ys1'].append(sobj['mortality'])
+      plot_data['mt']['ys2'].append(sobj['mortality'])
+
    make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd")
+   make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm")
+   make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in")
+   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "in")
+   make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr")
+   make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt")
       
 
 def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type):
@@ -160,10 +217,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                b = 1
             temp.append(b)
          temp_days = np.arange(len(bin_days))
-         #popt,pcov = curve_fit(func,temp_days,temp, p0=[1, 1, 1, 2.0])
-         #popt,pcov = curve_fit(func,temp_days,temp)
-         popt,pcov = curve_fit(func,bin_days,temp)
-         func_data = func(np.array(bin_days), *popt)
+         popt,pcov = curve_fit(curve_func,bin_days,temp)
+         func_data = curve_func(np.array(bin_days), *popt)
    
          temp = []
          for fff in func_data:
@@ -175,7 +230,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
          print(func_data)
          ax1.plot(func_data, label='fit')
       except:
-         print("Couldn't fit data curve")
+         print("Couldn't fit data curve for ax1")
+      #   exit()
 
 
       print("BD:", len(bin_days))
@@ -184,12 +240,10 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
 
 
    else:
-      print("BIN DAYS:", bin_days)
-      print("BIN SUMS :", bin_sums)
       ax1.plot(bin_days,bin_sums)
       try:
-         popt,pcov = curve_fit(func,bin_days,bin_sums, maxfev=10000 )
-         func_data = func(np.array(bin_days), *popt)
+         popt,pcov = curve_fit(curve_func,bin_days,bin_sums, maxfev=10000 )
+         func_data = curve_func(np.array(bin_days), *popt)
    
          temp = []
          for fff in func_data:
@@ -201,7 +255,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
          print(func_data)
          ax1.plot(bin_days,func_data, label='fit')
       except:
-         print("failed to fit curve")
+         print("failed to fit curve for ax1")
 
    ax1.set(xlabel=xa_label,ylabel=ya_label,title=plot_title)
    #ax1.grid()
@@ -222,8 +276,9 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
       ax2.set_ylabel(ya2_label)
       #ax2.bar(bin_days, bin_sums2, color=line_color)
       try:
-         popt,pcov = curve_fit(func,bin_days,bin_sums2, maxfev=10000 )
-         func_data = func(np.array(bin_days), *popt)
+      #if True:
+         popt,pcov = curve_fit(curve_func,bin_days,bin_sums2, maxfev=10000 )
+         func_data = curve_func(np.array(bin_days), *popt)
 
          temp = []
          for fff in func_data:
@@ -234,17 +289,15 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
          print(bin_days)
          print(func_data)
          #ax2.plot(func_data, label='fit', color='tab:red')
-         ax22.plot(bin_days,func_data, label='fit')
+         ax2.plot(func_data, label='fit', color='tab:red')
       except:
-         print("Couldn't fit data curve")
+         print("Couldn't fit data curve for ax2")
 
 
 
    ax1.legend(loc='upper left')
    ax2.legend(loc='lower left')
    print(bin_days)
-   print("SUMS:", bin_sums)
-   print("SUMS2:", bin_sums2)
    if cfe("./plots/", 1) == 0:
       os.makedirs("./plots/")
    plot_file = "plots/" + state + "-" + plot_type + ".png"
@@ -252,6 +305,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
    print("SAVED:", plot_file)
    plt.show()
 
+def curve_func(x, a, b, c):
+   return a * np.exp(-(x-b)**2/(2*c**2))
 
 def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_label="", ya2_label = ""):
    fig, ax1 = plt.subplots()
@@ -333,9 +388,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                b = 1
             temp.append(b)
          temp_days = np.arange(len(bin_days))
-         #popt,pcov = curve_fit(func,temp_days,temp, p0=[1, 1, 1, 2.0])
-         #popt,pcov = curve_fit(func,temp_days,temp)
-         popt,pcov = curve_fit(func,bin_days,temp)
+         popt,pcov = curve_fit(curve_func,bin_days,temp)
          func_data = func(np.array(bin_days), *popt)
    
          temp = []
@@ -361,7 +414,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
       print("BIN SUMS :", bin_sums)
       ax1.plot(bin_days,bin_sums)
       try:
-         popt,pcov = curve_fit(func,bin_days,bin_sums, maxfev=10000 )
+         popt,pcov = curve_fit(curve_func,bin_days,bin_sums, maxfev=10000 )
          func_data = func(np.array(bin_days), *popt)
    
          temp = []
@@ -374,7 +427,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
          print(func_data)
          ax1.plot(bin_days,func_data, label='fit')
       except:
-         print("failed to fit curve")
+         print("failed to fit curve for ax2")
 
    ax1.set(xlabel=xa_label,ylabel=ya_label,title=plot_title)
    #ax1.grid()
