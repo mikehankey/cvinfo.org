@@ -95,10 +95,11 @@ def main_menu():
    print("---------------")
    print("1) Update data sources.")
    print("2) Analyze data and make level2 state and county files.")
-   print("3) Generate state pages.")
-   print("4) Generate main page.")
-   print("5) Generate all counties page.")
-   print("6) Quit.")
+   print("3) Generate state plots.")
+   print("4) Generate state pages.")
+   print("5) Generate main page.")
+   print("6) Generate all counties page.")
+   print("7) Quit.")
 
    cmd = input("What function do you want to run: ")
    if cmd == "1":
@@ -106,22 +107,394 @@ def main_menu():
       update_data_sources()
    if cmd == "2":
       print ("Making Level 2 Data.")
-      make_level2_data()
+      make_all_level2_data()
+   if cmd == "3":
+      this_state = input("Enter state code or ALL to do all states.").upper()
+      show = input("Show plot as you go? Press enter for NO or 1 for yes.")
+      if show != "1":
+         show = 0
+      else:
+         show = 1
+      
+      print ("Making plots for .", this_state)
+      make_all_plots(this_state,show)
+
+def make_all_plots(this_state,show=0):
+   if this_state != "ALL":
+      make_state_plots(this_state,show)
+   else:
+      state_names, state_codes = load_state_names()
+      for st in state_names:
+         make_state_plots(st,show)
+
+def make_state_plots(this_state_code, show=0):
+   sj = load_json_file("json/" + this_state_code + ".json")
+   
+   l2_state_data = []
+   plot_data = {}
+   plot_data['cases_deaths'] = {}
+   plot_data['cases_deaths']['xs'] = [] 
+   plot_data['cases_deaths']['ys1'] = [] 
+   plot_data['cases_deaths']['ys2'] = [] 
+   plot_data['cdpm'] = {}
+   plot_data['cdpm']['xs'] = [] 
+   plot_data['cdpm']['ys1'] = [] 
+   plot_data['cdpm']['ys2'] = [] 
+   plot_data['in'] = {}
+   plot_data['in']['xs'] = [] 
+   plot_data['in']['ys1'] = [] 
+   plot_data['in']['ys2'] = [] 
+   plot_data['ts'] = {}
+   plot_data['ts']['xs'] = [] 
+   plot_data['ts']['ys1'] = [] 
+   plot_data['ts']['ys2'] = [] 
+   plot_data['gr'] = {}
+   plot_data['gr']['xs'] = [] 
+   plot_data['gr']['ys1'] = [] 
+   plot_data['gr']['ys2'] = [] 
+   plot_data['mt'] = {}
+   plot_data['mt']['xs'] = [] 
+   plot_data['mt']['ys1'] = [] 
+   plot_data['mt']['ys2'] = [] 
+
+   for sobj in sj['state_stats']:
+      l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
+      plot_data['cases_deaths']['xs'].append(sobj['zero_day'])
+      plot_data['cases_deaths']['ys1'].append(sobj['cases'])
+      plot_data['cases_deaths']['ys2'].append(sobj['deaths'])
+
+      plot_data['cdpm']['xs'].append(sobj['zero_day'])
+      plot_data['cdpm']['ys1'].append(sobj['cpm'])
+      plot_data['cdpm']['ys2'].append(sobj['dpm'])
+
+      plot_data['in']['xs'].append(sobj['zero_day'])
+      plot_data['in']['ys1'].append(sobj['new_cases'])
+      plot_data['in']['ys2'].append(sobj['new_deaths'])
+
+      plot_data['ts']['xs'].append(sobj['zero_day'])
+      plot_data['ts']['ys1'].append(sobj['tests'])
+      plot_data['ts']['ys2'].append(sobj['tpm'])
+
+      plot_data['gr']['xs'].append(sobj['zero_day'])
+      plot_data['gr']['ys1'].append(sobj['cg_med'])
+      plot_data['gr']['ys2'].append(sobj['dg_med'])
+
+      plot_data['mt']['xs'].append(sobj['zero_day'])
+      plot_data['mt']['ys1'].append(sobj['mortality'])
+      plot_data['mt']['ys2'].append(sobj['mortality'])
+
+   make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd")
+   make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm")
+   make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in")
+   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "in")
+   make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr")
+   make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt")
+      
+
+def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type):
+   fig, ax1 = plt.subplots()
+   print("make_plot")
+   width = .35
+   x = np.arange(len(bin_days))
+
+   if plot_type == 'ts':
+      label1 = "Tests"
+   else:
+      label1 = "Cases"
+
+   if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
+      ax1.bar(x - width/2,bin_sums,width,label=label1)
+      ax1.set_xticks(x)
+      ax1.set_xticklabels(bin_days)
+
+      print(bin_days)
+      print(bin_sums)
+      try:
+      #if True:
+         temp = []
+         for b in bin_sums:
+            if b <= 0: 
+               b = 1
+            temp.append(b)
+         temp_days = np.arange(len(bin_days))
+         popt,pcov = curve_fit(curve_func,bin_days,temp)
+         func_data = curve_func(np.array(bin_days), *popt)
+   
+         temp = []
+         for fff in func_data:
+            if fff < 0:
+               fff = 0
+            temp.append(fff)
+         func_data = temp 
+         print(bin_days)
+         print(func_data)
+         ax1.plot(func_data, label='fit')
+      except:
+         print("Couldn't fit data curve for ax1")
+      #   exit()
 
 
-def make_level2_data():
+      print("BD:", len(bin_days))
+      #print("FIT DATA:", fit_data)
+      #exit()
 
-   this_state_code = "NY"
+
+   else:
+      ax1.plot(bin_days,bin_sums)
+      try:
+         popt,pcov = curve_fit(curve_func,bin_days,bin_sums, maxfev=10000 )
+         func_data = curve_func(np.array(bin_days), *popt)
+   
+         temp = []
+         for fff in func_data:
+            if fff < 0:
+               fff = 0
+            temp.append(fff)
+         func_data = temp 
+         print(bin_days)
+         print(func_data)
+         ax1.plot(bin_days,func_data, label='fit')
+      except:
+         print("failed to fit curve for ax1")
+
+   ax1.set(xlabel=xa_label,ylabel=ya_label,title=plot_title)
+   #ax1.grid()
+   line_color = 'tab:red'
+   if plot_type != 'in' and plot_type != 'cd' and plot_type != 'pm' and plot_type != 'ts':
+      ax2 = ax1.twinx()
+      ax2.plot(bin_days, bin_sums2 , color=line_color)
+      ax2.set_ylabel(ya2_label)
+   else: 
+      print(bin_sums2)
+      ax2 = ax1.twinx()
+      line_color = 'tab:red'
+      if plot_type == 'ts':
+         label2 = 'Tests PPM'
+      else:
+         label2 = 'Deaths'
+      ax2.bar(x + width/2,bin_sums2,width,label=label2, color=line_color)
+      ax2.set_ylabel(ya2_label)
+      #ax2.bar(bin_days, bin_sums2, color=line_color)
+      try:
+      #if True:
+         popt,pcov = curve_fit(curve_func,bin_days,bin_sums2, maxfev=10000 )
+         func_data = curve_func(np.array(bin_days), *popt)
+
+         temp = []
+         for fff in func_data:
+            if fff < 0:
+               fff = 0
+            temp.append(fff)
+         func_data = temp
+         print(bin_days)
+         print(func_data)
+         #ax2.plot(func_data, label='fit', color='tab:red')
+         ax2.plot(func_data, label='fit', color='tab:red')
+      except:
+         print("Couldn't fit data curve for ax2")
+
+
+
+   ax1.legend(loc='upper left')
+   ax2.legend(loc='lower left')
+   print(bin_days)
+   if cfe("./plots/", 1) == 0:
+      os.makedirs("./plots/")
+   plot_file = "plots/" + state + "-" + plot_type + ".png"
+   plt.savefig(plot_file)
+   print("SAVED:", plot_file)
+   plt.show()
+
+def curve_func(x, a, b, c):
+   return a * np.exp(-(x-b)**2/(2*c**2))
+
+def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_label="", ya2_label = ""):
+   fig, ax1 = plt.subplots()
+   #plt.plot(bin_days,bin_events, bin_avgs, bin_sums)
+   bin_days = []
+   bin_sums = []
+   bin_sums2 = []
+
+
+   # find first death date
+   first_death_date = None
+   dc = 0
+   for day in level2_data:
+      (this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm) = day
+      if deaths > 0 and first_death_date is None:
+         first_death_date = dc
+      dc += 1
+
+   dc = 0
+   if first_death_date is None:
+      first_death_date = len(level2_data)
+
+   for day in level2_data:
+      (this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm) = day
+      print("NEW/INCREASE:", new_cases, new_deaths, case_increase,death_increase)
+      sdc = dc - first_death_date
+      bin_days.append(sdc)
+
+      if plot_type == 'ts':
+         bin_sums.append(tests)
+         bin_sums2.append(tpm)
+
+      if plot_type == 'cd':
+         bin_sums.append(cases)
+         bin_sums2.append(deaths)
+      elif plot_type == 'pm':
+         bin_sums.append(cpm)
+         bin_sums2.append(dpm)
+      elif plot_type == 'in':
+         if case_increase == '':
+            case_increase = 0
+         if death_increase == '':
+            death_increase = 0
+         if case_increase < 0:
+            case_increase = 0
+         if death_increase < 0:
+            death_increase = 0
+         bin_sums.append(case_increase)
+         bin_sums2.append(death_increase)
+      elif plot_type == 'gr':
+         bin_sums.append(case_growth)
+         bin_sums2.append(death_growth)
+      elif plot_type == 'mt':
+         bin_sums.append(mortality)
+         bin_sums2.append(mortality)
+      dc += 1
+
+
+   width = .35
+   x = np.arange(len(bin_days))
+
+   if plot_type == 'ts':
+      label1 = "Tests"
+   else:
+      label1 = "Cases"
+
+   if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
+      ax1.bar(x - width/2,bin_sums,width,label=label1)
+      ax1.set_xticks(x)
+      ax1.set_xticklabels(bin_days)
+
+      print(bin_days)
+      print(bin_sums)
+      try:
+      #if True:
+         temp = []
+         for b in bin_sums:
+            if b <= 0: 
+               b = 1
+            temp.append(b)
+         temp_days = np.arange(len(bin_days))
+         popt,pcov = curve_fit(curve_func,bin_days,temp)
+         func_data = func(np.array(bin_days), *popt)
+   
+         temp = []
+         for fff in func_data:
+            if fff < 0:
+               fff = 0
+            temp.append(fff)
+         func_data = temp 
+         print(bin_days)
+         print(func_data)
+         ax1.plot(func_data, label='fit')
+      except:
+         print("Couldn't fit data curve")
+
+
+      print("BD:", len(bin_days))
+      #print("FIT DATA:", fit_data)
+      #exit()
+
+
+   else:
+      print("BIN DAYS:", bin_days)
+      print("BIN SUMS :", bin_sums)
+      ax1.plot(bin_days,bin_sums)
+      try:
+         popt,pcov = curve_fit(curve_func,bin_days,bin_sums, maxfev=10000 )
+         func_data = func(np.array(bin_days), *popt)
+   
+         temp = []
+         for fff in func_data:
+            if fff < 0:
+               fff = 0
+            temp.append(fff)
+         func_data = temp 
+         print(bin_days)
+         print(func_data)
+         ax1.plot(bin_days,func_data, label='fit')
+      except:
+         print("failed to fit curve for ax2")
+
+   ax1.set(xlabel=xa_label,ylabel=ya_label,title=plot_title)
+   #ax1.grid()
+   line_color = 'tab:red'
+   if plot_type != 'in' and plot_type != 'cd' and plot_type != 'pm' and plot_type != 'ts':
+      ax2 = ax1.twinx()
+      ax2.plot(bin_days, bin_sums2 , color=line_color)
+      ax2.set_ylabel(ya2_label)
+   else: 
+      print(bin_sums2)
+      ax2 = ax1.twinx()
+      line_color = 'tab:red'
+      if plot_type == 'ts':
+         label2 = 'Tests PPM'
+      else:
+         label2 = 'Deaths'
+      ax2.bar(x + width/2,bin_sums2,width,label=label2, color=line_color)
+      ax2.set_ylabel(ya2_label)
+      #ax2.bar(bin_days, bin_sums2, color=line_color)
+      try:
+         popt,pcov = curve_fit(func,bin_days,bin_sums2, maxfev=10000 )
+         func_data = func(np.array(bin_days), *popt)
+
+         temp = []
+         for fff in func_data:
+            if fff < 0:
+               fff = 0
+            temp.append(fff)
+         func_data = temp
+         print(bin_days)
+         print(func_data)
+         #ax2.plot(func_data, label='fit', color='tab:red')
+         ax22.plot(bin_days,func_data, label='fit')
+      except:
+         print("Couldn't fit data curve")
+
+
+
+   ax1.legend(loc='upper left')
+   ax2.legend(loc='lower left')
+   print(bin_days)
+   print("SUMS:", bin_sums)
+   print("SUMS2:", bin_sums2)
+
+   plot_file = "plots/" + state + "-" + plot_type + ".png"
+   plt.savefig(plot_file)
+   print("SAVED:", plot_file)
+   #plt.show()
+
+
+def make_all_level2_data():
    state_data,state_pop = load_state_data()
-   #state_data structure: [date,cases,deaths,case_increase,death_increase,tests])
-
    state_names, state_codes = load_state_names()
-
-   state_pop = load_state_pop()
    county_pops = load_county_pop(state_codes)
-   county_pop = county_pops[this_state_code]
    acdata = load_county_data()
-   cdata = acdata[this_state_code]
+   for state_code in state_names:
+
+      make_level2_data(state_code, state_data, state_pop,state_names,county_pops,acdata)
+
+def make_level2_data(this_state_code, state_data, state_pop,state_names,county_pops,acdata):
+   cj = {}
+
+   county_pop = county_pops[this_state_code]
+   if this_state_code in acdata:
+      cdata = acdata[this_state_code]
+   else:
+      cdata =[]
 
    level2_data = analyze_data_for_state(this_state_code, state_data,state_pop)
    #(this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm)
@@ -129,8 +502,7 @@ def make_level2_data():
    level2_data = add_enhanced_growth_stats("MD", level2_data)
    #(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) 
 
-   level2_cdata = enhance_cdata(cdata)
-   exit()
+   cj = enhance_cdata(this_state_code, cdata, cj)
 
    #print("state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay") 
 
@@ -139,7 +511,7 @@ def make_level2_data():
    for data in level2_data:
       stat_obj = {}
       (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay) = data 
-      print(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay)
+      #print(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay)
       stat_obj = { 
          "state_code" : state_code,
          "state_pop" : pop,
@@ -160,9 +532,11 @@ def make_level2_data():
          "cg_med" : cg_med,
          "dg_med" : dg_med,
          "cg_med_decay" : cg_med_decay,
-         "dg_med_decay" : dg_med_decay
+         "dg_med_decay" : dg_med_decay,
+         "mortality" : mortality 
       }
       state_stats.append(stat_obj)
+   sorted_state_stats = state_stats.sort(key=sort_date,reverse=False)
 
    # Create final state json object:
    state_obj = {}
@@ -188,16 +562,22 @@ def make_level2_data():
    state_obj['summary_info']['dg_med_decay'] = dg_med_decay
    state_obj['county_pop'] = county_pop
    state_obj['state_stats'] = state_stats
-   state_obj['cdata'] = cdata 
+   state_obj['county_stats'] = cj
+   #state_obj['cdata'] = cdata 
    if cfe("./json", 1) == 0:
       os.makedirs("./json")
    save_json_file("./json/" + state_code + ".json", state_obj)
    print("Saved: ./json/" + state_code + ".json")
 
-   for stobj in state_stats:
-      print(stobj)
+   #for stobj in state_stats:
+   #   print(stobj)
 
-def enhance_county(data):
+def enhance_county(this_state_code, this_county, data, cj):
+   if this_state_code not in cj:
+      cj[this_state_code] = {}
+   if this_county not in cj[this_state_code]:
+      cj[this_state_code][this_county] = {}
+  
    #print("ENHANCE:", data['cd_data'])
    # add growth (last,avg,med)
    # add growth decay (med)
@@ -209,8 +589,10 @@ def enhance_county(data):
       (day,cases,deaths,pm_cases,pm_deaths,mortality) = d
       if first_death_day == None and int(deaths) > 0:
          first_death_day = dc
-         print(day,cases)
+         #print(day,cases)
       dc += 1
+   if first_death_day is None:
+      first_death_day = 0 
 
    # ADD ZERO DAY
    dc = 0
@@ -231,20 +613,16 @@ def enhance_county(data):
       (day,zero_day,cases,deaths,pm_cases,pm_deaths,mortality) = zz
       new_cases = cases - last_cases
       new_deaths = deaths - last_deaths
-      print("CASES:", cases)
       if int(cases) > 0:
          case_growth = (1 - (int(last_cases) / int(cases))) * 100
          case_growth = round(case_growth,2)
-         print("CASE GR:", case_growth)
       else: 
-         print("CASES IS 0")
          case_growth = 0
       if deaths != 0:
          death_growth = (1 - (last_deaths / deaths)) * 100
          death_growth = round(death_growth,2)
       else:
          death_growth = 0
-         #print(deaths, " / ", last_deaths)
       if case_growth > 0:
          cgr_last.append(case_growth) 
          dgr_last.append(death_growth) 
@@ -281,23 +659,47 @@ def enhance_county(data):
          dg_med_decay = 0
       
       decay.append((day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay))
+      last_cg_med = cg_med
+      last_dg_med = dg_med
 
 
-
+   # Make final data object
+   cd_objs = []
    for ggg in decay:
-      print(ggg)
+      cd_obj = {}
+      cd_obj['day'] = day
+      cd_obj['zero_day'] = zero_day
+      cd_obj['cases'] = cases
+      cd_obj['deaths'] = deaths
+      cd_obj['pm_cases'] = pm_cases
+      cd_obj['pm_deaths'] = pm_deaths
+      cd_obj['new_cases'] = new_cases
+      cd_obj['new_deaths'] = new_deaths
+      cd_obj['mortality'] = mortality
+      cd_obj['case_growth'] = case_growth
+      cd_obj['death_growth'] = death_growth
+      cd_obj['cg_avg'] = cg_avg
+      cd_obj['dg_avg'] = dg_avg
+      cd_obj['cg_med'] = cg_med
+      cd_obj['dg_med'] = dg_med
+      cd_obj['cg_med_decay'] = cg_med_decay
+      cd_obj['dg_med_decay'] = dg_med_decay
+      (day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay) = ggg
+      cd_objs.append(cd_obj)
 
+   sorted_cd_objs = cd_objs.sort(key=sort_date,reverse=False)
+
+   return(ggg,cd_objs)
+
+def sort_date(json):
+   return(int(json['zero_day']))
  
-def enhance_cdata(cdata):
+def enhance_cdata(this_state_code, cdata,cj):
    # add growth vars, zero day, decay 
    for key in cdata:
-      print(key, cdata[key])   
-      en_data = enhance_county(cdata[key])
-      exit()
-     # need to add zero day, growth and decay but not here?
-     #cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
-   print("ECD")
-   exit()
+      cd_data, cd_objs = enhance_county(this_state_code, key,cdata[key],cj)
+      cj[this_state_code][key]['county_stats'] = cd_objs 
+   return(cj)
 
 def add_enhanced_growth_stats(state_code, l2s):
    extra = []
@@ -335,10 +737,14 @@ def add_enhanced_growth_stats(state_code, l2s):
          death_grs.append(death_growth)
       dc = dc + 1
 
+
    # add median growth decay to l2 data 
+
    last_cg_med = 0
    last_dg_med = 0
    dc = 0
+   if first_death_day is None:
+      first_death_day = 0
    for data in extra:
       (state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) = data
     
@@ -357,8 +763,8 @@ def add_enhanced_growth_stats(state_code, l2s):
       last_dg_med = dg_med
       dc += 1
 
-   for data in final:
-      print(data)
+   #for data in final:
+   #   print(data)
  
    return(final)
 
@@ -367,15 +773,6 @@ def analyze_data_for_state(this_state,state_data,state_pop):
    last_deaths = 0
 
    level2_data = []
-
-   print("THIS STATE:", this_state)
-   for sd in state_data:
-      if this_state == sd:
-         print("STATE FOUND IN STATE DATA:", this_state, sd)
-   for sd in state_pop:
-      if this_state == sd:
-         print("STATE FOUND IN STATE POP DATA:", this_state, sd)
-
 
    temp = sorted(state_data[this_state], key=lambda x: x[0], reverse=False)
 
@@ -509,6 +906,8 @@ def load_county_pop(state_codes):
          county_pop[state_code][count] = int(pop)
       #else: 
       #   print("BAD:", state)
+
+
    return(county_pop)
 
 
@@ -566,8 +965,8 @@ def load_county_data():
      #cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
      # need to add zero day, growth and decay but not here?
      cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
-  print("SAVED: json/county-level2.json")
-  save_json_file("./json/county-level2.json", cj)
+  #print("SAVED: json/county-level2.json")
+  #save_json_file("./json/county-level2.json", cj)
   return(cj)
 
 
