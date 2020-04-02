@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/QAPage" class="html__responsive">
+<head data-live-domain="codeorigin.jquery.com">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>COVID 19 - {STATE_NAME} Stats</title>
+
+	<meta name="author" content="Mike Hankey">
+	<meta name="description" content="COVID 19 (Coronavirus) Stats for Maryland, USA, Per Million, By County, Historical">
+   <meta name="viewport" content="width=device-width">
+   
+   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+   <script src="https://archive.allsky.tv/covid/dist/js/jquery.tablesorter.min.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"> 
+   <link href="https://archive.allsky.tv/covid/dist/css/m.css" rel="stylesheet">
+   <link href="https://archive.allsky.tv/covid/dist/css/tablesorter.css" rel="stylesheet">  
+ 
+
+</head>
+<body>
+   <h1>COVID 19 - US Stats</h1>
+<center>
+<div >
+<center>
+{STATE_LINKS}
+</center>
+</div>
+</center>
+   <div id="bc">
+      <a href="http://www.cvinfo.org/index.html" class="s">USA</a>
+      <a>{STATE_NAME}</a>
+   </div>
+
+   <div id="state" class="clearfix">
+      <div class="fl ff">
+            <img src="http://archive.allsky.tv/covid/flags/{STATE_CODE_L}.png"/>
+      </div>
+      <div class="fl">
+            <h3>{STATE_NAME}<span>Population: <b>{POPULATION}</b></span></h3>
+            <dl> 
+            
+               <dt>Cases </dt>
+               <dd>{CASES}</dd>
+             
+               <dt>Deaths  </dt>
+               <dd>{DEATHS}</dd>
+
+               <dt>New Cases </dt>
+               <dd>{CASE_INCREASE}</dd>
+
+               <dt>New Deaths</dt>
+               <dd>{DEATH_INCREASE}</dd>
+            
+               <dt>Cases per million </dt>
+               <dd>{CPM}</dd>
+             
+               <dt>Deaths per million </dt>
+               <dd>{DPM}</dd>
+
+
+               <dt>Total Tests</dt>
+               <dd>{TESTS}</dd>
+
+               <dt>Tests Per Million</dt>
+               <dd>{TPM}</dd>
+
+               <dt>Case Growth %</dt>
+               <dd>{CASE_GROWTH}</dd>
+
+               <dt>Death Growth %</dt>
+               <dd>{DEATH_GROWTH}</dd>
+            
+               <dt>Mortality Rate</dt>
+               <dd>{MORTALITY}</dd>
+             
+               <dt>Last Update</dt>
+               <dd>{LAST_UPDATE}</dd>
+            </dl>
+      </div>
+   </div>
+   <div id="graphs" class="clearfix">
+      <h3>Graphs</h3>
+      <div class="graph_container">
+            <div class="grid">
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-cd.png" />
+              </div>
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-pm.png" />
+              </div>
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-in.png" />
+              </div>
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-ts.png" />
+              </div>
+              <div class="cell">
+                  <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-gr.png" />
+               </div>
+               <div class="cell">
+                  <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-mt.png" />
+               </div>
+            </div>
+          </div>
+   
+      </div>
+   </div>
+
+<div id="graph_img_viewer" class="modal">
+   <span class="close">&times;</span>
+   <img class="modal-content" id="img_fv">
+   <div id="caption"></div>
+</div>
+
+  {COUNTY_TABLE}
+
+<script>
+
+
+  function open_modal() {
+     // Get the modal
+      var modal = document.getElementById("graph_img_viewer");
+
+      // Get the image and insert it inside the modal - use its "alt" text as a caption
+      var img = document.getElementById("plots_img");
+      var modalImg = document.getElementById("img_fv"); 
+      img.onclick = function(){
+         modal.style.display = "block";
+         modalImg.src = this.src; 
+      }
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+         modal.style.display = "none";
+      }
+  }
+
+
+  $(function() {
+     
+     // Table sorter
+     $("table thead th:eq(0)").data("sorter", false);
+     $('table').tablesorter({
+        widgets        : ['zebra', 'columns'],
+        usNumberFormat : false,
+        sortReset      : true,
+        sortRestart    : true
+     });
+     
+     // Click on stats image
+     open_modal();
+
+  })
+   
+
+</script> 
+</body>
+</html>
+

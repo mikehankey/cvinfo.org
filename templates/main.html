@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/QAPage" class="html__responsive">
+<head data-live-domain="codeorigin.jquery.com">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>COVID 19 - US Stats</title>
+
+	<meta name="author" content="Mike Hankey">
+	<meta name="description" content="COVID 19 (Coronavirus) Stats for USA">
+   <meta name="viewport" content="width=device-width">
+   
+   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+   <script src="https://archive.allsky.tv/covid/dist/js/jquery.tablesorter.min.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="https://archive.allsky.tv/covid/dist/css/m.css" rel="stylesheet">
+   <link href="https://archive.allsky.tv/covid/dist/css/tablesorter.css" rel="stylesheet">
+ 
+
+</head>
+<body>
+
+   <h1>COVID 19 - US Stats</h1> 
+   <div id="us_map">
+{US_MAP}
+       
+   </div>
+
+
+   {STATE_TABLE}   
+
+   <div id="ft">
+cvinfo.org provides enhanced COVID-19 statistics and reports made from open source data<BR> 
+<a href="https://covidtracking.com/">Covid Tracking</a> -  
+<a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a> <BR>
+contact: mike.hankey[@]gmail.com
+   </div>
+
+
+   <script>
+
+      function actionsOnSVGState() {
+         $('path,circle').mouseenter(function() {
+            var $t = $(this);
+            var state = $t.attr('id'); 
+            $("path, tr,circle").removeClass('on');
+            $("path#"+state).addClass('on'); 
+            $("tr[data-state="+state+"]").addClass('on');
+
+         }).mouseleave(function() {
+            $('path, tr').removeClass('on');
+         }).click(function() {
+            var $t = $(this);
+            var state = $t.attr('id'); 
+            window.location = "./states/" + state + ".html"
+         });
+      }
+
+      function actionOnTable() {
+         $('tbody tr').mouseenter(function() {
+            var $t = $(this);
+            var state = $t.attr('data-state');  
+            $("path, tr, circle").removeClass('on');
+            $("path#"+state).addClass('on'); 
+            $("tr[data-state="+state+"]").addClass('on');
+         }).mouseleave(function() {
+            $('path, tr').removeClass('on');
+         }).click(function() {
+            var $t = $(this);
+            var state = $t.attr('data-state'); 
+            window.location = "./states/" + state + ".html"
+         });
+      }
+
+ 
+  
+   $(function() {
+
+      // Action
+      actionsOnSVGState();
+      actionOnTable();
+     
+      // Table sorter
+      $("table thead th:eq(0)").data("sorter", false);
+      $('table').tablesorter({
+			widgets        : ['zebra', 'columns'],
+			usNumberFormat : false,
+			sortReset      : true,
+			sortRestart    : true
+      });
+       
+
+
+   })
+    
+ 
+</script>
+</body>
+</html>

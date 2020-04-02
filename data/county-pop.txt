@@ -1,0 +1,3198 @@
+STNAME	CTYNAME	CENSUS2010POP
+Alabama	Alabama	4779736
+Alabama	Autauga	54571
+Alabama	Baldwin	182265
+Alabama	Barbour	27457
+Alabama	Bibb	22915
+Alabama	Blount	57322
+Alabama	Bullock	10914
+Alabama	Butler	20947
+Alabama	Calhoun	118572
+Alabama	Chambers	34215
+Alabama	Cherokee	25989
+Alabama	Chilton	43643
+Alabama	Choctaw	13859
+Alabama	Clarke	25833
+Alabama	Clay	13932
+Alabama	Cleburne	14972
+Alabama	Coffee	49948
+Alabama	Colbert	54428
+Alabama	Conecuh	13228
+Alabama	Coosa	11539
+Alabama	Covington	37765
+Alabama	Crenshaw	13906
+Alabama	Cullman	80406
+Alabama	Dale	50251
+Alabama	Dallas	43820
+Alabama	DeKalb	71109
+Alabama	Elmore	79303
+Alabama	Escambia	38319
+Alabama	Etowah	104430
+Alabama	Fayette	17241
+Alabama	Franklin	31704
+Alabama	Geneva	26790
+Alabama	Greene	9045
+Alabama	Hale	15760
+Alabama	Henry	17302
+Alabama	Houston	101547
+Alabama	Jackson	53227
+Alabama	Jefferson	658466
+Alabama	Lamar	14564
+Alabama	Lauderdale	92709
+Alabama	Lawrence	34339
+Alabama	Lee	140247
+Alabama	Limestone	82782
+Alabama	Lowndes	11299
+Alabama	Macon	21452
+Alabama	Madison	334811
+Alabama	Marengo	21027
+Alabama	Marion	30776
+Alabama	Marshall	93019
+Alabama	Mobile	412992
+Alabama	Monroe	23068
+Alabama	Montgomery	229363
+Alabama	Morgan	119490
+Alabama	Perry	10591
+Alabama	Pickens	19746
+Alabama	Pike	32899
+Alabama	Randolph	22913
+Alabama	Russell	52947
+Alabama	St. Clair	83593
+Alabama	Shelby	195085
+Alabama	Sumter	13763
+Alabama	Talladega	82291
+Alabama	Tallapoosa	41616
+Alabama	Tuscaloosa	194656
+Alabama	Walker	67023
+Alabama	Washington	17581
+Alabama	Wilcox	11670
+Alabama	Winston	24484
+Alaska	Alaska	710231
+Alaska	Anchorage	288000
+Alaska	Aleutians East Borough	3141
+Alaska	Aleutians West Census Area	5561
+Alaska	Anchorage Municipality	291826
+Alaska	Bethel Census Area	17013
+Alaska	Bristol Bay Borough	997
+Alaska	Denali Borough	1826
+Alaska	Dillingham Census Area	4847
+Alaska	Fairbanks North Star Borough	97581
+Alaska	Haines Borough	2508
+Alaska	Hoonah-Angoon Census Area	2150
+Alaska	Juneau City and Borough	31275
+Alaska	Kenai Peninsula Borough	55400
+Alaska	Ketchikan Gateway Borough	13477
+Alaska	Kodiak Island Borough	13592
+Alaska	Kusilvak Census Area	7459
+Alaska	Lake and Peninsula Borough	1631
+Alaska	Matanuska-Susitna Borough	88995
+Alaska	Nome Census Area	9492
+Alaska	North Slope Borough	9430
+Alaska	Northwest Arctic Borough	7523
+Alaska	Petersburg Borough	3815
+Alaska	Prince of Wales-Hyder Census Area	5559
+Alaska	Sitka City and Borough	8881
+Alaska	Skagway Municipality	968
+Alaska	Southeast Fairbanks Census Area	7029
+Alaska	Valdez-Cordova Census Area	9636
+Alaska	Wrangell City and Borough	2369
+Alaska	Yakutat City and Borough	662
+Alaska	Yukon-Koyukuk Census Area	5588
+Arizona	Arizona	6392017
+Arizona	Apache	71518
+Arizona	Cochise	131346
+Arizona	Coconino	134421
+Arizona	Gila	53597
+Arizona	Graham	37220
+Arizona	Greenlee	8437
+Arizona	La Paz	20489
+Arizona	Maricopa	3817117
+Arizona	Mohave	200186
+Arizona	Navajo	107449
+Arizona	Pima	980263
+Arizona	Pinal	375770
+Arizona	Santa Cruz	47420
+Arizona	Yavapai	211033
+Arizona	Yuma	195751
+Arkansas	Arkansas	2915918
+Arkansas	Arkansas	19019
+Arkansas	Ashley	21853
+Arkansas	Baxter	41513
+Arkansas	Benton	221339
+Arkansas	Boone	36903
+Arkansas	Bradley	11508
+Arkansas	Calhoun	5368
+Arkansas	Carroll	27446
+Arkansas	Chicot	11800
+Arkansas	Clark	22995
+Arkansas	Clay	16083
+Arkansas	Cleburne	25970
+Arkansas	Cleveland	8689
+Arkansas	Columbia	24552
+Arkansas	Conway	21273
+Arkansas	Craighead	96443
+Arkansas	Crawford	61948
+Arkansas	Crittenden	50902
+Arkansas	Cross	17870
+Arkansas	Dallas	8116
+Arkansas	Desha	13008
+Arkansas	Drew	18509
+Arkansas	Faulkner	113237
+Arkansas	Franklin	18125
+Arkansas	Fulton	12245
+Arkansas	Garland	96024
+Arkansas	Grant	17853
+Arkansas	Greene	42090
+Arkansas	Hempstead	22609
+Arkansas	Hot Spring	32923
+Arkansas	Howard	13789
+Arkansas	Independence	36647
+Arkansas	Izard	13696
+Arkansas	Jackson	17997
+Arkansas	Jefferson	77435
+Arkansas	Johnson	25540
+Arkansas	Lafayette	7645
+Arkansas	Lawrence	17415
+Arkansas	Lee	10424
+Arkansas	Lincoln	14134
+Arkansas	Little River	13171
+Arkansas	Logan	22353
+Arkansas	Lonoke	68356
+Arkansas	Madison	15717
+Arkansas	Marion	16653
+Arkansas	Miller	43462
+Arkansas	Mississippi	46480
+Arkansas	Monroe	8149
+Arkansas	Montgomery	9487
+Arkansas	Nevada	8997
+Arkansas	Newton	8330
+Arkansas	Ouachita	26120
+Arkansas	Perry	10445
+Arkansas	Phillips	21757
+Arkansas	Pike	11291
+Arkansas	Poinsett	24583
+Arkansas	Polk	20662
+Arkansas	Pope	61754
+Arkansas	Prairie	8715
+Arkansas	Pulaski	382748
+Arkansas	Randolph	17969
+Arkansas	St. Francis	28258
+Arkansas	Saline	107118
+Arkansas	Scott	11233
+Arkansas	Searcy	8195
+Arkansas	Sebastian	125744
+Arkansas	Sevier	17058
+Arkansas	Sharp	17264
+Arkansas	Stone	12394
+Arkansas	Union	41639
+Arkansas	Van Buren	17295
+Arkansas	Washington	203065
+Arkansas	White	77076
+Arkansas	Woodruff	7260
+Arkansas	Yell	22185
+California	California	37253956
+California	Alameda	1510271
+California	Alpine	1175
+California	Amador	38091
+California	Butte	220000
+California	Calaveras	45578
+California	Colusa	21419
+California	Contra Costa	1049025
+California	Del Norte	28610
+California	El Dorado	181058
+California	Fresno	930450
+California	Glenn	28122
+California	Humboldt	134623
+California	Imperial	174528
+California	Inyo	18546
+California	Kern	839631
+California	Kings	152982
+California	Lake	64665
+California	Lassen	34895
+California	Los Angeles	9818605
+California	Madera	150865
+California	Marin	252409
+California	Mariposa	18251
+California	Mendocino	87841
+California	Merced	255793
+California	Modoc	9686
+California	Mono	14202
+California	Monterey	415057
+California	Napa	136484
+California	Nevada	98764
+California	Orange	3010232
+California	Placer	348432
+California	Plumas	20007
+California	Riverside	2189641
+California	Sacramento	1418788
+California	San Benito	55269
+California	San Bernardino	2035210
+California	San Diego	3095313
+California	San Francisco	805235
+California	San Joaquin	685306
+California	San Luis Obispo	269637
+California	San Mateo	718451
+California	Santa Barbara	423895
+California	Santa Clara	1781642
+California	Santa Cruz	262382
+California	Shasta	177223
+California	Sierra	3240
+California	Siskiyou	44900
+California	Solano	413344
+California	Sonoma	483878
+California	Stanislaus	514453
+California	Sutter	94737
+California	Tehama	63463
+California	Trinity	13786
+California	Tulare	442179
+California	Tuolumne	55365
+California	Ventura	823318
+California	Yolo	200849
+California	Yuba	72155
+Colorado	Colorado	5029196
+Colorado	Adams	441603
+Colorado	Alamosa	15445
+Colorado	Arapahoe	572003
+Colorado	Archuleta	12084
+Colorado	Baca	3788
+Colorado	Bent	6499
+Colorado	Boulder	294567
+Colorado	Broomfield	55889
+Colorado	Chaffee	17809
+Colorado	Cheyenne	1836
+Colorado	Clear Creek	9088
+Colorado	Conejos	8256
+Colorado	Costilla	3524
+Colorado	Crowley	5823
+Colorado	Custer	4255
+Colorado	Delta	30952
+Colorado	Denver	600158
+Colorado	Dolores	2064
+Colorado	Douglas	285465
+Colorado	Eagle	52197
+Colorado	Elbert	23086
+Colorado	El Paso	622263
+Colorado	Fremont	46824
+Colorado	Garfield	56389
+Colorado	Gilpin	5441
+Colorado	Grand	14843
+Colorado	Gunnison	15324
+Colorado	Hinsdale	843
+Colorado	Huerfano	6711
+Colorado	Jackson	1394
+Colorado	Jefferson	534543
+Colorado	Kiowa	1398
+Colorado	Kit Carson	8270
+Colorado	Lake	7310
+Colorado	La Plata	51334
+Colorado	Larimer	299630
+Colorado	Las Animas	15507
+Colorado	Lincoln	5467
+Colorado	Logan	22709
+Colorado	Mesa	146723
+Colorado	Mineral	712
+Colorado	Moffat	13795
+Colorado	Montezuma	25535
+Colorado	Montrose	41276
+Colorado	Morgan	28159
+Colorado	Otero	18831
+Colorado	Ouray	4436
+Colorado	Park	16206
+Colorado	Phillips	4442
+Colorado	Pitkin	17148
+Colorado	Prowers	12551
+Colorado	Pueblo	159063
+Colorado	Rio Blanco	6666
+Colorado	Rio Grande	11982
+Colorado	Routt	23509
+Colorado	Saguache	6108
+Colorado	San Juan	699
+Colorado	San Miguel	7359
+Colorado	Sedgwick	2379
+Colorado	Summit	27994
+Colorado	Teller	23350
+Colorado	Washington	4814
+Colorado	Weld	252825
+Colorado	Yuma	10043
+Connecticut	Connecticut	3574097
+Connecticut	Fairfield	916829
+Connecticut	Hartford	894014
+Connecticut	Litchfield	189927
+Connecticut	Middlesex	165676
+Connecticut	New Haven	862477
+Connecticut	New London	274055
+Connecticut	Tolland	152691
+Connecticut	Windham	118428
+Delaware	Delaware	897934
+Delaware	Kent	162310
+Delaware	New Castle	538479
+Delaware	Sussex	197145
+District of Columbia	District of Columbia	601723
+District of Columbia	District of Columbia	601723
+Florida	Florida	18801310
+Florida	Alachua	247336
+Florida	Baker	27115
+Florida	Bay	168852
+Florida	Bradford	28520
+Florida	Brevard	543376
+Florida	Broward	1748066
+Florida	Calhoun	14625
+Florida	Charlotte	159978
+Florida	Citrus	141236
+Florida	Clay	190865
+Florida	Collier	321520
+Florida	Columbia	67531
+Florida	DeSoto	34862
+Florida	Dixie	16422
+Florida	Duval	864263
+Florida	Escambia	297619
+Florida	Flagler	95696
+Florida	Franklin	11549
+Florida	Gadsden	46389
+Florida	Gilchrist	16939
+Florida	Glades	12884
+Florida	Gulf	15863
+Florida	Hamilton	14799
+Florida	Hardee	27731
+Florida	Hendry	39140
+Florida	Hernando	172778
+Florida	Highlands	98786
+Florida	Hillsborough	1229226
+Florida	Holmes	19927
+Florida	Indian River	138028
+Florida	Jackson	49746
+Florida	Jefferson	14761
+Florida	Lafayette	8870
+Florida	Lake	297052
+Florida	Lee	618754
+Florida	Leon	275487
+Florida	Levy	40801
+Florida	Liberty	8365
+Florida	Madison	19224
+Florida	Manatee	322833
+Florida	Marion	331298
+Florida	Martin	146318
+Florida	Miami-Dade	2496435
+Florida	Monroe	73090
+Florida	Nassau	73314
+Florida	Okaloosa	180822
+Florida	Okeechobee	39996
+Florida	Orange	1145956
+Florida	Osceola	268685
+Florida	Palm Beach	1320134
+Florida	Pasco	464697
+Florida	Pinellas	916542
+Florida	Polk	602095
+Florida	Putnam	74364
+Florida	St. Johns	190039
+Florida	St. Lucie	277789
+Florida	Santa Rosa	151372
+Florida	Sarasota	379448
+Florida	Seminole	422718
+Florida	Sumter	93420
+Florida	Suwannee	41551
+Florida	Taylor	22570
+Florida	Union	15535
+Florida	Volusia	494593
+Florida	Wakulla	30776
+Florida	Walton	55043
+Florida	Washington	24896
+Georgia	Georgia	9687653
+Georgia	Appling	18236
+Georgia	Atkinson	8375
+Georgia	Bacon	11096
+Georgia	Baker	3451
+Georgia	Baldwin	45720
+Georgia	Banks	18395
+Georgia	Barrow	69367
+Georgia	Bartow	100157
+Georgia	Ben Hill	17634
+Georgia	Berrien	19286
+Georgia	Bibb	155547
+Georgia	Bleckley	13063
+Georgia	Brantley	18411
+Georgia	Brooks	16243
+Georgia	Bryan	30233
+Georgia	Bulloch	70217
+Georgia	Burke	23316
+Georgia	Butts	23655
+Georgia	Calhoun	6694
+Georgia	Camden	50513
+Georgia	Candler	10998
+Georgia	Carroll	110527
+Georgia	Catoosa	63942
+Georgia	Charlton	12171
+Georgia	Chatham	265128
+Georgia	Chattahoochee	11267
+Georgia	Chattooga	26015
+Georgia	Cherokee	214346
+Georgia	Clarke	116714
+Georgia	Clay	3183
+Georgia	Clayton	259424
+Georgia	Clinch	6798
+Georgia	Cobb	688078
+Georgia	Coffee	42356
+Georgia	Colquitt	45498
+Georgia	Columbia	124053
+Georgia	Cook	17212
+Georgia	Coweta	127317
+Georgia	Crawford	12630
+Georgia	Crisp	23439
+Georgia	Dade	16633
+Georgia	Dawson	22330
+Georgia	Decatur	27842
+Georgia	DeKalb	691893
+Georgia	Dodge	21796
+Georgia	Dooly	14918
+Georgia	Dougherty	94565
+Georgia	Douglas	132403
+Georgia	Early	11008
+Georgia	Echols	4034
+Georgia	Effingham	52250
+Georgia	Elbert	20166
+Georgia	Emanuel	22598
+Georgia	Evans	11000
+Georgia	Fannin	23682
+Georgia	Fayette	106567
+Georgia	Floyd	96317
+Georgia	Forsyth	175511
+Georgia	Franklin	22084
+Georgia	Fulton	920581
+Georgia	Gilmer	28292
+Georgia	Glascock	3082
+Georgia	Glynn	79626
+Georgia	Gordon	55186
+Georgia	Grady	25011
+Georgia	Greene	15994
+Georgia	Gwinnett	805321
+Georgia	Habersham	43041
+Georgia	Hall	179684
+Georgia	Hancock	9429
+Georgia	Haralson	28780
+Georgia	Harris	32024
+Georgia	Hart	25213
+Georgia	Heard	11834
+Georgia	Henry	203922
+Georgia	Houston	139900
+Georgia	Irwin	9538
+Georgia	Jackson	60485
+Georgia	Jasper	13900
+Georgia	Jeff Davis	15068
+Georgia	Jefferson	16930
+Georgia	Jenkins	8340
+Georgia	Johnson	9980
+Georgia	Jones	28669
+Georgia	Lamar	18317
+Georgia	Lanier	10078
+Georgia	Laurens	48434
+Georgia	Lee	28298
+Georgia	Liberty	63453
+Georgia	Lincoln	7996
+Georgia	Long	14464
+Georgia	Lowndes	109233
+Georgia	Lumpkin	29966
+Georgia	McDuffie	21875
+Georgia	McIntosh	14333
+Georgia	Macon	14740
+Georgia	Madison	28120
+Georgia	Marion	8742
+Georgia	Meriwether	21992
+Georgia	Miller	6125
+Georgia	Mitchell	23498
+Georgia	Monroe	26424
+Georgia	Montgomery	9123
+Georgia	Morgan	17868
+Georgia	Murray	39628
+Georgia	Muscogee	189885
+Georgia	Newton	99958
+Georgia	Oconee	32808
+Georgia	Oglethorpe	14899
+Georgia	Paulding	142324
+Georgia	Peach	27695
+Georgia	Pickens	29431
+Georgia	Pierce	18758
+Georgia	Pike	17869
+Georgia	Polk	41475
+Georgia	Pulaski	12010
+Georgia	Putnam	21218
+Georgia	Quitman	2513
+Georgia	Rabun	16276
+Georgia	Randolph	7719
+Georgia	Richmond	200549
+Georgia	Rockdale	85215
+Georgia	Schley	5010
+Georgia	Screven	14593
+Georgia	Seminole	8729
+Georgia	Spalding	64073
+Georgia	Stephens	26175
+Georgia	Stewart	6058
+Georgia	Sumter	32819
+Georgia	Talbot	6865
+Georgia	Taliaferro	1717
+Georgia	Tattnall	25520
+Georgia	Taylor	8906
+Georgia	Telfair	16500
+Georgia	Terrell	9315
+Georgia	Thomas	44720
+Georgia	Tift	40118
+Georgia	Toombs	27223
+Georgia	Towns	10471
+Georgia	Treutlen	6885
+Georgia	Troup	67044
+Georgia	Turner	8930
+Georgia	Twiggs	9023
+Georgia	Union	21356
+Georgia	Upson	27153
+Georgia	Walker	68756
+Georgia	Walton	83768
+Georgia	Ware	36312
+Georgia	Warren	5834
+Georgia	Washington	21187
+Georgia	Wayne	30099
+Georgia	Webster	2799
+Georgia	Wheeler	7421
+Georgia	White	27144
+Georgia	Whitfield	102599
+Georgia	Wilcox	9255
+Georgia	Wilkes	10593
+Georgia	Wilkinson	9563
+Georgia	Worth	21679
+Hawaii	Hawaii	1360301
+Hawaii	Hawaii	185079
+Hawaii	Honolulu	953207
+Hawaii	Kalawao	90
+Hawaii	Kauai	67091
+Hawaii	Maui	154834
+Idaho	Idaho	1567582
+Idaho	Ada	392365
+Idaho	Adams	3976
+Idaho	Bannock	82839
+Idaho	Bear Lake	5986
+Idaho	Benewah	9285
+Idaho	Bingham	45607
+Idaho	Blaine	21376
+Idaho	Boise	7028
+Idaho	Bonner	40877
+Idaho	Bonneville	104234
+Idaho	Boundary	10972
+Idaho	Butte	2891
+Idaho	Camas	1117
+Idaho	Canyon	188923
+Idaho	Caribou	6963
+Idaho	Cassia	22952
+Idaho	Clark	982
+Idaho	Clearwater	8761
+Idaho	Custer	4368
+Idaho	Elmore	27038
+Idaho	Franklin	12786
+Idaho	Fremont	13242
+Idaho	Gem	16719
+Idaho	Gooding	15464
+Idaho	Idaho	16267
+Idaho	Jefferson	26140
+Idaho	Jerome	22374
+Idaho	Kootenai	138494
+Idaho	Latah	37244
+Idaho	Lemhi	7936
+Idaho	Lewis	3821
+Idaho	Lincoln	5208
+Idaho	Madison	37536
+Idaho	Minidoka	20069
+Idaho	Nez Perce	39265
+Idaho	Oneida	4286
+Idaho	Owyhee	11526
+Idaho	Payette	22623
+Idaho	Power	7817
+Idaho	Shoshone	12765
+Idaho	Teton	10170
+Idaho	Twin Falls	77230
+Idaho	Valley	9862
+Idaho	Washington	10198
+Illinois	Illinois	12830632
+Illinois	Adams	67103
+Illinois	Alexander	8238
+Illinois	Bond	17768
+Illinois	Boone	54165
+Illinois	Brown	6937
+Illinois	Bureau	34978
+Illinois	Calhoun	5089
+Illinois	Carroll	15387
+Illinois	Cass	13642
+Illinois	Champaign	201081
+Illinois	Christian	34800
+Illinois	Clark	16335
+Illinois	Clay	13815
+Illinois	Clinton	37762
+Illinois	Coles	53873
+Illinois	Cook	5194675
+Illinois	Crawford	19817
+Illinois	Cumberland	11048
+Illinois	DeKalb	105160
+Illinois	De Witt	16561
+Illinois	Douglas	19980
+Illinois	DuPage	916924
+Illinois	Edgar	18576
+Illinois	Edwards	6721
+Illinois	Effingham	34242
+Illinois	Fayette	22140
+Illinois	Ford	14081
+Illinois	Franklin	39561
+Illinois	Fulton	37069
+Illinois	Gallatin	5589
+Illinois	Greene	13886
+Illinois	Grundy	50063
+Illinois	Hamilton	8457
+Illinois	Hancock	19104
+Illinois	Hardin	4320
+Illinois	Henderson	7331
+Illinois	Henry	50486
+Illinois	Iroquois	29718
+Illinois	Jackson	60218
+Illinois	Jasper	9698
+Illinois	Jefferson	38827
+Illinois	Jersey	22985
+Illinois	Jo Daviess	22678
+Illinois	Johnson	12582
+Illinois	Kane	515269
+Illinois	Kankakee	113449
+Illinois	Kendall	114736
+Illinois	Knox	52919
+Illinois	Lake	703462
+Illinois	LaSalle	113924
+Illinois	Lawrence	16833
+Illinois	Lee	36031
+Illinois	Livingston	38950
+Illinois	Logan	30305
+Illinois	McDonough	32612
+Illinois	McHenry	308760
+Illinois	McLean	169572
+Illinois	Macon	110768
+Illinois	Macoupin	47765
+Illinois	Madison	269282
+Illinois	Marion	39437
+Illinois	Marshall	12640
+Illinois	Mason	14666
+Illinois	Massac	15429
+Illinois	Menard	12705
+Illinois	Mercer	16434
+Illinois	Monroe	32957
+Illinois	Montgomery	30104
+Illinois	Morgan	35547
+Illinois	Moultrie	14846
+Illinois	Ogle	53497
+Illinois	Peoria	186494
+Illinois	Perry	22350
+Illinois	Piatt	16729
+Illinois	Pike	16430
+Illinois	Pope	4470
+Illinois	Pulaski	6161
+Illinois	Putnam	6006
+Illinois	Randolph	33476
+Illinois	Richland	16233
+Illinois	Rock Island	147546
+Illinois	St. Clair	270056
+Illinois	Saline	24913
+Illinois	Sangamon	197465
+Illinois	Schuyler	7544
+Illinois	Scott	5355
+Illinois	Shelby	22363
+Illinois	Stark	5994
+Illinois	Stephenson	47711
+Illinois	Tazewell	135394
+Illinois	Union	17808
+Illinois	Vermilion	81625
+Illinois	Wabash	11947
+Illinois	Warren	17707
+Illinois	Washington	14716
+Illinois	Wayne	16760
+Illinois	White	14665
+Illinois	Whiteside	58498
+Illinois	Will	677560
+Illinois	Williamson	66357
+Illinois	Winnebago	295266
+Illinois	Woodford	38664
+Indiana	Indiana	6483802
+Indiana	Adams	34387
+Indiana	Allen	355329
+Indiana	Bartholomew	76794
+Indiana	Benton	8854
+Indiana	Blackford	12766
+Indiana	Boone	56640
+Indiana	Brown	15242
+Indiana	Carroll	20155
+Indiana	Cass	38966
+Indiana	Clark	110232
+Indiana	Clay	26890
+Indiana	Clinton	33224
+Indiana	Crawford	10713
+Indiana	Daviess	31648
+Indiana	Dearborn	50047
+Indiana	Decatur	25740
+Indiana	DeKalb	42223
+Indiana	Delaware	117671
+Indiana	Dubois	41889
+Indiana	Elkhart	197559
+Indiana	Fayette	24277
+Indiana	Floyd	74578
+Indiana	Fountain	17240
+Indiana	Franklin	23087
+Indiana	Fulton	20836
+Indiana	Gibson	33503
+Indiana	Grant	70061
+Indiana	Greene	33165
+Indiana	Hamilton	274569
+Indiana	Hancock	70002
+Indiana	Harrison	39364
+Indiana	Hendricks	145448
+Indiana	Henry	49462
+Indiana	Howard	82752
+Indiana	Huntington	37124
+Indiana	Jackson	42376
+Indiana	Jasper	33478
+Indiana	Jay	21253
+Indiana	Jefferson	32428
+Indiana	Jennings	28525
+Indiana	Johnson	139654
+Indiana	Knox	38440
+Indiana	Kosciusko	77358
+Indiana	LaGrange	37128
+Indiana	Lake	496005
+Indiana	LaPorte	111467
+Indiana	Lawrence	46134
+Indiana	Madison	131636
+Indiana	Marion	903393
+Indiana	Marshall	47051
+Indiana	Martin	10334
+Indiana	Miami	36903
+Indiana	Monroe	137974
+Indiana	Montgomery	38124
+Indiana	Morgan	68894
+Indiana	Newton	14244
+Indiana	Noble	47536
+Indiana	Ohio	6128
+Indiana	Orange	19840
+Indiana	Owen	21575
+Indiana	Parke	17339
+Indiana	Perry	19338
+Indiana	Pike	12845
+Indiana	Porter	164343
+Indiana	Posey	25910
+Indiana	Pulaski	13402
+Indiana	Putnam	37963
+Indiana	Randolph	26171
+Indiana	Ripley	28818
+Indiana	Rush	17392
+Indiana	St. Joseph	266931
+Indiana	Scott	24181
+Indiana	Shelby	44436
+Indiana	Spencer	20952
+Indiana	Starke	23363
+Indiana	Steuben	34185
+Indiana	Sullivan	21475
+Indiana	Switzerland	10613
+Indiana	Tippecanoe	172780
+Indiana	Tipton	15936
+Indiana	Union	7516
+Indiana	Vanderburgh	179703
+Indiana	Vermillion	16212
+Indiana	Vigo	107848
+Indiana	Wabash	32888
+Indiana	Warren	8508
+Indiana	Warrick	59689
+Indiana	Washington	28262
+Indiana	Wayne	68917
+Indiana	Wells	27636
+Indiana	White	24643
+Indiana	Whitley	33292
+Iowa	Iowa	3046355
+Iowa	Adair	7682
+Iowa	Adams	4029
+Iowa	Allamakee	14330
+Iowa	Appanoose	12887
+Iowa	Audubon	6119
+Iowa	Benton	26076
+Iowa	Black Hawk	131090
+Iowa	Boone	26306
+Iowa	Bremer	24276
+Iowa	Buchanan	20958
+Iowa	Buena Vista	20260
+Iowa	Butler	14867
+Iowa	Calhoun	9670
+Iowa	Carroll	20816
+Iowa	Cass	13956
+Iowa	Cedar	18499
+Iowa	Cerro Gordo	44151
+Iowa	Cherokee	12072
+Iowa	Chickasaw	12439
+Iowa	Clarke	9286
+Iowa	Clay	16667
+Iowa	Clayton	18129
+Iowa	Clinton	49116
+Iowa	Crawford	17096
+Iowa	Dallas	66135
+Iowa	Davis	8753
+Iowa	Decatur	8457
+Iowa	Delaware	17764
+Iowa	Des Moines	40325
+Iowa	Dickinson	16667
+Iowa	Dubuque	93653
+Iowa	Emmet	10302
+Iowa	Fayette	20880
+Iowa	Floyd	16303
+Iowa	Franklin	10680
+Iowa	Fremont	7441
+Iowa	Greene	9336
+Iowa	Grundy	12453
+Iowa	Guthrie	10954
+Iowa	Hamilton	15673
+Iowa	Hancock	11341
+Iowa	Hardin	17534
+Iowa	Harrison	14928
+Iowa	Henry	20145
+Iowa	Howard	9566
+Iowa	Humboldt	9815
+Iowa	Ida	7089
+Iowa	Iowa	16355
+Iowa	Jackson	19848
+Iowa	Jasper	36842
+Iowa	Jefferson	16843
+Iowa	Johnson	130882
+Iowa	Jones	20638
+Iowa	Keokuk	10511
+Iowa	Kossuth	15543
+Iowa	Lee	35862
+Iowa	Linn	211226
+Iowa	Louisa	11387
+Iowa	Lucas	8898
+Iowa	Lyon	11581
+Iowa	Madison	15679
+Iowa	Mahaska	22381
+Iowa	Marion	33309
+Iowa	Marshall	40648
+Iowa	Mills	15059
+Iowa	Mitchell	10776
+Iowa	Monona	9243
+Iowa	Monroe	7970
+Iowa	Montgomery	10740
+Iowa	Muscatine	42745
+Iowa	O'Brien	14398
+Iowa	Osceola	6462
+Iowa	Page	15932
+Iowa	Palo Alto	9421
+Iowa	Plymouth	24986
+Iowa	Pocahontas	7310
+Iowa	Polk	430640
+Iowa	Pottawattamie	93158
+Iowa	Poweshiek	18914
+Iowa	Ringgold	5131
+Iowa	Sac	10350
+Iowa	Scott	165224
+Iowa	Shelby	12167
+Iowa	Sioux	33704
+Iowa	Story	89542
+Iowa	Tama	17767
+Iowa	Taylor	6317
+Iowa	Union	12534
+Iowa	Van Buren	7570
+Iowa	Wapello	35625
+Iowa	Warren	46225
+Iowa	Washington	21704
+Iowa	Wayne	6403
+Iowa	Webster	38013
+Iowa	Winnebago	10866
+Iowa	Winneshiek	21056
+Iowa	Woodbury	102172
+Iowa	Worth	7598
+Iowa	Wright	13229
+Kansas	Kansas	2853118
+Kansas	Allen	13371
+Kansas	Anderson	8102
+Kansas	Atchison	16924
+Kansas	Barber	4861
+Kansas	Barton	27674
+Kansas	Bourbon	15173
+Kansas	Brown	9984
+Kansas	Butler	65880
+Kansas	Chase	2790
+Kansas	Chautauqua	3669
+Kansas	Cherokee	21603
+Kansas	Cheyenne	2726
+Kansas	Clark	2215
+Kansas	Clay	8535
+Kansas	Cloud	9533
+Kansas	Coffey	8601
+Kansas	Comanche	1891
+Kansas	Cowley	36311
+Kansas	Crawford	39134
+Kansas	Decatur	2961
+Kansas	Dickinson	19754
+Kansas	Doniphan	7945
+Kansas	Douglas	110826
+Kansas	Edwards	3037
+Kansas	Elk	2882
+Kansas	Ellis	28452
+Kansas	Ellsworth	6497
+Kansas	Finney	36776
+Kansas	Ford	33848
+Kansas	Franklin	25992
+Kansas	Geary	34362
+Kansas	Gove	2695
+Kansas	Graham	2597
+Kansas	Grant	7829
+Kansas	Gray	6006
+Kansas	Greeley	1247
+Kansas	Greenwood	6689
+Kansas	Hamilton	2690
+Kansas	Harper	6034
+Kansas	Harvey	34684
+Kansas	Haskell	4256
+Kansas	Hodgeman	1916
+Kansas	Jackson	13462
+Kansas	Jefferson	19126
+Kansas	Jewell	3077
+Kansas	Johnson	544179
+Kansas	Kearny	3977
+Kansas	Kingman	7858
+Kansas	Kiowa	2553
+Kansas	Labette	21607
+Kansas	Lane	1750
+Kansas	Leavenworth	76227
+Kansas	Lincoln	3241
+Kansas	Linn	9656
+Kansas	Logan	2756
+Kansas	Lyon	33690
+Kansas	McPherson	29180
+Kansas	Marion	12660
+Kansas	Marshall	10117
+Kansas	Meade	4575
+Kansas	Miami	32787
+Kansas	Mitchell	6373
+Kansas	Montgomery	35471
+Kansas	Morris	5923
+Kansas	Morton	3233
+Kansas	Nemaha	10178
+Kansas	Neosho	16512
+Kansas	Ness	3107
+Kansas	Norton	5671
+Kansas	Osage	16295
+Kansas	Osborne	3858
+Kansas	Ottawa	6091
+Kansas	Pawnee	6973
+Kansas	Phillips	5642
+Kansas	Pottawatomie	21604
+Kansas	Pratt	9656
+Kansas	Rawlins	2519
+Kansas	Reno	64511
+Kansas	Republic	4980
+Kansas	Rice	10083
+Kansas	Riley	71115
+Kansas	Rooks	5181
+Kansas	Rush	3307
+Kansas	Russell	6970
+Kansas	Saline	55606
+Kansas	Scott	4936
+Kansas	Sedgwick	498365
+Kansas	Seward	22952
+Kansas	Shawnee	177934
+Kansas	Sheridan	2556
+Kansas	Sherman	6010
+Kansas	Smith	3853
+Kansas	Stafford	4437
+Kansas	Stanton	2235
+Kansas	Stevens	5724
+Kansas	Sumner	24132
+Kansas	Thomas	7900
+Kansas	Trego	3001
+Kansas	Wabaunsee	7053
+Kansas	Wallace	1485
+Kansas	Washington	5799
+Kansas	Wichita	2234
+Kansas	Wilson	9409
+Kansas	Woodson	3309
+Kansas	Wyandotte	157505
+Kentucky	Kentucky	4339367
+Kentucky	Adair	18656
+Kentucky	Allen	19956
+Kentucky	Anderson	21421
+Kentucky	Ballard	8249
+Kentucky	Barren	42173
+Kentucky	Bath	11591
+Kentucky	Bell	28691
+Kentucky	Boone	118811
+Kentucky	Bourbon	19985
+Kentucky	Boyd	49542
+Kentucky	Boyle	28432
+Kentucky	Bracken	8488
+Kentucky	Breathitt	13878
+Kentucky	Breckinridge	20059
+Kentucky	Bullitt	74319
+Kentucky	Butler	12690
+Kentucky	Caldwell	12984
+Kentucky	Calloway	37191
+Kentucky	Campbell	90336
+Kentucky	Carlisle	5104
+Kentucky	Carroll	10811
+Kentucky	Carter	27720
+Kentucky	Casey	15955
+Kentucky	Christian	73955
+Kentucky	Clark	35613
+Kentucky	Clay	21730
+Kentucky	Clinton	10272
+Kentucky	Crittenden	9315
+Kentucky	Cumberland	6856
+Kentucky	Daviess	96656
+Kentucky	Edmonson	12161
+Kentucky	Elliott	7852
+Kentucky	Estill	14672
+Kentucky	Fayette	295803
+Kentucky	Fleming	14348
+Kentucky	Floyd	39451
+Kentucky	Franklin	49285
+Kentucky	Fulton	6813
+Kentucky	Gallatin	8589
+Kentucky	Garrard	16912
+Kentucky	Grant	24662
+Kentucky	Graves	37121
+Kentucky	Grayson	25746
+Kentucky	Green	11258
+Kentucky	Greenup	36910
+Kentucky	Hancock	8565
+Kentucky	Hardin	105543
+Kentucky	Harlan	29278
+Kentucky	Harrison	18846
+Kentucky	Hart	18199
+Kentucky	Henderson	46250
+Kentucky	Henry	15416
+Kentucky	Hickman	4902
+Kentucky	Hopkins	46920
+Kentucky	Jackson	13494
+Kentucky	Jefferson	741096
+Kentucky	Jessamine	48586
+Kentucky	Johnson	23356
+Kentucky	Kenton	159720
+Kentucky	Knott	16346
+Kentucky	Knox	31883
+Kentucky	Larue	14193
+Kentucky	Laurel	58849
+Kentucky	Lawrence	15860
+Kentucky	Lee	7887
+Kentucky	Leslie	11310
+Kentucky	Letcher	24519
+Kentucky	Lewis	13870
+Kentucky	Lincoln	24742
+Kentucky	Livingston	9519
+Kentucky	Logan	26835
+Kentucky	Lyon	8314
+Kentucky	McCracken	65565
+Kentucky	McCreary	18306
+Kentucky	McLean	9531
+Kentucky	Madison	82916
+Kentucky	Magoffin	13333
+Kentucky	Marion	19820
+Kentucky	Marshall	31448
+Kentucky	Martin	12929
+Kentucky	Mason	17490
+Kentucky	Meade	28602
+Kentucky	Menifee	6306
+Kentucky	Mercer	21331
+Kentucky	Metcalfe	10099
+Kentucky	Monroe	10963
+Kentucky	Montgomery	26499
+Kentucky	Morgan	13923
+Kentucky	Muhlenberg	31499
+Kentucky	Nelson	43437
+Kentucky	Nicholas	7135
+Kentucky	Ohio	23842
+Kentucky	Oldham	60316
+Kentucky	Owen	10841
+Kentucky	Owsley	4755
+Kentucky	Pendleton	14877
+Kentucky	Perry	28712
+Kentucky	Pike	65024
+Kentucky	Powell	12613
+Kentucky	Pulaski	63063
+Kentucky	Robertson	2282
+Kentucky	Rockcastle	17056
+Kentucky	Rowan	23333
+Kentucky	Russell	17565
+Kentucky	Scott	47173
+Kentucky	Shelby	42074
+Kentucky	Simpson	17327
+Kentucky	Spencer	17061
+Kentucky	Taylor	24512
+Kentucky	Todd	12460
+Kentucky	Trigg	14339
+Kentucky	Trimble	8809
+Kentucky	Union	15007
+Kentucky	Warren	113792
+Kentucky	Washington	11717
+Kentucky	Wayne	20813
+Kentucky	Webster	13621
+Kentucky	Whitley	35637
+Kentucky	Wolfe	7355
+Kentucky	Woodford	24939
+Louisiana	Louisiana	4533372
+Louisiana	Acadia	61773
+Louisiana	Allen	25764
+Louisiana	Ascension	107215
+Louisiana	Assumption	23421
+Louisiana	Avoyelles	42073
+Louisiana	Beauregard	35654
+Louisiana	Bienville	14353
+Louisiana	Bossier	116979
+Louisiana	Caddo	254969
+Louisiana	Calcasieu	192768
+Louisiana	Caldwell	10132
+Louisiana	Cameron	6839
+Louisiana	Catahoula	10407
+Louisiana	Claiborne	17195
+Louisiana	Concordia	20822
+Louisiana	De Soto	26656
+Louisiana	East Baton Rouge	440171
+Louisiana	East Carroll	7759
+Louisiana	East Feliciana	20267
+Louisiana	Evangeline	33984
+Louisiana	Franklin	20767
+Louisiana	Grant	22309
+Louisiana	Iberia	73240
+Louisiana	Iberville	33387
+Louisiana	Jackson	16274
+Louisiana	Jefferson	432552
+Louisiana	Jefferson Davis	31594
+Louisiana	Lafayette	221578
+Louisiana	Lafourche	96318
+Louisiana	LaSalle	14890
+Louisiana	Lincoln	46735
+Louisiana	Livingston	128026
+Louisiana	Madison	12093
+Louisiana	Morehouse	27979
+Louisiana	Natchitoches	39566
+Louisiana	Orleans	343829
+Louisiana	Ouachita	153720
+Louisiana	Plaquemines	23042
+Louisiana	Pointe Coupee	22802
+Louisiana	Rapides	131613
+Louisiana	Red River	9091
+Louisiana	Richland	20725
+Louisiana	Sabine	24233
+Louisiana	St. Bernard	35897
+Louisiana	St. Charles	52780
+Louisiana	St. Helena	11203
+Louisiana	St. James	22102
+Louisiana	St. John the Baptist	45924
+Louisiana	St. Landry	83384
+Louisiana	St. Martin	52160
+Louisiana	St. Mary	54650
+Louisiana	St. Tammany	233740
+Louisiana	Tangipahoa	121097
+Louisiana	Tensas	5252
+Louisiana	Terrebonne	111860
+Louisiana	Union	22721
+Louisiana	Vermilion	57999
+Louisiana	Vernon	52334
+Louisiana	Washington	47168
+Louisiana	Webster	41207
+Louisiana	West Baton Rouge	23788
+Louisiana	West Carroll	11604
+Louisiana	West Feliciana	15625
+Louisiana	Winn	15313
+Maine	Maine	1328361
+Maine	Androscoggin	107702
+Maine	Aroostook	71870
+Maine	Cumberland	281674
+Maine	Franklin	30768
+Maine	Hancock	54418
+Maine	Kennebec	122151
+Maine	Knox	39736
+Maine	Lincoln	34457
+Maine	Oxford	57833
+Maine	Penobscot	153923
+Maine	Piscataquis	17535
+Maine	Sagadahoc	35293
+Maine	Somerset	52228
+Maine	Waldo	38786
+Maine	Washington	32856
+Maine	York	197131
+Maryland	Maryland	5773552
+Maryland	Allegany	75087
+Maryland	Anne Arundel	537656
+Maryland	Baltimore	805029
+Maryland	Calvert	88737
+Maryland	Caroline	33066
+Maryland	Carroll	167134
+Maryland	Cecil	101108
+Maryland	Charles	146551
+Maryland	Dorchester	32618
+Maryland	Frederick	233385
+Maryland	Garrett	30097
+Maryland	Harford	244826
+Maryland	Howard	287085
+Maryland	Kent	20197
+Maryland	Montgomery	971777
+Maryland	Prince George's	863420
+Maryland	Queen Anne's	47798
+Maryland	St. Mary's	105151
+Maryland	Somerset	26470
+Maryland	Talbot	37782
+Maryland	Washington	147430
+Maryland	Wicomico	98733
+Maryland	Worcester	51454
+Maryland	Baltimore city	620961
+Massachusetts	Massachusetts	6547629
+Massachusetts	Barnstable	215888
+Massachusetts	Berkshire	131219
+Massachusetts	Bristol	548285
+Massachusetts	Dukes	16535
+Massachusetts	Essex	743159
+Massachusetts	Franklin	71372
+Massachusetts	Hampden	463490
+Massachusetts	Hampshire	158080
+Massachusetts	Middlesex	1503085
+Massachusetts	Nantucket	10172
+Massachusetts	Norfolk	670850
+Massachusetts	Plymouth	494919
+Massachusetts	Suffolk	722023
+Massachusetts	Worcester	798552
+Michigan	Michigan	9883640
+Michigan	Alcona	10942
+Michigan	Alger	9601
+Michigan	Allegan	111408
+Michigan	Alpena	29598
+Michigan	Antrim	23580
+Michigan	Arenac	15899
+Michigan	Baraga	8860
+Michigan	Barry	59173
+Michigan	Bay	107771
+Michigan	Benzie	17525
+Michigan	Berrien	156813
+Michigan	Branch	45248
+Michigan	Calhoun	136146
+Michigan	Cass	52293
+Michigan	Charlevoix	25949
+Michigan	Cheboygan	26152
+Michigan	Chippewa	38520
+Michigan	Clare	30926
+Michigan	Clinton	75382
+Michigan	Crawford	14074
+Michigan	Delta	37069
+Michigan	Dickinson	26168
+Michigan	Eaton	107759
+Michigan	Emmet	32694
+Michigan	Genesee	425790
+Michigan	Gladwin	25692
+Michigan	Gogebic	16427
+Michigan	Grand Traverse	86986
+Michigan	Gratiot	42476
+Michigan	Hillsdale	46688
+Michigan	Houghton	36628
+Michigan	Huron	33118
+Michigan	Ingham	280895
+Michigan	Ionia	63905
+Michigan	Iosco	25887
+Michigan	Iron	11817
+Michigan	Isabella	70311
+Michigan	Jackson	160248
+Michigan	Kalamazoo	250331
+Michigan	Kalkaska	17153
+Michigan	Kent	602622
+Michigan	Keweenaw	2156
+Michigan	Lake	11539
+Michigan	Lapeer	88319
+Michigan	Leelanau	21708
+Michigan	Lenawee	99892
+Michigan	Livingston	180967
+Michigan	Luce	6631
+Michigan	Mackinac	11113
+Michigan	Macomb	840978
+Michigan	Manistee	24733
+Michigan	Marquette	67077
+Michigan	Mason	28705
+Michigan	Mecosta	42798
+Michigan	Menominee	24029
+Michigan	Midland	83629
+Michigan	Missaukee	14849
+Michigan	Monroe	152021
+Michigan	Montcalm	63342
+Michigan	Montmorency	9765
+Michigan	Muskegon	172188
+Michigan	Newaygo	48460
+Michigan	Oakland	1202362
+Michigan	Oceana	26570
+Michigan	Ogemaw	21699
+Michigan	Ontonagon	6780
+Michigan	Osceola	23528
+Michigan	Oscoda	8640
+Michigan	Otsego	24164
+Michigan	Ottawa	263801
+Michigan	Presque Isle	13376
+Michigan	Roscommon	24449
+Michigan	Saginaw	200169
+Michigan	St. Clair	163040
+Michigan	St. Joseph	61295
+Michigan	Sanilac	43114
+Michigan	Schoolcraft	8485
+Michigan	Shiawassee	70648
+Michigan	Tuscola	55729
+Michigan	Van Buren	76258
+Michigan	Washtenaw	344791
+Michigan	Wayne	1820584
+Michigan	Wexford	32735
+Minnesota	Minnesota	5303925
+Minnesota	Aitkin	16202
+Minnesota	Anoka	330844
+Minnesota	Becker	32504
+Minnesota	Beltrami	44442
+Minnesota	Benton	38451
+Minnesota	Big Stone	5269
+Minnesota	Blue Earth	64013
+Minnesota	Brown	25893
+Minnesota	Carlton	35386
+Minnesota	Carver	91042
+Minnesota	Cass	28567
+Minnesota	Chippewa	12441
+Minnesota	Chisago	53887
+Minnesota	Clay	58999
+Minnesota	Clearwater	8695
+Minnesota	Cook	5176
+Minnesota	Cottonwood	11687
+Minnesota	Crow Wing	62500
+Minnesota	Dakota	398552
+Minnesota	Dodge	20087
+Minnesota	Douglas	36009
+Minnesota	Faribault	14553
+Minnesota	Fillmore	20866
+Minnesota	Freeborn	31255
+Minnesota	Goodhue	46183
+Minnesota	Grant	6018
+Minnesota	Hennepin	1152425
+Minnesota	Houston	19027
+Minnesota	Hubbard	20428
+Minnesota	Isanti	37816
+Minnesota	Itasca	45058
+Minnesota	Jackson	10266
+Minnesota	Kanabec	16239
+Minnesota	Kandiyohi	42239
+Minnesota	Kittson	4552
+Minnesota	Koochiching	13311
+Minnesota	Lac qui Parle	7259
+Minnesota	Lake	10866
+Minnesota	Lake of the Woods	4045
+Minnesota	Le Sueur	27703
+Minnesota	Lincoln	5896
+Minnesota	Lyon	25857
+Minnesota	McLeod	36651
+Minnesota	Mahnomen	5413
+Minnesota	Marshall	9439
+Minnesota	Martin	20840
+Minnesota	Meeker	23300
+Minnesota	Mille Lacs	26097
+Minnesota	Morrison	33198
+Minnesota	Mower	39163
+Minnesota	Murray	8725
+Minnesota	Nicollet	32727
+Minnesota	Nobles	21378
+Minnesota	Norman	6852
+Minnesota	Olmsted	144248
+Minnesota	Otter Tail	57303
+Minnesota	Pennington	13930
+Minnesota	Pine	29750
+Minnesota	Pipestone	9596
+Minnesota	Polk	31600
+Minnesota	Pope	10995
+Minnesota	Ramsey	508640
+Minnesota	Red Lake	4089
+Minnesota	Redwood	16059
+Minnesota	Renville	15730
+Minnesota	Rice	64142
+Minnesota	Rock	9687
+Minnesota	Roseau	15629
+Minnesota	St. Louis	200226
+Minnesota	Scott	129928
+Minnesota	Sherburne	88499
+Minnesota	Sibley	15226
+Minnesota	Stearns	150642
+Minnesota	Steele	36576
+Minnesota	Stevens	9726
+Minnesota	Swift	9783
+Minnesota	Todd	24895
+Minnesota	Traverse	3558
+Minnesota	Wabasha	21676
+Minnesota	Wadena	13843
+Minnesota	Waseca	19136
+Minnesota	Washington	238136
+Minnesota	Watonwan	11211
+Minnesota	Wilkin	6576
+Minnesota	Winona	51461
+Minnesota	Wright	124700
+Minnesota	Yellow Medicine	10438
+Mississippi	Mississippi	2967297
+Mississippi	Adams	32297
+Mississippi	Alcorn	37057
+Mississippi	Amite	13131
+Mississippi	Attala	19564
+Mississippi	Benton	8729
+Mississippi	Bolivar	34145
+Mississippi	Calhoun	14962
+Mississippi	Carroll	10597
+Mississippi	Chickasaw	17392
+Mississippi	Choctaw	8547
+Mississippi	Claiborne	9604
+Mississippi	Clarke	16732
+Mississippi	Clay	20634
+Mississippi	Coahoma	26151
+Mississippi	Copiah	29449
+Mississippi	Covington	19568
+Mississippi	DeSoto	161252
+Mississippi	Forrest	74934
+Mississippi	Franklin	8118
+Mississippi	George	22578
+Mississippi	Greene	14400
+Mississippi	Grenada	21906
+Mississippi	Hancock	43929
+Mississippi	Harrison	187105
+Mississippi	Hinds	245285
+Mississippi	Holmes	19198
+Mississippi	Humphreys	9375
+Mississippi	Issaquena	1406
+Mississippi	Itawamba	23401
+Mississippi	Jackson	139668
+Mississippi	Jasper	17062
+Mississippi	Jefferson	7726
+Mississippi	Jefferson Davis	12487
+Mississippi	Jones	67761
+Mississippi	Kemper	10456
+Mississippi	Lafayette	47351
+Mississippi	Lamar	55658
+Mississippi	Lauderdale	80261
+Mississippi	Lawrence	12929
+Mississippi	Leake	23805
+Mississippi	Lee	82910
+Mississippi	Leflore	32317
+Mississippi	Lincoln	34869
+Mississippi	Lowndes	59779
+Mississippi	Madison	95203
+Mississippi	Marion	27088
+Mississippi	Marshall	37144
+Mississippi	Monroe	36989
+Mississippi	Montgomery	10925
+Mississippi	Neshoba	29676
+Mississippi	Newton	21720
+Mississippi	Noxubee	11545
+Mississippi	Oktibbeha	47671
+Mississippi	Panola	34707
+Mississippi	Pearl River	55834
+Mississippi	Perry	12250
+Mississippi	Pike	40404
+Mississippi	Pontotoc	29957
+Mississippi	Prentiss	25276
+Mississippi	Quitman	8223
+Mississippi	Rankin	141617
+Mississippi	Scott	28264
+Mississippi	Sharkey	4916
+Mississippi	Simpson	27503
+Mississippi	Smith	16491
+Mississippi	Stone	17786
+Mississippi	Sunflower	29450
+Mississippi	Tallahatchie	15378
+Mississippi	Tate	28886
+Mississippi	Tippah	22232
+Mississippi	Tishomingo	19593
+Mississippi	Tunica	10778
+Mississippi	Union	27134
+Mississippi	Walthall	15443
+Mississippi	Warren	48773
+Mississippi	Washington	51137
+Mississippi	Wayne	20747
+Mississippi	Webster	10253
+Mississippi	Wilkinson	9878
+Mississippi	Winston	19198
+Mississippi	Yalobusha	12678
+Mississippi	Yazoo	28065
+Missouri	Missouri	5988927
+Missouri	Kansas City	488943	
+
+Missouri	Adair	25607
+Missouri	Andrew	17291
+Missouri	Atchison	5685
+Missouri	Audrain	25529
+Missouri	Barry	35597
+Missouri	Barton	12402
+Missouri	Bates	17049
+Missouri	Benton	19056
+Missouri	Bollinger	12363
+Missouri	Boone	162642
+Missouri	Buchanan	89201
+Missouri	Butler	42794
+Missouri	Caldwell	9424
+Missouri	Callaway	44332
+Missouri	Camden	44002
+Missouri	Cape Girardeau	75674
+Missouri	Carroll	9295
+Missouri	Carter	6265
+Missouri	Cass	99478
+Missouri	Cedar	13982
+Missouri	Chariton	7831
+Missouri	Christian	77422
+Missouri	Clark	7139
+Missouri	Clay	221939
+Missouri	Clinton	20743
+Missouri	Cole	75990
+Missouri	Cooper	17601
+Missouri	Crawford	24696
+Missouri	Dade	7883
+Missouri	Dallas	16777
+Missouri	Daviess	8433
+Missouri	DeKalb	12892
+Missouri	Dent	15657
+Missouri	Douglas	13684
+Missouri	Dunklin	31953
+Missouri	Franklin	101492
+Missouri	Gasconade	15222
+Missouri	Gentry	6738
+Missouri	Greene	275174
+Missouri	Grundy	10261
+Missouri	Harrison	8957
+Missouri	Henry	22272
+Missouri	Hickory	9627
+Missouri	Holt	4912
+Missouri	Howard	10144
+Missouri	Howell	40400
+Missouri	Iron	10630
+Missouri	Jackson	674158
+Missouri	Jasper	117404
+Missouri	Jefferson	218733
+Missouri	Johnson	52595
+Missouri	Knox	4131
+Missouri	Laclede	35571
+Missouri	Lafayette	33381
+Missouri	Lawrence	38634
+Missouri	Lewis	10211
+Missouri	Lincoln	52566
+Missouri	Linn	12761
+Missouri	Livingston	15195
+Missouri	McDonald	23083
+Missouri	Macon	15566
+Missouri	Madison	12226
+Missouri	Maries	9176
+Missouri	Marion	28781
+Missouri	Mercer	3785
+Missouri	Miller	24748
+Missouri	Mississippi	14358
+Missouri	Moniteau	15607
+Missouri	Monroe	8840
+Missouri	Montgomery	12236
+Missouri	Morgan	20565
+Missouri	New Madrid	18956
+Missouri	Newton	58114
+Missouri	Nodaway	23370
+Missouri	Oregon	10881
+Missouri	Osage	13878
+Missouri	Ozark	9723
+Missouri	Pemiscot	18296
+Missouri	Perry	18971
+Missouri	Pettis	42201
+Missouri	Phelps	45156
+Missouri	Pike	18516
+Missouri	Platte	89322
+Missouri	Polk	31137
+Missouri	Pulaski	52274
+Missouri	Putnam	4979
+Missouri	Ralls	10167
+Missouri	Randolph	25414
+Missouri	Ray	23494
+Missouri	Reynolds	6696
+Missouri	Ripley	14100
+Missouri	St. Charles	360485
+Missouri	St. Clair	9805
+Missouri	Ste. Genevieve	18145
+Missouri	St. Francois	65359
+Missouri	St. Louis	998954
+Missouri	Saline	23370
+Missouri	Schuyler	4431
+Missouri	Scotland	4843
+Missouri	Scott	39191
+Missouri	Shannon	8441
+Missouri	Shelby	6373
+Missouri	Stoddard	29968
+Missouri	Stone	32202
+Missouri	Sullivan	6714
+Missouri	Taney	51675
+Missouri	Texas	26008
+Missouri	Vernon	21159
+Missouri	Warren	32513
+Missouri	Washington	25195
+Missouri	Wayne	13521
+Missouri	Webster	36202
+Missouri	Worth	2171
+Missouri	Wright	18815
+Missouri	St. Louis city	319294
+Montana	Montana	989415
+Montana	Beaverhead	9246
+Montana	Big Horn	12865
+Montana	Blaine	6491
+Montana	Broadwater	5612
+Montana	Carbon	10078
+Montana	Carter	1160
+Montana	Cascade	81327
+Montana	Chouteau	5813
+Montana	Custer	11699
+Montana	Daniels	1751
+Montana	Dawson	8966
+Montana	Deer Lodge	9298
+Montana	Fallon	2890
+Montana	Fergus	11586
+Montana	Flathead	90928
+Montana	Gallatin	89513
+Montana	Garfield	1206
+Montana	Glacier	13399
+Montana	Golden Valley	884
+Montana	Granite	3079
+Montana	Hill	16096
+Montana	Jefferson	11406
+Montana	Judith Basin	2072
+Montana	Lake	28746
+Montana	Lewis and Clark	63395
+Montana	Liberty	2339
+Montana	Lincoln	19687
+Montana	McCone	1734
+Montana	Madison	7691
+Montana	Meagher	1891
+Montana	Mineral	4223
+Montana	Missoula	109299
+Montana	Musselshell	4538
+Montana	Park	15636
+Montana	Petroleum	494
+Montana	Phillips	4253
+Montana	Pondera	6153
+Montana	Powder River	1743
+Montana	Powell	7027
+Montana	Prairie	1179
+Montana	Ravalli	40212
+Montana	Richland	9746
+Montana	Roosevelt	10425
+Montana	Rosebud	9233
+Montana	Sanders	11413
+Montana	Sheridan	3384
+Montana	Silver Bow	34200
+Montana	Stillwater	9117
+Montana	Sweet Grass	3651
+Montana	Teton	6073
+Montana	Toole	5324
+Montana	Treasure	718
+Montana	Valley	7369
+Montana	Wheatland	2168
+Montana	Wibaux	1017
+Montana	Yellowstone	147972
+Nebraska	Nebraska	1826341
+Nebraska	Adams	31364
+Nebraska	Antelope	6685
+Nebraska	Arthur	460
+Nebraska	Banner	690
+Nebraska	Blaine	478
+Nebraska	Boone	5505
+Nebraska	Box Butte	11308
+Nebraska	Boyd	2099
+Nebraska	Brown	3145
+Nebraska	Buffalo	46102
+Nebraska	Burt	6858
+Nebraska	Butler	8395
+Nebraska	Cass	25241
+Nebraska	Cedar	8852
+Nebraska	Chase	3966
+Nebraska	Cherry	5713
+Nebraska	Cheyenne	9998
+Nebraska	Clay	6542
+Nebraska	Colfax	10515
+Nebraska	Cuming	9139
+Nebraska	Custer	10939
+Nebraska	Dakota	21006
+Nebraska	Dawes	9182
+Nebraska	Dawson	24326
+Nebraska	Deuel	1941
+Nebraska	Dixon	6000
+Nebraska	Dodge	36691
+Nebraska	Douglas	517110
+Nebraska	Dundy	2008
+Nebraska	Fillmore	5890
+Nebraska	Franklin	3225
+Nebraska	Frontier	2756
+Nebraska	Furnas	4959
+Nebraska	Gage	22311
+Nebraska	Garden	2057
+Nebraska	Garfield	2049
+Nebraska	Gosper	2044
+Nebraska	Grant	614
+Nebraska	Greeley	2538
+Nebraska	Hall	58607
+Nebraska	Hamilton	9124
+Nebraska	Harlan	3423
+Nebraska	Hayes	967
+Nebraska	Hitchcock	2908
+Nebraska	Holt	10435
+Nebraska	Hooker	736
+Nebraska	Howard	6274
+Nebraska	Jefferson	7547
+Nebraska	Johnson	5217
+Nebraska	Kearney	6489
+Nebraska	Keith	8368
+Nebraska	Keya Paha	824
+Nebraska	Kimball	3821
+Nebraska	Knox	8701
+Nebraska	Lancaster	285407
+Nebraska	Lincoln	36288
+Nebraska	Logan	763
+Nebraska	Loup	632
+Nebraska	McPherson	539
+Nebraska	Madison	34876
+Nebraska	Merrick	7845
+Nebraska	Morrill	5042
+Nebraska	Nance	3735
+Nebraska	Nemaha	7248
+Nebraska	Nuckolls	4500
+Nebraska	Otoe	15740
+Nebraska	Pawnee	2773
+Nebraska	Perkins	2970
+Nebraska	Phelps	9188
+Nebraska	Pierce	7266
+Nebraska	Platte	32237
+Nebraska	Polk	5406
+Nebraska	Red Willow	11055
+Nebraska	Richardson	8363
+Nebraska	Rock	1526
+Nebraska	Saline	14200
+Nebraska	Sarpy	158840
+Nebraska	Saunders	20780
+Nebraska	Scotts Bluff	36970
+Nebraska	Seward	16750
+Nebraska	Sheridan	5469
+Nebraska	Sherman	3152
+Nebraska	Sioux	1311
+Nebraska	Stanton	6129
+Nebraska	Thayer	5228
+Nebraska	Thomas	647
+Nebraska	Thurston	6940
+Nebraska	Valley	4260
+Nebraska	Washington	20234
+Nebraska	Wayne	9595
+Nebraska	Webster	3812
+Nebraska	Wheeler	818
+Nebraska	York	13665
+Nevada	Nevada	2700551
+Nevada	Churchill	24877
+Nevada	Clark	1951269
+Nevada	Douglas	46997
+Nevada	Elko	48818
+Nevada	Esmeralda	783
+Nevada	Eureka	1987
+Nevada	Humboldt	16528
+Nevada	Lander	5775
+Nevada	Lincoln	5345
+Nevada	Lyon	51980
+Nevada	Mineral	4772
+Nevada	Nye	43946
+Nevada	Pershing	6753
+Nevada	Storey	4010
+Nevada	Washoe	421407
+Nevada	White Pine	10030
+Nevada	Carson City	55274
+New Hampshire	New Hampshire	1316470
+New Hampshire	Belknap	60088
+New Hampshire	Carroll	47818
+New Hampshire	Cheshire	77117
+New Hampshire	Coos	33055
+New Hampshire	Grafton	89118
+New Hampshire	Hillsborough	400721
+New Hampshire	Merrimack	146445
+New Hampshire	Rockingham	295223
+New Hampshire	Strafford	123143
+New Hampshire	Sullivan	43742
+New Jersey	New Jersey	8791894
+New Jersey	Atlantic	274549
+New Jersey	Bergen	905116
+New Jersey	Burlington	448734
+New Jersey	Camden	513657
+New Jersey	Cape May	97265
+New Jersey	Cumberland	156898
+New Jersey	Essex	783969
+New Jersey	Gloucester	288288
+New Jersey	Hudson	634266
+New Jersey	Hunterdon	128349
+New Jersey	Mercer	366513
+New Jersey	Middlesex	809858
+New Jersey	Monmouth	630380
+New Jersey	Morris	492276
+New Jersey	Ocean	576567
+New Jersey	Passaic	501226
+New Jersey	Salem	66083
+New Jersey	Somerset	323444
+New Jersey	Sussex	149265
+New Jersey	Union	536499
+New Jersey	Warren	108692
+New Mexico	New Mexico	2059179
+New Mexico	Bernalillo	662564
+New Mexico	Catron	3725
+New Mexico	Chaves	65645
+New Mexico	Cibola	27213
+New Mexico	Colfax	13750
+New Mexico	Curry	48376
+New Mexico	De Baca	2022
+New Mexico	Doña Ana	209233
+New Mexico	Eddy	53829
+New Mexico	Grant	29514
+New Mexico	Guadalupe	4687
+New Mexico	Harding	695
+New Mexico	Hidalgo	4894
+New Mexico	Lea	64727
+New Mexico	Lincoln	20497
+New Mexico	Los Alamos	17950
+New Mexico	Luna	25095
+New Mexico	McKinley	71492
+New Mexico	Mora	4881
+New Mexico	Otero	63797
+New Mexico	Quay	9041
+New Mexico	Rio Arriba	40246
+New Mexico	Roosevelt	19846
+New Mexico	Sandoval	131561
+New Mexico	San Juan	130044
+New Mexico	San Miguel	29393
+New Mexico	Santa Fe	144170
+New Mexico	Sierra	11988
+New Mexico	Socorro	17866
+New Mexico	Taos	32937
+New Mexico	Torrance	16383
+New Mexico	Union	4549
+New Mexico	Valencia	76569
+New York	New York City	8623000
+New York	New York	19378102
+New York	Albany	304204
+New York	Allegany	48946
+New York	Bronx	1385108
+New York	Broome	200600
+New York	Cattaraugus	80317
+New York	Cayuga	80026
+New York	Chautauqua	134905
+New York	Chemung	88830
+New York	Chenango	50477
+New York	Clinton	82128
+New York	Columbia	63096
+New York	Cortland	49336
+New York	Delaware	47980
+New York	Dutchess	297488
+New York	Erie	919040
+New York	Essex	39370
+New York	Franklin	51599
+New York	Fulton	55531
+New York	Genesee	60079
+New York	Greene	49221
+New York	Hamilton	4836
+New York	Herkimer	64519
+New York	Jefferson	116229
+New York	Kings	2504700
+New York	Lewis	27087
+New York	Livingston	65393
+New York	Madison	73442
+New York	Monroe	744344
+New York	Montgomery	50219
+New York	Nassau	1339532
+New York	New York 	1585873
+New York	Niagara	216469
+New York	Oneida	234878
+New York	Onondaga	467026
+New York	Ontario	107931
+New York	Orange	372813
+New York	Orleans	42883
+New York	Oswego	122109
+New York	Otsego	62259
+New York	Putnam	99710
+New York	Queens	2230722
+New York	Rensselaer	159429
+New York	Richmond	468730
+New York	Rockland	311687
+New York	St. Lawrence	111944
+New York	Saratoga	219607
+New York	Schenectady	154727
+New York	Schoharie	32749
+New York	Schuyler	18343
+New York	Seneca	35251
+New York	Steuben	98990
+New York	Suffolk	1493350
+New York	Sullivan	77547
+New York	Tioga	51125
+New York	Tompkins	101564
+New York	Ulster	182493
+New York	Warren	65707
+New York	Washington	63216
+New York	Wayne	93772
+New York	Westchester	949113
+New York	Wyoming	42155
+New York	Yates	25348
+North Carolina	North Carolina	9535483
+North Carolina	Alamance	151131
+North Carolina	Alexander	37198
+North Carolina	Alleghany	11155
+North Carolina	Anson	26948
+North Carolina	Ashe	27281
+North Carolina	Avery	17797
+North Carolina	Beaufort	47759
+North Carolina	Bertie	21282
+North Carolina	Bladen	35190
+North Carolina	Brunswick	107431
+North Carolina	Buncombe	238318
+North Carolina	Burke	90912
+North Carolina	Cabarrus	178011
+North Carolina	Caldwell	83029
+North Carolina	Camden	9980
+North Carolina	Carteret	66469
+North Carolina	Caswell	23719
+North Carolina	Catawba	154358
+North Carolina	Chatham	63505
+North Carolina	Cherokee	27444
+North Carolina	Chowan	14793
+North Carolina	Clay	10587
+North Carolina	Cleveland	98078
+North Carolina	Columbus	58098
+North Carolina	Craven	103505
+North Carolina	Cumberland	319431
+North Carolina	Currituck	23547
+North Carolina	Dare	33920
+North Carolina	Davidson	162878
+North Carolina	Davie	41240
+North Carolina	Duplin	58505
+North Carolina	Durham	267587
+North Carolina	Edgecombe	56552
+North Carolina	Forsyth	350670
+North Carolina	Franklin	60619
+North Carolina	Gaston	206086
+North Carolina	Gates	12197
+North Carolina	Graham	8861
+North Carolina	Granville	59916
+North Carolina	Greene	21362
+North Carolina	Guilford	488406
+North Carolina	Halifax	54691
+North Carolina	Harnett	114678
+North Carolina	Haywood	59036
+North Carolina	Henderson	106740
+North Carolina	Hertford	24669
+North Carolina	Hoke	46952
+North Carolina	Hyde	5810
+North Carolina	Iredell	159437
+North Carolina	Jackson	40271
+North Carolina	Johnston	168878
+North Carolina	Jones	10153
+North Carolina	Lee	57866
+North Carolina	Lenoir	59495
+North Carolina	Lincoln	78265
+North Carolina	McDowell	44996
+North Carolina	Macon	33922
+North Carolina	Madison	20764
+North Carolina	Martin	24505
+North Carolina	Mecklenburg	919628
+North Carolina	Mitchell	15579
+North Carolina	Montgomery	27798
+North Carolina	Moore	88247
+North Carolina	Nash	95840
+North Carolina	New Hanover	202667
+North Carolina	Northampton	22099
+North Carolina	Onslow	177772
+North Carolina	Orange	133801
+North Carolina	Pamlico	13144
+North Carolina	Pasquotank	40661
+North Carolina	Pender	52217
+North Carolina	Perquimans	13453
+North Carolina	Person	39464
+North Carolina	Pitt	168148
+North Carolina	Polk	20510
+North Carolina	Randolph	141752
+North Carolina	Richmond	46639
+North Carolina	Robeson	134168
+North Carolina	Rockingham	93643
+North Carolina	Rowan	138428
+North Carolina	Rutherford	67810
+North Carolina	Sampson	63431
+North Carolina	Scotland	36157
+North Carolina	Stanly	60585
+North Carolina	Stokes	47401
+North Carolina	Surry	73673
+North Carolina	Swain	13981
+North Carolina	Transylvania	33090
+North Carolina	Tyrrell	4407
+North Carolina	Union	201292
+North Carolina	Vance	45422
+North Carolina	Wake	900993
+North Carolina	Warren	20972
+North Carolina	Washington	13228
+North Carolina	Watauga	51079
+North Carolina	Wayne	122623
+North Carolina	Wilkes	69340
+North Carolina	Wilson	81234
+North Carolina	Yadkin	38406
+North Carolina	Yancey	17818
+North Dakota	North Dakota	672591
+North Dakota	Adams	2343
+North Dakota	Barnes	11066
+North Dakota	Benson	6660
+North Dakota	Billings	783
+North Dakota	Bottineau	6429
+North Dakota	Bowman	3151
+North Dakota	Burke	1968
+North Dakota	Burleigh	81308
+North Dakota	Cass	149778
+North Dakota	Cavalier	3993
+North Dakota	Dickey	5289
+North Dakota	Divide	2071
+North Dakota	Dunn	3536
+North Dakota	Eddy	2385
+North Dakota	Emmons	3550
+North Dakota	Foster	3343
+North Dakota	Golden Valley	1680
+North Dakota	Grand Forks	66861
+North Dakota	Grant	2394
+North Dakota	Griggs	2420
+North Dakota	Hettinger	2477
+North Dakota	Kidder	2435
+North Dakota	LaMoure	4139
+North Dakota	Logan	1990
+North Dakota	McHenry	5395
+North Dakota	McIntosh	2809
+North Dakota	McKenzie	6360
+North Dakota	McLean	8962
+North Dakota	Mercer	8424
+North Dakota	Morton	27471
+North Dakota	Mountrail	7673
+North Dakota	Nelson	3126
+North Dakota	Oliver	1846
+North Dakota	Pembina	7413
+North Dakota	Pierce	4357
+North Dakota	Ramsey	11451
+North Dakota	Ransom	5457
+North Dakota	Renville	2470
+North Dakota	Richland	16321
+North Dakota	Rolette	13937
+North Dakota	Sargent	3829
+North Dakota	Sheridan	1321
+North Dakota	Sioux	4153
+North Dakota	Slope	727
+North Dakota	Stark	24199
+North Dakota	Steele	1975
+North Dakota	Stutsman	21100
+North Dakota	Towner	2246
+North Dakota	Traill	8121
+North Dakota	Walsh	11119
+North Dakota	Ward	61675
+North Dakota	Wells	4207
+North Dakota	Williams	22398
+Ohio	Ohio	11536504
+Ohio	Adams	28550
+Ohio	Allen	106331
+Ohio	Ashland	53139
+Ohio	Ashtabula	101497
+Ohio	Athens	64757
+Ohio	Auglaize	45949
+Ohio	Belmont	70400
+Ohio	Brown	44846
+Ohio	Butler	368130
+Ohio	Carroll	28836
+Ohio	Champaign	40097
+Ohio	Clark	138333
+Ohio	Clermont	197363
+Ohio	Clinton	42040
+Ohio	Columbiana	107841
+Ohio	Coshocton	36901
+Ohio	Crawford	43784
+Ohio	Cuyahoga	1280122
+Ohio	Darke	52959
+Ohio	Defiance	39037
+Ohio	Delaware	174214
+Ohio	Erie	77079
+Ohio	Fairfield	146156
+Ohio	Fayette	29030
+Ohio	Franklin	1163414
+Ohio	Fulton	42698
+Ohio	Gallia	30934
+Ohio	Geauga	93389
+Ohio	Greene	161573
+Ohio	Guernsey	40087
+Ohio	Hamilton	802374
+Ohio	Hancock	74782
+Ohio	Hardin	32058
+Ohio	Harrison	15864
+Ohio	Henry	28215
+Ohio	Highland	43589
+Ohio	Hocking	29380
+Ohio	Holmes	42366
+Ohio	Huron	59626
+Ohio	Jackson	33225
+Ohio	Jefferson	69709
+Ohio	Knox	60921
+Ohio	Lake	230041
+Ohio	Lawrence	62450
+Ohio	Licking	166492
+Ohio	Logan	45858
+Ohio	Lorain	301356
+Ohio	Lucas	441815
+Ohio	Madison	43435
+Ohio	Mahoning	238823
+Ohio	Marion	66501
+Ohio	Medina	172332
+Ohio	Meigs	23770
+Ohio	Mercer	40814
+Ohio	Miami	102506
+Ohio	Monroe	14642
+Ohio	Montgomery	535153
+Ohio	Morgan	15054
+Ohio	Morrow	34827
+Ohio	Muskingum	86074
+Ohio	Noble	14645
+Ohio	Ottawa	41428
+Ohio	Paulding	19614
+Ohio	Perry	36058
+Ohio	Pickaway	55698
+Ohio	Pike	28709
+Ohio	Portage	161419
+Ohio	Preble	42270
+Ohio	Putnam	34499
+Ohio	Richland	124475
+Ohio	Ross	78064
+Ohio	Sandusky	60944
+Ohio	Scioto	79499
+Ohio	Seneca	56745
+Ohio	Shelby	49423
+Ohio	Stark	375586
+Ohio	Summit	541781
+Ohio	Trumbull	210312
+Ohio	Tuscarawas	92582
+Ohio	Union	52300
+Ohio	Van Wert	28744
+Ohio	Vinton	13435
+Ohio	Warren	212693
+Ohio	Washington	61778
+Ohio	Wayne	114520
+Ohio	Williams	37642
+Ohio	Wood	125488
+Ohio	Wyandot	22615
+Oklahoma	Oklahoma	3751351
+Oklahoma	Adair	22683
+Oklahoma	Alfalfa	5642
+Oklahoma	Atoka	14182
+Oklahoma	Beaver	5636
+Oklahoma	Beckham	22119
+Oklahoma	Blaine	11943
+Oklahoma	Bryan	42416
+Oklahoma	Caddo	29600
+Oklahoma	Canadian	115541
+Oklahoma	Carter	47557
+Oklahoma	Cherokee	46987
+Oklahoma	Choctaw	15205
+Oklahoma	Cimarron	2475
+Oklahoma	Cleveland	255755
+Oklahoma	Coal	5925
+Oklahoma	Comanche	124098
+Oklahoma	Cotton	6193
+Oklahoma	Craig	15029
+Oklahoma	Creek	69967
+Oklahoma	Custer	27469
+Oklahoma	Delaware	41487
+Oklahoma	Dewey	4810
+Oklahoma	Ellis	4151
+Oklahoma	Garfield	60580
+Oklahoma	Garvin	27576
+Oklahoma	Grady	52431
+Oklahoma	Grant	4527
+Oklahoma	Greer	6239
+Oklahoma	Harmon	2922
+Oklahoma	Harper	3685
+Oklahoma	Haskell	12769
+Oklahoma	Hughes	14003
+Oklahoma	Jackson	26446
+Oklahoma	Jefferson	6472
+Oklahoma	Johnston	10957
+Oklahoma	Kay	46562
+Oklahoma	Kingfisher	15034
+Oklahoma	Kiowa	9446
+Oklahoma	Latimer	11154
+Oklahoma	Le Flore	50384
+Oklahoma	Lincoln	34273
+Oklahoma	Logan	41848
+Oklahoma	Love	9423
+Oklahoma	McClain	34506
+Oklahoma	McCurtain	33151
+Oklahoma	McIntosh	20252
+Oklahoma	Major	7527
+Oklahoma	Marshall	15840
+Oklahoma	Mayes	41259
+Oklahoma	Murray	13488
+Oklahoma	Muskogee	70990
+Oklahoma	Noble	11561
+Oklahoma	Nowata	10536
+Oklahoma	Okfuskee	12191
+Oklahoma	Oklahoma	718633
+Oklahoma	Okmulgee	40069
+Oklahoma	Osage	47472
+Oklahoma	Ottawa	31848
+Oklahoma	Pawnee	16577
+Oklahoma	Payne	77350
+Oklahoma	Pittsburg	45837
+Oklahoma	Pontotoc	37492
+Oklahoma	Pottawatomie	69442
+Oklahoma	Pushmataha	11572
+Oklahoma	Roger Mills	3647
+Oklahoma	Rogers	86905
+Oklahoma	Seminole	25482
+Oklahoma	Sequoyah	42391
+Oklahoma	Stephens	45048
+Oklahoma	Texas	20640
+Oklahoma	Tillman	7992
+Oklahoma	Tulsa	603403
+Oklahoma	Wagoner	73085
+Oklahoma	Washington	50976
+Oklahoma	Washita	11629
+Oklahoma	Woods	8878
+Oklahoma	Woodward	20081
+Oregon	Oregon	3831074
+Oregon	Baker	16134
+Oregon	Benton	85579
+Oregon	Clackamas	375992
+Oregon	Clatsop	37039
+Oregon	Columbia	49351
+Oregon	Coos	63043
+Oregon	Crook	20978
+Oregon	Curry	22364
+Oregon	Deschutes	157733
+Oregon	Douglas	107667
+Oregon	Gilliam	1871
+Oregon	Grant	7445
+Oregon	Harney	7422
+Oregon	Hood River	22346
+Oregon	Jackson	203206
+Oregon	Jefferson	21720
+Oregon	Josephine	82713
+Oregon	Klamath	66380
+Oregon	Lake	7895
+Oregon	Lane	351715
+Oregon	Lincoln	46034
+Oregon	Linn	116672
+Oregon	Malheur	31313
+Oregon	Marion	315335
+Oregon	Morrow	11173
+Oregon	Multnomah	735334
+Oregon	Polk	75403
+Oregon	Sherman	1765
+Oregon	Tillamook	25250
+Oregon	Umatilla	75889
+Oregon	Union	25748
+Oregon	Wallowa	7008
+Oregon	Wasco	25213
+Oregon	Washington	529710
+Oregon	Wheeler	1441
+Oregon	Yamhill	99193
+Pennsylvania	Pennsylvania	12702379
+Pennsylvania	Adams	101407
+Pennsylvania	Allegheny	1223348
+Pennsylvania	Armstrong	68941
+Pennsylvania	Beaver	170539
+Pennsylvania	Bedford	49762
+Pennsylvania	Berks	411442
+Pennsylvania	Blair	127089
+Pennsylvania	Bradford	62622
+Pennsylvania	Bucks	625249
+Pennsylvania	Butler	183862
+Pennsylvania	Cambria	143679
+Pennsylvania	Cameron	5085
+Pennsylvania	Carbon	65249
+Pennsylvania	Centre	153990
+Pennsylvania	Chester	498886
+Pennsylvania	Clarion	39988
+Pennsylvania	Clearfield	81642
+Pennsylvania	Clinton	39238
+Pennsylvania	Columbia	67295
+Pennsylvania	Crawford	88765
+Pennsylvania	Cumberland	235406
+Pennsylvania	Dauphin	268100
+Pennsylvania	Delaware	558979
+Pennsylvania	Elk	31946
+Pennsylvania	Erie	280566
+Pennsylvania	Fayette	136606
+Pennsylvania	Forest	7716
+Pennsylvania	Franklin	149618
+Pennsylvania	Fulton	14845
+Pennsylvania	Greene	38686
+Pennsylvania	Huntingdon	45913
+Pennsylvania	Indiana	88880
+Pennsylvania	Jefferson	45200
+Pennsylvania	Juniata	24636
+Pennsylvania	Lackawanna	214437
+Pennsylvania	Lancaster	519445
+Pennsylvania	Lawrence	91108
+Pennsylvania	Lebanon	133568
+Pennsylvania	Lehigh	349497
+Pennsylvania	Luzerne	320918
+Pennsylvania	Lycoming	116111
+Pennsylvania	McKean	43450
+Pennsylvania	Mercer	116638
+Pennsylvania	Mifflin	46682
+Pennsylvania	Monroe	169842
+Pennsylvania	Montgomery	799874
+Pennsylvania	Montour	18267
+Pennsylvania	Northampton	297735
+Pennsylvania	Northumberland	94528
+Pennsylvania	Perry	45969
+Pennsylvania	Philadelphia	1526006
+Pennsylvania	Pike	57369
+Pennsylvania	Potter	17457
+Pennsylvania	Schuylkill	148289
+Pennsylvania	Snyder	39702
+Pennsylvania	Somerset	77742
+Pennsylvania	Sullivan	6428
+Pennsylvania	Susquehanna	43356
+Pennsylvania	Tioga	41981
+Pennsylvania	Union	44947
+Pennsylvania	Venango	54984
+Pennsylvania	Warren	41815
+Pennsylvania	Washington	207820
+Pennsylvania	Wayne	52822
+Pennsylvania	Westmoreland	365169
+Pennsylvania	Wyoming	28276
+Pennsylvania	York	434972
+Rhode Island	Rhode Island	1052567
+Rhode Island	Bristol	49875
+Rhode Island	Kent	166158
+Rhode Island	Newport	82888
+Rhode Island	Providence	626667
+Rhode Island	Washington	126979
+South Carolina	South Carolina	4625364
+South Carolina	Abbeville	25417
+South Carolina	Aiken	160099
+South Carolina	Allendale	10419
+South Carolina	Anderson	187126
+South Carolina	Bamberg	15987
+South Carolina	Barnwell	22621
+South Carolina	Beaufort	162233
+South Carolina	Berkeley	177843
+South Carolina	Calhoun	15175
+South Carolina	Charleston	350209
+South Carolina	Cherokee	55342
+South Carolina	Chester	33140
+South Carolina	Chesterfield	46734
+South Carolina	Clarendon	34971
+South Carolina	Colleton	38892
+South Carolina	Darlington	68681
+South Carolina	Dillon	32062
+South Carolina	Dorchester	136555
+South Carolina	Edgefield	26985
+South Carolina	Fairfield	23956
+South Carolina	Florence	136885
+South Carolina	Georgetown	60158
+South Carolina	Greenville	451225
+South Carolina	Greenwood	69661
+South Carolina	Hampton	21090
+South Carolina	Horry	269291
+South Carolina	Jasper	24777
+South Carolina	Kershaw	61697
+South Carolina	Lancaster	76652
+South Carolina	Laurens	66537
+South Carolina	Lee	19220
+South Carolina	Lexington	262391
+South Carolina	McCormick	10233
+South Carolina	Marion	33062
+South Carolina	Marlboro	28933
+South Carolina	Newberry	37508
+South Carolina	Oconee	74273
+South Carolina	Orangeburg	92501
+South Carolina	Pickens	119224
+South Carolina	Richland	384504
+South Carolina	Saluda	19875
+South Carolina	Spartanburg	284307
+South Carolina	Sumter	107456
+South Carolina	Union	28961
+South Carolina	Williamsburg	34423
+South Carolina	York	226073
+South Dakota	South Dakota	814180
+South Dakota	Aurora	2710
+South Dakota	Beadle	17398
+South Dakota	Bennett	3431
+South Dakota	Bon Homme	7070
+South Dakota	Brookings	31965
+South Dakota	Brown	36531
+South Dakota	Brule	5255
+South Dakota	Buffalo	1912
+South Dakota	Butte	10110
+South Dakota	Campbell	1466
+South Dakota	Charles Mix	9129
+South Dakota	Clark	3691
+South Dakota	Clay	13864
+South Dakota	Codington	27227
+South Dakota	Corson	4050
+South Dakota	Custer	8216
+South Dakota	Davison	19504
+South Dakota	Day	5710
+South Dakota	Deuel	4364
+South Dakota	Dewey	5301
+South Dakota	Douglas	3002
+South Dakota	Edmunds	4071
+South Dakota	Fall River	7094
+South Dakota	Faulk	2364
+South Dakota	Grant	7356
+South Dakota	Gregory	4271
+South Dakota	Haakon	1937
+South Dakota	Hamlin	5903
+South Dakota	Hand	3431
+South Dakota	Hanson	3331
+South Dakota	Harding	1255
+South Dakota	Hughes	17022
+South Dakota	Hutchinson	7343
+South Dakota	Hyde	1420
+South Dakota	Jackson	3031
+South Dakota	Jerauld	2071
+South Dakota	Jones	1006
+South Dakota	Kingsbury	5148
+South Dakota	Lake	11200
+South Dakota	Lawrence	24097
+South Dakota	Lincoln	44828
+South Dakota	Lyman	3755
+South Dakota	McCook	5618
+South Dakota	McPherson	2459
+South Dakota	Marshall	4656
+South Dakota	Meade	25434
+South Dakota	Mellette	2048
+South Dakota	Miner	2389
+South Dakota	Minnehaha	169468
+South Dakota	Moody	6486
+South Dakota	Oglala Lakota	13586
+South Dakota	Pennington	100948
+South Dakota	Perkins	2982
+South Dakota	Potter	2329
+South Dakota	Roberts	10149
+South Dakota	Sanborn	2355
+South Dakota	Spink	6415
+South Dakota	Stanley	2966
+South Dakota	Sully	1373
+South Dakota	Todd	9612
+South Dakota	Tripp	5644
+South Dakota	Turner	8347
+South Dakota	Union	14399
+South Dakota	Walworth	5438
+South Dakota	Yankton	22438
+South Dakota	Ziebach	2801
+Tennessee	Tennessee	6346105
+Tennessee	Anderson	75129
+Tennessee	Bedford	45058
+Tennessee	Benton	16489
+Tennessee	Bledsoe	12876
+Tennessee	Blount	123010
+Tennessee	Bradley	98963
+Tennessee	Campbell	40716
+Tennessee	Cannon	13801
+Tennessee	Carroll	28522
+Tennessee	Carter	57424
+Tennessee	Cheatham	39105
+Tennessee	Chester	17131
+Tennessee	Claiborne	32213
+Tennessee	Clay	7861
+Tennessee	Cocke	35662
+Tennessee	Coffee	52796
+Tennessee	Crockett	14586
+Tennessee	Cumberland	56053
+Tennessee	Davidson	626681
+Tennessee	Decatur	11757
+Tennessee	DeKalb	18723
+Tennessee	Dickson	49666
+Tennessee	Dyer	38335
+Tennessee	Fayette	38413
+Tennessee	Fentress	17959
+Tennessee	Franklin	41052
+Tennessee	Gibson	49683
+Tennessee	Giles	29485
+Tennessee	Grainger	22657
+Tennessee	Greene	68831
+Tennessee	Grundy	13703
+Tennessee	Hamblen	62544
+Tennessee	Hamilton	336463
+Tennessee	Hancock	6819
+Tennessee	Hardeman	27253
+Tennessee	Hardin	26026
+Tennessee	Hawkins	56833
+Tennessee	Haywood	18787
+Tennessee	Henderson	27769
+Tennessee	Henry	32330
+Tennessee	Hickman	24690
+Tennessee	Houston	8426
+Tennessee	Humphreys	18538
+Tennessee	Jackson	11638
+Tennessee	Jefferson	51407
+Tennessee	Johnson	18244
+Tennessee	Knox	432226
+Tennessee	Lake	7832
+Tennessee	Lauderdale	27815
+Tennessee	Lawrence	41869
+Tennessee	Lewis	12161
+Tennessee	Lincoln	33361
+Tennessee	Loudon	48556
+Tennessee	McMinn	52266
+Tennessee	McNairy	26075
+Tennessee	Macon	22248
+Tennessee	Madison	98294
+Tennessee	Marion	28237
+Tennessee	Marshall	30617
+Tennessee	Maury	80956
+Tennessee	Meigs	11753
+Tennessee	Monroe	44519
+Tennessee	Montgomery	172331
+Tennessee	Moore	6362
+Tennessee	Morgan	21987
+Tennessee	Obion	31807
+Tennessee	Overton	22083
+Tennessee	Perry	7915
+Tennessee	Pickett	5077
+Tennessee	Polk	16825
+Tennessee	Putnam	72321
+Tennessee	Rhea	31809
+Tennessee	Roane	54181
+Tennessee	Robertson	66283
+Tennessee	Rutherford	262604
+Tennessee	Scott	22228
+Tennessee	Sequatchie	14112
+Tennessee	Sevier	89889
+Tennessee	Shelby	927644
+Tennessee	Smith	19166
+Tennessee	Stewart	13324
+Tennessee	Sullivan	156823
+Tennessee	Sumner	160645
+Tennessee	Tipton	61081
+Tennessee	Trousdale	7870
+Tennessee	Unicoi	18313
+Tennessee	Union	19109
+Tennessee	Van Buren	5548
+Tennessee	Warren	39839
+Tennessee	Washington	122979
+Tennessee	Wayne	17021
+Tennessee	Weakley	35021
+Tennessee	White	25841
+Tennessee	Williamson	183182
+Tennessee	Wilson	113993
+Texas	Texas	25145561
+Texas	Anderson	58458
+Texas	Andrews	14786
+Texas	Angelina	86771
+Texas	Aransas	23158
+Texas	Archer	9054
+Texas	Armstrong	1901
+Texas	Atascosa	44911
+Texas	Austin	28417
+Texas	Bailey	7165
+Texas	Bandera	20485
+Texas	Bastrop	74171
+Texas	Baylor	3726
+Texas	Bee	31861
+Texas	Bell	310235
+Texas	Bexar	1714773
+Texas	Blanco	10497
+Texas	Borden	641
+Texas	Bosque	18212
+Texas	Bowie	92565
+Texas	Brazoria	313166
+Texas	Brazos	194851
+Texas	Brewster	9232
+Texas	Briscoe	1637
+Texas	Brooks	7223
+Texas	Brown	38106
+Texas	Burleson	17187
+Texas	Burnet	42750
+Texas	Caldwell	38066
+Texas	Calhoun	21381
+Texas	Callahan	13544
+Texas	Cameron	406220
+Texas	Camp	12401
+Texas	Carson	6182
+Texas	Cass	30464
+Texas	Castro	8062
+Texas	Chambers	35096
+Texas	Cherokee	50845
+Texas	Childress	7041
+Texas	Clay	10752
+Texas	Cochran	3127
+Texas	Coke	3320
+Texas	Coleman	8895
+Texas	Collin	782341
+Texas	Collingsworth	3057
+Texas	Colorado	20874
+Texas	Comal	108472
+Texas	Comanche	13974
+Texas	Concho	4087
+Texas	Cooke	38437
+Texas	Coryell	75388
+Texas	Cottle	1505
+Texas	Crane	4375
+Texas	Crockett	3719
+Texas	Crosby	6059
+Texas	Culberson	2398
+Texas	Dallam	6703
+Texas	Dallas	2368139
+Texas	Dawson	13833
+Texas	Deaf Smith	19372
+Texas	Delta	5231
+Texas	Denton	662614
+Texas	DeWitt	20097
+Texas	Dickens	2444
+Texas	Dimmit	9996
+Texas	Donley	3677
+Texas	Duval	11782
+Texas	Eastland	18583
+Texas	Ector	137130
+Texas	Edwards	2002
+Texas	Ellis	149610
+Texas	El Paso	800647
+Texas	Erath	37890
+Texas	Falls	17866
+Texas	Fannin	33915
+Texas	Fayette	24554
+Texas	Fisher	3974
+Texas	Floyd	6446
+Texas	Foard	1336
+Texas	Fort Bend	585375
+Texas	Franklin	10605
+Texas	Freestone	19816
+Texas	Frio	17217
+Texas	Gaines	17526
+Texas	Galveston	291309
+Texas	Garza	6461
+Texas	Gillespie	24837
+Texas	Glasscock	1226
+Texas	Goliad	7210
+Texas	Gonzales	19807
+Texas	Gray	22535
+Texas	Grayson	120877
+Texas	Gregg	121730
+Texas	Grimes	26604
+Texas	Guadalupe	131533
+Texas	Hale	36273
+Texas	Hall	3353
+Texas	Hamilton	8517
+Texas	Hansford	5613
+Texas	Hardeman	4139
+Texas	Hardin	54635
+Texas	Harris	4092459
+Texas	Harrison	65631
+Texas	Hartley	6062
+Texas	Haskell	5899
+Texas	Hays	157107
+Texas	Hemphill	3807
+Texas	Henderson	78532
+Texas	Hidalgo	774769
+Texas	Hill	35089
+Texas	Hockley	22935
+Texas	Hood	51182
+Texas	Hopkins	35161
+Texas	Houston	23732
+Texas	Howard	35012
+Texas	Hudspeth	3476
+Texas	Hunt	86129
+Texas	Hutchinson	22150
+Texas	Irion	1599
+Texas	Jack	9044
+Texas	Jackson	14075
+Texas	Jasper	35710
+Texas	Jeff Davis	2342
+Texas	Jefferson	252273
+Texas	Jim Hogg	5300
+Texas	Jim Wells	40838
+Texas	Johnson	150934
+Texas	Jones	20202
+Texas	Karnes	14824
+Texas	Kaufman	103350
+Texas	Kendall	33410
+Texas	Kenedy	416
+Texas	Kent	808
+Texas	Kerr	49625
+Texas	Kimble	4607
+Texas	King	286
+Texas	Kinney	3598
+Texas	Kleberg	32061
+Texas	Knox	3719
+Texas	Lamar	49793
+Texas	Lamb	13977
+Texas	Lampasas	19677
+Texas	La Salle	6886
+Texas	Lavaca	19263
+Texas	Lee	16612
+Texas	Leon	16801
+Texas	Liberty	75643
+Texas	Limestone	23384
+Texas	Lipscomb	3302
+Texas	Live Oak	11531
+Texas	Llano	19301
+Texas	Loving	82
+Texas	Lubbock	278831
+Texas	Lynn	5915
+Texas	McCulloch	8283
+Texas	McLennan	234906
+Texas	McMullen	707
+Texas	Madison	13664
+Texas	Marion	10546
+Texas	Martin	4799
+Texas	Mason	4012
+Texas	Matagorda	36702
+Texas	Maverick	54258
+Texas	Medina	46006
+Texas	Menard	2242
+Texas	Midland	136872
+Texas	Milam	24757
+Texas	Mills	4936
+Texas	Mitchell	9403
+Texas	Montague	19719
+Texas	Montgomery	455746
+Texas	Moore	21904
+Texas	Morris	12934
+Texas	Motley	1210
+Texas	Nacogdoches	64524
+Texas	Navarro	47735
+Texas	Newton	14445
+Texas	Nolan	15216
+Texas	Nueces	340223
+Texas	Ochiltree	10223
+Texas	Oldham	2052
+Texas	Orange	81837
+Texas	Palo Pinto	28111
+Texas	Panola	23796
+Texas	Parker	116927
+Texas	Parmer	10269
+Texas	Pecos	15507
+Texas	Polk	45413
+Texas	Potter	121073
+Texas	Presidio	7818
+Texas	Rains	10914
+Texas	Randall	120725
+Texas	Reagan	3367
+Texas	Real	3309
+Texas	Red River	12860
+Texas	Reeves	13783
+Texas	Refugio	7383
+Texas	Roberts	929
+Texas	Robertson	16622
+Texas	Rockwall	78337
+Texas	Runnels	10501
+Texas	Rusk	53330
+Texas	Sabine	10834
+Texas	San Augustine	8865
+Texas	San Jacinto	26384
+Texas	San Patricio	64804
+Texas	San Saba	6131
+Texas	Schleicher	3461
+Texas	Scurry	16921
+Texas	Shackelford	3378
+Texas	Shelby	25448
+Texas	Sherman	3034
+Texas	Smith	209714
+Texas	Somervell	8490
+Texas	Starr	60968
+Texas	Stephens	9630
+Texas	Sterling	1143
+Texas	Stonewall	1490
+Texas	Sutton	4128
+Texas	Swisher	7854
+Texas	Tarrant	1809034
+Texas	Taylor	131506
+Texas	Terrell	984
+Texas	Terry	12651
+Texas	Throckmorton	1641
+Texas	Titus	32334
+Texas	Tom Green	110224
+Texas	Travis	1024266
+Texas	Trinity	14585
+Texas	Tyler	21766
+Texas	Upshur	39309
+Texas	Upton	3355
+Texas	Uvalde	26405
+Texas	Val Verde	48879
+Texas	Van Zandt	52579
+Texas	Victoria	86793
+Texas	Walker	67861
+Texas	Waller	43205
+Texas	Ward	10658
+Texas	Washington	33718
+Texas	Webb	250304
+Texas	Wharton	41280
+Texas	Wheeler	5410
+Texas	Wichita	131500
+Texas	Wilbarger	13535
+Texas	Willacy	22134
+Texas	Williamson	422679
+Texas	Wilson	42918
+Texas	Winkler	7110
+Texas	Wise	59127
+Texas	Wood	41964
+Texas	Yoakum	7879
+Texas	Young	18550
+Texas	Zapata	14018
+Texas	Zavala	11677
+Utah	Utah	2763885
+Utah	Beaver	6629
+Utah	Box Elder	49975
+Utah	Cache	112656
+Utah	Carbon	21403
+Utah	Daggett	1059
+Utah	Davis	306479
+Utah	Duchesne	18607
+Utah	Emery	10976
+Utah	Garfield	5172
+Utah	Grand	9225
+Utah	Iron	46163
+Utah	Juab	10246
+Utah	Kane	7125
+Utah	Millard	12503
+Utah	Morgan	9469
+Utah	Piute	1556
+Utah	Rich	2264
+Utah	Salt Lake	1029655
+Utah	San Juan	14746
+Utah	Sanpete	27822
+Utah	Sevier	20802
+Utah	Summit	36324
+Utah	Tooele	58218
+Utah	Uintah	32588
+Utah	Utah	516564
+Utah	Wasatch	23530
+Utah	Washington	138115
+Utah	Wayne	2778
+Utah	Weber	231236
+Vermont	Vermont	625741
+Vermont	Addison	36821
+Vermont	Bennington	37125
+Vermont	Caledonia	31227
+Vermont	Chittenden	156545
+Vermont	Essex	6306
+Vermont	Franklin	47746
+Vermont	Grand Isle	6970
+Vermont	Lamoille	24475
+Vermont	Orange	28936
+Vermont	Orleans	27231
+Vermont	Rutland	61642
+Vermont	Washington	59534
+Vermont	Windham	44513
+Vermont	Windsor	56670
+Virginia	Virginia	8001024
+Virginia	Accomack	33164
+Virginia	Albemarle	98970
+Virginia	Alleghany	16250
+Virginia	Amelia	12690
+Virginia	Amherst	32353
+Virginia	Appomattox	14973
+Virginia	Arlington	207627
+Virginia	Augusta	73750
+Virginia	Bath	4731
+Virginia	Bedford	68676
+Virginia	Bland	6824
+Virginia	Botetourt	33148
+Virginia	Brunswick	17434
+Virginia	Buchanan	24098
+Virginia	Buckingham	17146
+Virginia	Campbell	54842
+Virginia	Caroline	28545
+Virginia	Carroll	30042
+Virginia	Charles City	7256
+Virginia	Charlotte	12586
+Virginia	Chesterfield	316236
+Virginia	Clarke	14034
+Virginia	Craig	5190
+Virginia	Culpeper	46689
+Virginia	Cumberland	10052
+Virginia	Dickenson	15903
+Virginia	Dinwiddie	28001
+Virginia	Essex	11151
+Virginia	Fairfax	1081726
+Virginia	Fauquier	65203
+Virginia	Floyd	15279
+Virginia	Fluvanna	25691
+Virginia	Franklin	56159
+Virginia	Frederick	78305
+Virginia	Giles	17286
+Virginia	Gloucester	36858
+Virginia	Goochland	21717
+Virginia	Grayson	15533
+Virginia	Greene	18403
+Virginia	Greensville	12243
+Virginia	Halifax	36241
+Virginia	Hanover	99863
+Virginia	Henrico	306935
+Virginia	Henry	54151
+Virginia	Highland	2321
+Virginia	Isle of Wight	35270
+Virginia	James City	67009
+Virginia	King and Queen	6945
+Virginia	King George	23584
+Virginia	King William	15935
+Virginia	Lancaster	11391
+Virginia	Lee	25587
+Virginia	Loudoun	312311
+Virginia	Louisa	33153
+Virginia	Lunenburg	12914
+Virginia	Madison	13308
+Virginia	Mathews	8978
+Virginia	Mecklenburg	32727
+Virginia	Middlesex	10959
+Virginia	Montgomery	94392
+Virginia	Nelson	15020
+Virginia	New Kent	18429
+Virginia	Northampton	12389
+Virginia	Northumberland	12330
+Virginia	Nottoway	15853
+Virginia	Orange	33481
+Virginia	Page	24042
+Virginia	Patrick	18490
+Virginia	Pittsylvania	63506
+Virginia	Powhatan	28046
+Virginia	Prince Edward	23368
+Virginia	Prince George	35725
+Virginia	Prince William	402002
+Virginia	Pulaski	34872
+Virginia	Rappahannock	7373
+Virginia	Richmond	9254
+Virginia	Roanoke	92376
+Virginia	Rockbridge	22307
+Virginia	Rockingham	76314
+Virginia	Russell	28897
+Virginia	Scott	23177
+Virginia	Shenandoah	41993
+Virginia	Smyth	32208
+Virginia	Southampton	18570
+Virginia	Spotsylvania	122397
+Virginia	Stafford	128961
+Virginia	Surry	7058
+Virginia	Sussex	12087
+Virginia	Tazewell	45078
+Virginia	Warren	37575
+Virginia	Washington	54876
+Virginia	Westmoreland	17454
+Virginia	Wise	41452
+Virginia	Wythe	29235
+Virginia	York	65464
+Virginia	Alexandria city	139966
+Virginia	Bristol city	17835
+Virginia	Buena Vista city	6650
+Virginia	Charlottesville city	43475
+Virginia	Chesapeake city	222209
+Virginia	Colonial Heights city	17411
+Virginia	Covington city	5961
+Virginia	Danville city	43055
+Virginia	Emporia city	5927
+Virginia	Fairfax city	22565
+Virginia	Falls Church city	12332
+Virginia	Franklin city	8582
+Virginia	Fredericksburg city	24286
+Virginia	Galax city	7042
+Virginia	Hampton city	137436
+Virginia	Harrisonburg city	48914
+Virginia	Hopewell city	22591
+Virginia	Lexington city	7042
+Virginia	Lynchburg city	75568
+Virginia	Manassas city	37821
+Virginia	Manassas Park city	14273
+Virginia	Martinsville city	13821
+Virginia	Newport News city	180719
+Virginia	Norfolk city	242803
+Virginia	Norton city	3958
+Virginia	Petersburg city	32420
+Virginia	Poquoson city	12150
+Virginia	Portsmouth city	95535
+Virginia	Radford city	16408
+Virginia	Richmond city	204214
+Virginia	Roanoke city	97032
+Virginia	Salem city	24802
+Virginia	Staunton city	23746
+Virginia	Suffolk city	84585
+Virginia	Virginia Beach city	437994
+Virginia	Waynesboro city	21006
+Virginia	Williamsburg city	14068
+Virginia	Winchester city	26203
+Washington	Washington	6724540
+Washington	Adams	18728
+Washington	Asotin	21623
+Washington	Benton	175177
+Washington	Chelan	72453
+Washington	Clallam	71404
+Washington	Clark	425363
+Washington	Columbia	4078
+Washington	Cowlitz	102410
+Washington	Douglas	38431
+Washington	Ferry	7551
+Washington	Franklin	78163
+Washington	Garfield	2266
+Washington	Grant	89120
+Washington	Grays Harbor	72797
+Washington	Island	78506
+Washington	Jefferson	29872
+Washington	King	1931249
+Washington	Kitsap	251133
+Washington	Kittitas	40915
+Washington	Klickitat	20318
+Washington	Lewis	75455
+Washington	Lincoln	10570
+Washington	Mason	60699
+Washington	Okanogan	41120
+Washington	Pacific	20920
+Washington	Pend Oreille	13001
+Washington	Pierce	795225
+Washington	San Juan	15769
+Washington	Skagit	116901
+Washington	Skamania	11066
+Washington	Snohomish	713335
+Washington	Spokane	471221
+Washington	Stevens	43531
+Washington	Thurston	252264
+Washington	Wahkiakum	3978
+Washington	Walla Walla	58781
+Washington	Whatcom	201140
+Washington	Whitman	44776
+Washington	Yakima	243231
+West Virginia	West Virginia	1852994
+West Virginia	Barbour	16589
+West Virginia	Berkeley	104169
+West Virginia	Boone	24629
+West Virginia	Braxton	14523
+West Virginia	Brooke	24069
+West Virginia	Cabell	96319
+West Virginia	Calhoun	7627
+West Virginia	Clay	9386
+West Virginia	Doddridge	8202
+West Virginia	Fayette	46039
+West Virginia	Gilmer	8693
+West Virginia	Grant	11937
+West Virginia	Greenbrier	35480
+West Virginia	Hampshire	23964
+West Virginia	Hancock	30676
+West Virginia	Hardy	14025
+West Virginia	Harrison	69099
+West Virginia	Jackson	29211
+West Virginia	Jefferson	53498
+West Virginia	Kanawha	193063
+West Virginia	Lewis	16372
+West Virginia	Lincoln	21720
+West Virginia	Logan	36743
+West Virginia	McDowell	22113
+West Virginia	Marion	56418
+West Virginia	Marshall	33107
+West Virginia	Mason	27324
+West Virginia	Mercer	62264
+West Virginia	Mineral	28212
+West Virginia	Mingo	26839
+West Virginia	Monongalia	96189
+West Virginia	Monroe	13502
+West Virginia	Morgan	17541
+West Virginia	Nicholas	26233
+West Virginia	Ohio	44443
+West Virginia	Pendleton	7695
+West Virginia	Pleasants	7605
+West Virginia	Pocahontas	8719
+West Virginia	Preston	33520
+West Virginia	Putnam	55486
+West Virginia	Raleigh	78859
+West Virginia	Randolph	29405
+West Virginia	Ritchie	10449
+West Virginia	Roane	14926
+West Virginia	Summers	13927
+West Virginia	Taylor	16895
+West Virginia	Tucker	7141
+West Virginia	Tyler	9208
+West Virginia	Upshur	24254
+West Virginia	Wayne	42481
+West Virginia	Webster	9154
+West Virginia	Wetzel	16583
+West Virginia	Wirt	5717
+West Virginia	Wood	86956
+West Virginia	Wyoming	23796
+Wisconsin	Wisconsin	5686986
+Wisconsin	Adams	20875
+Wisconsin	Ashland	16157
+Wisconsin	Barron	45870
+Wisconsin	Bayfield	15014
+Wisconsin	Brown	248007
+Wisconsin	Buffalo	13587
+Wisconsin	Burnett	15457
+Wisconsin	Calumet	48971
+Wisconsin	Chippewa	62415
+Wisconsin	Clark	34690
+Wisconsin	Columbia	56833
+Wisconsin	Crawford	16644
+Wisconsin	Dane	488073
+Wisconsin	Dodge	88759
+Wisconsin	Door	27785
+Wisconsin	Douglas	44159
+Wisconsin	Dunn	43857
+Wisconsin	Eau Claire	98736
+Wisconsin	Florence	4423
+Wisconsin	Fond du Lac	101633
+Wisconsin	Forest	9304
+Wisconsin	Grant	51208
+Wisconsin	Green	36842
+Wisconsin	Green Lake	19051
+Wisconsin	Iowa	23687
+Wisconsin	Iron	5916
+Wisconsin	Jackson	20449
+Wisconsin	Jefferson	83686
+Wisconsin	Juneau	26664
+Wisconsin	Kenosha	166426
+Wisconsin	Kewaunee	20574
+Wisconsin	La Crosse	114638
+Wisconsin	Lafayette	16836
+Wisconsin	Langlade	19977
+Wisconsin	Lincoln	28743
+Wisconsin	Manitowoc	81442
+Wisconsin	Marathon	134063
+Wisconsin	Marinette	41749
+Wisconsin	Marquette	15404
+Wisconsin	Menominee	4232
+Wisconsin	Milwaukee	947735
+Wisconsin	Monroe	44673
+Wisconsin	Oconto	37660
+Wisconsin	Oneida	35998
+Wisconsin	Outagamie	176695
+Wisconsin	Ozaukee	86395
+Wisconsin	Pepin	7469
+Wisconsin	Pierce	41019
+Wisconsin	Polk	44205
+Wisconsin	Portage	70019
+Wisconsin	Price	14159
+Wisconsin	Racine	195408
+Wisconsin	Richland	18021
+Wisconsin	Rock	160331
+Wisconsin	Rusk	14755
+Wisconsin	St. Croix	84345
+Wisconsin	Sauk	61976
+Wisconsin	Sawyer	16557
+Wisconsin	Shawano	41949
+Wisconsin	Sheboygan	115507
+Wisconsin	Taylor	20689
+Wisconsin	Trempealeau	28816
+Wisconsin	Vernon	29773
+Wisconsin	Vilas	21430
+Wisconsin	Walworth	102228
+Wisconsin	Washburn	15911
+Wisconsin	Washington	131887
+Wisconsin	Waukesha	389891
+Wisconsin	Waupaca	52410
+Wisconsin	Waushara	24496
+Wisconsin	Winnebago	166994
+Wisconsin	Wood	74749
+Wyoming	Wyoming	563626
+Wyoming	Albany	36299
+Wyoming	Big Horn	11668
+Wyoming	Campbell	46133
+Wyoming	Carbon	15885
+Wyoming	Converse	13833
+Wyoming	Crook	7083
+Wyoming	Fremont	40123
+Wyoming	Goshen	13249
+Wyoming	Hot Springs	4812
+Wyoming	Johnson	8569
+Wyoming	Laramie	91738
+Wyoming	Lincoln	18106
+Wyoming	Natrona	75450
+Wyoming	Niobrara	2484
+Wyoming	Park	28205
+Wyoming	Platte	8667
+Wyoming	Sheridan	29116
+Wyoming	Sublette	10247
+Wyoming	Sweetwater	43806
+Wyoming	Teton	21294
+Wyoming	Uinta	21118
+Wyoming	Washakie	8533
+Wyoming	Weston	7208
