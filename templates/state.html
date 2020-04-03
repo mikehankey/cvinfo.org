@@ -22,7 +22,8 @@
    <div id="up">Last Update: {LAST_UPDATE}</div>
 
    <div id="bc">
-      <a href="../main.html">USA</a> <a href="NY.html">New York</a>
+      <a href="../main.html"><b>USA</b></a> 
+      <a href="NY.html">New York</a>
       <a href="NJ.html">New Jersey</a>
       <a href="MI.html">Michigan</a>
       <a href="MO.html">Missouri</a>
@@ -72,61 +73,61 @@
       <a href="WV.html">West Virginia</a>
       <a href="NE.html">Nebraska</a> 
    </div> 
-   <table width=80%><tr><td>
-      <div class="fl ff" >
-            <img src="http://archive.allsky.tv/covid/flags/{STATE_CODE_L}.png"/>
+
+
+   <div id="main-container">
+      <div id="state" class="clearfix">
+         <div class="flg">
+               <img src="http://archive.allsky.tv/covid/flags/{STATE_CODE_L}.png"/>
+         </div>
+         <div class="std">
+               <h2>{STATE_NAME} <span>Population: <b>{POPULATION}</b></span></h2>
+               <dl> 
+   
+                     <dt>Cases </dt>
+                     <dd>{CASES}</dd>
+                   
+                     <dt>Deaths  </dt>
+                     <dd>{DEATHS}</dd>
+      
+                     <dt>New Cases </dt>
+                     <dd>{CASE_INCREASE}</dd>
+      
+                     <dt>New Deaths</dt>
+                     <dd>{DEATH_INCREASE}</dd>
+                  
+                     <dt>Cases per million </dt>
+                     <dd>{CPM}</dd>
+                   
+                     <dt>Deaths per million </dt>
+                     <dd>{DPM}</dd>
+      
+      
+                     <dt>Total Tests</dt>
+                     <dd>{TESTS}</dd>
+      
+                     <dt>Tests Per Million</dt>
+                     <dd>{TPM}</dd>
+      
+                     <dt>Case Growth %</dt>
+                     <dd>{CASE_GROWTH}</dd>
+      
+                     <dt>Death Growth %</dt>
+                     <dd>{DEATH_GROWTH}</dd>
+                  
+                     <dt>Mortality Rate</dt>
+                     <dd>{MORTALITY}</dd>
+                   
+                     <dt>State Data Update</dt>
+                     <dd>{STATE_LAST_UPDATE}</dd>
+                     <dt>County Data Update</dt>
+                     <dd>{COUNTY_LAST_UPDATE}</dd> 
+                  </dl>
+         </div>
       </div>
-   </td><td>
-      <div class="fl" >
-            <h3>{STATE_NAME}</h3>
-            <dl> 
-            
-               <dt>Population</dt>
-               <dd>{POPULATION}</dd>
-               <dt>Cases </dt>
-               <dd>{CASES}</dd>
-             
-               <dt>Deaths  </dt>
-               <dd>{DEATHS}</dd>
+   </div>
 
-               <dt>New Cases </dt>
-               <dd>{CASE_INCREASE}</dd>
-
-               <dt>New Deaths</dt>
-               <dd>{DEATH_INCREASE}</dd>
-            
-               <dt>Cases per million </dt>
-               <dd>{CPM}</dd>
-             
-               <dt>Deaths per million </dt>
-               <dd>{DPM}</dd>
-
-
-               <dt>Total Tests</dt>
-               <dd>{TESTS}</dd>
-
-               <dt>Tests Per Million</dt>
-               <dd>{TPM}</dd>
-
-               <dt>Case Growth %</dt>
-               <dd>{CASE_GROWTH}</dd>
-
-               <dt>Death Growth %</dt>
-               <dd>{DEATH_GROWTH}</dd>
-            
-               <dt>Mortality Rate</dt>
-               <dd>{MORTALITY}</dd>
-             
-               <dt>State Data Update</dt>
-               <dd>{STATE_LAST_UPDATE}</dd>
-               <dt>County Data Update</dt>
-               <dd>{COUNTY_LAST_UPDATE}</dd>
-               <dt>Page Update</dt>
-               <dd>{PAGE_LAST_UPDATE}</dd>
-            </dl>
-      </div>
-   </td></tr></table>
-   <center>
+ 
 
    <div id="graphs" class="clearfix">
       <h3>Graphs</h3>
