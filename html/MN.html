@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html itemscope itemtype="http://schema.org/QAPage" class="html__responsive">
+<head data-live-domain="codeorigin.jquery.com">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>COVID 19 - Minnesota Stats</title>
+
+	<meta name="author" content="Mike Hankey">
+	<meta name="description" content="COVID 19 (Coronavirus) Stats for Maryland, USA, Per Million, By County, Historical">
+   <meta name="viewport" content="width=device-width">
+   
+   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+   <script src="https://archive.allsky.tv/covid/dist/js/jquery.tablesorter.min.js"></script>
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"> 
+   <!--
+   <link href="https://archive.allsky.tv/covid/dist/css/m.css" rel="stylesheet">
+   <link href="https://archive.allsky.tv/covid/dist/css/tablesorter.css" rel="stylesheet">  
+   -->
+   <link href="/cvinfo.org/dist/css/m.css?20200402x4" rel="stylesheet">
+   <link href="/cvinfo.org/dist/css/tablesorter.css" rel="stylesheet">  
+ 
+
+</head>
+<body>
+   <h1>COVID 19 - US Stats</h1>
+   <div id="bc">
+      <a href="http://www.cvinfo.org/index.html" class="s">USA</a>
+      <a>Minnesota</a>
+   </div>
+   <center>
+   <table width=80%><tr><td>
+      <div class="fl ff" >
+            <img src="http://archive.allsky.tv/covid/flags/mn.png"/>
+      </div>
+   </td><td>
+      <div class="fl" >
+            <h3>Minnesota</h3>
+            <dl> 
+            
+               <dt>Population</dt>
+               <dd>5611000</dd>
+               <dt>Cases </dt>
+               <dd>742</dd>
+             
+               <dt>Deaths  </dt>
+               <dd>18</dd>
+
+               <dt>New Cases </dt>
+               <dd>53</dd>
+
+               <dt>New Deaths</dt>
+               <dd>1</dd>
+            
+               <dt>Cases per million </dt>
+               <dd>132</dd>
+             
+               <dt>Deaths per million </dt>
+               <dd>3</dd>
+
+
+               <dt>Total Tests</dt>
+               <dd>0</dd>
+
+               <dt>Tests Per Million</dt>
+               <dd>0</dd>
+
+               <dt>Case Growth %</dt>
+               <dd>7.14</dd>
+
+               <dt>Death Growth %</dt>
+               <dd>5.56</dd>
+            
+               <dt>Mortality Rate</dt>
+               <dd>2.43</dd>
+             
+               <dt>State Data Update</dt>
+               <dd>20200402</dd>
+               <dt>County Data Update</dt>
+               <dd>NA</dd>
+               <dt>Page Update</dt>
+               <dd>2020-04-03 08:10:10</dd>
+            </dl>
+      </div>
+   </td></tr></table>
+   <center>
+
+   <div id="graphs" class="clearfix">
+      <h3>Graphs</h3>
+      <div class="graph_container">
+            <div class="grid">
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/MN-cd.png" />
+              </div>
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/MN-pm.png" />
+              </div>
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/MN-in.png" />
+              </div>
+              <div class="cell">
+                <img src="http://archive.allsky.tv/covid/plots/MN-ts.png" />
+              </div>
+              <div class="cell">
+                  <img src="http://archive.allsky.tv/covid/plots/MN-gr.png" />
+               </div>
+               <div class="cell">
+                  <img src="http://archive.allsky.tv/covid/plots/MN-mt.png" />
+               </div>
+            </div>
+          </div>
+   
+      </div>
+   </div>
+
+<div id="graph_img_viewer" class="modal">
+   <span class="close">&times;</span>
+   <img class="modal-content" id="img_fv">
+   <div id="caption"></div>
+</div>
+
+  
+   <div id="table">
+      <table id="states" class="tablesorter ">
+            <thead>
+               <tr>
+                  <th>&nbsp;</th>
+                  <th>County</th>
+                  <th>Population</th>
+                  <th>Cases</th>
+                  <th>Deaths</th>
+                  <th>Cases per m</th>
+                  <th>Deaths per m</th>
+                  <th>Growth Rate</th>
+                  <th>Mortality Rate</th>
+               </tr>
+            </thead>
+            <tbody  class="list-of-states" >
+   
+            </tbody>
+      </table>
+   </div>
+   
+
+<script>
+
+
+  function open_modal() {
+     // Get the modal
+      var modal = document.getElementById("graph_img_viewer");
+
+      // Get the image and insert it inside the modal - use its "alt" text as a caption
+      var img = document.getElementById("plots_img");
+      var modalImg = document.getElementById("img_fv"); 
+      img.onclick = function(){
+         modal.style.display = "block";
+         modalImg.src = this.src; 
+      }
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+         modal.style.display = "none";
+      }
+  }
+
+
+  $(function() {
+     
+     // Table sorter
+     $("table thead th:eq(0)").data("sorter", false);
+     $('table').tablesorter({
+        widgets        : ['zebra', 'columns'],
+        usNumberFormat : false,
+        sortReset      : true,
+        sortRestart    : true
+     });
+     
+     // Click on stats image
+     open_modal();
+
+  })
+   
+
+</script> 
+</body>
+</html>
+
