@@ -33,13 +33,13 @@ This program will:
 """
 
 #################################################################################################
-# Vincent's VN
-ORG_PATH = "/var/www/project/COVID/Git/cvinfo.org"
+
 
 # GLOBAL VARS
 ORG_PATH =  "/home/ams/cvinfo.org"
 
-
+# Vincent's VN
+ORG_PATH = "/var/www/projects/COVID/Git/cvinfo.org"
  
 # PATHS 
 PATH_TO_US_SVG_MAP  = ORG_PATH + "/templates/USA_map_template.svg"
@@ -53,6 +53,7 @@ TEMPLATES_FOLDER = ORG_PATH + "/templates/"
 
 #OUTPUT
 OUT_PATH = "/var/www/projects/COVID/LIVE/out"
+OUT_PATH = ORG_PATH  + "html/"
 OUT_INDEX = OUT_PATH  + "/index.html"
 
 #UI
@@ -255,7 +256,7 @@ def make_main_page():
    temp = temp.replace("{STATE_TABLE}", state_table_html)
    temp = temp.replace("{US_MAP}", us_map_template)
 
-   out = open("./main.html", "w")
+   out = open("./html/main.html", "w+")
    out.write(temp)
    out.close()
 
