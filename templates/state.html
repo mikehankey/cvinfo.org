@@ -14,33 +14,33 @@
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
    <script src="https://archive.allsky.tv/covid/dist/js/jquery.tablesorter.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet"> 
+   <!--
    <link href="https://archive.allsky.tv/covid/dist/css/m.css" rel="stylesheet">
    <link href="https://archive.allsky.tv/covid/dist/css/tablesorter.css" rel="stylesheet">  
+   -->
+   <link href="/cvinfo.org/dist/css/m.css?{STATE_LAST_UPDATE}x4" rel="stylesheet">
+   <link href="/cvinfo.org/dist/css/tablesorter.css" rel="stylesheet">  
  
 
 </head>
 <body>
    <h1>COVID 19 - US Stats</h1>
-<center>
-<div >
-<center>
-{STATE_LINKS}
-</center>
-</div>
-</center>
    <div id="bc">
       <a href="http://www.cvinfo.org/index.html" class="s">USA</a>
       <a>{STATE_NAME}</a>
    </div>
-
-   <div id="state" class="clearfix">
-      <div class="fl ff">
+   <center>
+   <table width=80%><tr><td>
+      <div class="fl ff" >
             <img src="http://archive.allsky.tv/covid/flags/{STATE_CODE_L}.png"/>
       </div>
-      <div class="fl">
-            <h3>{STATE_NAME}<span>Population: <b>{POPULATION}</b></span></h3>
+   </td><td>
+      <div class="fl" >
+            <h3>{STATE_NAME}</h3>
             <dl> 
             
+               <dt>Population</dt>
+               <dd>{POPULATION}</dd>
                <dt>Cases </dt>
                <dd>{CASES}</dd>
              
@@ -75,11 +75,17 @@
                <dt>Mortality Rate</dt>
                <dd>{MORTALITY}</dd>
              
-               <dt>Last Update</dt>
-               <dd>{LAST_UPDATE}</dd>
+               <dt>State Data Update</dt>
+               <dd>{STATE_LAST_UPDATE}</dd>
+               <dt>County Data Update</dt>
+               <dd>{COUNTY_LAST_UPDATE}</dd>
+               <dt>Page Update</dt>
+               <dd>{PAGE_LAST_UPDATE}</dd>
             </dl>
       </div>
-   </div>
+   </td></tr></table>
+   <center>
+
    <div id="graphs" class="clearfix">
       <h3>Graphs</h3>
       <div class="graph_container">

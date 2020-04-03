@@ -2916,7 +2916,7 @@ Virginia	Henrico	306935
 Virginia	Henry	54151
 Virginia	Highland	2321
 Virginia	Isle of Wight	35270
-Virginia	James City	67009
+Virginia	James city	67009
 Virginia	King and Queen	6945
 Virginia	King George	23584
 Virginia	King William	15935

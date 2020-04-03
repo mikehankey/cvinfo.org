@@ -34,7 +34,7 @@ This program will:
 
 #################################################################################################
 # GLOBAL VARS
-ORG_PATH =  "/home/ams/covid"
+ORG_PATH =  "/home/ams/cvinfo.org"
 
  
 # PATHS 
@@ -122,10 +122,174 @@ def main_menu():
    if cmd == "4":
       this_state = input("Enter state code or ALL to do all states.").upper()
       make_state_pages(this_state)
+   if cmd == "5":
+      make_main_page()
+
+def merge_state_data():
+
+   state_names, state_codes = load_state_names()
+   asd = []
+   for st in state_names:
+      sd = load_json_file("./json/" + st + ".json") 
+      asd.append(sd)
+   save_json_file("./json/states_level2.json", asd)
+   return(asd)
+
+  
+def make_main_page():
+   asd = merge_state_data()
+   asd.sort(key=sort_cpm,reverse=True)
+
+   # Load svg map
+   with open(PATH_TO_US_SVG_MAP, 'r') as file:  
+      us_map_template = file.read()
+ 
+
+   html = "<table width=60%><tr><td><center>"
+   COLORS=['b','g','y','o','r']
+ 
+   rk = 0 
+   for data in asd:
+      state_code = data['summary_info']['state_code']
+      si = data['summary_info']
+      print(si)
+      if rk <= 10:
+         color_of_state = COLORS[4]
+      if 10 < rk <= 20:
+         color_of_state = COLORS[3]
+      if 20 < rk <= 30:
+         color_of_state = COLORS[2]
+      if 30 < rk <= 40:
+         color_of_state = COLORS[1]
+      if 40 < rk <= 55:
+         color_of_state = COLORS[0]
+
+      print("COLOR:" + "{"+state_code+"_color_class}")
+      us_map_template = us_map_template.replace("{"+state_code+"_color_class}", color_of_state)  
+      #state_rank_list.append( (state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort,cpm_rank_list[state_code],dpm_rank_list[state_code],cgr_rank_list[state_code],mort_rank_list[state_code],color_of_state ))
+      rk += 1
+
+
+   #state_table_html = state_table(state_rank_list)
+   # make main page
+   fp = open("templates/main.html", "r")
+   temp = ""
+   for line in fp:
+      temp += line
+   #temp = temp.replace("{STATE_TABLE}", state_table_html)
+   temp = temp.replace("{US_MAP}", us_map_template)
+
+   out = open("./html/main.html", "w")
+   out.write(temp)
+   out.close()
+
+
+
+def make_county_table(sjs):
+
+   table_header = """
+   <div id="table">
+      <table id="states" class="tablesorter ">
+            <thead>
+               <tr>
+                  <th>&nbsp;</th>
+                  <th>County</th>
+                  <th>Population</th>
+                  <th>Cases</th>
+                  <th>Deaths</th>
+                  <th>Cases per m</th>
+                  <th>Deaths per m</th>
+                  <th>Growth Rate</th>
+                  <th>Mortality Rate</th>
+               </tr>
+            </thead>
+            <tbody  class="list-of-states" >
+   """
+
+   row_html = """
+                  <tr data-state="{COUNTY}">
+                     <td><span class="cl {COLOR}"></span></td>
+                     <td>{COUNTY}</td>
+                     <td>{COUNTY_POP}</td>
+                     <td>{CASES}</td>
+                     <td>{DEATHS}</td>
+                     <td>{CPM}</td>
+                     <td>{DPM}</td>
+                     <td>{CGR}</td>
+                     <td>{MORTALITY}</td>
+                  </tr>
+   """
+
+
+   table_footer = """
+            </tbody>
+      </table>
+   </div>
+   """
+
+
+   latest = []
+   state_code = sjs['summary_info']['state_code']
+   rows = ""
+   cd = []
+   for county in sjs['county_stats']:
+      dr = sjs['county_stats'][county]['county_stats'][-1]
+      dr['county'] = county
+      cd.append(dr)
+   cd.sort(key=sort_cpm,reverse=True)
+   scd = cd
+   total_c = len(scd)
+   cc = 1
+   for dr in scd:
+      county = dr['county']
+      #for dr in sjs['county_stats'][county]['county_stats']:
+      if True:
+         if total_c > 0:
+            rank_perc = cc / total_c
+         else:
+            rank_perc = 0
+         print("RANK PERC:", rank_perc)
+         if rank_perc < .2:
+            color = COLORS[4]
+         if .2 <= rank_perc < .4:
+            color = COLORS[3]
+         if .4 <= rank_perc < .6:
+            color = COLORS[2]
+         if .6 <= rank_perc < .8:
+            color = COLORS[1]
+         if .8 <= rank_perc <= 1:
+            color = COLORS[0]
+
+
+         row = row_html
+         row = row.replace("{COLOR}", color)
+         row = row.replace("{COUNTY}", dr['county'])
+         row = row.replace("{CASES}", str(dr['cases']))
+           
+         if county in sjs['county_pop']:
+            row = row.replace("{COUNTY_POP}", str(sjs['county_pop'][county]))
+         else:
+            row = row.replace("{COUNTY_POP}", str(0))
+         row = row.replace("{DEATHS}", str(dr['deaths']))
+         row = row.replace("{CPM}", str(dr['cpm']))
+         row = row.replace("{DPM}", str(dr['dpm']))
+         row = row.replace("{CGR}", str(dr['cg_med']))
+         row = row.replace("{DGR}", str(dr['dg_med']))
+         row = row.replace("{MORTALITY}", str(dr['mortality']))
+         #row = row.replace("{LAST_UPDATE}", update)
+         rows += row
+         cc += 1
+
+
+   table = table_header + rows + table_footer
+   return(table)
+
+
+
 
 def make_state_page(this_state):
    sjs = load_json_file("./json/" + this_state + ".json")
-
+   county_table = make_county_table(sjs)
    fp = open("templates/state.html", "r")
    template = ""
    for line in fp:
@@ -148,11 +312,9 @@ def make_state_page(this_state):
    template = template.replace("{TPM}", str(int(sjs['summary_info']['tpm'])))
    template = template.replace("{STATE_LAST_UPDATE}", str(sjs['summary_info']['state_data_last_updated']))
    template = template.replace("{COUNTY_LAST_UPDATE}", str(sjs['summary_info']['county_data_last_updated']))
-   template = template.replace("{PAGE_LAST_UPATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-   print(sjs['county_pop'])
+   template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
-   #county_table = make_county_table(sjs['county_data'], sjs['county_pop'])
-   #template = template.replace("{COUNTY_TABLE}", county_table)
+   template = template.replace("{COUNTY_TABLE}", county_table)
 
    if cfe("html/",1) == 0:
       os.makedirs("html")
@@ -166,6 +328,9 @@ def make_state_pages(this_state):
       make_state_page(this_state)
    else:
       print("Make all state pages.")
+      state_names, state_codes = load_state_names()
+      for st in state_names:
+         make_state_page(st)
 
 def make_all_plots(this_state,show=0):
    if this_state != "ALL":
@@ -251,9 +416,6 @@ def make_state_plots(this_state_code, show=0):
       
 
 def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,show=0):
-   print("DAYS:", bin_days) 
-   print("SUMS:", bin_sums) 
-   print("SUMS2:", bin_sums2) 
    fig, ax1 = plt.subplots()
    print("make_plot")
    width = .35
@@ -269,8 +431,6 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
       ax1.set_xticks(x)
       ax1.set_xticklabels(bin_days)
 
-      print(bin_days)
-      print(bin_sums)
       try:
       #if True:
          temp = []
@@ -288,17 +448,11 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                fff = 0
             temp.append(fff)
          func_data = temp 
-         print(bin_days)
-         print(func_data)
          ax1.plot(func_data, label='fit')
       except:
          print("Couldn't fit data curve for ax1")
-      #   exit()
 
 
-      print("BD:", len(bin_days))
-      #print("FIT DATA:", fit_data)
-      #exit()
 
 
    else:
@@ -313,8 +467,6 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                fff = 0
             temp.append(fff)
          func_data = temp 
-         print(bin_days)
-         print(func_data)
          ax1.plot(bin_days,func_data, label='fit')
       except:
          print("failed to fit curve for ax1")
@@ -327,7 +479,6 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
       ax2.plot(bin_days, bin_sums2 , color=line_color)
       ax2.set_ylabel(ya2_label)
    else: 
-      print(bin_sums2)
       ax2 = ax1.twinx()
       line_color = 'tab:red'
       if plot_type == 'ts':
@@ -348,8 +499,6 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                fff = 0
             temp.append(fff)
          func_data = temp
-         print(bin_days)
-         print(func_data)
          #ax2.plot(func_data, label='fit', color='tab:red')
          ax2.plot(func_data, label='fit', color='tab:red')
       except:
@@ -359,7 +508,6 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
 
    ax1.legend(loc='upper left')
    ax2.legend(loc='lower left')
-   print(bin_days)
    if cfe("./plots/", 1) == 0:
       os.makedirs("./plots/")
    plot_file = "plots/" + state + "-" + plot_type + ".png"
@@ -394,7 +542,6 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
 
    for day in level2_data:
       (this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm) = day
-      print("NEW/INCREASE:", new_cases, new_deaths, case_increase,death_increase)
       sdc = dc - first_death_date
       bin_days.append(sdc)
 
@@ -441,8 +588,6 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
       ax1.set_xticks(x)
       ax1.set_xticklabels(bin_days)
 
-      print(bin_days)
-      print(bin_sums)
       try:
       #if True:
          temp = []
@@ -460,21 +605,14 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                fff = 0
             temp.append(fff)
          func_data = temp 
-         print(bin_days)
-         print(func_data)
          ax1.plot(func_data, label='fit')
       except:
          print("Couldn't fit data curve")
 
 
-      print("BD:", len(bin_days))
-      #print("FIT DATA:", fit_data)
-      #exit()
 
 
    else:
-      print("BIN DAYS:", bin_days)
-      print("BIN SUMS :", bin_sums)
       ax1.plot(bin_days,bin_sums)
       try:
          popt,pcov = curve_fit(curve_func,bin_days,bin_sums, maxfev=10000 )
@@ -486,8 +624,6 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                fff = 0
             temp.append(fff)
          func_data = temp 
-         print(bin_days)
-         print(func_data)
          ax1.plot(bin_days,func_data, label='fit')
       except:
          print("failed to fit curve for ax2")
@@ -500,7 +636,6 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
       ax2.plot(bin_days, bin_sums2 , color=line_color)
       ax2.set_ylabel(ya2_label)
    else: 
-      print(bin_sums2)
       ax2 = ax1.twinx()
       line_color = 'tab:red'
       if plot_type == 'ts':
@@ -520,8 +655,6 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                fff = 0
             temp.append(fff)
          func_data = temp
-         print(bin_days)
-         print(func_data)
          #ax2.plot(func_data, label='fit', color='tab:red')
          ax22.plot(bin_days,func_data, label='fit')
       except:
@@ -531,9 +664,6 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
 
    ax1.legend(loc='upper left')
    ax2.legend(loc='lower left')
-   print(bin_days)
-   print("SUMS:", bin_sums)
-   print("SUMS2:", bin_sums2)
 
    plot_file = "plots/" + state + "-" + plot_type + ".png"
    plt.savefig(plot_file)
@@ -543,6 +673,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
 
 def make_all_level2_data():
    state_data,state_pop = load_state_data()
+   print(state_data)
    state_names, state_codes = load_state_names()
    county_pops = load_county_pop(state_codes)
    acdata = load_county_data()
@@ -565,16 +696,18 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    level2_data = add_enhanced_growth_stats("MD", level2_data)
    #(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) 
 
-   cj,last_c_date = enhance_cdata(this_state_code, cdata, cj)
+   cja,last_c_date = enhance_cdata(this_state_code, cdata, cj)
+   if this_state_code in cja:
+      cj = cja[this_state_code]
+   else:
+      cj = []
 
-   #print("state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay") 
 
    # Create state stats json object
    state_stats = []
    for data in level2_data:
       stat_obj = {}
       (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay) = data 
-      #print(state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay)
       stat_obj = { 
          "state_code" : state_code,
          "state_pop" : pop,
@@ -639,8 +772,6 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    save_json_file("./json/" + state_code + ".json", state_obj)
    print("Saved: ./json/" + state_code + ".json")
 
-   #for stobj in state_stats:
-   #   print(stobj)
 
 def enhance_county(this_state_code, this_county, data, cj):
    last_day = None
@@ -649,10 +780,6 @@ def enhance_county(this_state_code, this_county, data, cj):
    if this_county not in cj[this_state_code]:
       cj[this_state_code][this_county] = {}
   
-   #print("ENHANCE:", data['cd_data'])
-   # add growth (last,avg,med)
-   # add growth decay (med)
-   # zero day growth decay (med)
    first_death_day = None 
 
    dc = 0
@@ -660,7 +787,6 @@ def enhance_county(this_state_code, this_county, data, cj):
       (day,cases,deaths,pm_cases,pm_deaths,mortality) = d
       if first_death_day == None and int(deaths) > 0:
          first_death_day = dc
-         #print(day,cases)
       dc += 1
    if first_death_day is None:
       first_death_day = 0 
@@ -743,8 +869,8 @@ def enhance_county(this_state_code, this_county, data, cj):
       cd_obj['zero_day'] = zero_day
       cd_obj['cases'] = cases
       cd_obj['deaths'] = deaths
-      cd_obj['pm_cases'] = pm_cases
-      cd_obj['pm_deaths'] = pm_deaths
+      cd_obj['cpm'] = pm_cases
+      cd_obj['dpm'] = pm_deaths
       cd_obj['new_cases'] = new_cases
       cd_obj['new_deaths'] = new_deaths
       cd_obj['mortality'] = mortality
@@ -766,6 +892,12 @@ def enhance_county(this_state_code, this_county, data, cj):
 
 def sort_date(json):
    return(int(json['zero_day']))
+
+def sort_cpm(json):
+   try:
+      return(int(json['cpm']))
+   except:
+      return(0)
  
 def enhance_cdata(this_state_code, cdata,cj):
    # add growth vars, zero day, decay 
@@ -919,14 +1051,19 @@ def load_state_data():
    for line in fp:
       line = line.replace("\n", "")
       fields = line.split(",")
-      if len(fields) == 17 and lc > 0:
+      #print(len(fields))
+#date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease
+      if len(fields) == 25 and lc > 0:
+         #print(fields[14], fields[15])
          date = fields[0]
          state = fields[1]
          cases = fields[2]
-         deaths = fields[6]
+         deaths = fields[14]
+         hospital = fields[15]
+         recovered = fields[11]
          tests = fields[10]
-         death_increase = fields[12]
-         case_increase = fields[15]
+         death_increase = fields[20]
+         case_increase = fields[22]
 
          if state not in state_data:
             state_data[state] = []
@@ -1033,7 +1170,7 @@ def load_county_data():
            exit()
 
      if pm_cases > 0 and pm_deaths > 0:
-        mortality = pm_deaths / pm_cases
+        mortality = round((pm_deaths / pm_cases) * 100,2)
      else:
         mortality = 0
      #cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
