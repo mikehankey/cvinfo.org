@@ -203,20 +203,7 @@
       display: none;
    }
 
-   @media(max-width:800px) {
-      .mbo {
-         display:inline-block;
-      }
 
-      .flg {
-         display:none
-      }
-
-      dl {
-         display: block;
-         column-count: 1;
-      }
-   }
 
 
    #main-container {
@@ -356,16 +343,7 @@
    cursor: pointer;
 }
 
-@media screen and (min-width: 600px) {
-   .grid {
-     display: flex;
-     flex-wrap: wrap;
-     flex-direction: row;
-   }
-   .cell {
-     width: 33.3%;
-   }
- }
+
 
 
  /* SVG Map */
@@ -406,4 +384,53 @@
  .tablesorter-default input.tablesorter-filter,.tablesorter-default select.tablesorter-filter{width:95%;height:auto;margin:.45rem auto;padding:.45rem;background-color:#fff;border:1px solid #bbb;color:#333;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-webkit-transition:height .1s ease;-moz-transition:height .1s ease;-o-transition:height .1s ease;transition:height .1s ease}
  .tablesorter .filtered{display:none}
  .tablesorter .tablesorter-errorRow td{text-align:center;cursor:pointer;background-color:#e6bf99}
+
+
+
+ @media screen and (min-width: 600px) {
+   .grid {
+     display: flex;
+     flex-wrap: wrap;
+     flex-direction: row;
+   }
+   .cell {
+     width: 33.3%;
+   }
+ }
+
+ @media screen and (max-width:800px) {
+   #main-container {
+      margin-left: .5rem;
+      margin-right: .5rem;
+   }
+
+   .graph_container {
+      padding: 0;
+   }
+
+   .mbo {
+      display:inline-block;
+   }
+
+   .flg {
+      display:none
+   }
+
+   dl {
+      display: block;
+      column-count: 1;
+   }
+
+   #state span {
+      float: none;
+      display: block;
+      text-align: left;
+      margin: 0.2rem 0 0 0;
+   }
+
+   #state_counties_map svg {
+      width: 100%;
+      height: auto;
+  }
+}
  
