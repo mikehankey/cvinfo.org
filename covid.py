@@ -34,7 +34,7 @@ This program will:
 
 #################################################################################################
 # GLOBAL VARS
-from conf import *	
+from conf_vince import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -305,7 +305,7 @@ def make_main_page():
    # Add last update date
 
 
-   out = open("./main.html", "w")
+   out = open(OUT_PATH + "/main.html", "w+")
    out.write(temp)
    out.close()
 
@@ -415,7 +415,7 @@ def make_county_table(sjs):
 def make_state_page(this_state):
    sjs = load_json_file("./json/" + this_state + ".json")
    county_table = make_county_table(sjs)
-   fp = open("templates/state.html", "r")
+   fp = open("./templates/state.html", "r")
    template = ""
    for line in fp:
       template += line
@@ -438,15 +438,17 @@ def make_state_page(this_state):
    template = template.replace("{STATE_LAST_UPDATE}", str(sjs['summary_info']['state_data_last_updated']))
    template = template.replace("{COUNTY_LAST_UPDATE}", str(sjs['summary_info']['county_data_last_updated']))
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-
+   template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
 
-   if cfe("states/",1) == 0:
-      os.makedirs("states")
-   outfp = open(OUT_PATH + "/" + this_state + ".html", "w+")
+   if cfe(OUT_PATH + "/states/",1) == 0:
+      os.makedirs(OUT_PATH + "/states/")
+
+   outfp = open(OUT_PATH + "/states/" + this_state + ".html", "w+")
    print("Saved states/" + this_state + ".html")
-   outfp.write(OUT_PATH + "/" + template)
+   outfp.write(template)
    outfp.close()
+
 
 def make_state_pages(this_state):
    if this_state != "ALL":

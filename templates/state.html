@@ -18,118 +18,163 @@
 
 </head>
 <body>
-   <h1>COVID 19 - US Stats</h1>
+   <h1>COVID 19 - {STATE_NAME} Stats</h1>
+   <div id="up">Last Update: {LAST_UPDATE}</div>
+
    <div id="bc">
-      <a href="http://www.cvinfo.org/index.html" class="s">USA</a>
-      <a>{STATE_NAME}</a>
+      <a href="../main.html"><b>USA</b></a> 
+      <a href="NY.html">New York</a>
+      <a href="NJ.html">New Jersey</a>
+      <a href="MI.html">Michigan</a>
+      <a href="MO.html">Missouri</a>
+      <a href="LA.html">Louisiana</a>
+      <a href="MA.html">Massachusetts</a>
+      <a href="CT.html">Connecticut</a>
+      <a href="DC.html">Washington DC</a>
+      <a href="WA.html">Washington</a>
+      <a href="IL.html">Illinois</a>
+      <a href="VT.html">Vermont</a>
+      <a href="RI.html">Rhode Island</a>
+      <a href="CO.html">Colorado</a>
+      <a href="DE.html">Delaware</a>
+      <a href="PA.html">Pennsylvania</a>
+      <a href="GA.html">Georgia</a>
+      <a href="NV.html">Nevada</a>
+      <a href="TN.html">Tennessee</a>
+      <a href="IN.html">Indiana</a>
+      <a href="MS.html">Mississippi</a>
+      <a href="FL.html">Florida</a>
+      <a href="UT.html">Utah</a>
+      <a href="MD.html">Maryland</a>
+      <a href="WI.html">Wisconsin</a>
+      <a href="ID.html">Idaho</a>
+      <a href="NH.html">New Hampshire</a>
+      <a href="ME.html">Maine</a>
+      <a href="SC.html">South Carolina</a>
+      <a href="AL.html">Alabama</a>
+      <a href="CA.html">California</a>
+      <a href="OH.html">Ohio</a>
+      <a href="WY.html">Wyoming</a>
+      <a href="AZ.html">Arizona</a>
+      <a href="AR.html">Arkansas</a>
+      <a href="ND.html">North Dakota</a>
+      <a href="OR.html">Oregon</a>
+      <a href="AK.html">Alaska</a>
+      <a href="IA.html">Iowa</a>
+      <a href="VA.html">Virginia</a>
+      <a href="KS.html">Kansas</a>
+      <a href="HI.html">Hawaii</a>
+      <a href="NC.html">North Carolina</a>
+      <a href="OK.html">Oklahoma</a>
+      <a href="NM.html">New Mexico</a>
+      <a href="SD.html">South Dakota</a>
+      <a href="TX.html">Texas</a>
+      <a href="KY.html">Kentucky</a>
+      <a href="WV.html">West Virginia</a>
+      <a href="NE.html">Nebraska</a> 
    </div> 
-   <table width=80%><tr><td>
-      <div class="fl ff" >
-            <img src="http://archive.allsky.tv/covid/flags/{STATE_CODE_L}.png"/>
+
+
+   <div id="main-container">
+      <div id="state" class="clearfix">
+         <div class="flg">
+               <img src="http://archive.allsky.tv/covid/flags/{STATE_CODE_L}.png"/>
+         </div>
+         <div class="std">
+               <h2>{STATE_NAME} <span>Population: <b>{POPULATION}</b></span></h2>
+               <dl> 
+                     <dt>Cases </dt>
+                     <dd>{CASES}</dd>
+                     <dt>Deaths  </dt>
+                     <dd>{DEATHS}</dd>
+                     <dt>New Cases </dt>
+                     <dd>{CASE_INCREASE}</dd>
+                     <dt>New Deaths</dt>
+                     <dd>{DEATH_INCREASE}</dd>
+                     <dt>Cases per million </dt>
+                     <dd>{CPM}</dd>
+                     <dt>Deaths per million </dt>
+                     <dd>{DPM}</dd>
+                     <dt>Total Tests</dt>
+                     <dd>{TESTS}</dd>
+                     <dt>Tests Per Million</dt>
+                     <dd>{TPM}</dd>
+                     <dt>Case Growth %</dt>
+                     <dd>{CASE_GROWTH}</dd>
+                     <dt>Death Growth %</dt>
+                     <dd>{DEATH_GROWTH}</dd>
+                     <dt>Mortality Rate</dt>
+                     <dd>{MORTALITY}</dd>
+                     <dt>State Data Update</dt>
+                     <dd>{STATE_LAST_UPDATE}</dd>
+                     <dt>County Data Update</dt>
+                     <dd>{COUNTY_LAST_UPDATE}</dd> 
+                  </dl>
+         </div>
       </div>
-   </td><td>
-      <div class="fl" >
-            <h3>{STATE_NAME}</h3>
-            <dl> 
-            
-               <dt>Population</dt>
-               <dd>{POPULATION}</dd>
-               <dt>Cases </dt>
-               <dd>{CASES}</dd>
-             
-               <dt>Deaths  </dt>
-               <dd>{DEATHS}</dd>
-
-               <dt>New Cases </dt>
-               <dd>{CASE_INCREASE}</dd>
-
-               <dt>New Deaths</dt>
-               <dd>{DEATH_INCREASE}</dd>
-            
-               <dt>Cases per million </dt>
-               <dd>{CPM}</dd>
-             
-               <dt>Deaths per million </dt>
-               <dd>{DPM}</dd>
-
-
-               <dt>Total Tests</dt>
-               <dd>{TESTS}</dd>
-
-               <dt>Tests Per Million</dt>
-               <dd>{TPM}</dd>
-
-               <dt>Case Growth %</dt>
-               <dd>{CASE_GROWTH}</dd>
-
-               <dt>Death Growth %</dt>
-               <dd>{DEATH_GROWTH}</dd>
-            
-               <dt>Mortality Rate</dt>
-               <dd>{MORTALITY}</dd>
-             
-               <dt>State Data Update</dt>
-               <dd>{STATE_LAST_UPDATE}</dd>
-               <dt>County Data Update</dt>
-               <dd>{COUNTY_LAST_UPDATE}</dd>
-               <dt>Page Update</dt>
-               <dd>{PAGE_LAST_UPDATE}</dd>
-            </dl>
-      </div>
-   </td></tr></table>
-   <center>
-
-   <div id="graphs" class="clearfix">
-      <h3>Graphs</h3>
-      <div class="graph_container">
-            <div class="grid">
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-cd.png" />
-              </div>
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-pm.png" />
-              </div>
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-in.png" />
-              </div>
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-ts.png" />
-              </div>
-              <div class="cell">
-                  <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-gr.png" />
-               </div>
-               <div class="cell">
-                  <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-mt.png" />
-               </div>
-            </div>
-          </div>
    
-      </div>
+      <div id="graphs" class="clearfix">
+            <h3>Graphs</h3>
+            <div class="graph_container">
+                  <div class="grid">
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-cd.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-pm.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-in.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-ts.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-gr.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-mt.png">
+                     </div>
+                  </div>
+            </div>
+         </div>
+
    </div>
 
-<div id="graph_img_viewer" class="modal">
-   <span class="close">&times;</span>
-   <img class="modal-content" id="img_fv">
-   <div id="caption"></div>
-</div>
+   <div id="graph_img_viewer" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="img_fv">
+      <div id="caption"></div>
+   </div>
 
-  {COUNTY_TABLE}
+   <div class="table-holder">
+      {COUNTY_TABLE} 
+   </div>
+ 
+
+  <div id="ft">
+      cvinfo.org provides enhanced COVID-19 statistics and reports made from open source data<BR> 
+      <a href="https://covidtracking.com/">Covid Tracking</a> -  
+      <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a> <BR>
+      contact: mike.hankey[@]gmail.com
+   </div>
 
 <script>
-
+   
+   var cur_state =  "{STATE_CODE_L}";
+   cur_state = cur_state.toUpperCase();
 
   function open_modal() {
-     // Get the modal
       var modal = document.getElementById("graph_img_viewer");
-
-      // Get the image and insert it inside the modal - use its "alt" text as a caption
-      var img = document.getElementById("plots_img");
       var modalImg = document.getElementById("img_fv"); 
-      img.onclick = function(){
-         modal.style.display = "block";
-         modalImg.src = this.src; 
-      }
 
+     $('.cell img').click(function() {
+         modal.style.display = "block";
+         modalImg.src = $(this).attr('src'); 
+     })
+
+    
+    
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
 
@@ -137,8 +182,7 @@
       span.onclick = function() {
          modal.style.display = "none";
       }
-  }
-
+  } 
 
   $(function() {
      
@@ -153,6 +197,9 @@
      
      // Click on stats image
      open_modal();
+
+     // Set Active State
+     $('a[href="'+cur_state+'.html"]').addClass('active');
 
   })
    
