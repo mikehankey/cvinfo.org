@@ -33,8 +33,12 @@ This program will:
 """
 
 #################################################################################################
+# Vincent's VN
+ORG_PATH = "/var/www/project/COVID/Git/cvinfo.org"
+
 # GLOBAL VARS
 ORG_PATH =  "/home/ams/cvinfo.org"
+
 
  
 # PATHS 
