@@ -50,7 +50,9 @@
          }).click(function() {
             var $t = $(this);
             var state = $t.attr('id'); 
-            window.location = "./states/" + state + ".html"
+            if(state!='frames') {
+               window.location = "./states/" + state + ".html"
+            }
          });
       }
 
