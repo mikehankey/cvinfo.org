@@ -50,7 +50,9 @@
          }).click(function() {
             var $t = $(this);
             var state = $t.attr('id'); 
-            window.location = "./states/" + state + ".html"
+            if(state!='frames') {
+               window.location = "./states/" + state + ".html"
+            }
          });
       }
 
@@ -86,7 +88,8 @@
 			sortReset      : true,
 			sortRestart    : true
       });
-        
+      $('th[data-column=5]').click();
+      $('th[data-column=5]').click();  
    }) 
 </script>
 </body>
