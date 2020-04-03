@@ -589,7 +589,9 @@ def make_state_pages(this_state):
       print("Make all state pages.")
       state_names, state_codes = load_state_names()
       for st in state_names:
-         make_state_page(st)
+         print("STATE:", st)
+         if st is not "":
+            make_state_page(st)
 
 def make_all_plots(this_state,show=0):
    if this_state != "ALL":
