@@ -259,8 +259,9 @@ def make_main_page():
    # Load svg map
    with open(PATH_TO_US_SVG_MAP, 'r') as file:  
       us_map_template = file.read()
-  
-   COLORS=['b','g','y','o','r']
+ 
+
+   #COLORS=['b','g','y','o','r']
  
    rk = 0 
    state_rank_list = []
@@ -280,19 +281,18 @@ def make_main_page():
       if 40 < rk <= 55:
          color_of_state = COLORS[0]
 
-      print("COLOR:" + "{"+state_code+"_color_class}")
+      #print("COLOR:" + "{"+state_code+"_color_class}")
       us_map_template = us_map_template.replace("{"+state_code+"_color_class}", color_of_state)  
       #{'state_code': 'AL', 'state_name': 'Alabama', 'state_population': 4.903185, 'cases': 1233, 'deaths': 32, 'new_cases': 156, 'new_deaths': 6, 'tests': 0, 'tpm': 0, 'cpm': 251, 'dpm': 6, 'cg_last': 12.65, 'dg_last': 18.75, 'cg_avg': 30.3, 'dg_avg': 46.98, 'cg_med': 21.98, 'dg_med': 50.0, 'cg_med_decay': -0.24, 'dg_med_decay': 6.41, 'mortality': 2.6, 'state_data_last_updated': '20200402', 'county_data_last_updated': '20200401'}
       
       state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality'],color_of_state ))
       rk += 1
 
-   #(state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort,cpm_rank,dpm_rank,cgr_rank,mort_rank,color_of_state)  = data_row
 
    state_rank_list.sort(key=sort_cpm,reverse=True)
    state_table_html = state_table(state_rank_list)
    # make main page
-   fp = open("templates/main.html", "r")
+   fp = open("./templates/main.html", "r")
    temp = ""
    for line in fp:
       temp += line
@@ -300,10 +300,10 @@ def make_main_page():
    temp = temp.replace("{US_MAP}", us_map_template)
    temp = temp.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
-   # Add last update date
 
 
-   out = open(OUT_PATH + "/main.html", "w+")
+   
+   out = open("./main.html", "w+")
    out.write(temp)
    out.close()
 
@@ -438,14 +438,6 @@ def make_state_page(this_state):
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
    template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
-
-   # Create SVG map of the state with all counties
-   
-   with open(PATH_TO_STATE_SVG_MAP + "/" + sjs['summary_info']['state_code'] +".svg", 'r') as file:  
-      state_map = file.read()
-   
-   template = template.replace("{SVG_STATE_COUNTIES}",  state_map )
-   
 
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")
