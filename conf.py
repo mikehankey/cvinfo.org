@@ -8,6 +8,7 @@ PUB_DIR = "/mnt/archive.allsky.tv/cvinfo.org/"
 JSON_PATH = ORG_PATH + "/json"
 
 PATH_TO_US_SVG_MAP  = ORG_PATH + "/templates/USA_map_template.svg"
+PATH_TO_STATE_SVG_MAP  = ORG_PATH + "/templates/states/"
 PATH_TO_MAIN_TEMPLATE = ORG_PATH + "/templates/main.html"
 
 # INPUT

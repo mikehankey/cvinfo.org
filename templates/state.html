@@ -11,18 +11,18 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="../dist/js/jquery.tablesorter.min.js"></script>
+   <script src="./dist/js/jquery.tablesorter.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="../dist/css/m.css" rel="stylesheet"> 
+   <link href="./dist/css/m.css" rel="stylesheet"> 
  
 
 </head>
 <body>
-   <h1>COVID 19 - {STATE_NAME} Stats</h1>
+   <h1>COVID 19 <br class="mbo"> {STATE_NAME} Stats</h1>
    <div id="up">Last Update: {LAST_UPDATE}</div>
 
    <div id="bc">
-      <a href="../main.html"><b>USA</b></a> 
+      <a href="main.html"><b>USA</b></a> 
       <a href="NY.html">New York</a>
       <a href="NJ.html">New Jersey</a>
       <a href="MI.html">Michigan</a>
@@ -139,16 +139,18 @@
             </div>
          </div>
 
-   </div>
+ 
 
-   <div id="graph_img_viewer" class="modal">
-      <span class="close">&times;</span>
-      <img class="modal-content" id="img_fv">
-      <div id="caption"></div>
-   </div>
+      <div id="state_counties_map">
+         <h3>State Map</h3>
+         {SVG_STATE_COUNTIES}
+      </div>
 
-   <div class="table-holder">
-      {COUNTY_TABLE} 
+      <div class="table-holder">
+         {COUNTY_TABLE} 
+      </div>
+
+
    </div>
  
 
@@ -158,6 +160,13 @@
       <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a> <BR>
       contact: mike.hankey[@]gmail.com
    </div>
+
+
+   <div id="graph_img_viewer" class="modal">
+         <span class="close">&times;</span>
+         <img class="modal-content" id="img_fv">
+         <div id="caption"></div>
+      </div>
 
 <script>
    

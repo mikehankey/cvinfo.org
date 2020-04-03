@@ -6,4 +6,5 @@
 /__pycache__/
 /html/*.html
 /html/states/*.html
+/covid-19-data/
 conf_vince.py
