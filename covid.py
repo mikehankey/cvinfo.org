@@ -12,22 +12,23 @@ how this approach is different:
    3) ranking states and counties to find outliers. 
 
 
-This program will:
+This program :
   - downloads USA state and county data from covidtracking.com and the NYT COVID-19 data repo on git hub.
     http://covidtracking.com/api/states/daily.csv
     https://github.com/nytimes/covid-19-data
-  - analyze the data and compute the following for each state, county and day.
+  - analyzes the data and computes the following extra data fields for each state, county and day.
     - CPM, DPM per day per state, per county (Case / Death Per Million)
     - Zero Day date (number of days since first death for each entry)
     - Mortality rate per entry (deaths / cases per day,state,county)
     - Case and death growth rates (change in cases and deaths per day,state,county)
     - Growth decay (change in growth per day)
   - After data has been analyzed the program:
-    - creates simplified "Level2" json data structures for all state and county data
-    - generates plots for each state
-    - generates country plots
+    - creates simplified "Level2" json data structures for all state and all county data (states-level2.json, counties-level2.json)
+    - creates state.json "Level2" file for each state with all county info inside it
+    - generates currently 6 plots for each state
     - creates HTML page with county data for each state
     - creates main page for USA
+    - generates entire country plots(PENDING)
 
 
 """
@@ -111,8 +112,100 @@ def main_menu():
       make_state_pages(this_state)
    if cmd == "5":
       make_main_page()
+   if cmd == "6":
+      make_all_county_page()
    if cmd == "7":
       publish_site()
+
+def make_all_county_page():
+   cl2 = load_json_file("json/covid-19-level2-counties.json")
+   cl2.sort(key=sort_cpm,reverse=True)
+   total_c = len(cl2)
+
+   table_header = """
+   <div id="table">
+      <table id="states" class="tablesorter ">
+            <thead>
+               <tr>
+                  <th>&nbsp;</th>
+                  <th>State</th>
+                  <th>County</th>
+                  <th>Population</th>
+                  <th>Cases</th>
+                  <th>Deaths</th>
+                  <th>Cases per m</th>
+                  <th>Deaths per m</th>
+                  <th>Growth Rate</th>
+                  <th>Mortality Rate</th>
+               </tr>
+            </thead>
+            <tbody  class="list-of-states" >
+   """
+
+   row_html = """
+                  <tr data-state="{STATE_CODE}" id="{FIP}">
+                     <td><span class="cl {COLOR}"></span></td>
+                     <td>{STATE_CODE}</td>
+                     <td>{COUNTY}</td>
+                     <td>{COUNTY_POP}</td>
+                     <td>{CASES}</td>
+                     <td>{DEATHS}</td>
+                     <td>{CPM}</td>
+                     <td>{DPM}</td>
+                     <td>{CGR}</td>
+                     <td>{MORTALITY}</td>
+                  </tr>
+   """
+
+
+   table_footer = """
+            </tbody>
+      </table>
+   </div>
+   """
+   rows = ""
+   cc = 0
+   for dr in cl2:
+      if True:
+         if total_c > 0:
+            rank_perc = cc / total_c
+         else:
+            rank_perc = 0
+         if rank_perc < .2:
+            color = COLORS[4]
+         if .2 <= rank_perc < .4:
+            color = COLORS[3]
+         if .4 <= rank_perc < .6:
+            color = COLORS[2]
+         if .6 <= rank_perc < .8:
+            color = COLORS[1]
+         if .8 <= rank_perc <= 1:
+            color = COLORS[0]
+
+
+         row = row_html
+         row = row.replace("{STATE_CODE}", dr['state'])
+         row = row.replace("{FIP}", dr['fips'])
+         row = row.replace("{COLOR}", color)
+         row = row.replace("{COUNTY}", dr['county'])
+         row = row.replace("{CASES}", str(dr['cases']))
+
+         row = row.replace("{COUNTY_POP}", str(dr['population']))
+         row = row.replace("{DEATHS}", str(dr['deaths']))
+         row = row.replace("{CPM}", str(dr['cpm']))
+         row = row.replace("{DPM}", str(dr['dpm']))
+         row = row.replace("{CGR}", str(dr['cg_med']))
+         row = row.replace("{DGR}", str(dr['dg_med']))
+         row = row.replace("{MORTALITY}", str(dr['mortality']))
+         #row = row.replace("{LAST_UPDATE}", update)
+         rows += row
+         cc += 1
+
+   html = table_header + rows + table_footer
+   fp = open("all-counties.html", "w")
+   fp.write(html)
+   fp.close()
+
 
 def publish_site():
    print("""
@@ -180,10 +273,25 @@ def merge_state_data():
 
    state_names, state_codes = load_state_names()
    asd = []
+   acd = []
+
    for st in state_names:
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
       asd.append(sd)
-   save_json_file(JSON_PATH + "/" +  "states_level2.json", asd)
+
+      cd = sd['county_stats']
+      for county in cd:
+         fips = cd[county]['fips']
+         pop = cd[county]['population']
+         last_stats = cd[county]['county_stats'][-1]
+         last_stats['state'] = st
+         last_stats['county'] = county
+         last_stats['population'] = pop
+         last_stats['fips'] = fips
+         print(last_stats) 
+         acd.append(last_stats)
+   save_json_file(JSON_PATH + "/" +  "covid-19-level2-states.json", asd)
+   save_json_file(JSON_PATH + "/" +  "covid-19-level2-counties.json", acd)
    return(asd)
 
 def state_table(data):
@@ -810,6 +918,7 @@ def make_all_level2_data():
    for state_code in state_names:
 
       make_level2_data(state_code, state_data, state_pop,state_names,county_pops,acdata)
+   merge_state_data()
 
 def make_level2_data(this_state_code, state_data, state_pop,state_names,county_pops,acdata):
    cj = {}
@@ -1039,6 +1148,7 @@ def enhance_cdata(this_state_code, cdata,cj):
       cd_data, cd_objs,last_date = enhance_county(this_state_code, key,cdata[key],cj)
       cj[this_state_code][key]['county_stats'] = cd_objs 
       cj[this_state_code][key]['fips'] = cdata[key]['fips']
+      cj[this_state_code][key]['population'] = cdata[key]['population']
  
    return(cj,last_date)
 
@@ -1312,7 +1422,7 @@ def load_county_data():
      # need to add zero day, growth and decay but not here?
      cj[state_code][county]['cd_data'].append([day,cases,deaths,pm_cases,pm_deaths,mortality])
   #print("SAVED: json/county-level2.json")
-  #save_json_file("./json/county-level2.json", cj)
+  save_json_file("./json/county-level2.json", cj)
   return(cj)
 
 
