@@ -35,7 +35,7 @@ This program :
 
 #################################################################################################
 # GLOBAL VARS
-from conf_vince   import *	
+from conf import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -118,6 +118,12 @@ def main_menu():
       publish_site()
 
 def make_all_county_page():
+
+   fp = open("./templates/all-counties.html", "r")
+   template = ""
+   for line in fp:
+      template += line
+
    cl2 = load_json_file("json/covid-19-level2-counties.json")
    cl2.sort(key=sort_cpm,reverse=True)
    total_c = len(cl2)
@@ -201,7 +207,9 @@ def make_all_county_page():
          rows += row
          cc += 1
 
+   template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
    html = table_header + rows + table_footer
+   html = template.replace("{COUNTY_TABLE}", html)
    fp = open("all-counties.html", "w")
    fp.write(html)
    fp.close()
@@ -581,7 +589,9 @@ def make_state_pages(this_state):
       print("Make all state pages.")
       state_names, state_codes = load_state_names()
       for st in state_names:
-         make_state_page(st)
+         print("STATE:", st)
+         if st is not "":
+            make_state_page(st)
 
 def make_all_plots(this_state,show=0):
    if this_state != "ALL":
