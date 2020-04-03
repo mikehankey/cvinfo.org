@@ -6,3 +6,4 @@
 /__pycache__/
 /html/*.html
 /html/states/*.html
+conf_vince.py

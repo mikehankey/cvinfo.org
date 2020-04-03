@@ -34,7 +34,7 @@ This program will:
 
 #################################################################################################
 # GLOBAL VARS
-from conf import *	
+from conf  import *	
  
 #UI
 COLORS=['b','g','y','o','r']
