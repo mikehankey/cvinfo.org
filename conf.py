@@ -1,5 +1,5 @@
 # GLOBAL VARS
-ORG_PATH =  "/home/ams/cvinfo.org"
+ORG_PATH =  "/home/ams/cvinfo.org/"
  
  
 # PATHS 
@@ -17,6 +17,5 @@ STATES_JSON_DATA_FOLDER =  ORG_PATH + "/data/"
 TEMPLATES_FOLDER = ORG_PATH + "/templates/"
 
 #OUTPUT
-OUT_PATH = "/var/www/projects/COVID/LIVE/out"
-OUT_PATH = ORG_PATH  + "html/"
+OUT_PATH = ORG_PATH  + "states/"
 OUT_INDEX = OUT_PATH  + "/index.html"

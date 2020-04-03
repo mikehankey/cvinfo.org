@@ -419,9 +419,9 @@ def make_state_page(this_state):
 
    if cfe("states/",1) == 0:
       os.makedirs("states")
-   outfp = open(OUT_PATH + "/states/" + this_state + ".html", "w+")
+   outfp = open(OUT_PATH + "/" + this_state + ".html", "w+")
    print("Saved states/" + this_state + ".html")
-   outfp.write(OUT_PATH + "/states/" + template)
+   outfp.write(OUT_PATH + "/" + template)
    outfp.close()
 
 def make_state_pages(this_state):
