@@ -33,6 +33,8 @@ This program will:
 """
 
 #################################################################################################
+# GLOBAL VARS
+from conf import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -53,12 +55,8 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.optimize import curve_fit
 from datetime import datetime, timedelta
 import cv2
+
 import sys
-
-
-# Import PATHS
-from conf_vince import *
-
 
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
@@ -87,7 +85,8 @@ def main_menu():
    print("4) Generate state pages.")
    print("5) Generate main page.")
    print("6) Generate all counties page.")
-   print("7) Quit.")
+   print("7) Publish Site To PUB Folder.")
+   print("8) Quit.")
 
    cmd = input("What function do you want to run: ")
    if cmd == "1":
@@ -111,6 +110,46 @@ def main_menu():
       make_state_pages(this_state)
    if cmd == "5":
       make_main_page()
+   if cmd == "7":
+      publish_site()
+
+def publish_site():
+   print("""
+   Select publishing option:
+      1) Publish just HTML 
+      2) Publish all data content - main.html, state pages, state plots
+      3) Publish EVERYTHING images, cs, js etc 
+   """)
+   mode = input ("What do you want to publish?")
+
+   # make out dirs if they don't already exist
+   if cfe(PUB_DIR + "states/", 1) == 0:
+      os.makedirs(PUB_DIR + "states/")
+   if cfe(PUB_DIR + "plots/", 1) == 0:
+      os.makedirs(PUB_DIR + "plots/")
+
+   if mode == "1":
+      cmd = "cp states/* " + PUB_DIR + "states/" 
+      print(cmd)
+      os.system(cmd)
+      cmd = "cp main.html " + PUB_DIR + "main.html" 
+      print(cmd)
+      os.system(cmd)
+
+   if mode == "2":
+      cmd = "cp plots/* " + PUB_DIR + "plots/" 
+      print(cmd)
+      os.system(cmd)
+      cmd = "cp states/* " + PUB_DIR + "states/" 
+      print(cmd)
+      os.system(cmd)
+      cmd = "cp main.html " + PUB_DIR + "main.html" 
+      print(cmd)
+      os.system(cmd)
+   if mode == "3":
+      cmd = "cp -r * " + PUB_DIR 
+      print(cmd)
+      os.system(cmd)
 
 def merge_state_data():
 
@@ -242,7 +281,7 @@ def make_main_page():
    # Add last update date
 
 
-   out = open("./html/main.html", "w+")
+   out = open("./main.html", "w")
    out.write(temp)
    out.close()
 
@@ -311,7 +350,6 @@ def make_county_table(sjs):
             rank_perc = cc / total_c
          else:
             rank_perc = 0
-         print("RANK PERC:", rank_perc)
          if rank_perc < .2:
             color = COLORS[4]
          if .2 <= rank_perc < .4:
