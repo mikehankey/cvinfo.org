@@ -3,6 +3,7 @@ ORG_PATH =  "/home/ams/cvinfo.org"
  
  
 # PATHS 
+JSON_PATH = ORG_PATH + "/json"
 PATH_TO_US_SVG_MAP  = ORG_PATH + "/templates/USA_map_template.svg"
 PATH_TO_MAIN_TEMPLATE = ORG_PATH + "/templates/main.html"
 

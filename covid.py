@@ -63,13 +63,13 @@ from conf_vince import *
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
 def update_data_sources():
-  if cfe("./data/", 1) != 1:
-     os.makedirs("./data")
+  if cfe(ORG_PATH +"/data/", 1) != 1:
+     os.makedirs(ORG_PATH + "/data")
   print("updating NYT COVID-19 git hub data repo. ")
-  if cfe("./covid-19-data/", 1) == 0:
+  if cfe(ORG_PATH +"/covid-19-data/", 1) == 0:
      # NYT REPO IS NOT INSTALLED, CLONE IT NOW. 
      os.system("git clone https://github.com/nytimes/covid-19-data.git")
-  os.system("cd ./covid-19-data/; git pull")
+  os.system("cd "+ ORG_PATH + "/covid-19-data/; git pull")
   print("updating covidtracking.com daily.csv data file.")
   os.system("wget " + STATE_DAY_URL + " -O covid-19-data/covidtracking.com-daily.csv" )
 
@@ -117,9 +117,9 @@ def merge_state_data():
    state_names, state_codes = load_state_names()
    asd = []
    for st in state_names:
-      sd = load_json_file("./json/" + st + ".json") 
+      sd = load_json_file(JSON_PATH + "/" + st + ".json") 
       asd.append(sd)
-   save_json_file("./json/states_level2.json", asd)
+   save_json_file(JSON_PATH + "/" +  "states_level2.json", asd)
    return(asd)
 
 def state_table(data):
