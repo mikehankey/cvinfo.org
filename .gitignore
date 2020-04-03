@@ -2,3 +2,4 @@
 ./json/*.json
 ./dist/*.html
 ./covid-19-data/*.csv
+./__pycache__/
