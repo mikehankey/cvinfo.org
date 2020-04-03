@@ -199,7 +199,24 @@
       border: 1px solid rgba(0,0,0,.1);
    }
 
+   .mbo  {
+      display: none;
+   }
 
+   @media(max-width:800px) {
+      .mbo {
+         display:inline-block;
+      }
+
+      .flg {
+         display:none
+      }
+
+      dl {
+         display: block;
+         column-count: 1;
+      }
+   }
 
 
    #main-container {
