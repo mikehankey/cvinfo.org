@@ -237,6 +237,10 @@ def make_main_page():
       temp += line
    temp = temp.replace("{STATE_TABLE}", state_table_html)
    temp = temp.replace("{US_MAP}", us_map_template)
+   temp = temp.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+   # Add last update date
+
 
    out = open("./html/main.html", "w+")
    out.write(temp)

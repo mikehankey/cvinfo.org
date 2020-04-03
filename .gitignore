@@ -4,3 +4,4 @@
 /states/*.html
 /covid-19-data/*.csv
 /__pycache__/
+/html/*.html
