@@ -34,7 +34,7 @@ This program will:
 
 #################################################################################################
 # GLOBAL VARS
-from conf import *	
+from conf_vince import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -414,7 +414,7 @@ def make_state_page(this_state):
    template = template.replace("{STATE_LAST_UPDATE}", str(sjs['summary_info']['state_data_last_updated']))
    template = template.replace("{COUNTY_LAST_UPDATE}", str(sjs['summary_info']['county_data_last_updated']))
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-
+   template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
 
    if cfe("states/",1) == 0:
