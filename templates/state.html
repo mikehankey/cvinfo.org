@@ -11,9 +11,9 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="./dist/js/jquery.tablesorter.min.js"></script>
+   <script src="../dist/js/jquery.tablesorter.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="./dist/css/m.css" rel="stylesheet"> 
+   <link href="../dist/css/m.css" rel="stylesheet"> 
  
 
 </head>
@@ -181,9 +181,7 @@
          modal.style.display = "block";
          modalImg.src = $(this).attr('src'); 
      })
-
-    
-    
+ 
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
 
@@ -193,7 +191,40 @@
       }
   } 
 
+
+
+
+
+   function actionsOnSVGState() {
+         $('path,circle').mouseenter(function() {
+            var $t = $(this);
+            var state = $t.attr('id'); 
+            $("path, tr,circle").removeClass('on');
+            $("path#"+state).addClass('on'); 
+            $("tr[data-state="+state+"]").addClass('on');
+            $('.selected').removeClass('selected');
+ 
+         }).mouseleave(function() {
+            $('path, tr').removeClass('on');
+         }).click(function() {
+            var $t = $(this);
+            var state = $t.attr('id'); 
+            state = state.substring(5,state.length); // Remove "FIPS"
+            $('.selected').removeClass('selected');
+            $("html, body").animate({ scrollTop: $('#'+state).offset().top }, 150, function() {$('#'+state).addClass('selected') });
+         });
+      }
+ 
+  
+
+
+
+
   $(function() {
+
+      // Action
+      actionsOnSVGState(); 
+     
      
      // Table sorter
      $("table thead th:eq(0)").data("sorter", false);
@@ -211,6 +242,10 @@
      $('a[href="'+cur_state+'.html"]').addClass('active');
 
   })
+
+
+
+ 
    
 
 </script> 
