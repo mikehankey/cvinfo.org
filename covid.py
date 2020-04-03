@@ -50,6 +50,7 @@ from pathlib import Path
 import os
 import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.use('Agg')
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.optimize import curve_fit
@@ -331,7 +332,7 @@ def make_county_table(sjs):
    """
 
    row_html = """
-                  <tr data-state="{COUNTY}">
+                  <tr data-state="{STATE_CODE}" id="{FIP}">
                      <td><span class="cl {COLOR}"></span></td>
                      <td>{COUNTY}</td>
                      <td>{COUNTY_POP}</td>
@@ -359,6 +360,7 @@ def make_county_table(sjs):
    for county in sjs['county_stats']:
       dr = sjs['county_stats'][county]['county_stats'][-1]
       dr['county'] = county
+      dr['fips'] = sjs['county_stats'][county]['fips']
       cd.append(dr)
    cd.sort(key=sort_cpm,reverse=True)
    scd = cd
@@ -366,6 +368,7 @@ def make_county_table(sjs):
    cc = 1
    for dr in scd:
       county = dr['county']
+      fips = dr['fips']
       #for dr in sjs['county_stats'][county]['county_stats']:
       if True:
          if total_c > 0:
@@ -385,6 +388,8 @@ def make_county_table(sjs):
 
 
          row = row_html
+         row = row.replace("{STATE_CODE}", state_code)
+         row = row.replace("{FIP}", fips)
          row = row.replace("{COLOR}", color)
          row = row.replace("{COUNTY}", dr['county'])
          row = row.replace("{CASES}", str(dr['cases']))
@@ -1027,9 +1032,14 @@ def sort_cpm(json):
 def enhance_cdata(this_state_code, cdata,cj):
    # add growth vars, zero day, decay 
    last_date = None
+
    for key in cdata:
+      print("COUNT:", key, cdata[key])
+      print("FIPS:", cdata[key]['fips'])
       cd_data, cd_objs,last_date = enhance_county(this_state_code, key,cdata[key],cj)
       cj[this_state_code][key]['county_stats'] = cd_objs 
+      cj[this_state_code][key]['fips'] = cdata[key]['fips']
+ 
    return(cj,last_date)
 
 def add_enhanced_growth_stats(state_code, l2s):
