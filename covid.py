@@ -35,7 +35,7 @@ This program :
 
 #################################################################################################
 # GLOBAL VARS
-from conf  import *	
+from conf_vince   import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -408,10 +408,7 @@ def make_main_page():
    temp = temp.replace("{STATE_TABLE}", state_table_html)
    temp = temp.replace("{US_MAP}", us_map_template)
    temp = temp.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-
-
-   
+ 
    out = open("./main.html", "w+")
    out.write(temp)
    out.close()
@@ -419,6 +416,12 @@ def make_main_page():
 
 
 def make_county_table(sjs):
+   
+   state_code = sjs['summary_info']['state_code']
+
+   # We  create the State SVG map per counties here
+   with open(PATH_TO_STATE_SVG_MAP + state_code + ".svg", 'r') as file:  
+      state_map_template = file.read()
 
    table_header = """
    <div id="table">
@@ -462,18 +465,20 @@ def make_county_table(sjs):
 
 
    latest = []
-   state_code = sjs['summary_info']['state_code']
    rows = ""
    cd = []
+
    for county in sjs['county_stats']:
       dr = sjs['county_stats'][county]['county_stats'][-1]
       dr['county'] = county
       dr['fips'] = sjs['county_stats'][county]['fips']
       cd.append(dr)
+   
    cd.sort(key=sort_cpm,reverse=True)
    scd = cd
    total_c = len(scd)
    cc = 1
+   
    for dr in scd:
       county = dr['county']
       fips = dr['fips']
@@ -501,6 +506,10 @@ def make_county_table(sjs):
          row = row.replace("{COLOR}", color)
          row = row.replace("{COUNTY}", dr['county'])
          row = row.replace("{CASES}", str(dr['cases']))
+
+         # We update the related county in the SVG map here
+         state_map_template = state_map_template.replace('id="FIPS_'+fips+'"','id="FIPS_'+fips+'" class="'+color+'"')
+ 
            
          if county in sjs['county_pop']:
             row = row.replace("{COUNTY_POP}", str(sjs['county_pop'][county]))
@@ -518,14 +527,15 @@ def make_county_table(sjs):
 
 
    table = table_header + rows + table_footer
-   return(table)
+   return table, state_map_template
 
 
 
 
 def make_state_page(this_state):
    sjs = load_json_file("./json/" + this_state + ".json")
-   county_table = make_county_table(sjs)
+   county_table, state_svg_map = make_county_table(sjs)
+
    fp = open("./templates/state.html", "r")
    template = ""
    for line in fp:
@@ -551,6 +561,9 @@ def make_state_page(this_state):
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
    template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
+
+   template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
+   
 
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")

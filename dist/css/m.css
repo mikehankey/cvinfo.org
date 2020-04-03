@@ -204,6 +204,9 @@
    }
 
 
+   .selected td {
+      background:#fff2b0 !important
+   }
 
 
    #main-container {
@@ -225,6 +228,11 @@
 
    #state_counties_map svg {
       height: 500px;
+      
+   }
+
+   #state_counties_map path {
+      stroke-width: 0.1%;
    }
    
    #state span {
@@ -302,6 +310,7 @@
   from {transform:scale(0)}
   to {transform:scale(1)}
 }
+
 
 /* The Close Button */
 .close {
@@ -386,6 +395,9 @@
  .tablesorter .tablesorter-errorRow td{text-align:center;cursor:pointer;background-color:#e6bf99}
 
 
+
+
+ 
 
  @media screen and (min-width: 600px) {
    .grid {
