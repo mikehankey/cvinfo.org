@@ -12,7 +12,6 @@ STATES_JSON_DATA_FOLDER =  ORG_PATH + "/data/"
 
 TEMPLATES_FOLDER = ORG_PATH + "/templates/"
 
-#OUTPUT
-OUT_PATH = "/var/www/projects/COVID/LIVE/out"
-OUT_PATH = ORG_PATH  + "html/"
+#OUTPUT 
+OUT_PATH = ORG_PATH  + "/html/"
 OUT_INDEX = OUT_PATH  + "/index.html"
