@@ -187,7 +187,7 @@
       display: flex;
       flex-flow: row wrap;
       border-bottom: 1px solid rgba(0,0,0,0.15);
-      padding-bottom: 1rem; 
+      margin-bottom: 1rem; 
    }
 
    .flg {
@@ -212,6 +212,16 @@
       display: block;
       width: 100%;
    } 
+
+   #state_counties_map {
+      border-top: 1px solid rgba(0,0,0,0.15);
+      margin-top: 2rem;
+      margin: 2rem 0 2.5rem;
+   }
+
+   #state_counties_map svg {
+      height: 500px;
+   }
    
    #state span {
       font-weight: normal;

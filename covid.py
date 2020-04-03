@@ -259,9 +259,7 @@ def make_main_page():
    # Load svg map
    with open(PATH_TO_US_SVG_MAP, 'r') as file:  
       us_map_template = file.read()
- 
-
-   html = "<table width=60%><tr><td><center>"
+  
    COLORS=['b','g','y','o','r']
  
    rk = 0 
@@ -440,6 +438,14 @@ def make_state_page(this_state):
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
    template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
+
+   # Create SVG map of the state with all counties
+   
+   with open(PATH_TO_STATE_SVG_MAP + "/" + sjs['summary_info']['state_code'] +".svg", 'r') as file:  
+      state_map = file.read()
+   
+   template = template.replace("{SVG_STATE_COUNTIES}",  state_map )
+   
 
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")
