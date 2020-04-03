@@ -1,6 +1,6 @@
 #!/usr/bin/python3 
-
 """
+
 covid.py -- COVID-19 data downloader and analyzer. 
 copyright : Mike Hankey LLC
 project started : 3/30/2020 
@@ -42,7 +42,7 @@ COLORS=['b','g','y','o','r']
 # END GLOBAL VARS
 #################################################################################################
 
-
+import glob
 from PIL import Image, ImageFont, ImageDraw
 import json
 import numpy as np
@@ -117,8 +117,10 @@ def publish_site():
    print("""
    Select publishing option:
       1) Publish just HTML 
-      2) Publish all data content - main.html, state pages, state plots
-      3) Publish EVERYTHING images, cs, js etc 
+      2) Publish just plot images 
+      3) Publish ALL data - main.html, state pages, state plots
+      4) Publish site resources css, js, flags etc 
+      5) Publish flags 
    """)
    mode = input ("What do you want to publish?")
 
@@ -127,29 +129,51 @@ def publish_site():
       os.makedirs(PUB_DIR + "states/")
    if cfe(PUB_DIR + "plots/", 1) == 0:
       os.makedirs(PUB_DIR + "plots/")
+   if cfe(PUB_DIR + "dist/", 1) == 0:
+      os.makedirs(PUB_DIR + "dist/")
+   if cfe(PUB_DIR + "dist/css", 1) == 0:
+      os.makedirs(PUB_DIR + "dist/css")
+   if cfe(PUB_DIR + "dist/js", 1) == 0:
+      os.makedirs(PUB_DIR + "dist/js")
+   if cfe(PUB_DIR + "flags/", 1) == 0:
+      os.makedirs(PUB_DIR + "flags/")
 
-   if mode == "1":
-      cmd = "cp states/* " + PUB_DIR + "states/" 
+   if mode == "1" or mode == 3:
+      htmls = glob.glob("states/*.html")
+      cmd = "cp main.html " + PUB_DIR + "states/" 
       print(cmd)
       os.system(cmd)
-      cmd = "cp main.html " + PUB_DIR + "main.html" 
+      for html in htmls:
+         h = html.split("/")[-1]
+         cmd = "cp states/" + h + " " + PUB_DIR + "states/" 
+         print(cmd)
+         os.system(cmd)
+
+
+   if mode == "2" or mode == 3:
+      images = glob.glob("plots/*.png")
+      for img in images:
+         i = img.split("/")[-1]
+         cmd = "cp plots/" + i + " " + PUB_DIR + "plots/" 
+         print(cmd)
+         os.system(cmd)
+
+   if mode == "4" :
+      cmd = "cp dist/css/m.css " + PUB_DIR + "dist/css/"
+      print(cmd)
+      os.system(cmd)
+      cmd = "cp dist/js/jquery.tablesorter.min.js " + PUB_DIR + "dist/css/"
       print(cmd)
       os.system(cmd)
 
-   if mode == "2":
-      cmd = "cp plots/* " + PUB_DIR + "plots/" 
-      print(cmd)
-      os.system(cmd)
-      cmd = "cp states/* " + PUB_DIR + "states/" 
-      print(cmd)
-      os.system(cmd)
-      cmd = "cp main.html " + PUB_DIR + "main.html" 
-      print(cmd)
-      os.system(cmd)
-   if mode == "3":
-      cmd = "cp -r * " + PUB_DIR 
-      print(cmd)
-      os.system(cmd)
+   if mode == "5":
+      flags = glob.glob("flags/*.png")
+      for flag in flags:
+         f = flag.split("/")[-1]
+         cmd = "cp flags/" + f + " " + PUB_DIR + "flags/" 
+         print(cmd)
+         os.system(cmd)
+ 
 
 def merge_state_data():
 
