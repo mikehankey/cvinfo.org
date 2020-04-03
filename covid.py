@@ -34,7 +34,7 @@ This program will:
 
 #################################################################################################
 # GLOBAL VARS
-from conf_vince import *	
+from conf import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -441,10 +441,10 @@ def make_state_page(this_state):
    template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
 
-   if cfe(OUT_PATH + "/states/",1) == 0:
-      os.makedirs(OUT_PATH + "/states/")
+   if cfe(OUT_PATH + "/",1) == 0:
+      os.makedirs(OUT_PATH + "/")
 
-   outfp = open(OUT_PATH + "/states/" + this_state + ".html", "w+")
+   outfp = open(OUT_PATH + "/" + this_state + ".html", "w+")
    print("Saved states/" + this_state + ".html")
    outfp.write(template)
    outfp.close()
