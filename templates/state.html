@@ -83,41 +83,28 @@
          <div class="std">
                <h2>{STATE_NAME} <span>Population: <b>{POPULATION}</b></span></h2>
                <dl> 
-   
                      <dt>Cases </dt>
                      <dd>{CASES}</dd>
-                   
                      <dt>Deaths  </dt>
                      <dd>{DEATHS}</dd>
-      
                      <dt>New Cases </dt>
                      <dd>{CASE_INCREASE}</dd>
-      
                      <dt>New Deaths</dt>
                      <dd>{DEATH_INCREASE}</dd>
-                  
                      <dt>Cases per million </dt>
                      <dd>{CPM}</dd>
-                   
                      <dt>Deaths per million </dt>
                      <dd>{DPM}</dd>
-      
-      
                      <dt>Total Tests</dt>
                      <dd>{TESTS}</dd>
-      
                      <dt>Tests Per Million</dt>
                      <dd>{TPM}</dd>
-      
                      <dt>Case Growth %</dt>
                      <dd>{CASE_GROWTH}</dd>
-      
                      <dt>Death Growth %</dt>
                      <dd>{DEATH_GROWTH}</dd>
-                  
                      <dt>Mortality Rate</dt>
                      <dd>{MORTALITY}</dd>
-                   
                      <dt>State Data Update</dt>
                      <dd>{STATE_LAST_UPDATE}</dd>
                      <dt>County Data Update</dt>
@@ -125,43 +112,40 @@
                   </dl>
          </div>
       </div>
-   </div>
-
- 
-
-   <div id="graphs" class="clearfix">
-      <h3>Graphs</h3>
-      <div class="graph_container">
-            <div class="grid">
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-cd.png" />
-              </div>
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-pm.png" />
-              </div>
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-in.png" />
-              </div>
-              <div class="cell">
-                <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-ts.png" />
-              </div>
-              <div class="cell">
-                  <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-gr.png" />
-               </div>
-               <div class="cell">
-                  <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-mt.png" />
-               </div>
-            </div>
-          </div>
    
-      </div>
+      <div id="graphs" class="clearfix">
+            <h3>Graphs</h3>
+            <div class="graph_container">
+                  <div class="grid">
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-cd.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-pm.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-in.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-ts.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-gr.png">
+                     </div>
+                     <div class="cell">
+                        <img src="http://archive.allsky.tv/covid/plots/{STATE_CODE}-mt.png">
+                     </div>
+                  </div>
+            </div>
+         </div>
+
    </div>
 
-<div id="graph_img_viewer" class="modal">
-   <span class="close">&times;</span>
-   <img class="modal-content" id="img_fv">
-   <div id="caption"></div>
-</div>
+   <div id="graph_img_viewer" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="img_fv">
+      <div id="caption"></div>
+   </div>
 
   {COUNTY_TABLE}
 
@@ -171,17 +155,16 @@
    cur_state = cur_state.toUpperCase();
 
   function open_modal() {
-     // Get the modal
       var modal = document.getElementById("graph_img_viewer");
-
-      // Get the image and insert it inside the modal - use its "alt" text as a caption
-      var img = document.getElementById("plots_img");
       var modalImg = document.getElementById("img_fv"); 
-      img.onclick = function(){
-         modal.style.display = "block";
-         modalImg.src = this.src; 
-      }
 
+     $('.cell img').click(function() {
+         modal.style.display = "block";
+         modalImg.src = $(this).attr('src'); 
+     })
+
+    
+    
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
 
@@ -189,8 +172,7 @@
       span.onclick = function() {
          modal.style.display = "none";
       }
-  }
-
+  } 
 
   $(function() {
      
@@ -204,7 +186,7 @@
      });
      
      // Click on stats image
-     //open_modal();
+     open_modal();
 
      // Set Active State
      $('a[href="'+cur_state+'.html"]').addClass('active');

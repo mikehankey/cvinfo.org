@@ -281,7 +281,7 @@ def make_main_page():
    # Add last update date
 
 
-   out = open("./main.html", "w")
+   out = open(OUT_PATH + "/main.html", "w+")
    out.write(temp)
    out.close()
 
