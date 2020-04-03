@@ -135,6 +135,72 @@ def merge_state_data():
    save_json_file("./json/states_level2.json", asd)
    return(asd)
 
+def state_table(data):
+
+
+   table_header = """
+   <table id="states" class="tablesorter ">
+         <thead>
+            <tr>
+               <th>&nbsp;</th>
+               <th>State</th>
+               <th>Population</th>
+               <th>Cases</th>
+               <th>Deaths</th>
+               <th>Cases per m</th>
+               <th>Deaths per m</th>
+               <th>Growth Rate</th>
+               <th>Mortality Rate</th>
+            </tr>
+         </thead>
+         <tbody class="list-of-states" >
+   """
+   table_row = """
+            <tr data-state="{STATE_CODE}">
+               <td><span class="cl {COLOR}"></span></td>
+               <td>{STATE_NAME}</td>
+               <td>{POPULATION}</td>
+               <td>{CASES}</td>
+               <td>{DEATHS}</td>
+               <td>{CPM}</td>
+               <td>{DPM}</td>
+               <td>{CGR}</td>
+               <td>{MORT}</td>
+            </tr>
+   """
+   table_footer = """
+            </tr>
+         </tbody>
+       </table>
+   """
+   rows = ""
+
+   data_sorted = sorted(data, key=lambda x: x[7], reverse=True)
+   for data_row in data_sorted:
+      print(len(data_row)) 
+
+      #state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality'],color_of_state ))
+      (state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort,color_of_state) = data_row
+
+
+
+      
+      html_row = table_row
+      html_row = html_row.replace("{COLOR}", color_of_state)
+      html_row = html_row.replace("{STATE_CODE}", state_code)
+      html_row = html_row.replace("{STATE_NAME}", state_name)
+      html_row = html_row.replace("{POPULATION}", str(population))
+      html_row = html_row.replace("{CASES}", str(last_cases))
+      html_row = html_row.replace("{DEATHS}", str(last_deaths))
+      html_row = html_row.replace("{COLOR}", str(color_of_state))
+      html_row = html_row.replace("{CPM}", str(last_cpm))
+      html_row = html_row.replace("{DPM}", str(last_dpm))
+      html_row = html_row.replace("{CGR}", str(last_cg))
+      html_row = html_row.replace("{MORT}", str(last_mort))
+      rows += html_row
+   table_html = table_header + rows + table_footer
+   return(table_html) 
+  
   
 def make_main_page():
    asd = merge_state_data()
@@ -149,9 +215,11 @@ def make_main_page():
    COLORS=['b','g','y','o','r']
  
    rk = 0 
-   for data in asd:
-      state_code = data['summary_info']['state_code']
-      si = data['summary_info']
+   state_rank_list = []
+   for adata in asd:
+      data = adata['summary_info']
+      state_code = data['state_code']
+      si = data
       print(si)
       if rk <= 10:
          color_of_state = COLORS[4]
@@ -166,20 +234,24 @@ def make_main_page():
 
       print("COLOR:" + "{"+state_code+"_color_class}")
       us_map_template = us_map_template.replace("{"+state_code+"_color_class}", color_of_state)  
-      #state_rank_list.append( (state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort,cpm_rank_list[state_code],dpm_rank_list[state_code],cgr_rank_list[state_code],mort_rank_list[state_code],color_of_state ))
+      #{'state_code': 'AL', 'state_name': 'Alabama', 'state_population': 4.903185, 'cases': 1233, 'deaths': 32, 'new_cases': 156, 'new_deaths': 6, 'tests': 0, 'tpm': 0, 'cpm': 251, 'dpm': 6, 'cg_last': 12.65, 'dg_last': 18.75, 'cg_avg': 30.3, 'dg_avg': 46.98, 'cg_med': 21.98, 'dg_med': 50.0, 'cg_med_decay': -0.24, 'dg_med_decay': 6.41, 'mortality': 2.6, 'state_data_last_updated': '20200402', 'county_data_last_updated': '20200401'}
+      
+      state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality'],color_of_state ))
       rk += 1
 
+   #(state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort,cpm_rank,dpm_rank,cgr_rank,mort_rank,color_of_state)  = data_row
 
-   #state_table_html = state_table(state_rank_list)
+   state_rank_list.sort(key=sort_cpm,reverse=True)
+   state_table_html = state_table(state_rank_list)
    # make main page
    fp = open("templates/main.html", "r")
    temp = ""
    for line in fp:
       temp += line
-   #temp = temp.replace("{STATE_TABLE}", state_table_html)
+   temp = temp.replace("{STATE_TABLE}", state_table_html)
    temp = temp.replace("{US_MAP}", us_map_template)
 
-   out = open("./html/main.html", "w")
+   out = open("./main.html", "w")
    out.write(temp)
    out.close()
 
@@ -316,10 +388,10 @@ def make_state_page(this_state):
 
    template = template.replace("{COUNTY_TABLE}", county_table)
 
-   if cfe("html/",1) == 0:
-      os.makedirs("html")
-   outfp = open("html/" + this_state + ".html", "w")
-   print("Saved html/" + this_state + ".html")
+   if cfe("states/",1) == 0:
+      os.makedirs("states")
+   outfp = open("states/" + this_state + ".html", "w")
+   print("Saved states/" + this_state + ".html")
    outfp.write(template)
    outfp.close()
 
