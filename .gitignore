@@ -1,5 +1,7 @@
 /plots/*.png
 /json/*.json
 /dist/*.html
+/states/*.html
 /covid-19-data/*.csv
 /__pycache__/
+/html/*.html
