@@ -200,13 +200,13 @@ def make_all_county_page():
          row_html += """
                      <td>{:,d}</td>
                      <td>{:,d}</td>
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
+                     <td>{:0.2f}</td>
+                     <td>{:0.2f}</td>
                      <td>{:,d}</td>
                      <td>{:0.2f}</td>
                      <td>{:0.2f}</td>
                   </tr>
-         """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
+         """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),float(dr['cpm']),float(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
 
 
          #row = row_html
