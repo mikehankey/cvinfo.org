@@ -63,6 +63,8 @@ import sys
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
 def update_data_sources():
+  # US CITIES DB
+  #https://simplemaps.com/static/data/us-cities/1.6/basic/simplemaps_uscities_basicv1.6.zip
   if cfe(ORG_PATH +"/data/", 1) != 1:
      os.makedirs(ORG_PATH + "/data")
   print("updating NYT COVID-19 git hub data repo. ")
@@ -76,6 +78,7 @@ def update_data_sources():
  
 
 def main_menu(): 
+
    if len(sys.argv) > 1:
       print("What are the args we have here???")
    print("cvinfo.org -- COVID-19 DATA ANALYZER AND REPORTING APPLICATION ")
@@ -188,23 +191,40 @@ def make_all_county_page():
          if .8 <= rank_perc <= 1:
             color = COLORS[0]
 
+         row_html = """
+                  <tr data-state="{:s}" id="{:s}">
+                     <td><span class="cl {:s}"></span></td>
+                     <td>{:s}</td>
+                     <td>{:s}</td>
+         """.format(dr['state'],dr['fips'],color,dr['county'],dr['state'])
+         row_html += """
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:0.2f}</td>
+                     <td>{:0.2f}</td>
+                  </tr>
+         """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
 
-         row = row_html
-         row = row.replace("{STATE_CODE}", dr['state'])
-         row = row.replace("{FIP}", dr['fips'])
-         row = row.replace("{COLOR}", color)
-         row = row.replace("{COUNTY}", dr['county'])
-         row = row.replace("{CASES}", str(dr['cases']))
 
-         row = row.replace("{COUNTY_POP}", str(dr['population']))
-         row = row.replace("{DEATHS}", str(dr['deaths']))
-         row = row.replace("{CPM}", str(dr['cpm']))
-         row = row.replace("{DPM}", str(dr['dpm']))
-         row = row.replace("{CGR}", str(dr['cg_med']))
-         row = row.replace("{DGR}", str(dr['dg_med']))
-         row = row.replace("{MORTALITY}", str(dr['mortality']))
+         #row = row_html
+         #row = row.replace("{STATE_CODE}", dr['state'])
+         #row = row.replace("{FIP}", dr['fips'])
+         #row = row.replace("{COLOR}", color)
+         #row = row.replace("{COUNTY}", dr['county'])
+         #row = row.replace("{CASES}", str(dr['cases']))
+
+         #row = row.replace("{COUNTY_POP}", str(dr['population']))
+         #row = row.replace("{DEATHS}", str(dr['deaths']))
+         #row = row.replace("{CPM}", str(dr['cpm']))
+         #row = row.replace("{DPM}", str(dr['dpm']))
+         #row = row.replace("{CGR}", str(dr['cg_med']))
+         #row = row.replace("{DGR}", str(dr['dg_med']))
+         #row = row.replace("{MORTALITY}", str(dr['mortality']))
          #row = row.replace("{LAST_UPDATE}", update)
-         rows += row
+         rows += row_html
          cc += 1
 
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
@@ -242,7 +262,10 @@ def publish_site():
 
    if mode == "1" or mode == 3:
       htmls = glob.glob("states/*.html")
-      cmd = "cp main.html " + PUB_DIR + "states/" 
+      cmd = "cp main.html " + PUB_DIR + "index.html" 
+      print(cmd)
+      os.system(cmd)
+      cmd = "cp all-counties.html " + PUB_DIR + "all-counties.html" 
       print(cmd)
       os.system(cmd)
       for html in htmls:
@@ -302,7 +325,7 @@ def merge_state_data():
    save_json_file(JSON_PATH + "/" +  "covid-19-level2-counties.json", acd)
    return(asd)
 
-def state_table(data):
+def state_table(data,us_map_template):
 
 
    table_header = """
@@ -343,50 +366,12 @@ def state_table(data):
    rows = ""
 
    data_sorted = sorted(data, key=lambda x: x[7], reverse=True)
-   for data_row in data_sorted:
-      print(len(data_row)) 
+   rk = 0
+   for dr in data_sorted:
 
       #state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality'],color_of_state ))
-      (state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort,color_of_state) = data_row
+      (state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort) = dr 
 
-
-
-      
-      html_row = table_row
-      html_row = html_row.replace("{COLOR}", color_of_state)
-      html_row = html_row.replace("{STATE_CODE}", state_code)
-      html_row = html_row.replace("{STATE_NAME}", state_name)
-      html_row = html_row.replace("{POPULATION}", str(population))
-      html_row = html_row.replace("{CASES}", str(last_cases))
-      html_row = html_row.replace("{DEATHS}", str(last_deaths))
-      html_row = html_row.replace("{COLOR}", str(color_of_state))
-      html_row = html_row.replace("{CPM}", str(last_cpm))
-      html_row = html_row.replace("{DPM}", str(last_dpm))
-      html_row = html_row.replace("{CGR}", str(last_cg))
-      html_row = html_row.replace("{MORT}", str(last_mort))
-      rows += html_row
-   table_html = table_header + rows + table_footer
-   return(table_html) 
-  
-  
-def make_main_page():
-   asd = merge_state_data()
-   asd.sort(key=sort_cpm,reverse=True)
-
-   # Load svg map
-   with open(PATH_TO_US_SVG_MAP, 'r') as file:  
-      us_map_template = file.read()
- 
-
-   #COLORS=['b','g','y','o','r']
- 
-   rk = 0 
-   state_rank_list = []
-   for adata in asd:
-      data = adata['summary_info']
-      state_code = data['state_code']
-      si = data
-      print(si)
       if rk <= 10:
          color_of_state = COLORS[4]
       if 10 < rk <= 20:
@@ -398,16 +383,71 @@ def make_main_page():
       if 40 < rk <= 55:
          color_of_state = COLORS[0]
 
-      #print("COLOR:" + "{"+state_code+"_color_class}")
       us_map_template = us_map_template.replace("{"+state_code+"_color_class}", color_of_state)  
+
+      print(dr)
+      row_html = """
+         <tr data-state="{:s}">
+            <td><span class="cl {:s}"></span></td>
+            <td>{:s}</td>
+      """.format(state_code,color_of_state,state_name)
+      row_html += """
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:0.2f}</td>
+            <td>{:0.2f}</td>
+         </tr>
+      """.format(int(dr[2]),int(dr[3]),int(dr[4]),int(dr[7]),int(dr[8]),float(dr[9]),float(dr[11]))
+
+
+
+      
+      rows += row_html
+      rk += 1
+   table_html = table_header + rows + table_footer
+   return(table_html,us_map_template) 
+  
+  
+def make_main_page():
+   asd = merge_state_data()
+
+   # Load svg map
+   with open(PATH_TO_US_SVG_MAP, 'r') as file:  
+      us_map_template = file.read()
+ 
+
+   #COLORS=['b','g','y','o','r']
+ 
+   rk = 0 
+   state_rank_list = []
+   print(asd)
+   #sdata = []
+   #for adata in asd:
+   #   data = adata['summary_info']
+   #   print(data['state_code'],data['cpm'])
+   #   sdata.append(data)
+   #exit()
+   for adata in asd:
+      data = adata['summary_info']
+      state_code = data['state_code']
+      si = data
       #{'state_code': 'AL', 'state_name': 'Alabama', 'state_population': 4.903185, 'cases': 1233, 'deaths': 32, 'new_cases': 156, 'new_deaths': 6, 'tests': 0, 'tpm': 0, 'cpm': 251, 'dpm': 6, 'cg_last': 12.65, 'dg_last': 18.75, 'cg_avg': 30.3, 'dg_avg': 46.98, 'cg_med': 21.98, 'dg_med': 50.0, 'cg_med_decay': -0.24, 'dg_med_decay': 6.41, 'mortality': 2.6, 'state_data_last_updated': '20200402', 'county_data_last_updated': '20200401'}
       
-      state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality'],color_of_state ))
+      state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality']))
       rk += 1
 
 
    state_rank_list.sort(key=sort_cpm,reverse=True)
-   state_table_html = state_table(state_rank_list)
+   rk = 0
+   for data in state_rank_list:
+      (state_code, state_name, state_population, cases, deaths, new_cases, new_deaths, cpm, dpm, cg_med, dg_med, mortality ) = data
+      print(rk, state_code)
+
+
+   state_table_html,us_map_template = state_table(state_rank_list, us_map_template)
    # make main page
    fp = open("./templates/main.html", "r")
    temp = ""
@@ -421,7 +461,53 @@ def make_main_page():
    out.write(temp)
    out.close()
 
+def make_state_map(sjs):
+   state_code = sjs['summary_info']['state_code']
+   latest = []
+   rows = ""
+   cd = []
 
+   with open(PATH_TO_STATE_SVG_MAP + state_code + ".svg", 'r') as file:  
+      state_map_template = file.read()
+
+   for county in sjs['county_stats']:
+      dr = sjs['county_stats'][county]['county_stats'][-1]
+      dr['county'] = county
+      dr['fips'] = sjs['county_stats'][county]['fips']
+      cd.append(dr)
+
+   cd.sort(key=sort_cpm,reverse=True)
+   scd = cd
+   total_c = len(scd)
+   cc = 1
+
+   for dr in scd:
+      county = dr['county']
+      fips = dr['fips']
+      #for dr in sjs['county_stats'][county]['county_stats']:
+      if True:
+         if total_c > 0:
+            rank_perc = cc / total_c
+         else:
+            rank_perc = 0
+         if rank_perc < .2:
+            color = COLORS[4]
+         if .2 <= rank_perc < .4:
+            color = COLORS[3]
+         if .4 <= rank_perc < .6:
+            color = COLORS[2]
+         if .6 <= rank_perc < .8:
+            color = COLORS[1]
+         if .8 <= rank_perc <= 1:
+            color = COLORS[0]
+
+         state_map_template = state_map_template.replace('id="FIPS_'+fips+'"','id="FIPS_'+fips+'" class="'+color+'"')
+         cc += 1
+
+   out = open("test.svg", "w")
+   out.write(state_map_template)
+   out.close()
+   return(state_map_template)
 
 def make_county_table(sjs):
    
@@ -450,7 +536,7 @@ def make_county_table(sjs):
             <tbody  class="list-of-states" >
    """
 
-   row_html = """
+   oldrow_html = """
                   <tr data-state="{STATE_CODE}" id="{FIP}">
                      <td><span class="cl {COLOR}"></span></td>
                      <td>{COUNTY}</td>
@@ -463,6 +549,19 @@ def make_county_table(sjs):
                      <td>{MORTALITY}</td>
                   </tr>
    """
+   row_html = """
+                  <tr data-state="{:s}" id="{:s}">
+                     <td><span class="cl {:s}"></span></td>
+                     <td>{:s}</td>
+                     <td>{:0,0f}</td>
+                     <td>{:0,0f}</td>
+                     <td>{:0,0f}</td>
+                     <td>{:0,0f}</td>
+                     <td>{:0,.0f}}</td>
+                     <td>{0:.2f}</td>
+                     <td>{0:.2f}</td>
+                  </tr>
+   """
 
 
    table_footer = """
@@ -471,6 +570,7 @@ def make_county_table(sjs):
    </div>
    """
 
+#'{0:.2f}'.format(pi)
 
    latest = []
    rows = ""
@@ -507,31 +607,57 @@ def make_county_table(sjs):
          if .8 <= rank_perc <= 1:
             color = COLORS[0]
 
+         if county not in sjs['county_pop']:
+            cpop = 0
+         else:
+            cpop = sjs['county_pop'][county]
 
-         row = row_html
-         row = row.replace("{STATE_CODE}", state_code)
-         row = row.replace("{FIP}", fips)
-         row = row.replace("{COLOR}", color)
-         row = row.replace("{COUNTY}", dr['county'])
-         row = row.replace("{CASES}", str(dr['cases']))
+         row_html = """
+                  <tr data-state="{:s}" id="{:s}">
+                     <td><span class="cl {:s}"></span></td>
+                     <td>{:s}</td>
+         """.format(state_code,fips,color,dr['county'])
+         row_html += """
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:0.2f}</td>
+                     <td>{:0.2f}</td>
+                  </tr> 
+         """.format(int(cpop),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
+                     #<td>{0:.2f}</td>
+                     #<td>{0:.2f}</td>
+         print(int(dr['cases']),dr['deaths'],dr['cpm'],dr['dpm'],dr['cg_med'],dr['dg_med'],dr['mortality'])
+         print(row_html)
+         rows += row_html
+
+         #frow = row.format(state_code,fips,color,dr['county'],dr['cases'],dr['deaths'],dr['cpm'],dr['dpm'],dr['cg_med'],dr['dg_med'],dr['mortality'])
+         #row = row.replace("{STATE_CODE}", state_code)
+         #row = row.replace("{FIP}", fips)
+         #row = row.replace("{COLOR}", color)
+         #row = row.replace("{COUNTY}", dr['county'])
+         #row = row.replace("{CASES}", str(dr['cases']))
 
          # We update the related county in the SVG map here
          state_map_template = state_map_template.replace('id="FIPS_'+fips+'"','id="FIPS_'+fips+'" class="'+color+'"')
- 
-           
-         if county in sjs['county_pop']:
-            row = row.replace("{COUNTY_POP}", str(sjs['county_pop'][county]))
-         else:
-            row = row.replace("{COUNTY_POP}", str(0))
-         row = row.replace("{DEATHS}", str(dr['deaths']))
-         row = row.replace("{CPM}", str(dr['cpm']))
-         row = row.replace("{DPM}", str(dr['dpm']))
-         row = row.replace("{CGR}", str(dr['cg_med']))
-         row = row.replace("{DGR}", str(dr['dg_med']))
-         row = row.replace("{MORTALITY}", str(dr['mortality']))
-         #row = row.replace("{LAST_UPDATE}", update)
-         rows += row
-         cc += 1
+         cc += 1 
+         if False:  
+            if county in sjs['county_pop']:
+               row = row.replace("{COUNTY_POP}", str(sjs['county_pop'][county]))
+            else:
+               row = row.replace("{COUNTY_POP}", str(0))
+            row = row.replace("{DEATHS}", str(dr['deaths']))
+            row = row.replace("{CPM}", str(dr['cpm']))
+            row = row.replace("{DPM}", str(dr['dpm']))
+            row = row.replace("{CGR}", str(dr['cg_med']))
+            row = row.replace("{DGR}", str(dr['dg_med']))
+            row = row.replace("{MORTALITY}", str(dr['mortality']))
+            #row = row.replace("{LAST_UPDATE}", update)
+            rows += row
+            cc += 1
+        
 
 
    table = table_header + rows + table_footer
@@ -543,6 +669,7 @@ def make_county_table(sjs):
 def make_state_page(this_state):
    sjs = load_json_file("./json/" + this_state + ".json")
    county_table, state_svg_map = make_county_table(sjs)
+   state_map = make_state_map(sjs)
 
    fp = open("./templates/state.html", "r")
    template = ""
@@ -564,6 +691,30 @@ def make_state_page(this_state):
    template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2)))
    template = template.replace("{TESTS}", str(sjs['summary_info']['tests']))
    template = template.replace("{TPM}", str(int(sjs['summary_info']['tpm'])))
+   if sjs['summary_info']['hospital_now'] == "":
+      sjs['summary_info']['hospital_now'] = 0
+      template = template.replace("{HOSP_NOW}", str(int(sjs['summary_info']['hospital_now'])))
+   else:
+      template = template.replace("{HOSP_NOW}", str(int(sjs['summary_info']['hospital_now'])))
+
+   if sjs['summary_info']['icu_now'] == "":
+      sjs['summary_info']['icu_now'] = 0
+      template = template.replace("{ICU_NOW}", "No data.")
+   else:
+      template = template.replace("{ICU_NOW}", str(int(sjs['summary_info']['icu_now'])))
+   if sjs['summary_info']['vent_now'] == "":
+      sjs['summary_info']['vent_now'] = 0
+      template = template.replace("{VENT_NOW}", "No data.")
+   else:
+      template = template.replace("{VENT_NOW}", str(int(sjs['summary_info']['vent_now'])))
+
+   if sjs['summary_info']['recovered'] == "":
+      template = template.replace("{RECOVERED}", "No data.")
+   else:
+      template = template.replace("{RECOVERED}", str(int(sjs['summary_info']['recovered'])))
+
+
+
    template = template.replace("{STATE_LAST_UPDATE}", str(sjs['summary_info']['state_data_last_updated']))
    template = template.replace("{COUNTY_LAST_UPDATE}", str(sjs['summary_info']['county_data_last_updated']))
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
@@ -969,7 +1120,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    state_stats = []
    for data in level2_data:
       stat_obj = {}
-      (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay) = data 
+      (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered) = data 
       stat_obj = { 
          "state_code" : state_code,
          "state_pop" : pop,
@@ -980,6 +1131,10 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          "new_cases" : new_cases,
          "new_deaths" : new_deaths,
          "tests" : tests,
+         "hospital_now" : hospital_now,
+         "icu_now" : icu_now,
+         "vent_now" : vent_now,
+         "recovered" : recovered,
          "tpm" : tpm,
          "cpm" : cpm,
          "dpm" : dpm,
@@ -991,7 +1146,11 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          "dg_med" : dg_med,
          "cg_med_decay" : cg_med_decay,
          "dg_med_decay" : dg_med_decay,
-         "mortality" : mortality 
+         "mortality" : mortality,
+         "hospital_now" : hospital_now,
+         "icu_now" : icu_now,
+         "vent_now" : vent_now,
+         "recovered" :recovered 
       }
       state_stats.append(stat_obj)
    sorted_state_stats = state_stats.sort(key=sort_date,reverse=False)
@@ -1019,6 +1178,10 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    state_obj['summary_info']['cg_med_decay'] = cg_med_decay
    state_obj['summary_info']['dg_med_decay'] = dg_med_decay
    state_obj['summary_info']['mortality'] = mortality
+   state_obj['summary_info']['hospital_now'] = hospital_now
+   state_obj['summary_info']['icu_now'] = icu_now
+   state_obj['summary_info']['vent_now'] = vent_now
+   state_obj['summary_info']['recovered'] = recovered 
    state_obj['summary_info']['state_data_last_updated'] = level2_data[-1][2] 
    if last_c_date is not None:
       state_obj['summary_info']['county_data_last_updated'] = last_c_date.replace("-", "")
@@ -1184,7 +1347,7 @@ def add_enhanced_growth_stats(state_code, l2s):
    first_death_day = None
    dc = 0
    for data in l2s:
-      (state_code,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm) = data
+      (state_code,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_now,icu_now,vent_now,recovered) = data
       pop = round(pop,2)
       if first_death_day is None and deaths > 0:
          first_death_day = dc
@@ -1204,7 +1367,7 @@ def add_enhanced_growth_stats(state_code, l2s):
          dg_avg = death_growth 
          dg_med = death_growth 
 
-      extra.append((state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) )
+      extra.append((state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,hospital_now,icu_now,vent_now,recovered) )
       if cases > 0:
          case_grs.append(case_growth)
       if deaths > 0:
@@ -1220,7 +1383,7 @@ def add_enhanced_growth_stats(state_code, l2s):
    if first_death_day is None:
       first_death_day = 0
    for data in extra:
-      (state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med) = data
+      (state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,hospital_now,icu_now,vent_now,recovered) = data
     
       if cases > 0:
          cg_med_decay = round(cg_med - last_cg_med,2)
@@ -1232,7 +1395,7 @@ def add_enhanced_growth_stats(state_code, l2s):
       else:
          dg_med_decay = 0
       zero_day = dc - first_death_day
-      final.append((state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay) )
+      final.append((state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered) )
       last_cg_med = cg_med 
       last_dg_med = dg_med
       dc += 1
@@ -1259,7 +1422,8 @@ def analyze_data_for_state(this_state,state_data,state_pop):
 
 
    for data in temp:
-      date, cases, deaths, case_increase, death_increase,tests = data
+      #date, cases, deaths, case_increase, death_increase,tests = data
+      (date,cases,deaths,case_increase,death_increase,tests,hospital_active,icu_now,vent_now,recovered,hospital_now,icu_now,vent_now,recovered) = data
       new_cases = cases - last_cases
       new_deaths = deaths - last_deaths
       #if this_state == "DE":
@@ -1286,7 +1450,7 @@ def analyze_data_for_state(this_state,state_data,state_pop):
          mortality = round(mortality,2)
       else:
          mortality = 0
-      level2_data.append((this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm))
+      level2_data.append((this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_active,icu_now,vent_now,recovered))
       last_cpm = cpm
       last_dpm = dpm
       last_cases = cases
@@ -1327,7 +1491,9 @@ def load_state_data():
          state = fields[1]
          cases = fields[2]
          deaths = fields[14]
-         hospital = fields[15]
+         icu_now = fields[7]
+         vent_now = fields[9]
+         hospital_now= fields[5]
          recovered = fields[11]
          tests = fields[10]
          death_increase = fields[20]
@@ -1357,7 +1523,7 @@ def load_state_data():
             death_increase = 0
          else:
             death_increase = int(death_increase)
-         state_data[state].append([date,cases,deaths,case_increase,death_increase,tests])
+         state_data[state].append([date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered,hospital_now,icu_now,vent_now,recovered])
       lc += 1
 
    #for st in state_data:
@@ -1366,6 +1532,16 @@ def load_state_data():
       #   print("LATEST STATE DATA: ", st, day)
 
    return(state_data, state_pop)
+
+def load_us_cities():
+#"city","city_ascii","state_id","state_name","county_fips","county_name","county_fips_all","county_name_all","lat","lng","population","density","source","military" ,"incorporated","timezone","ranking","zips","id"
+   fp = open("uscities.csv", "r")
+   for line in fp:
+      data = data.replace("\"", "")
+      data = line.split(",")
+      print(data)
+      
+
 
 def load_county_pop(state_codes):
    fp = open("./data/county-pop.txt", "r")
@@ -1435,7 +1611,8 @@ def load_county_data():
         pm_deaths = 0
         if county != 'Unknown': 
            print("MISSING COUNTY:", county)
-           exit()
+           fp = open("err_log.txt", "a")
+           fp.write("COUNTY MISSING," + state_code + "," + county)
 
      if pm_cases > 0 and pm_deaths > 0:
         mortality = round((pm_deaths / pm_cases) * 100,2)

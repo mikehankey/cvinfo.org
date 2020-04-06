@@ -20,3 +20,6 @@ TEMPLATES_FOLDER = ORG_PATH + "/templates/"
 #OUTPUT
 OUT_PATH = ORG_PATH  + "states/"
 OUT_INDEX = OUT_PATH  + "/index.html"
+
+#ANIM
+ANIM_PATH = ORG_PATH + "anim/"
