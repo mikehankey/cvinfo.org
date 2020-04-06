@@ -1,27 +1,96 @@
 <!DOCTYPE html>
 <html>
-<head data-live-domain="codeorigin.jquery.com">
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <title>COVID-19 - All USA Counties Statistics</title>
 
-	<title>COVID 19 - US Stats</title>
-
-	<meta name="author" content="Mike Hankey">
-	<meta name="description" content="COVID 19 (Coronavirus) Stats for USA">
+        <meta name="author" content="Mike Hankey">
+        <meta name="description" content="COVID 19 (Coronavirus) Stats for {STATE_NAME}, USA, Per Million, By County, Historical">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="./dist/js/jquery.tablesorter.min.js"></script>
+   <script src="./dist/js/cvinfo.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="./dist/css/m.css" rel="stylesheet"> 
-  
+   <link href="./dist/css/cvinfo.css" rel="stylesheet">
+
+   <meta property="og:title" content="COVID-19 (Coronavirus) - {STATE_NAME}  Statistics - Last Update: {LAST_UPDATE}"/>
+   <meta property="og:type" content="article"/>
+   <meta property="og:url" content="http://cvinfo.org/"/>
+   <meta property="og:site_name" content="COVID-19 - US Statistics"/>
+   <meta property="og:description" content="COVID 19 (Coronavirus) Stats for {STATE_NAME}, Per Million, By County, Historical..."/>
+   <!--
+   <meta property="og:image" content="https://www.amsmeteors.org/wp-content/uploads/2020/04/999999999_5609.jpg"/>
+   <meta property="og:image:width" content="1800"/>
+   <meta property="og:image:height" content="1012"/>
+   -->
+
 </head>
 <body>
 
    <h1>COVID 19 - US Stats</h1> 
-   <div id="up">Last Update: {LAST_UPDATE}</div>
+   <div id="up">Last Update: {LAST_UPDATE} <BR>
+   COVID-19 Statistics for all US Counties</div> 
    <div id="us_map">
    </div>
+   <div id="bc"> 
+         <div class="hbc">
+         <a href="states/../main.html"><b>USA</b></a>
+         <a href="states/../all-counties.html"><b>All Counties</b></a>
+         <a href="states/AL.html">Alabama</a>
+         <a href="states/AK.html">Alaska</a>
+         <a href="states/AZ.html">Arizona</a>
+         <a href="states/AR.html">Arkansas</a>
+         <a href="states/CA.html">California</a>
+         <a href="states/CO.html">Colorado</a>
+         <a href="states/CT.html">Connecticut</a>
+         <a href="states/DE.html">Delaware</a>
+         <a href="states/FL.html">Florida</a>
+         <a href="states/GA.html">Georgia</a>
+         <a href="states/HI.html">Hawaii</a>
+         <a href="states/ID.html">Idaho</a>
+         <a href="states/IL.html">Illinois</a>
+         <a href="states/IN.html">Indiana</a>
+         <a href="states/IA.html">Iowa</a>
+         <a href="states/KS.html">Kansas</a>
+         <a href="states/KY.html">Kentucky</a>
+         <a href="states/LA.html">Louisiana</a>
+         <a href="states/ME.html">Maine</a>
+         <a href="states/MD.html">Maryland</a>
+         <a href="states/MA.html">Massachusetts</a>
+         <a href="states/MI.html">Michigan</a>
+         <a href="states/MN.html">Minnesota</a>
+         <a href="states/MS.html">Mississippi</a>
+         <a href="states/MO.html">Missouri</a>
+         <a href="states/MT.html">Montana</a>
+         <a href="states/NE.html">Nebraska</a>
+         <a href="states/NV.html">Nevada</a>
+         <a href="states/NH.html">New Hampshire</a>
+         <a href="states/NJ.html">New Jersey</a>
+         <a href="states/NM.html">New Mexico</a>
+         <a href="states/NY.html">New York</a>
+         <a href="states/NC.html">North Carolina</a>
+         <a href="states/ND.html">North Dakota</a>
+         <a href="states/OH.html">Ohio</a>
+         <a href="states/OK.html">Oklahoma</a>
+         <a href="states/OR.html">Oregon</a>
+         <a href="states/PA.html">Pennsylvania</a>
+         <a href="states/RI.html">Rhode Island</a>
+         <a href="states/SC.html">South Carolina</a>
+         <a href="states/SD.html">South Dakota</a>
+         <a href="states/TN.html">Tennessee</a>
+         <a href="states/TX.html">Texas</a>
+         <a href="states/UT.html">Utah</a>
+         <a href="states/VT.html">Vermont</a>
+         <a href="states/VA.html">Virginia</a>
+         <a href="states/WA.html">Washington</a>
+         <a href="states/WV.html">West Virginia</a>
+         <a href="states/WI.html">Wisconsin</a>
+         <a href="states/WY.html">Wyoming</a>
+         <a href="states/DC.html">Washington DC</a>
+      </div>
+   </div>
+
 
    <div class="table-holder">
       {COUNTY_TABLE}   
