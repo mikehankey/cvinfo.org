@@ -421,11 +421,11 @@ def state_table(data,us_map_template):
             <td>{:s}</td>
       """.format(state_code,color_of_state,state_name)
       row_html += """
-            <td>{:,d}</td>
-            <td>{:,d}</td>
-            <td>{:,d}</td>
-            <td>{:,d}</td>
-            <td>{:,d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
             <td>{:0.2f}%</td>
             <td>{:0.2f}%</td>
          </tr>
