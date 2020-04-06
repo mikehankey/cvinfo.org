@@ -35,7 +35,7 @@ This program :
 
 #################################################################################################
 # GLOBAL VARS
-from conf import *	
+from conf  import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -200,13 +200,13 @@ def make_all_county_page():
          row_html += """
                      <td>{:,d}</td>
                      <td>{:,d}</td>
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
+                     <td>{:0.2f}</td>
+                     <td>{:0.2f}</td>
                      <td>{:,d}</td>
                      <td>{:0.2f}</td>
                      <td>{:0.2f}</td>
                   </tr>
-         """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
+         """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),float(dr['cpm']),float(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
 
 
          #row = row_html
@@ -366,19 +366,38 @@ def state_table(data,us_map_template):
             </tr>
    """
    table_footer = """
-            </tr>
          </tbody>
+         <tfoot>
+            <tr>
+               <td><b>TOTAL</b></td>
+               <td>&nbsp;</td>
+               <td>{TOT_POP}</td>
+               <td>{TOT_CASES}</td>
+               <td>{TOT_DEATHS}</td>
+               <td>{TOT_CPM}</td>
+               <td>{TOT_DPM}</td>
+               <td> </td>
+               <td> </td>
+            </tr>
+         </tfoot>
        </table>
    """
    rows = ""
 
    data_sorted = sorted(data, key=lambda x: x[7], reverse=True)
    rk = 0
+
+   total_pop = 0;
+   total_cases = 0;
+   total_deaths = 0;
+   total_cpm = 0;
+   total_dpm = 0;
+
    for dr in data_sorted:
 
       #state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality'],color_of_state ))
       (state_code, state_name, population, last_cases, last_deaths, last_ci, last_di, last_cpm, last_dpm, last_cg, last_dg, last_mort) = dr 
-
+ 
       if rk <= 10:
          color_of_state = COLORS[4]
       if 10 < rk <= 20:
@@ -392,7 +411,10 @@ def state_table(data,us_map_template):
 
       us_map_template = us_map_template.replace("{"+state_code+"_color_class}", color_of_state)  
 
-      print(dr)
+      total_pop      += int(dr[2]*1000000)
+      total_cases    += int(dr[3])
+      total_deaths   += int(dr[4]) 
+ 
       row_html = """
          <tr data-state="{:s}">
             <td><span class="cl {:s}"></span></td>
@@ -404,16 +426,27 @@ def state_table(data,us_map_template):
             <td>{:,d}</td>
             <td>{:,d}</td>
             <td>{:,d}</td>
-            <td>{:0.2f}</td>
-            <td>{:0.2f}</td>
+            <td>{:0.2f}%</td>
+            <td>{:0.2f}%</td>
          </tr>
-      """.format(int(dr[2]),int(dr[3]),int(dr[4]),int(dr[7]),int(dr[8]),float(dr[9]),float(dr[11]))
-
-
-
-      
+      """.format(int(dr[2]*1000000),int(dr[3]),int(dr[4]),int(dr[7]),int(dr[8]),float(dr[9]),float(dr[11]))
+ 
       rows += row_html
       rk += 1
+
+   table_footer = table_footer.replace('{TOT_POP}','{:,d}'.format((int(total_pop))))
+   table_footer = table_footer.replace('{TOT_CASES}','{:,d}'.format((int(total_cases))))
+   table_footer = table_footer.replace('{TOT_DEATHS}','{:,d}'.format((int(total_deaths))))
+
+
+   # Compute Total Cases per millions
+   total_cpm = int(total_cases)/(int(total_pop)/100000)
+   # Compute Total Deaths per millions
+   total_dpm = int(total_deaths)/(int(total_pop)/100000)
+ 
+   table_footer = table_footer.replace('{TOT_CPM}','{:0.2f}'.format((float(total_cpm))))
+   table_footer = table_footer.replace('{TOT_DPM}','{:0.2f}'.format((float(total_dpm))))
+
    table_html = table_header + rows + table_footer
    return(table_html,us_map_template) 
   
@@ -565,8 +598,8 @@ def make_county_table(sjs):
                      <td>{:0,0f}</td>
                      <td>{:0,0f}</td>
                      <td>{:0,.0f}}</td>
-                     <td>{0:.2f}</td>
-                     <td>{0:.2f}</td>
+                     <td>{0:.2f}%</td>
+                     <td>{0:.2f}%</td>
                   </tr>
    """
 
@@ -671,6 +704,9 @@ def make_county_table(sjs):
    return table, state_map_template
 
 
+# Transform 20200506 to 2020-05-06
+def string_to_date(s) :
+   return s[:4]+'-'+s[4:6]+'-'+s[6:]
 
 
 def make_state_page(this_state):
@@ -687,18 +723,20 @@ def make_state_page(this_state):
    template = template.replace("{STATE_NAME}", sjs['summary_info']['state_name'])
    template = template.replace("{STATE_CODE}", sjs['summary_info']['state_code'])
    template = template.replace("{STATE_CODE_L}", sjs['summary_info']['state_code'].lower())
-   template = template.replace("{POPULATION}", str(int(sjs['summary_info']['state_population'] * 1000000)))
-   template = template.replace("{CASES}", str(sjs['summary_info']['cases']))
-   template = template.replace("{DEATHS}", str(sjs['summary_info']['deaths']))
-   template = template.replace("{CPM}", str(int(sjs['summary_info']['cpm'])))
-   template = template.replace("{DPM}", str(int(sjs['summary_info']['dpm'])))
-   template = template.replace("{CASE_INCREASE}", str(sjs['summary_info']['new_cases']))
-   template = template.replace("{DEATH_INCREASE}", str(sjs['summary_info']['new_deaths']))
-   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_last'],2)))
-   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_last'],2)))
-   template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2)))
-   template = template.replace("{TESTS}", str(sjs['summary_info']['tests']))
-   template = template.replace("{TPM}", str(int(sjs['summary_info']['tpm'])))
+
+   template = template.replace("{POPULATION}", str('{:,d}'.format(int(sjs['summary_info']['state_population'] * 1000000))))
+   
+   template = template.replace("{CASES}", str('{:,d}'.format(sjs['summary_info']['cases'])))
+   template = template.replace("{DEATHS}", str('{:,d}'.format(sjs['summary_info']['deaths'])))
+   template = template.replace("{CPM}", str('{:,d}'.format(int(sjs['summary_info']['cpm']))))
+   template = template.replace("{DPM}", str('{:,d}'.format(int(sjs['summary_info']['dpm']))))
+   template = template.replace("{CASE_INCREASE}", str('{:,d}'.format(sjs['summary_info']['new_cases'])))
+   template = template.replace("{DEATH_INCREASE}", str('{:,d}'.format(sjs['summary_info']['new_deaths'])))
+   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_last'],2))+"%")
+   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_last'],2))+"%")
+   template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2))+"%")
+   template = template.replace("{TESTS}", str('{:,d}'.format(sjs['summary_info']['tests'])))
+   template = template.replace("{TPM}", str('{:,d}'.format(int(sjs['summary_info']['tpm']))))
    if sjs['summary_info']['hospital_now'] == "":
       sjs['summary_info']['hospital_now'] = 0
       template = template.replace("{HOSP_NOW}", str(int(sjs['summary_info']['hospital_now'])))
@@ -723,8 +761,8 @@ def make_state_page(this_state):
 
 
 
-   template = template.replace("{STATE_LAST_UPDATE}", str(sjs['summary_info']['state_data_last_updated']))
-   template = template.replace("{COUNTY_LAST_UPDATE}", str(sjs['summary_info']['county_data_last_updated']))
+   template = template.replace("{STATE_LAST_UPDATE}", string_to_date(str(sjs['summary_info']['state_data_last_updated'])))
+   template = template.replace("{COUNTY_LAST_UPDATE}", string_to_date(str(sjs['summary_info']['county_data_last_updated'])))
    template = template.replace("{PAGE_LAST_UPDATE}", str(datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
    template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)

@@ -1,5 +1,5 @@
 # GLOBAL VARS
-ORG_PATH =  "/var/www/projects/COVID/Git/cvinfo.org/"
+ORG_PATH =  "/var/www/projects/COVID/Git/cvinfo.org"
   
 # PATHS 
 PUB_DIR = "/var/www/projects/COVID/Git/cvinfo.org/testPUB/"
@@ -17,5 +17,5 @@ STATES_JSON_DATA_FOLDER =  ORG_PATH + "/data/"
 TEMPLATES_FOLDER = ORG_PATH + "/templates/"
 
 #OUTPUT
-OUT_PATH = ORG_PATH  + "states/"
+OUT_PATH = ORG_PATH  + "/states/"
 OUT_INDEX = OUT_PATH  + "/index.html"

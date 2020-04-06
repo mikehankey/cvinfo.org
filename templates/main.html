@@ -4,92 +4,53 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-	<title>COVID 19 - US Stats</title>
+	<title>COVID-19 - US Statistics</title>
 
 	<meta name="author" content="Mike Hankey">
-	<meta name="description" content="COVID 19 (Coronavirus) Stats for USA">
+	<meta name="description" content="COVID 19 (Coronavirus) Stats for USA, Per Million, By County, Historical">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="./dist/js/jquery.tablesorter.min.js"></script>
+   <script src="./dist/js/cvinfo.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="./dist/css/m.css" rel="stylesheet"> 
+   <link href="./dist/css/cvinfo.css" rel="stylesheet"> 
+
+   <meta property="og:title" content="COVID-19 - US Statistics - Last Update: {LAST_UPDATE}"/>
+   <meta property="og:type" content="article"/>
+   <meta property="og:url" content="http://cvinfo.org/"/>
+   <meta property="og:site_name" content="COVID-19 (Coronavirus) - US Statistics"/> 
+   <meta property="og:description" content="COVID 19 (Coronavirus) Stats for USA, Per Million, By County, Historical..."/>
+   <!--
+   <meta property="og:image" content="https://www.amsmeteors.org/wp-content/uploads/2020/04/999999999_5609.jpg"/>
+   <meta property="og:image:width" content="1800"/>
+   <meta property="og:image:height" content="1012"/>
+   -->
   
 </head>
 <body>
-
-   <h1>COVID 19 - US Stats</h1> 
-   <div id="up">Last Update: {LAST_UPDATE}</div>
-   <div id="us_map">
-      {US_MAP}
+   <div id="header">
+      <h1>COVID-19 - US Statistics</h1> 
+      <div id="up">Last Update: {LAST_UPDATE}</div>
    </div>
-
-   <div class="table-holder">
-      {STATE_TABLE}   
+   
+   <div id="us_map">{US_MAP}</div>
+   <div id="country-table" class="table-holder">
+      {STATE_TABLE} 
    </div>
-
+   <div id="soc">
+      <ul class="share-buttons">
+            <li><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fcvinfo.org&quote=" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&quote=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Facebook" src="./dist/img/Facebook.svg" /></a></li>
+            <li><a href="https://twitter.com/intent/tweet?source=http%3A%2F%2Fcvinfo.org&text=:%20http%3A%2F%2Fcvinfo.org" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20'  + encodeURIComponent(document.URL)); return false;"><img alt="Tweet" src="./dist/img/Twitter.svg" /></a></li>
+            <li><a href="http://pinterest.com/pin/create/button/?url=http%3A%2F%2Fcvinfo.org&description=" target="_blank" title="Pin it" onclick="window.open('http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(document.URL) + '&description=' +  encodeURIComponent(document.title)); return false;"><img alt="Pin it" src="./dist/img/Pinterest.svg" /></a></li>
+            <li><a href="http://www.reddit.com/submit?url=http%3A%2F%2Fcvinfo.org&title=" target="_blank" title="Submit to Reddit" onclick="window.open('http://www.reddit.com/submit?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Submit to Reddit" src="./dist/img/Reddit.svg" /></a></li>
+            <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fcvinfo.org&title=&summary=&source=http%3A%2F%2Fcvinfo.org" target="_blank" title="Share on LinkedIn" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Share on LinkedIn" src="./dist/img/LinkedIn.svg" /></a></li>
+      </ul>
+   </div>
    <div id="ft">
       cvinfo.org provides enhanced COVID-19 statistics and reports made from open source data<BR> 
       <a href="https://covidtracking.com/">Covid Tracking</a> -  
       <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a> <BR>
       contact: mike.hankey[@]gmail.com
    </div>
- 
-   <script>
-   <!-- MMM -->
-      function actionsOnSVGState() {
-         $('path,circle').mouseenter(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            $("path, tr,circle").removeClass('on');
-            $("path#"+state).addClass('on'); 
-            $("tr[data-state="+state+"]").addClass('on');
-
-         }).mouseleave(function() {
-            $('path, tr').removeClass('on');
-         }).click(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            if(state!='frames') {
-               window.location = "./states/" + state + ".html"
-            }
-         });
-      }
-
-      function actionOnTable() {
-         $('tbody tr').mouseenter(function() {
-            var $t = $(this);
-            var state = $t.attr('data-state');  
-            $("path, tr, circle").removeClass('on');
-            $("path#"+state).addClass('on'); 
-            $("tr[data-state="+state+"]").addClass('on');
-         }).mouseleave(function() {
-            $('path, tr').removeClass('on');
-         }).click(function() {
-            var $t = $(this);
-            var state = $t.attr('data-state'); 
-            window.location = "./states/" + state + ".html"
-         });
-      }
-
- 
-  
-   $(function() {
-
-      // Action
-      actionsOnSVGState();
-      actionOnTable();
-     
-      // Table sorter
-      $("table thead th:eq(0)").data("sorter", false);
-      $('table').tablesorter({
-			widgets        : ['zebra', 'columns'],
-			usNumberFormat : false,
-			sortReset      : true,
-			sortRestart    : true
-      });
- 
-   }) 
-</script>
 </body>
 </html>

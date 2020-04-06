@@ -52,5 +52,5 @@
        <path id="WY" class="{WY_color_class}" d="M354.3,143.8l-10.5-0.8l-32.1-3.3l-16.2-2.1l-28.3-4.1l-19.9-3l-1.4,11.2l-3.8,24.3l-5.3,30.4 l-1.5,10.5l-1.7,11.9l6.5,0.9l25.9,2.5l20.6,2.3l36.8,4.1l23.8,2.9l4.5-44.2l1.4-25.4L354.3,143.8z"><title>Wyoming</title></path>
        <circle id="DC" class="{DC_color_class}" stroke="#FFFFFF" stroke-width="1.5" cx="801.3" cy="251.8" r="5"><title>Washington, DC</title></circle>
    </g>
-   <path id="frames" fill="none" stroke="#A9A9A9" stroke-width="2" d="M215,493v55l36,45 M0,425h147l68,68h85l54,54v46"/>
+    
 </svg>
