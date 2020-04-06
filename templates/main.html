@@ -4,30 +4,34 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-	<title>COVID 19 - US Stats</title>
+	<title>COVID-19 - US Statistics</title>
 
 	<meta name="author" content="Mike Hankey">
-	<meta name="description" content="COVID 19 (Coronavirus) Stats for USA">
+	<meta name="description" content="COVID 19 (Coronavirus) Stats for USA, Per Million, By County, Historical">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="./dist/js/jquery.tablesorter.min.js"></script>
+   <script src="./dist/js/cvinfo.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="./dist/css/m.css" rel="stylesheet"> 
+   <link href="./dist/css/cvinfo.css" rel="stylesheet"> 
+
+   <meta property="og:title" content="Meteor Activity Outlook for April 4-10, 2020"/>
+   <meta property="og:type" content="article"/>
+   <meta property="og:url" content="https://www.amsmeteors.org/2020/04/meteor-activity-outlook-for-april-4-10-2020/"/>
+   <meta property="og:site_name" content="American Meteor Society"/>
+   <meta property="fb:app_id" content="129042280625768"/>
+   <meta property="og:description" content="During this period the moon reaches its full phase on Tuesday April 7th. At this time the moon lies opposite the sun and will be above the horizon all night long. This weekend the waxing gibbous moon will set during the morning hours allowing meteor observers a short window of opportunity to view under dark skies just before dawn. "/>
+   <meta property="og:image" content="https://www.amsmeteors.org/wp-content/uploads/2020/04/999999999_5609.jpg"/>
+   <meta property="og:image:width" content="1800"/>
+   <meta property="og:image:height" content="1012"/>
   
 </head>
 <body>
 
-   <h1>COVID 19 - US Stats</h1> 
+   <h1>COVID-19 - US Statistics</h1> 
    <div id="up">Last Update: {LAST_UPDATE}</div>
-   <div id="us_map">
-      {US_MAP}
-   </div>
-
-   <div class="table-holder">
-      {STATE_TABLE}   
-   </div>
-
+   <div id="us_map">{US_MAP}</div>
+   <div class="table-holder">{STATE_TABLE}</div>
    <div id="ft">
       cvinfo.org provides enhanced COVID-19 statistics and reports made from open source data<BR> 
       <a href="https://covidtracking.com/">Covid Tracking</a> -  
@@ -35,59 +39,16 @@
       contact: mike.hankey[@]gmail.com
    </div>
  
-   <script>
-   <!-- MMM -->
-      function actionsOnSVGState() {
-         $('path,circle').mouseenter(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            $("path, tr,circle").removeClass('on');
-            $("path#"+state).addClass('on'); 
-            $("tr[data-state="+state+"]").addClass('on');
-
-         }).mouseleave(function() {
-            $('path, tr').removeClass('on');
-         }).click(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            if(state!='frames') {
-               window.location = "./states/" + state + ".html"
-            }
-         });
-      }
-
-      function actionOnTable() {
-         $('tbody tr').mouseenter(function() {
-            var $t = $(this);
-            var state = $t.attr('data-state');  
-            $("path, tr, circle").removeClass('on');
-            $("path#"+state).addClass('on'); 
-            $("tr[data-state="+state+"]").addClass('on');
-         }).mouseleave(function() {
-            $('path, tr').removeClass('on');
-         }).click(function() {
-            var $t = $(this);
-            var state = $t.attr('data-state'); 
-            window.location = "./states/" + state + ".html"
-         });
-      }
+   <script> 
+      
 
  
   
    $(function() {
 
-      // Action
-      actionsOnSVGState();
-      actionOnTable();
+    
      
-      // Table sorter
-      $("table thead th:eq(0)").data("sorter", false);
-      $('table').tablesorter({
-			widgets        : ['zebra', 'columns'],
-			usNumberFormat : false,
-			sortReset      : true,
-			sortRestart    : true
-      });
+    
  
    }) 
 </script>
