@@ -357,7 +357,7 @@ def get_val_rank(val,type='cpm'):
       for r in ranks[type]:
  
          if r[0] < val <= r[1]:
-            print("RANK:", r[0], "<", val, "<=", r[1])
+            #print("RANK:", r[0], "<", val, "<=", r[1])
             rank = rc
          rc += 1
 
