@@ -112,6 +112,8 @@ def main_menu():
       make_all_plots(this_state,show)
    if cmd == "4":
       this_state = input("Enter state code or ALL to do all states.").upper()
+      if this_state == "":
+         this_state = "ALL"
       make_state_pages(this_state)
    if cmd == "5":
       make_main_page()
@@ -198,11 +200,11 @@ def make_all_county_page():
                      <td>{:s}</td>
          """.format(dr['state'],dr['fips'],color,dr['county'],dr['state'])
          row_html += """
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
-                     <td>{:0.2f}</td>
-                     <td>{:0.2f}</td>
-                     <td>{:,d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
                      <td>{:0.2f}</td>
                      <td>{:0.2f}</td>
                   </tr>
@@ -655,20 +657,21 @@ def make_county_table(sjs):
                      <td><span class="cl {:s}"></span></td>
                      <td>{:s}</td>
          """.format(state_code,fips,color,dr['county'])
+                     # Use this for commas in field <td>{:,d}</td>
          row_html += """
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
-                     <td>{:,d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
+                     <td>{:d}</td>
                      <td>{:0.2f}</td>
                      <td>{:0.2f}</td>
                   </tr> 
          """.format(int(cpop),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
                      #<td>{0:.2f}</td>
                      #<td>{0:.2f}</td>
-         print(int(dr['cases']),dr['deaths'],dr['cpm'],dr['dpm'],dr['cg_med'],dr['dg_med'],dr['mortality'])
-         print(row_html)
+         #print(int(dr['cases']),dr['deaths'],dr['cpm'],dr['dpm'],dr['cg_med'],dr['dg_med'],dr['mortality'])
+         #print(row_html)
          rows += row_html
 
          #frow = row.format(state_code,fips,color,dr['county'],dr['cases'],dr['deaths'],dr['cpm'],dr['dpm'],dr['cg_med'],dr['dg_med'],dr['mortality'])
@@ -708,7 +711,7 @@ def string_to_date(s) :
 
 
 def make_state_page(this_state):
-   print("TS:",this_state)
+   #print("TS:",this_state)
    sjs = load_json_file("./json/" + this_state + ".json")
    county_table, state_svg_map = make_county_table(sjs)
    state_map = make_state_map(sjs)
@@ -784,7 +787,6 @@ def make_state_pages(this_state):
       print("Make all state pages.")
       state_names, state_codes = load_state_names()
       for st in state_names:
-         print("STATE:", st)
          if st is not "":
             make_state_page(st)
 
