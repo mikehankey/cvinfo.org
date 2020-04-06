@@ -242,7 +242,7 @@ def publish_site():
    Select publishing option:
       1) Publish just HTML 
       2) Publish just plot images 
-      3) Publish ALL data - main.html, state pages, state plots
+      3) Publish ALL data - index.html, state pages, state plots
       4) Publish site resources css, js, flags etc 
       5) Publish flags 
    """)
@@ -264,7 +264,7 @@ def publish_site():
 
    if mode == "1" or mode == 3:
       htmls = glob.glob("states/*.html")
-      cmd = "cp main.html " + PUB_DIR + "index.html" 
+      cmd = "cp index.html " + PUB_DIR + "index.html" 
       print(cmd)
       os.system(cmd)
       cmd = "cp all-counties.html " + PUB_DIR + "all-counties.html" 
@@ -483,7 +483,7 @@ def make_main_page():
    state_table_html,us_map_template = state_table(state_rank_list, us_map_template)
 
    # make main page
-   fp = open("./templates/main.html", "r")
+   fp = open("./templates/index.html", "r")
    temp = ""
    for line in fp:
       temp += line
@@ -497,7 +497,7 @@ def make_main_page():
    temp  = temp.replace('{MAP_TITLE}','Cases per Million')
  
 
-   out = open("./main.html", "w+")
+   out = open("./index.html", "w+")
    out.write(temp)
    out.close()
 
