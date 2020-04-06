@@ -32,3 +32,5 @@ function actionOnTable() {
       window.location = "./states/" + state + ".html"
    });
 }
+
+

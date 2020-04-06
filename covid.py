@@ -397,8 +397,8 @@ def state_table(data,us_map_template):
             <td>{:,d}</td>
             <td>{:,d}</td>
             <td>{:,d}</td>
-            <td>{:0.2f}</td>
-            <td>{:0.2f}</td>
+            <td>{:0.2f}%</td>
+            <td>{:0.2f}%</td>
          </tr>
       """.format(int(dr[2]),int(dr[3]),int(dr[4]),int(dr[7]),int(dr[8]),float(dr[9]),float(dr[11]))
 
@@ -679,16 +679,16 @@ def make_state_page(this_state):
    template = template.replace("{STATE_NAME}", sjs['summary_info']['state_name'])
    template = template.replace("{STATE_CODE}", sjs['summary_info']['state_code'])
    template = template.replace("{STATE_CODE_L}", sjs['summary_info']['state_code'].lower())
-   template = template.replace("{POPULATION}", str(int(sjs['summary_info']['state_population'] * 1000000)))
+   template = template.replace("{POPULATION}", str('{:,d}'.format(int(sjs['summary_info']['state_population'] * 1000000))))
    template = template.replace("{CASES}", str(sjs['summary_info']['cases']))
    template = template.replace("{DEATHS}", str(sjs['summary_info']['deaths']))
    template = template.replace("{CPM}", str(int(sjs['summary_info']['cpm'])))
    template = template.replace("{DPM}", str(int(sjs['summary_info']['dpm'])))
    template = template.replace("{CASE_INCREASE}", str(sjs['summary_info']['new_cases']))
    template = template.replace("{DEATH_INCREASE}", str(sjs['summary_info']['new_deaths']))
-   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_last'],2)))
-   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_last'],2)))
-   template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2)))
+   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_last'],2))+"%")
+   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_last'],2))+"%")
+   template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2))+"%")
    template = template.replace("{TESTS}", str(sjs['summary_info']['tests']))
    template = template.replace("{TPM}", str(int(sjs['summary_info']['tpm'])))
    if sjs['summary_info']['hospital_now'] == "":

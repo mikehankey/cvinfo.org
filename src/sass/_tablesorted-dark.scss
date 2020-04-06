@@ -6,7 +6,7 @@
 	width: 100%; 
 	color: #ccc;
 	text-align: left;
-	background-color: #000;
+	background-color: #353333;
 	border-spacing: 0;
 }
 
@@ -26,8 +26,20 @@
 	color: #fff;
 	background-color: #000;
    border-collapse: collapse;
-   border-radius: 5px 0;
+  
 }
+
+
+.tablesorter thead th:first-child {
+   border-radius: 5px 0 0 0;
+}
+
+.tablesorter thead th:last-child {
+   border-radius: 0 0 5px  0;
+}
+
+
+
 .tablesorter thead th {
 	border-bottom: #333 2px solid;
 }

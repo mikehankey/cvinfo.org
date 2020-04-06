@@ -9,6 +9,15 @@
       color: $font_color;
    }
 
+   #header {
+      background-color: #000;
+      padding:.8rem 0;
+      h1 {
+         margin:0;
+         
+      }
+   }
+
    a, a:visited {
       color:$link_color;
    }
@@ -58,7 +67,7 @@
    }
 
    #us_map {
-      margin: 0 auto 1.5rem;
+      margin: 1.5rem auto;
       max-width: 800px; 
    }
 
@@ -164,23 +173,26 @@
    
 
    #bc {
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.15);
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      text-align: center; 
       padding: 1rem;
-      max-width: 1100px;
-      margin: 1rem auto;
+      margin: 0 auto;
+      background-color:#212121;
+
+      .hbc {
+         max-width: 1280px;
+         margin:0 auto;
+      }
    }
 
    #bc a  { 
       display: inline-block;
-      padding: .2rem .3rem;
+      padding: .3rem .4rem;
       text-decoration: none;
-      background-color: #e6e6e6; // #d2d2d2;
+      background-color: #000000;
       border-radius: 2px;
       line-height: 1;
       margin: .2rem;
-      color: #000; //#423c3c;
+      color: #a2a2a2;
       transition: all .15s;
    }
 
@@ -211,6 +223,7 @@
 
    .flg {
       width: 200px;
+      text-align: center;
    }
 
    .flg img {
@@ -255,13 +268,11 @@
    }
    
    #state span {
-      font-weight: normal;
-      font-size:1rem;
-      margin-left: 2rem;
+      font-weight: 400;
+      font-size: 1rem;
+      margin-top: .5rem;
       display: block;
-      float: right;
-      text-align: right;
-   }
+   } 
    
    .std {
       flex-grow: 1;
