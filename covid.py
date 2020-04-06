@@ -305,6 +305,7 @@ def merge_state_data():
    state_names, state_codes = load_state_names()
    asd = []
    acd = []
+   acd_all = []
 
    for st in state_names:
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
@@ -319,10 +320,16 @@ def merge_state_data():
          last_stats['county'] = county
          last_stats['population'] = pop
          last_stats['fips'] = fips
-         print(last_stats) 
          acd.append(last_stats)
+         for cdr in cd[county]['county_stats']:
+            day_stats = cdr
+            day_stats['state'] = st 
+            day_stats['county'] = county 
+            day_stats['fips'] = fips
+            acd_all.append(day_stats)
    save_json_file(JSON_PATH + "/" +  "covid-19-level2-states.json", asd)
    save_json_file(JSON_PATH + "/" +  "covid-19-level2-counties.json", acd)
+   save_json_file(JSON_PATH + "/" +  "covid-19-level2-counties-all-days.json", acd_all)
    return(asd)
 
 def state_table(data,us_map_template):
@@ -667,6 +674,7 @@ def make_county_table(sjs):
 
 
 def make_state_page(this_state):
+   print("TS:",this_state)
    sjs = load_json_file("./json/" + this_state + ".json")
    county_table, state_svg_map = make_county_table(sjs)
    state_map = make_state_map(sjs)

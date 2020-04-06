@@ -19,6 +19,10 @@ import glob
 def main_menu():
    state_code = sys.argv[1]  
    field = sys.argv[2]  
+   day = sys.argv[3]  
+   #make_usa_map(field, day)
+   make_usa_map_seq(field )
+   exit()
    make_seq(state_code, field)
    #make_seq_all()
    exit()
@@ -60,6 +64,63 @@ def main_menu():
    print("State : ", state_code)
    print("Scale Rank: ", scale_rank)
    print("Data Scheme: ", data_scheme)
+
+def get_county_field_val_for_day(data,day,field):
+   for d in data:
+      if day == d['date']:
+         val = d[field]
+         print("VAL FIND:", day, val)
+
+def make_usa_map_seq(field):
+   cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
+   days = {}
+   for data in cl2:
+      days[data['day'].replace("-", "")] = 1
+
+   for day in sorted(days):
+      print(day)
+      make_usa_map(field,day,cl2)
+
+def make_usa_map(field, date, cl2 = None):
+   fp = open("templates/USA_Counties_with_FIPS_and_names.svg")
+   map = ""
+   for line in fp:
+      map += line
+   if cl2 is None: 
+      cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
+   palette = sns.color_palette("Reds", n_colors=11)
+   sns.palplot(palette)
+   md = []
+   vals = []
+   for data in cl2:
+      day = data['day'].replace("-", "")
+      if day == date:
+    
+         state = data['state']
+         county = data['county']
+         fips = data['fips']
+         val = data[field]
+         color_rank,ranks = get_cpm_rank(val)
+         color = palette[color_rank]
+         md.append((day,state,county,fips,val,color_rank,color))
+         vals.append(val)
+   for mmm in md:
+      (day,state,county,fips,val,color_rank,rgb) = mmm
+      color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
+      #map = map.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
+      if val > 0:
+         map = map.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" ")
+         print(mmm)
+
+      #id="FIPS_02201"
+   outfile = "anim/frames/USA-counties-" + date + ".png"
+   outsvg = outfile.replace(".png", ".svg")
+   out = open(outsvg, "w")
+   out.write(map)
+   out.close()
+   svg2png(bytestring=map,write_to=outfile)
+   print(outfile)
+
 
 def find_max_county_val(state_code, field,sj):
    vals = []
