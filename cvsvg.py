@@ -15,16 +15,47 @@ import seaborn as sns
 from cairosvg import svg2png
 from PIL import Image, ImageFont, ImageDraw
 import glob
+import cv2
+
+def preview(state_code, field):
+  
+   frame_wild = "anim/frames/" + state_code + "/" + state_code + "*-" + field + "*.png"
+   print(frame_wild)
+   files = glob.glob(frame_wild)
+   for file in sorted(files):
+      #imf = Image.open(file)
+      #imc = np.asarray(imf)
+      print(file)
+      imc = cv2.imread(file)
+      iw,ih = imc.shape[:2]
+      ims = cv2.resize(imc, (int(ih*1.5),int(iw*1.5)))
+      cv2.imshow('pepe', ims)
+      cv2.waitKey(250)
 
 def main_menu():
    state_code = sys.argv[1]  
    field = sys.argv[2]  
-   day = sys.argv[3]  
-   #make_usa_map(field, day)
-   make_usa_map_seq(field )
-   exit()
-   make_seq(state_code, field)
-   #make_seq_all()
+
+   if len(sys.argv) > 3:
+      cmd = sys.argv[3]  
+      if cmd == 'prev':
+         preview(state_code,field)
+         exit()
+   if state_code == "USA":
+      make_usa_map_seq(field )
+      #make_usa_map(field, day)
+      #check()
+      #exit()
+   elif state_code == "ALL": 
+      make_seq_all(field)
+   else:
+      if field != 'ALL':
+         make_seq(state_code, field)
+      else:
+         fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality']
+         for field in fields:
+            make_seq(state_code, field)
+   
    exit()
    #make_map("MD", "20200401", "cases", "1")
    #make_map("MD", "20200402", "cases", "1")
@@ -79,7 +110,13 @@ def make_usa_map_seq(field):
 
    for day in sorted(days):
       print(day)
-      make_usa_map(field,day,cl2)
+      if cfe("anim/frames/USA/", 1) == 0:
+         os.makedirs("anim/frames/USA/")
+      outfile = "anim/frames/USA/USA-counties-" + field + "-" + day + ".png"
+      if cfe(outfile) == 0:
+         make_usa_map(field,day,cl2)
+      else:
+         print("done: ", day)
 
 def make_usa_map(field, date, cl2 = None):
    fp = open("templates/USA_Counties_with_FIPS_and_names.svg")
@@ -100,7 +137,7 @@ def make_usa_map(field, date, cl2 = None):
          county = data['county']
          fips = data['fips']
          val = data[field]
-         color_rank,ranks = get_cpm_rank(val)
+         color_rank,ranks = get_val_rank(val, field)
          color = palette[color_rank]
          md.append((day,state,county,fips,val,color_rank,color))
          vals.append(val)
@@ -113,7 +150,7 @@ def make_usa_map(field, date, cl2 = None):
          print(mmm)
 
       #id="FIPS_02201"
-   outfile = "anim/frames/USA-counties-" + date + ".png"
+   outfile = "anim/frames/USA/USA-counties-" + field + "-" + day + ".png"
    outsvg = outfile.replace(".png", ".svg")
    out = open(outsvg, "w")
    out.write(map)
@@ -124,6 +161,7 @@ def make_usa_map(field, date, cl2 = None):
 
 def find_max_county_val(state_code, field,sj):
    vals = []
+   xxx = []
    cs = sj['county_stats']
    for county in cs:
       cd = cs[county]['county_stats']
@@ -136,12 +174,15 @@ def find_max_county_val(state_code, field,sj):
       vals = [0,0,0,0,0]
    return(max(vals))
 
-def make_seq_all():
+def make_seq_all(field):
    js = load_json_file("json/covid-19-level2-states.json")
    for data in js:
       state_code = data['summary_info']['state_code']
-      print("./cvsvg.py " + state_code + " " + "cpm")
-      #make_seq(state_code, "cpm")
+      cmd = "./cvsvg.py " + state_code + " " + "ALL"
+      print(cmd)
+      os.system(cmd)
+      #preview(state_code, field)
+      #make_seq(state_code, field)
 
 def make_seq(state_code, field):
    data = load_json_file("json/" + state_code + ".json")
@@ -167,8 +208,45 @@ def make_seq(state_code, field):
    ts = len(stats)
    cc = 0
    for ss in stats:
-      print(state_code, ss['date'])
       if cc < ts - 1:
+         ANIM_DIR = ANIM_PATH + "/frames/" + state_code + "/"
+         ss_date = ss['date'].replace("-", "")
+         outfile = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".png"
+         if cfe(outfile) == 0:
+            print("MAKE :", state_code, ss['date'])
+            outfile, all_val = make_map(state_code, ss_date, field, "1", max_val)
+            cc += 1
+         else:
+            print("ALREADY MADE :", state_code, ss['date'])
+
+   return(outfile)
+
+def load_covid_state_map_data(state_code, rpt_date = None):
+   #rpt_date = "20200401"
+   sd = load_json_file("json/" + state_code + ".json")
+   state_code = sd['summary_info']['state_code']
+   state_name = sd['summary_info']['state_name']
+   state_population = sd['summary_info']['state_population']
+   state_stats = sd['state_stats']
+   cs = sd['county_stats']
+   cd = []
+   cstats = {}
+   stats = {}
+   for county in cs:
+      ccs = cs[county]['county_stats']
+      if rpt_date is None:
+         cstats = ccs[-1]
+      else:
+         for cdata in cs[county]['county_stats']: 
+            fips = cs[county]['fips']
+            if cdata['day'].replace("-", "") == rpt_date:
+               cdata['fips'] = fips
+               cdata['county'] = county
+               cstats = cdata
+      cd.append((cstats))
+
+   if rpt_date is None:
+
          outfile, all_val = make_map(state_code, ss['date'], field, "1", max_val)
          files.append(outfile)
          dates.append(ss['date'])
@@ -179,13 +257,10 @@ def make_seq(state_code, field):
          cc += 1
 
    base_file = state_code + "-" + field
-   make_gif(files,dates,all_vals,state_code,field,base_file,palette)
+   #make_gif(files,dates,all_vals,state_code,field,base_file,palette)
 
 def make_cpm_legend(palette, state_code,field,height=480):
-   if field == 'cpm':
-      rank_perc,cpm_ranks = get_cpm_rank(100)
-   if field == 'mortality':
-      rank_perc,cpm_ranks = get_mortality_rank(100)
+   rank_perc,cpm_ranks = get_val_rank(100)
    img = Image.new('RGB', (200,height), (0, 0, 0))
    block_size = int(height / 13) 
    img_d = ImageDraw.Draw(img)   
@@ -203,7 +278,6 @@ def make_cpm_legend(palette, state_code,field,height=480):
       y1 = (cc * block_size) + 30
       x2 = x1 + block_size
       y2 = y1 + block_size 
-      #print("CCPM:", cpm_val)
       if cpm_val[1] >= 9999:
          val1 = str(int(cpm_val[0]))
          val2 = "+"
@@ -213,12 +287,14 @@ def make_cpm_legend(palette, state_code,field,height=480):
          val2 = str(int(cpm_val[1]))
          img_d.text((100,y1+7), val1 + "-" + val2 , font=fnt, fill=(255,255,255))
     
-      #print(x1,y2,x2,y2)
       shape = [(x1,y1), (x2,y2)]
       img_d.rectangle(shape, fill=(r,g,b), outline="black")
       cc += 1
    #img.show() 
-   img.save(ANIM_PATH + "frames/legend-" + field + ".png", "PNG")
+   LEG_PATH = ANIM_PATH + "legends/"
+   if cfe(LEG_PATH, 1) == 0:
+      os.makedirs(LEG_PATH)
+   img.save(LEG_PATH + "legend-" + state_code + "-" + field + ".png", "PNG")
    return(ANIM_PATH + "frames/legend-" + field + ".png")   
 
 def make_legend(state_code,field,palette,max_val):
@@ -249,7 +325,6 @@ def make_legend(state_code,field,palette,max_val):
       y2 = y1 + 40
       img_d.text((100,y1+10), str(round(max_val-(i*step),2)) , font=fnt, fill=(0,0,0,255))
     
-      #print(x1,y2,x2,y2)
       shape = [(x1,y1), (x2,y2)]
       img_d.rectangle(shape, fill=(r,g,b), outline="black")
       cc += 1
@@ -259,77 +334,47 @@ def make_legend(state_code,field,palette,max_val):
    #img_d.text((100,65), str(max_val) , font=fnt, fill=(0,0,0,255))
 
    #img.show() 
-   img.save(ANIM_PATH + "frames/legend-" + state_code + "-" + field + ".png", "PNG")
 
-def get_mortality_rank(val):
-   rank = 0
-   mort_ranks = ((0,1),(1,2),(2,3),(3,4),(4,5),(6,7),(7,8),(8,9),(9,10),(10,15),(15,100))
-   if val < 1:
+   LEG_PATH = ANIM_PATH + "legends/"
+   if cfe(LEG_PATH, 1) == 0:
+      os.makedirs(LEG_PATH)
+
+   img.save(LEG_PATH + "legend-" + state_code + "-" + field + ".png", "PNG")
+
+
+def get_val_rank(val,type='cpm'):
+   if True:
       rank = 0
-   if 1 <= val < 2:
-      rank = 1
-   if 2 <= val < 3:
-      rank = 2
-   if 3 <= val < 4:
-      rank = 3
-   if 4 <= val < 5:
-      rank = 4
-   if 6 <= val < 7:
-      rank = 5
-   if 8 <= val < 9:
-      rank = 6
-   if 9 <= val < 10:
-      rank = 7
-   if 10 <= val < 15:
-      rank = 8
-   if 15 <= val < 20:
-      rank = 9
-   if val >= 20:
-      rank = 10
-   return(rank,mort_ranks)
+      ranks = {}
+      ranks['cases'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+      ranks['deaths'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,20),(30,40),(40,50),(50,100),(100,200),(300,999999))
+      ranks['cpm'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+      ranks['dpm'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,25),(25,50),(50,100),(100,200),(200,300),(300,999999))
+      ranks['mortality'] = ((0,1),(1,2),(2,3),(3,4),(4,5),(6,7),(7,8),(8,9),(9,10),(10,15),(15,100))
+      ranks['cg_med'] = ((0,5),(5,10),(10,15),(15,20),(20,25),(25,30),(30,35),(35,40),(40,50),(50,75),(75,100))
+      ranks['dg_med'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+      rc = 0
+      for r in ranks[type]:
+ 
+         if r[0] < val <= r[1]:
+            print("RANK:", r[0], "<", val, "<=", r[1])
+            rank = rc
+         rc += 1
 
 
-def get_cpm_rank(val):
-   rank = 0
-   cpm_ranks = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
-   if val < 10:
-      rank = 0
-   if 10 <= val < 25:
-      rank = 1 
-   if 25 <= val < 50:
-      rank = 2 
-   if 50 <= val < 100:
-      rank = 3 
-   if 100 <= val < 150:
-      rank = 4
-   if 150 <= val < 200:
-      rank = 5
-   if 200 <= val < 250:
-      rank = 6
-   if 250 <= val < 300:
-      rank = 7
-   if 300 <= val < 400:
-      rank = 8
-   if 400 <= val < 500:
-      rank = 9 
-   if val >= 500:
-      rank = 10 
-   return(rank,cpm_ranks)
+
+   return(rank,ranks[type])
 
 def make_map(state_code,rpt_date,field,scale,max_val):
    info = load_covid_state_map_data(state_code,rpt_date)
-   #print("INFO:", info['state_name'])
-   #print("INFO CS:", info['county_stats'])
+   
    all_val = 0   
    map_data = [] 
    vals = [] 
    for cdata in info['county_stats']:
-      #print("C:", cdata)
-      #fips = info['county_stats'][county]['fips']
       if "fips" in cdata:
          fips = cdata['fips']
          val = cdata[field]
-         print(field,val)
          map_data.append((fips, val))
          vals.append(val)
 
@@ -341,20 +386,13 @@ def make_map(state_code,rpt_date,field,scale,max_val):
    md = []
    unqx = {}
    for fips,val in map_data:
-      rank_perc = int((val / max_val) * 10)
-      if field == 'cpm':
-         rank_perc,cpm_ranks = get_cpm_rank(val)
-         color = palette[rank_perc]
-      elif field == 'mortality':
-         rank_perc,cpm_ranks = get_mortality_rank(val)
-         print("MORT RANK:", rank_perc, val)
-         color = palette[rank_perc]
-
+      if max_val > 0:
+         rank_perc,cpm_ranks = get_val_rank(val,field)
       else:
-         if rank_perc < len(palette):
-            color = palette[rank_perc]
-         else:
-            color = palette[10]
+         rank_perc = 0
+      
+      color = palette[rank_perc]
+
       if val == 0:
          color = palette[0]
       if fips not in unqx:
@@ -369,10 +407,11 @@ def make_map(state_code,rpt_date,field,scale,max_val):
       else:
          all_val = 0
 
-   ANIM_DIR = ANIM_PATH + "/frames/"
+   ANIM_DIR = ANIM_PATH + "/frames/" + state_code + "/"
+   if cfe(ANIM_DIR, 1) == 0:
+      os.makedirs(ANIM_DIR)
    outfile = ANIM_DIR + state_code + "-" + field + "-" + rpt_date + ".png"
    
-   #print("md:", md)
 
    make_svg_map(state_code,md,outfile)
    return(outfile,all_val)
@@ -384,6 +423,10 @@ def load_covid_state_map_data(state_code, rpt_date = None):
    state_name = sd['summary_info']['state_name']
    state_population = sd['summary_info']['state_population']
    state_stats = sd['state_stats']
+   if state_code == 'NY':
+      sd['county_stats']['New York City']['fips'] = "9999"
+
+
    cs = sd['county_stats']
    cd = []
    cstats = {}
@@ -395,7 +438,6 @@ def load_covid_state_map_data(state_code, rpt_date = None):
       else:
          for cdata in cs[county]['county_stats']: 
             fips = cs[county]['fips']
-            #print(cdata['day'], rpt_date)
             if cdata['day'].replace("-", "") == rpt_date:
                cdata['fips'] = fips
                cdata['county'] = county
@@ -408,8 +450,6 @@ def load_covid_state_map_data(state_code, rpt_date = None):
       for stat in state_stats:
          if stat['date'] == rpt_date:
             stats = stat 
-   #print(state_code, state_name,state_population)
-   #print(stats)
    info = {
       "state_code": state_code,
       "state_name": state_name,
@@ -430,7 +470,6 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
    #   last_file_ex = last_file_ex.replace("frames", "marked")
    #   cmd = "cp " + last_file + " " + last_file_ex 
    #   os.system(cmd)
-   #   print(cmd)
    #time.sleep(1)
 
    imf = Image.open(files[0])
@@ -442,7 +481,6 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
    leg_file = ANIM_PATH + "frames/legend-" + field + ".png"
    fnt = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', 15)
   
-   print(leg_file)
    leg = Image.open(leg_file)
    lw,lh = leg.size
 
@@ -451,7 +489,6 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
    nw = int(lw * rh)
    nh = int(lh * rh)
    leg = leg.resize((nw,nh))
-   print("LEG SIZE:", lw,lh, iw,ih,rw,rh,nw,nh)
 
    cw = lw + iw + 10
    ch = ih
@@ -478,7 +515,6 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
       draw.text((10,ih-20), dates[fc], font=fnt, fill=(255,255,255))
       draw.text((cw-100,ih-20), "cvinfo.org " , font=fnt, fill=(255,255,255))
 
-      #print("IMAGE:", new_im.size[0],new_im.size[1],file)
       #new_im.show()
       images.append(new_im)
       new_file = file.replace("frames", "marked")
@@ -522,7 +558,6 @@ def make_svg_map(state_code,data,outfile):
 
       if "FIPS_" in line:
          for fips,rgb in data:
-            print(fips,data)
             color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
             #if "fill" not in line: 
             line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
@@ -533,8 +568,9 @@ def make_svg_map(state_code,data,outfile):
    out = open(outsvg, "w")
    out.write(svg_code)
    out.close()
-   #print(outsvg)
-   svg2png(bytestring=svg_code,write_to=outfile)
+   ow = 555.22
+   oh = 351.67
+   svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
 
 
 
