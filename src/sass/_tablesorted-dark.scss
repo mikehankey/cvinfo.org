@@ -204,8 +204,13 @@
 	display: none;
 }
 
- 
 
+ 
+ 
+.tablesorter tfoot td {
+   text-align: right;
+   font-weight: bold
+}
 
 
 table tbody tr td:nth-child(2), table tbody tr td:nth-child(1) {

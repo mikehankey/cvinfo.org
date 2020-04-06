@@ -103,9 +103,9 @@
                      <dd>{CASES}</dd>
                      <dt>Deaths  </dt>
                      <dd>{DEATHS}</dd>
-                     <dt>New Cases </dt>
+                     <dt>New Cases*</dt>
                      <dd>{CASE_INCREASE}</dd>
-                     <dt>New Deaths</dt>
+                     <dt>New Deaths*</dt>
                      <dd>{DEATH_INCREASE}</dd>
                      <dt>Cases per million </dt>
                      <dd>{CPM}</dd>
@@ -138,6 +138,8 @@
                      <dt>County Data Update</dt>
                      <dd>{COUNTY_LAST_UPDATE}</dd> 
                   </dl>
+
+                  <p>* last 24 hours.</p>
          </div>
       </div>
    
@@ -169,14 +171,14 @@
 
  
 
-      <div id="state_counties_map">
-         <h3>State Map</h3>
-         {SVG_STATE_COUNTIES}
-      </div>
+         <div id="state_counties_map">
+            <h3>State Map</h3>
+            {SVG_STATE_COUNTIES}
+         </div>
 
-      <div class="table-holder">
-         {COUNTY_TABLE} 
-      </div>
+         <div class="table-holder">
+            {COUNTY_TABLE} 
+         </div>
 
 
    </div>
