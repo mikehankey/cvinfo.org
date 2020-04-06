@@ -35,7 +35,7 @@ This program :
 
 #################################################################################################
 # GLOBAL VARS
-from conf  import *	
+from conf import *	
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -441,6 +441,8 @@ def state_table(data,us_map_template):
    table_footer = table_footer.replace('{TOT_DPM}','{:0.2f}'.format((float(total_dpm))))
 
    table_html = table_header + rows + table_footer
+
+
    return(table_html,us_map_template) 
   
   
@@ -451,24 +453,13 @@ def make_main_page():
    with open(PATH_TO_US_SVG_MAP, 'r') as file:  
       us_map_template = file.read()
  
-
-   #COLORS=['b','g','y','o','r']
- 
    rk = 0 
    state_rank_list = []
-   print(asd)
-   #sdata = []
-   #for adata in asd:
-   #   data = adata['summary_info']
-   #   print(data['state_code'],data['cpm'])
-   #   sdata.append(data)
-   #exit()
+   
    for adata in asd:
       data = adata['summary_info']
       state_code = data['state_code']
       si = data
-      #{'state_code': 'AL', 'state_name': 'Alabama', 'state_population': 4.903185, 'cases': 1233, 'deaths': 32, 'new_cases': 156, 'new_deaths': 6, 'tests': 0, 'tpm': 0, 'cpm': 251, 'dpm': 6, 'cg_last': 12.65, 'dg_last': 18.75, 'cg_avg': 30.3, 'dg_avg': 46.98, 'cg_med': 21.98, 'dg_med': 50.0, 'cg_med_decay': -0.24, 'dg_med_decay': 6.41, 'mortality': 2.6, 'state_data_last_updated': '20200402', 'county_data_last_updated': '20200401'}
-      
       state_rank_list.append( (data['state_code'], data['state_name'], data['state_population'], data['cases'],data['deaths'],data['new_cases'], data['new_deaths'], data['cpm'], data['dpm'], data['cg_med'], data['dg_med'], data['mortality']))
       rk += 1
 
@@ -481,6 +472,7 @@ def make_main_page():
 
 
    state_table_html,us_map_template = state_table(state_rank_list, us_map_template)
+
    # make main page
    fp = open("./templates/main.html", "r")
    temp = ""
@@ -490,6 +482,12 @@ def make_main_page():
    temp = temp.replace("{US_MAP}", us_map_template)
    temp = temp.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
  
+   
+   # Important here we add the title that corresponds to the default sorting of the table 
+   # and the default coloring of the map
+   temp  = temp.replace('{MAP_TITLE}','Cases per Million')
+ 
+
    out = open("./main.html", "w+")
    out.write(temp)
    out.close()
