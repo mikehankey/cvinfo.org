@@ -28,6 +28,9 @@ function launch_sorter() {
          }
       });
 
+      // Default Sorting: CPM
+      $('th[data-column=5]').click().click();
+
 
    
    }
