@@ -3,7 +3,7 @@
 # cvinfo.org 
 # Batch script for making colored state and county images based on covid-level2 data
 # 
-from covid import cfe, load_json_file
+from covid import cfe, load_json_file, load_state_names
 from conf import *
 
 import time
@@ -17,20 +17,82 @@ from PIL import Image, ImageFont, ImageDraw
 import glob
 import cv2
 
+
 def preview(state_code, field):
-  
+   field_desc = {
+      'cpm' : "Cases Per Million",
+      'dpm' : "Deaths Per Million",
+      'cases' : "Cases",
+      'deaths' : "Deaths",
+      'cg_med' : "Case Growth Percent",
+      'dg_med' : "Death Growth Percent",
+      'mortality' : "Mortality Percent",
+      'new_deaths' : "New Deaths Per Day",
+      'new_cases' : "New Cases Per Day"
+   }
+   dates = []
+   vals = []
+   state_names, state_codes = load_state_names()
+   state_name = state_names[state_code]
+   js = load_json_file("json/" + state_code + ".json")
+   ss = js['state_stats']
+   for dd in ss:
+      dates.append(dd['date']) 
+      vals.append(dd[field]) 
+
+   print(dates)
+   print(vals)
+
+   palette = sns.color_palette("Reds", n_colors=11)
+   sns.palplot(palette)
+
+
    frame_wild = "anim/frames/" + state_code + "/" + state_code + "*-" + field + "*.png"
    print(frame_wild)
    files = glob.glob(frame_wild)
+
+   imc = cv2.imread(files[0])
+   ih,iw = imc.shape[:2]
+   ih = int(ih * 1.5)
+   iw = int(iw * 1.5)
+
+   make_cpm_legend(palette, state_code,field,int(ih))
+   leg = "anim/legends/legend-" + state_code + "-" + field + ".png"
+   limg = cv2.imread(leg)
+   lh,lw = limg.shape[:2]
+
+   tw = lw + iw + 50
+   th = lh + 50
+   cc = 0
    for file in sorted(files):
-      #imf = Image.open(file)
-      #imc = np.asarray(imf)
-      print(file)
+      custom_frame = np.zeros((th,tw,3),dtype=np.uint8)
       imc = cv2.imread(file)
-      iw,ih = imc.shape[:2]
-      ims = cv2.resize(imc, (int(ih*1.5),int(iw*1.5)))
-      cv2.imshow('pepe', ims)
+      ims = cv2.resize(imc, (int(iw),int(ih)))
+      x1 = 10
+      x2 = 10 + lw
+      y1 = 25
+      y2 = 25 + lh
+      custom_frame[y1:y2,x1:x2] = limg.copy()
+
+      x1 = 10 + lw 
+      x2 = 10 + lw + iw
+      y1 = 25 
+      y2 = 25 + ih
+      custom_frame[y1:y2,x1:x2] = ims.copy()
+      desc = state_name + " " + field_desc[field] + " " + str(vals[cc])
+      cv2.putText(custom_frame, desc,  (40,25), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 1)
+
+      desc = dates[cc]
+      cv2.putText(custom_frame, desc,  (40,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
+
+      desc = "www.cvinfo.org"
+      cv2.putText(custom_frame, desc,  (tw-160,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
+
+
+      cv2.imshow('pepe', custom_frame)
       cv2.waitKey(250)
+      cc += 1
+      del custom_frame
 
 def main_menu():
    state_code = sys.argv[1]  
@@ -52,7 +114,7 @@ def main_menu():
       if field != 'ALL':
          make_seq(state_code, field)
       else:
-         fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality']
+         fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
          for field in fields:
             make_seq(state_code, field)
    
@@ -260,7 +322,7 @@ def load_covid_state_map_data(state_code, rpt_date = None):
    #make_gif(files,dates,all_vals,state_code,field,base_file,palette)
 
 def make_cpm_legend(palette, state_code,field,height=480):
-   rank_perc,cpm_ranks = get_val_rank(100)
+   rank_perc,cpm_ranks = get_val_rank(100,field)
    img = Image.new('RGB', (200,height), (0, 0, 0))
    block_size = int(height / 13) 
    img_d = ImageDraw.Draw(img)   
@@ -353,6 +415,8 @@ def get_val_rank(val,type='cpm'):
       ranks['mortality'] = ((0,1),(1,2),(2,3),(3,4),(4,5),(6,7),(7,8),(8,9),(9,10),(10,15),(15,100))
       ranks['cg_med'] = ((0,5),(5,10),(10,15),(15,20),(20,25),(25,30),(30,35),(35,40),(40,50),(50,75),(75,100))
       ranks['dg_med'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+      ranks['new_cases'] = ((0,5),(5,10),(10,20),(20,30),(30,40),(40,50),(50,100),(100,200),(200,500),(500,1000),(1000,99999))
+      ranks['new_deaths'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
       rc = 0
       for r in ranks[type]:
  
