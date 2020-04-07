@@ -781,14 +781,25 @@ def make_state_page(this_state):
 
    template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
    
-
    # We add all the svgs for cases
-   #all_svg = glob.glob( ANIM_PATH + "/frames/" + sjs['summary_info']['state_code'] + "*" + "cases" + "*" + "svg")
-   #print(ANIM_PATH + "/frames/" + sjs['summary_info']['state_code'] + "*" + "cases" + "*" + "svg")
-   #print(all_svg)
-   #sys.exit()
+   all_svg = glob.glob( ANIM_PATH + "frames/" + sjs['summary_info']['state_code'] + "/*" + "cases" + "*" + "svg")
+   all_svg_code = ""
+   all_dates = []
+   
+   for svg in all_svg:
+      # Get date from the path
+      svg_date = svg[-12:].replace('.svg','')
+      all_dates.append(svg)
+      #svg = svg.replace(ORG_PATH,'..')  # .. because we have /states in the path
 
-   #template = template.replace("{ALL_SVG_MORTALITY}",state_svg_mortality_maps)
+      
+      # Load svg map
+      with open(svg, 'r') as f:  
+         svg_code = f.read()
+ 
+      all_svg_code += "<div id='cases_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
+
+   template = template.replace("{ALL_SVGS_CASES}",all_svg_code)
 
 
 
