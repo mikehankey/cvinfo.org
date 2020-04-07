@@ -636,11 +636,19 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
 
 
 def make_svg_map(state_code,data,outfile):
+   used_counties = {}
+   state_data = load_json_file("json/" + state_code + ".json")
+   counties = state_data['county_pop']
+   for c in counties:
+      fips = state_data['county_stats'][c]['fips']
+      used_counties[fips] = 0
 
    fname = "templates/states/" + state_code + ".svg"
 
    fp = open(fname, "r")
 
+   print("USED:", used_counties)
+   exit()
 
    svg_code = ""
    lc = 0
@@ -651,6 +659,7 @@ def make_svg_map(state_code,data,outfile):
             color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
             #if "fill" not in line: 
             line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
+            
       svg_code += line
 
    fp.close()
