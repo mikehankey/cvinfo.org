@@ -50,7 +50,7 @@ import numpy as np
 from pathlib import Path
 import os
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
@@ -870,7 +870,8 @@ def make_state_plots(this_state_code, show=0):
    make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
    make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
    make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
-   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "in", show)
+   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "ts", show)
+
    make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
    make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
    make_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
@@ -878,6 +879,10 @@ def make_state_plots(this_state_code, show=0):
 
 def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,show=0):
    fig, ax1 = plt.subplots()
+   print("PLOT:", state, plot_title, show)
+   print(bin_days)
+   print(bin_sums)
+   print(bin_sums2)
    print("make_plot")
    width = .35
    x = np.arange(len(bin_days))
@@ -972,10 +977,10 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
    if cfe("./plots/", 1) == 0:
       os.makedirs("./plots/")
    plot_file = "plots/" + state + "-" + plot_type + ".png"
+   #plt.show()
    plt.savefig(plot_file)
-   print("SAVED:", plot_file)
-   if show == 1:
-      plt.show()
+   print("SAVED:", plot_file, show)
+   #if show == "1":
 
 def curve_func(x, a, b, c):
    return a * np.exp(-(x-b)**2/(2*c**2))
