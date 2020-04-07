@@ -721,6 +721,9 @@ def string_to_date(s) :
    return s[:4]+'-'+s[4:6]+'-'+s[6:]
 
 
+
+ 
+
 def make_state_page(this_state):
    js_vals = [ 'cpm_vals', 'dpm_vals', 'gr_vals', 'mr_vals', 'death_vals', 'case_vals'] 
 
@@ -809,7 +812,7 @@ def make_state_page(this_state):
       with open(svg, 'r') as f:  
          svg_code = f.read()
  
-      all_svg_code += "<div id='cases_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
+      all_svg_code += "<div id='cpm_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
 
    template = template.replace("{ALL_SVGS_CASES}",all_svg_code)
 
