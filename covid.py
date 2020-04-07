@@ -735,7 +735,6 @@ def make_county_tool_tip(data):
    """
 
 
-   exit()
    return(tool_tip)
 
 
@@ -766,10 +765,13 @@ def make_state_page(this_state):
    js_vals = [ 'cpm_vals', 'dpm_vals', 'gr_vals', 'mr_vals', 'death_vals', 'case_vals'] 
    sjs = load_json_file("./json/" + this_state + ".json")
 
+   print("YO")
    county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
+   print("YO")
  
 
    state_map = make_state_map(sjs)
+   print("YOYO")
    
    fp = open("./templates/state.html", "r")
    template = ""
@@ -1208,13 +1210,16 @@ def make_all_level2_data():
    state_names, state_codes = load_state_names()
    county_pops = load_county_pop(state_codes)
    acdata = load_county_data()
-   for state_code in state_names:
 
+   for state_code in state_names:
+      print("STATE DATA:", state_data)
+      #exit()
       make_level2_data(state_code, state_data, state_pop,state_names,county_pops,acdata)
    merge_state_data()
 
 def make_level2_data(this_state_code, state_data, state_pop,state_names,county_pops,acdata):
    cj = {}
+   all_usa_data = []
 
    county_pop = county_pops[this_state_code]
    if this_state_code in acdata:
@@ -1240,6 +1245,50 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    for data in level2_data:
       stat_obj = {}
       (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered) = data 
+      if date not in all_usa_data:
+         all_usa_data[date] = {
+         "date" : date,
+         "zero_day" : zero_day,
+         "cases" : cases,
+         "deaths" : deaths,
+         "new_cases" : new_cases,
+         "new_deaths" : new_deaths,
+         "tests" : tests,
+         "tpm" : tpm,
+         "cpm" : cpm,
+         "dpm" : dpm,
+         "cg_last" : case_growth,
+         "dg_last" : death_growth,
+         "cg_avg" : cg_avg,
+         "dg_avg" : dg_avg,
+         "cg_med" : cg_med,
+         "dg_med" : dg_med,
+         "cg_med_decay" : cg_med_decay,
+         "dg_med_decay" : dg_med_decay,
+         "mortality" : mortality,
+         "hospital_now" : hospital_now,
+         "icu_now" : icu_now,
+         "vent_now" : vent_now,
+         "recovered" :recovered
+         }
+      else:
+         all_usa_data['cases'] += cases
+         all_usa_data['deaths'] += deaths
+         all_usa_data['new_cases'] += new_cases
+         all_usa_data['new_deaths'] += new_deaths
+         all_usa_data['tests'] += tests
+         all_usa_data['tpm'] += tpm
+         all_usa_data['cpm'] += cpm
+         all_usa_data['cg_last'] += cg_last
+         all_usa_data['dg_last'] += dg_last
+         all_usa_data['cg_med'] += cg_last
+         all_usa_data['dg_med'] += dg_last
+         all_usa_data['mortality'] += mortality
+         all_usa_data['hospital_now'] += hospital_now
+         all_usa_data['icu_now'] += icu_now
+         all_usa_data['vent_now'] += vent_now
+         all_usa_data['recovered'] += recovered
+
       stat_obj = { 
          "state_code" : state_code,
          "state_pop" : pop,
@@ -1250,10 +1299,6 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          "new_cases" : new_cases,
          "new_deaths" : new_deaths,
          "tests" : tests,
-         "hospital_now" : hospital_now,
-         "icu_now" : icu_now,
-         "vent_now" : vent_now,
-         "recovered" : recovered,
          "tpm" : tpm,
          "cpm" : cpm,
          "dpm" : dpm,
@@ -1273,6 +1318,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
       }
       state_stats.append(stat_obj)
    sorted_state_stats = state_stats.sort(key=sort_date,reverse=False)
+   #all_usa_data = all_usa_data.sort(key=sort_date,reverse=False)
 
    # Create final state json object:
    state_obj = {}
@@ -1314,6 +1360,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    if cfe("./json", 1) == 0:
       os.makedirs("./json")
    save_json_file("./json/" + state_code + ".json", state_obj)
+   save_json_file("./json/" + USA + ".json", all_usa_data)
    print("Saved: ./json/" + state_code + ".json")
 
 
@@ -1542,7 +1589,8 @@ def analyze_data_for_state(this_state,state_data,state_pop):
 
    for data in temp:
       #date, cases, deaths, case_increase, death_increase,tests = data
-      (date,cases,deaths,case_increase,death_increase,tests,hospital_active,icu_now,vent_now,recovered,hospital_now,icu_now,vent_now,recovered) = data
+      print("TEMP:", data)
+      (date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered) = data
       new_cases = cases - last_cases
       new_deaths = deaths - last_deaths
       #if this_state == "DE":
@@ -1608,6 +1656,7 @@ def load_state_data():
          #print(fields[14], fields[15])
          date = fields[0]
          state = fields[1]
+         
          cases = fields[2]
          deaths = fields[14]
          icu_now = fields[7]
@@ -1617,6 +1666,25 @@ def load_state_data():
          tests = fields[17]
          death_increase = fields[20]
          case_increase = fields[22]
+
+         if cases == "":
+            cases = 0
+         if deaths == "":
+            deaths = 0
+         if icu_now == "":
+            icu_now = 0
+         if vent_now == "":
+            vent_now = 0
+         if hospital_now == "":
+            hospital_now = 0
+         if recovered == "":
+            recovered = 0
+         if tests == "":
+            tests = 0
+         if death_increase == "":
+            death_increase = 0
+         if case_increase == "":
+            case_increase = 0
 
          if state not in state_data:
             state_data[state] = []
@@ -1632,7 +1700,8 @@ def load_state_data():
          if cases == "":
             cases = 0
          else:
-            cases = cases.replace(",", "")
+            if "," in str(cases):
+               cases = cases.replace(",", "")
             cases = int(cases)
          if case_increase == "":
             cases_increase = 0
@@ -1642,7 +1711,7 @@ def load_state_data():
             death_increase = 0
          else:
             death_increase = int(death_increase)
-         state_data[state].append([date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered,hospital_now,icu_now,vent_now,recovered])
+         state_data[state].append([date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered])
       lc += 1
 
    #for st in state_data:
