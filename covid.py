@@ -785,10 +785,14 @@ def make_state_page(this_state):
       template += line
 
    for js_field in js_vals:
-      if js_field in sjs['js_vals']:
-         js_ar = sjs['js_vals'][js_field]
+      if 'js_vals' not in sjs:
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg.py " + this_state + " cpm prev_all"  )
+         exit()
       else:
-         js_ar = []
+         if js_field in sjs['js_vals']:
+            js_ar = sjs['js_vals'][js_field]
+         else:
+            js_ar = []
       js_tag = js_field.upper() 
       template = template.replace("{" + js_tag + "}", str(js_ar))
 

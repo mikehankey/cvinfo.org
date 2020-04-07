@@ -30,7 +30,7 @@ else:
    from conf import *
 
 
-def preview(state_code, field):
+def preview(state_code, field,data_only=0):
 
    data = load_json_file("json/" + state_code + ".json")
    if "js_vals" not in data:
@@ -67,8 +67,13 @@ def preview(state_code, field):
    print(dates)
    save_json_file("json/" + state_code + ".json", data)
    print("SAVED JS VALS:", data['js_vals'])
+
+
    js_vals = str(vals)
    print("JS VALS:", js_vals)
+
+   if data_only == 1:
+      return()
    palette = sns.color_palette("Reds", n_colors=11)
    sns.palplot(palette)
 
@@ -120,6 +125,8 @@ def preview(state_code, field):
       cc += 1
       del custom_frame
 
+
+
 def main_menu():
    state_code = sys.argv[1]  
    field = sys.argv[2]  
@@ -128,6 +135,14 @@ def main_menu():
       cmd = sys.argv[3]  
       if cmd == 'prev':
          preview(state_code,field)
+         exit()
+      if cmd == 'prev_data':
+
+         js = load_json_file("json/covid-19-level2-states.json")
+         for data in js:
+            state_code = data['summary_info']['state_code']
+            fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
+            preview(state_code,field,1)
          exit()
    if state_code == "USA":
       make_usa_map_seq(field )
@@ -485,6 +500,7 @@ def make_map(state_code,rpt_date,field,scale,max_val):
          rank_perc,cpm_ranks,rank_css = get_val_rank(val,field)
       else:
          rank_perc = 0
+         rank_css = 0
       
       # Not sure what this is for, but caused a 30 minute debug session.  
       # yep... I should really take care of what is color related... :)
