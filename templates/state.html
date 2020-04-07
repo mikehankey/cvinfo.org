@@ -33,8 +33,8 @@
    </div>
    <div id="bc"> 
          <div class="hbc">
-         <a href="../index.html"><b>USA</b></a>
-         <a href="../all-counties.html"><b>All Counties</b></a>
+         <a href="../main.html" class="tt"><b>USA</b></a>
+         <a href="../all-counties.html" class="tt"><b>All Counties</b></a>
          <a href="AL.html">Alabama</a>
          <a href="AK.html">Alaska</a>
          <a href="AZ.html">Arizona</a>
@@ -111,8 +111,7 @@
                      <dd>{CPM}</dd>
                      <dt>Deaths per million </dt>
                      <dd>{DPM}</dd>
-                </dl>
-                <dl>
+               
                      <dt>Total Tests</dt>
                      <dd>{TESTS}</dd>
                      <dt>Tests Per Million</dt>
@@ -142,8 +141,18 @@
                   <p>* last 24 hours.</p>
          </div>
       </div>
-   
-      <div id="graphs" class="clearfix">
+    
+         <div id="state_counties_map">
+            <h3>State Map</h3>
+            {SVG_STATE_COUNTIES}
+         </div>
+
+         <div class="table-holder">
+            {COUNTY_TABLE} 
+         </div>
+
+
+         <div id="graphs" class="clearfix">
             <h3>Graphs</h3>
             <div class="graph_container">
                   <div class="grid">
@@ -170,15 +179,6 @@
          </div>
 
  
-
-         <div id="state_counties_map">
-            <h3>State Map</h3>
-            {SVG_STATE_COUNTIES}
-         </div>
-
-         <div class="table-holder">
-            {COUNTY_TABLE} 
-         </div>
 
 
    </div>
