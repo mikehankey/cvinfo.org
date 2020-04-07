@@ -750,9 +750,12 @@ def add_svg_images(template,_type,_type_string,state):
       svg_date = svg[-12:].replace('.svg','')
       all_dates.append(svg)
       
+      print(svg)
+
       # Load svg map
       with open(svg, 'r') as f:  
          svg_code = f.read()  
+ 
 
       if(i==len(all_svg)-1):
          all_svg_code += "<div id='cpm_"+ svg_date+"' class='anim_svg'><h4>"+ _type_string + " - " + string_to_date(svg_date)+"</h4>"+svg_code+"</div>"
