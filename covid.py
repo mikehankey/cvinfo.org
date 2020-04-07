@@ -739,22 +739,25 @@ def make_county_tool_tip(data):
 
 
 # ADD ALL THE SVG IMAGES FOR A GIVE PLAYER
-def add_svg_images(template,_type,state):
+def add_svg_images(template,_type,_type_string,state):
     # We add all the svgs for CPM
    all_svg = glob.glob( ANIM_PATH + "frames/" + state + "/*" + _type + "*" + "svg")
    all_svg_code = ""
    all_dates = []
      
-   for svg in all_svg:
+   for i,svg in enumerate(all_svg):
       # Get date from the path
       svg_date = svg[-12:].replace('.svg','')
       all_dates.append(svg)
       
       # Load svg map
       with open(svg, 'r') as f:  
-         svg_code = "<li>" + f.read() + "</li>" 
- 
-      all_svg_code += "<div id='cpm_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
+         svg_code = f.read()  
+
+      if(i==len(all_svg)-1):
+         all_svg_code += "<div id='cpm_"+ svg_date+"' class='anim_svg'><h4>"+ _type_string + " - " + string_to_date(svg_date)+"</h4>"+svg_code+"</div>"
+      else:
+         all_svg_code += "<div id='cpm_"+ svg_date+"' class='anim_svg' style='display:none'><h4>"+ _type_string + " - " + string_to_date(svg_date)+"</h4>"+svg_code+"</div>"
 
    template = template.replace("{ALL_SVGS_"+_type+"}",all_svg_code)
 
@@ -842,7 +845,7 @@ def make_state_page(this_state):
 
   
    # Add All images for SVG aims
-   #"template = add_svg_images(template,"cpm", sjs['summary_info']['state_code'])
+   template = add_svg_images(template,"cpm", "Cases per Million", sjs['summary_info']['state_code'])
   
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")
