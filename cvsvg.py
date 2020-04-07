@@ -32,16 +32,17 @@ else:
 
 def preview(state_code, field,data_only=0):
 
+
+
    data = load_json_file("json/" + state_code + ".json")
-   if "js_vals" not in data:
+   if "js_values2" not in data:
       data['js_vals'] = {
          'cpm_vals' : [],
          'dpm_vals' : [],
-         'gr_vals' : [],
-         'mr_vals' : [],
-         'death_vals' : [],
-         'case_vals' : [],
+         'cases_vals' : [],
       }
+      data['js_values2'] = "updated"
+      del(data['js_values'])
 
    field_desc = {
       'cpm' : "Cases Per Million",
@@ -63,6 +64,8 @@ def preview(state_code, field,data_only=0):
    for dd in ss:
       dates.append(dd['date']) 
       vals.append(dd[field]) 
+      if field + "_vals" not in data['js_vals']:
+         data['js_vals'][field + "_vals"] = []
       data['js_vals'][field + "_vals"].append(dd[field])
    print(dates)
    save_json_file("json/" + state_code + ".json", data)
@@ -142,7 +145,8 @@ def main_menu():
          for data in js:
             state_code = data['summary_info']['state_code']
             fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
-            preview(state_code,field,1)
+            for ff in fields:
+               preview(state_code,ff,1)
          exit()
    if state_code == "USA":
       make_usa_map_seq(field )
@@ -156,8 +160,8 @@ def main_menu():
          make_seq(state_code, field)
       else:
          fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
-         for field in fields:
-            make_seq(state_code, field)
+         for ff in fields:
+            make_seq(state_code, ff)
    
    exit()
    #make_map("MD", "20200401", "cases", "1")

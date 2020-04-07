@@ -765,7 +765,7 @@ def add_svg_images(template,_type,_type_string,state):
  
 
 def make_state_page(this_state):
-   js_vals = [ 'cpm_vals', 'dpm_vals', 'gr_vals', 'mr_vals', 'death_vals', 'case_vals'] 
+   js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
    sjs = load_json_file("./json/" + this_state + ".json")
 
    print("YO")
@@ -1624,7 +1624,7 @@ def analyze_data_for_state(this_state,state_data,state_pop):
          mortality = round(mortality,2)
       else:
          mortality = 0
-      level2_data.append((this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_active,icu_now,vent_now,recovered))
+      level2_data.append((this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_now,icu_now,vent_now,recovered))
       last_cpm = cpm
       last_dpm = dpm
       last_cases = cases
