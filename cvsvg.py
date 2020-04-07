@@ -679,10 +679,10 @@ def make_svg_map(state_code,data,outfile):
    state_names, state_codes = load_state_names()
    state_name = state_names[state_code]
    counties = state_data['county_pop']
-   for c in counties:
-      if c != state_name: 
-         fips = state_data['county_stats'][c]['fips']
-         used_counties[fips] = 0
+   #for c in counties:
+   #   if c != state_name: 
+   #      fips = state_data['county_stats'][c]['fips']
+   #      used_counties[fips] = 0
 
    fname_tmplate = "templates/states/" + state_code + ".svg" 
 
