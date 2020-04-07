@@ -3,7 +3,8 @@
    @import "tablesorted-dark";
    @import "socials";
    @import "palette";
-   
+   @import "player";
+
    body {
       margin:0;
       font-family: 'Lato', sans-serif; 
@@ -23,8 +24,7 @@
    a, a:visited {
       color:$link_color;
    }
-
-
+ 
 
    .clearfix::after {
       content: "";
@@ -285,7 +285,7 @@
       
    }
 
-   #state_counties_map path {
+   path {
       stroke-width: 0.1%;
    }
    
