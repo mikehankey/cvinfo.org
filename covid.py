@@ -561,7 +561,7 @@ def make_state_map(sjs):
    return(state_map_template)
 
 def make_county_table(sjs):
-   
+   tool_tips_html = ""   
    state_code = sjs['summary_info']['state_code']
 
    # We  create the State SVG map per counties here
@@ -632,6 +632,9 @@ def make_county_table(sjs):
       dr['county'] = county
       dr['fips'] = sjs['county_stats'][county]['fips']
       cd.append(dr)
+      tool_tips_html += "<div id=\"det_" + dr['fips'] + "\" class=\"dets\">"
+      tool_tips_html += make_county_tool_tip(sjs['county_stats'][county])
+      tool_tips_html += "</div>\n "
    
    cd.sort(key=sort_cpm,reverse=True)
    scd = cd
@@ -713,13 +716,29 @@ def make_county_table(sjs):
 
 
    table = table_header + rows + table_footer
-   return table, state_map_template
+   return table, state_map_template, tool_tips_html
 
 
 # Transform 20200506 to 2020-05-06
 def string_to_date(s) :
    return s[:4]+'-'+s[4:6]+'-'+s[6:]
 
+def make_county_tool_tip(data):
+   #{'day': '2020-04-04', 'zero_day': 14, 'cases': 640, 'deaths': 9, 'cpm': 658, 'dpm': 9, 'new_cases': 74, 'new_deaths': 0, 'mortality': 1.41, 'case_growth': 11.56, 'death_growth': 0.0, 'cg_avg': 22.56, 'dg_avg': 8.67, 'cg_med': 18.07, 'dg_med': 0.0, 'cg_med_decay': -0.18, 'dg_med_decay': 0.0}
+
+
+   sd = data['county_stats'].sort(key=sort_date,reverse=False)
+
+   for dd in data['county_stats']:
+      print(dd) 
+
+   tool_tip = """
+      County Details<BR>
+   """
+
+
+   exit()
+   return(tool_tip)
 
 
  
@@ -730,7 +749,7 @@ def make_state_page(this_state):
 
    #print("TS:",this_state)
    sjs = load_json_file("./json/" + this_state + ".json")
-   county_table, state_svg_map = make_county_table(sjs)
+   county_table, state_svg_map,tool_tips_html = make_county_table(sjs)
    state_map = make_state_map(sjs)
 
    fp = open("./templates/state.html", "r")
@@ -746,6 +765,7 @@ def make_state_page(this_state):
       js_tag = js_field.upper() 
       template = template.replace("{" + js_tag + "}", str(js_ar))
 
+   template = template.replace("{COUNTY_TOOL_TIP_DIVS}", tool_tips_html)
    template = template.replace("{STATE_NAME}", sjs['summary_info']['state_name'])
    template = template.replace("{STATE_CODE}", sjs['summary_info']['state_code'])
    template = template.replace("{STATE_CODE_L}", sjs['summary_info']['state_code'].lower())
