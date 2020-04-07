@@ -3,7 +3,7 @@
 # cvinfo.org 
 # Batch script for making colored state and county images based on covid-level2 data
 # 
-from covid import cfe, load_json_file
+from covid import cfe, load_json_file, load_state_names
 
 
 
