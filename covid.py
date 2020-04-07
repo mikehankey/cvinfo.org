@@ -711,9 +711,7 @@ def make_county_table(sjs):
             row = row.replace("{MORTALITY}", str(dr['mortality']))
             #row = row.replace("{LAST_UPDATE}", update)
             rows += row
-            cc += 1
-        
-
+            cc += 1 
 
    table = table_header + rows + table_footer
    return table, state_map_template, tool_tips_html
@@ -741,17 +739,38 @@ def make_county_tool_tip(data):
    return(tool_tip)
 
 
+# ADD ALL THE SVG IMAGES FOR A GIVE PLAYER
+def add_svg_images(template,_type,state):
+    # We add all the svgs for CPM
+   all_svg = glob.glob( ANIM_PATH + "frames/" + state + "/*" + _type + "*" + "svg")
+   all_svg_code = ""
+   all_dates = []
+     
+   for svg in all_svg:
+      # Get date from the path
+      svg_date = svg[-12:].replace('.svg','')
+      all_dates.append(svg)
+      
+      # Load svg map
+      with open(svg, 'r') as f:  
+         svg_code = "<li>" + f.read() + "</li>" 
+ 
+      all_svg_code += "<div id='cpm_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
+
+   template = template.replace("{ALL_SVGS_"+_type+"}",all_svg_code)
+
+   return template
  
 
 def make_state_page(this_state):
    js_vals = [ 'cpm_vals', 'dpm_vals', 'gr_vals', 'mr_vals', 'death_vals', 'case_vals'] 
-
-
-   #print("TS:",this_state)
    sjs = load_json_file("./json/" + this_state + ".json")
-   county_table, state_svg_map,tool_tips_html = make_county_table(sjs)
-   state_map = make_state_map(sjs)
 
+   county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
+ 
+
+   state_map = make_state_map(sjs)
+   
    fp = open("./templates/state.html", "r")
    template = ""
    for line in fp:
@@ -814,31 +833,11 @@ def make_state_page(this_state):
    template = template.replace("{COUNTY_TABLE}", county_table)
 
    template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
-   
-   # We add all the svgs for CPM
-   all_svg = glob.glob( ANIM_PATH + "frames/" + sjs['summary_info']['state_code'] + "/*" + "cpm" + "*" + "svg")
-   all_svg_code = ""
-   all_dates = []
-   
-   print(all_svg)
 
-   for svg in all_svg:
-      # Get date from the path
-      svg_date = svg[-12:].replace('.svg','')
-      all_dates.append(svg)
-      #svg = svg.replace(ORG_PATH,'..')  # .. because we have /states in the path
- 
-      # Load svg map
-      with open(svg, 'r') as f:  
-         svg_code = f.read()
- 
-      all_svg_code += "<div id='cpm_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
-
-   template = template.replace("{ALL_SVGS_CASES}",all_svg_code)
-
-
-
-
+  
+   # Add All images for SVG aims
+   #"template = add_svg_images(template,"cpm", sjs['summary_info']['state_code'])
+  
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")
 
