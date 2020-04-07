@@ -858,6 +858,7 @@ def make_state_plots(this_state_code, show=0):
 
    for sobj in sj['state_stats']:
       #l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
+      print("SOBJ:", sobj)
       plot_data['cases_deaths']['xs'].append(sobj['zero_day'])
       plot_data['cases_deaths']['ys1'].append(sobj['cases'])
       plot_data['cases_deaths']['ys2'].append(sobj['deaths'])
@@ -889,7 +890,7 @@ def make_state_plots(this_state_code, show=0):
    make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
    make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
    make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
-   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Case Increase", "Death Increase", "ts", show)
+   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", show)
 
    make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
    make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
@@ -1568,7 +1569,7 @@ def load_state_data():
          vent_now = fields[9]
          hospital_now= fields[5]
          recovered = fields[11]
-         tests = fields[10]
+         tests = fields[17]
          death_increase = fields[20]
          case_increase = fields[22]
 
