@@ -189,17 +189,11 @@
          </div>
 
          <div class="anim">
-            <div id="anim_img" data-rel="cpm">
-               <ul id="cpm">{ALL_SVGS_cpm}</ul> 
+            <div class="image_player" data-rel="cpm">
+               <button class="play">Play</button>
+               {ALL_SVGS_cpm} 
             </div>
-         </div>
-
-
-
-
- 
-
-
+         </div> 
    </div>
  
 
@@ -221,104 +215,59 @@
 
 {COUNTY_TOOL_TIP_DIVS}
 
+ 
 <script>
+
+
    var cpm_vals = {CPM_VALS};
    var dpm_vals = {DPM_VALS};
    var gr_vals = {GR_VALS};
    var mr_vals = {MR_VALS};
    var death_vals = {DEATH_VALS};
-   var cases_vals = {CASES_VALS};
-</script>
-
-<script>
+   var cases_vals = {CASE_VALS};
    
    var cur_state =  "{STATE_CODE_L}";
    cur_state = cur_state.toUpperCase();
-
-   // AMIM VALS
-   var case_vals = {CASE_VALS}
-   var death_vals = {DEATH_VALS}
-   var cpm_vals = {CPM_VALS}
-   var dpm_vals = {DPM_VALS}
-   var gr_vals = {GR_VALS}
-   var mr_vals = {MR_VALS}
-
-
-
-  function open_modal() {
-      var modal = document.getElementById("graph_img_viewer");
-      var modalImg = document.getElementById("img_fv"); 
-
-     $('.cell img').click(function() {
-         modal.style.display = "block";
-         modalImg.src = $(this).attr('src'); 
-     })
  
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
-
-      // When the user clicks on <span> (x), close the modal
-      span.onclick = function() {
-         modal.style.display = "none";
-      }
-  } 
-
-
-
-
-
-   function actionsOnSVGState() {
-         $('path,circle').mouseenter(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            $("path, tr,circle").removeClass('on');
-            $("path#"+state).addClass('on'); 
-            $("tr[data-state="+state+"]").addClass('on');
-            $('.selected').removeClass('selected');
- 
-         }).mouseleave(function() {
-            $('path, tr').removeClass('on');
-         }).click(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            state = state.substring(5,state.length); // Remove "FIPS"
-            $('.selected').removeClass('selected');
-            $("html, body").animate({ scrollTop: $('#'+state).offset().top }, 150, function() {$('#'+state).addClass('selected') });
-         });
-      }
- 
-  
-
-
-
+   function sleep(seconds){
+      var waitUntil = new Date().getTime() + seconds*1000;
+      while(new Date().getTime() < waitUntil) true;
+   }
 
   $(function() {
-
-      // Action
-      actionsOnSVGState(); 
-     
-     
-     // Table sorter
-     $("table thead th:eq(0)").data("sorter", false);
-     $('table').tablesorter({
-        widgets        : ['zebra', 'columns'],
-        usNumberFormat : false,
-        sortReset      : true,
-        sortRestart    : true
-     });
-     
-     // Click on stats image
-     open_modal();
+ 
 
      // Set Active State
      $('a[href="'+cur_state+'.html"]').addClass('active');
 
-  })
 
+   
+   var all_anim = $(".play").closest('.image_player').find('.anim_svg'); 
+   var all_ids = [];
+   $(all_anim).each(function(){
+      all_ids.push($(this).attr('id'));
+   });
+   var cur_inx = 0;
 
+   $('.play').click(function() {
+    
+
+      $('.anim_svg').css('display','none'); 
+      $('#'+all_ids[cur_inx]).css('display','block'); 
+
+      if(cur_inx>  all_ids.length) {
+         cur_inx = 0;
+      } else {
+         cur_inx++;
+      }
+   })
+  
 
  
-   
+
+  })
+
+ 
 
 </script> 
 </body>
