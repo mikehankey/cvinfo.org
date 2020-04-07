@@ -76,7 +76,7 @@ def preview(state_code, field):
    frame_wild = "anim/frames/" + state_code + "/" + state_code + "*-" + field + "*.png"
    print(frame_wild)
    files = glob.glob(frame_wild)
-
+   print("FILES:", files)
    imc = cv2.imread(files[0])
    ih,iw = imc.shape[:2]
    ih = int(ih * 1.5)
@@ -457,7 +457,11 @@ def get_val_rank(val,type='cpm'):
 
 def make_map(state_code,rpt_date,field,scale,max_val):
    info = load_covid_state_map_data(state_code,rpt_date)
-   
+  
+
+   for i in info['county_stats']:
+      print("INFO:", i)
+
    all_val = 0   
    map_data = [] 
    vals = [] 
@@ -465,8 +469,10 @@ def make_map(state_code,rpt_date,field,scale,max_val):
       if "fips" in cdata:
          fips = cdata['fips']
          val = cdata[field]
+         print("MAP DATA:", fips,val)
          map_data.append((fips, val))
          vals.append(val)
+
 
    palette = sns.color_palette("Reds", n_colors=11)
    sns.palplot(palette)
@@ -480,12 +486,18 @@ def make_map(state_code,rpt_date,field,scale,max_val):
          rank_perc,cpm_ranks = get_val_rank(val,field)
       else:
          rank_perc = 0
-       
-      color = rank_perc #palette[rank_perc]
+      
+      # Not sure what this is for, but caused a 30 minute debug session.  
+      #color = rank_perc #palette[rank_perc]
+
+      color = palette[rank_perc]
 
       if val == 0:
-         color = 0
+         color = 1,1,1
+ 
+
       if fips not in unqx:
+         print("FIPS:", fips, color)
          md.append((fips, color) )
          unqx[fips] = 1
       cc += 1
@@ -507,7 +519,9 @@ def make_map(state_code,rpt_date,field,scale,max_val):
    return(outfile,all_val)
 
 def load_covid_state_map_data(state_code, rpt_date = None):
-   #rpt_date = "20200401"
+
+   print("LOAD STATE MAP DATA:", state_code, rpt_date)
+
    sd = load_json_file("json/" + state_code + ".json")
    state_code = sd['summary_info']['state_code']
    state_name = sd['summary_info']['state_name']
@@ -636,19 +650,22 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
 
 
 def make_svg_map(state_code,data,outfile):
+   print("DATA:", data)
    used_counties = {}
    state_data = load_json_file("json/" + state_code + ".json")
+   state_names, state_codes = load_state_names()
+   state_name = state_names[state_code]
    counties = state_data['county_pop']
    for c in counties:
-      fips = state_data['county_stats'][c]['fips']
-      used_counties[fips] = 0
+      if c != state_name: 
+         fips = state_data['county_stats'][c]['fips']
+         used_counties[fips] = 0
 
    fname = "templates/states/" + state_code + ".svg"
 
    fp = open(fname, "r")
 
    print("USED:", used_counties)
-   #exit()
 
  
    svg_code = ""
@@ -657,6 +674,7 @@ def make_svg_map(state_code,data,outfile):
 
       if "FIPS_" in line:
          for fips,rgb in data:
+            print("RGB:", rgb)
             color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
             #if "fill" not in line: 
             line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
@@ -676,7 +694,8 @@ def make_svg_map(state_code,data,outfile):
    out.close()
    ow = 555.22
    oh = 351.67
-   #svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
+   # DON'T COMMENT THIS OUT AS IT IS NEEDED STILL FOR MAKING CUSTOM MOVIES/GIFS ANIMATIONS ETC
+   svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
 
 
 
