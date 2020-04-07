@@ -141,46 +141,50 @@
                   <p>* last 24 hours.</p>
          </div>
       </div>
+
+      <div id="graphs" class="clearfix">
+         <h3>Graphs</h3>
+         <div class="graph_container">
+               <div class="grid">
+                  <div class="cell">
+                     <img src="../plots/{STATE_CODE}-cd.png">
+                  </div>
+                  <div class="cell">
+                     <img src="../plots/{STATE_CODE}-pm.png">
+                  </div>
+                  <div class="cell">
+                     <img src="../plots/{STATE_CODE}-in.png">
+                  </div>
+                  <div class="cell">
+                     <img src="../plots/{STATE_CODE}-ts.png">
+                  </div>
+                  <div class="cell">
+                     <img src="../plots/{STATE_CODE}-gr.png">
+                  </div>
+                  <div class="cell">
+                     <img src="../plots/{STATE_CODE}-mt.png">
+                  </div>
+               </div>
+         </div>
+      </div>
     
          <div id="state_counties_map">
             <h3>State Map</h3>
             {SVG_STATE_COUNTIES}
          </div>
 
+
+
          <div class="table-holder">
             {COUNTY_TABLE} 
          </div>
 
          <div class="anim">
-            {ALL_SVGS_CASES}
+            <div id="anim_img" data-rel="cpm">{ALL_SVGS_cpm}</div>
          </div>
 
 
-         <div id="graphs" class="clearfix">
-            <h3>Graphs</h3>
-            <div class="graph_container">
-                  <div class="grid">
-                     <div class="cell">
-                        <img src="../plots/{STATE_CODE}-cd.png">
-                     </div>
-                     <div class="cell">
-                        <img src="../plots/{STATE_CODE}-pm.png">
-                     </div>
-                     <div class="cell">
-                        <img src="../plots/{STATE_CODE}-in.png">
-                     </div>
-                     <div class="cell">
-                        <img src="../plots/{STATE_CODE}-ts.png">
-                     </div>
-                     <div class="cell">
-                        <img src="../plots/{STATE_CODE}-gr.png">
-                     </div>
-                     <div class="cell">
-                        <img src="../plots/{STATE_CODE}-mt.png">
-                     </div>
-                  </div>
-            </div>
-         </div>
+
 
  
 
@@ -200,7 +204,7 @@
          <span class="close">&times;</span>
          <img class="modal-content" id="img_fv">
          <div id="caption"></div>
-      </div>
+   </div>
 
 <!-- COUNTY TOOL TIP DIVS -->
 

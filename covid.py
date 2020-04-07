@@ -740,6 +740,9 @@ def make_county_tool_tip(data):
    exit()
    return(tool_tip)
 
+
+ 
+
 def make_state_page(this_state):
    js_vals = [ 'cpm_vals', 'dpm_vals', 'gr_vals', 'mr_vals', 'death_vals', 'case_vals'] 
 
@@ -812,23 +815,24 @@ def make_state_page(this_state):
 
    template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
    
-   # We add all the svgs for cases
-   all_svg = glob.glob( ANIM_PATH + "frames/" + sjs['summary_info']['state_code'] + "/*" + "cases" + "*" + "svg")
+   # We add all the svgs for CPM
+   all_svg = glob.glob( ANIM_PATH + "frames/" + sjs['summary_info']['state_code'] + "/*" + "cpm" + "*" + "svg")
    all_svg_code = ""
    all_dates = []
    
+   print(all_svg)
+
    for svg in all_svg:
       # Get date from the path
       svg_date = svg[-12:].replace('.svg','')
       all_dates.append(svg)
       #svg = svg.replace(ORG_PATH,'..')  # .. because we have /states in the path
-
-      
+ 
       # Load svg map
       with open(svg, 'r') as f:  
          svg_code = f.read()
  
-      all_svg_code += "<div id='cases_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
+      all_svg_code += "<div id='cpm_"+svg_date+"'  >"+svg_date+"<br>"+svg_code+"</div>"
 
    template = template.replace("{ALL_SVGS_CASES}",all_svg_code)
 

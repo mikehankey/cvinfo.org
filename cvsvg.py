@@ -444,12 +444,12 @@ def get_val_rank(val,type='cpm'):
       ranks['new_cases'] = ((0,5),(5,10),(10,20),(20,30),(30,40),(40,50),(50,100),(100,200),(200,500),(500,1000),(1000,99999))
       ranks['new_deaths'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
       rc = 0
-      for r in ranks[type]:
+      for i,r in enumerate(ranks[type]):
  
          if r[0] < val <= r[1]:
             #print("RANK:", r[0], "<", val, "<=", r[1])
-            rank = rc
-         rc += 1
+            rank = i
+         #rc += 1
 
 
 
@@ -480,11 +480,11 @@ def make_map(state_code,rpt_date,field,scale,max_val):
          rank_perc,cpm_ranks = get_val_rank(val,field)
       else:
          rank_perc = 0
-      
-      color = palette[rank_perc]
+       
+      color = rank_perc #palette[rank_perc]
 
       if val == 0:
-         color = palette[0]
+         color = 0
       if fips not in unqx:
          md.append((fips, color) )
          unqx[fips] = 1
@@ -648,8 +648,9 @@ def make_svg_map(state_code,data,outfile):
    fp = open(fname, "r")
 
    print("USED:", used_counties)
-   exit()
+   #exit()
 
+ 
    svg_code = ""
    lc = 0
    for line in fp:
@@ -660,16 +661,22 @@ def make_svg_map(state_code,data,outfile):
             #if "fill" not in line: 
             line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
             
+            color = "cl_" + str(rgb)  
+            line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" class=\""+color+"\" ")
       svg_code += line
 
    fp.close()
+
+
+
+
    outsvg = outfile.replace(".png", ".svg")
    out = open(outsvg, "w")
    out.write(svg_code)
    out.close()
    ow = 555.22
    oh = 351.67
-   svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
+   #svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
 
 
 
