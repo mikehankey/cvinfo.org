@@ -3,7 +3,7 @@
 # cvinfo.org 
 # Batch script for making colored state and county images based on covid-level2 data
 # 
-from covid import cfe, load_json_file, load_state_names
+from covid import cfe, load_json_file, save_json_file, load_state_names 
 
 
 
@@ -31,6 +31,18 @@ else:
 
 
 def preview(state_code, field):
+
+   data = load_json_file("json/" + state_code + ".json")
+   if "js_vals" not in data:
+      data['js_vals'] = {
+         'cpm_vals' : [],
+         'dpm_vals' : [],
+         'gr_vals' : [],
+         'mr_vals' : [],
+         'death_vals' : [],
+         'case_vals' : [],
+      }
+
    field_desc = {
       'cpm' : "Cases Per Million",
       'dpm' : "Deaths Per Million",
@@ -51,10 +63,12 @@ def preview(state_code, field):
    for dd in ss:
       dates.append(dd['date']) 
       vals.append(dd[field]) 
-
+      data['js_vals'][field + "_vals"].append(dd[field])
    print(dates)
-   print(vals)
-
+   save_json_file("json/" + state_code + ".json", data)
+   print("SAVED JS VALS:", data['js_vals'])
+   js_vals = str(vals)
+   print("JS VALS:", js_vals)
    palette = sns.color_palette("Reds", n_colors=11)
    sns.palplot(palette)
 
