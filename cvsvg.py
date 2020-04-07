@@ -225,7 +225,7 @@ def make_usa_map(field, date, cl2 = None):
          county = data['county']
          fips = data['fips']
          val = data[field]
-         color_rank,ranks = get_val_rank(val, field)
+         color_rank,ranks,rankCss = get_val_rank(val, field)
          color = palette[color_rank]
          md.append((day,state,county,fips,val,color_rank,color))
          vals.append(val)
@@ -348,7 +348,7 @@ def load_covid_state_map_data(state_code, rpt_date = None):
    #make_gif(files,dates,all_vals,state_code,field,base_file,palette)
 
 def make_cpm_legend(palette, state_code,field,height=480):
-   rank_perc,cpm_ranks = get_val_rank(100,field)
+   rank_perc,cpm_ranks,rankCss = get_val_rank(100,field)
    img = Image.new('RGB', (200,height), (0, 0, 0))
    block_size = int(height / 13) 
    img_d = ImageDraw.Draw(img)   
@@ -433,6 +433,7 @@ def make_legend(state_code,field,palette,max_val):
 def get_val_rank(val,type='cpm'):
    if True:
       rank = 0
+      rankcss= "n"
       ranks = {}
       ranks['cases'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
       ranks['deaths'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,20),(30,40),(40,50),(50,100),(100,200),(300,999999))
@@ -449,16 +450,14 @@ def get_val_rank(val,type='cpm'):
          if r[0] < val <= r[1]:
             #print("RANK:", r[0], "<", val, "<=", r[1])
             rank = i
-         #rc += 1
+            rankcss= rc
+         rc += 1
 
-
-
-   return(rank,ranks[type])
+   return(rank,ranks[type],rankcss)
 
 def make_map(state_code,rpt_date,field,scale,max_val):
    info = load_covid_state_map_data(state_code,rpt_date)
-  
-
+   
    for i in info['county_stats']:
       print("INFO:", i)
 
@@ -483,22 +482,26 @@ def make_map(state_code,rpt_date,field,scale,max_val):
    unqx = {}
    for fips,val in map_data:
       if max_val > 0:
-         rank_perc,cpm_ranks = get_val_rank(val,field)
+         rank_perc,cpm_ranks,rank_css = get_val_rank(val,field)
       else:
          rank_perc = 0
       
       # Not sure what this is for, but caused a 30 minute debug session.  
+      # yep... I should really take care of what is color related... :)
       #color = rank_perc #palette[rank_perc]
 
       color = palette[rank_perc]
+      colorCss = rank_css
+
 
       if val == 0:
          color = 1,1,1
+         colorCss = "n"
  
 
       if fips not in unqx:
          print("FIPS:", fips, color)
-         md.append((fips, color) )
+         md.append((fips, color, colorCss) )
          unqx[fips] = 1
       cc += 1
       all_val += val
@@ -650,7 +653,7 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
 
 
 def make_svg_map(state_code,data,outfile):
-   print("DATA:", data)
+ 
    used_counties = {}
    state_data = load_json_file("json/" + state_code + ".json")
    state_names, state_codes = load_state_names()
@@ -661,37 +664,46 @@ def make_svg_map(state_code,data,outfile):
          fips = state_data['county_stats'][c]['fips']
          used_counties[fips] = 0
 
-   fname = "templates/states/" + state_code + ".svg"
+   fname_tmplate = "templates/states/" + state_code + ".svg" 
 
-   fp = open(fname, "r")
-
-   print("USED:", used_counties)
-
- 
+   # REAL SVG with classes
+   fname = open(fname_tmplate, "r")
    svg_code = ""
-   lc = 0
-   for line in fp:
+   for line in fname:
 
       if "FIPS_" in line:
-         for fips,rgb in data:
-            print("RGB:", rgb)
-            color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
+         for fips,rgb,cssClass in data:
+           
             #if "fill" not in line: 
-            line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
-            
-            color = "cl_" + str(rgb)  
-            line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" class=\""+color+"\" ")
+            line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" class=\"cl_" + str(cssClass) + "\"")
       svg_code += line
+   fname.close()
 
-   fp.close()
-
-
-
-
+   # We save it
    outsvg = outfile.replace(".png", ".svg")
    out = open(outsvg, "w")
    out.write(svg_code)
-   out.close()
+
+ 
+   # SVG FOR PNG
+   fp = open(fname_tmplate, "r")
+   svg_code = ""
+   lc = 0
+   for line in fp:
+      if "FIPS_" in line:
+         for fips,rgb,cssClass in data: 
+            color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
+            line = line.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" stroke-width=\".1\"")
+           
+      svg_code += line
+
+   fp.close()
+ 
+   # outsvg = outfile.replace(".png", ".svg")
+   # ut = open(outsvg, "w")
+   # out.write(svg_code)
+
+   # out.close()
    ow = 555.22
    oh = 351.67
    # DON'T COMMENT THIS OUT AS IT IS NEEDED STILL FOR MAKING CUSTOM MOVIES/GIFS ANIMATIONS ETC
