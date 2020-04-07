@@ -431,11 +431,11 @@ def state_table(data,us_map_template):
             <td>{:s}</td>
       """.format(state_code,color_of_state,state_name)
       row_html += """
-            <td>{:,d}</td>
-            <td>{:,d}</td>
-            <td>{:,d}</td>
-            <td>{:,d}</td>
-            <td>{:,d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
+            <td>{:d}</td>
             <td>{:0.2f}%</td>
             <td>{:0.2f}%</td>
          </tr>
@@ -491,7 +491,7 @@ def make_main_page():
    state_table_html,us_map_template = state_table(state_rank_list, us_map_template)
 
    # make main page
-   fp = open("./templates/index.html", "r")
+   fp = open("./templates/main.html", "r")
    temp = ""
    for line in fp:
       temp += line
@@ -506,6 +506,9 @@ def make_main_page():
  
 
    out = open("./index.html", "w+")
+   out.write(temp)
+   out.close()
+   out = open("./main.html", "w+")
    out.write(temp)
    out.close()
 
