@@ -4,7 +4,9 @@
 # Batch script for making colored state and county images based on covid-level2 data
 # 
 from covid import cfe, load_json_file
-from conf import *
+
+
+
 
 import time
 import os
@@ -16,6 +18,17 @@ from cairosvg import svg2png
 from PIL import Image, ImageFont, ImageDraw
 import glob
 import cv2
+
+
+ 
+#################################################################################################
+# GLOBAL VARS
+dir_path = os.path.dirname(os.path.realpath(__file__))
+if('/var/www/projects/' in dir_path):
+   from conf_vince import *   
+else:
+   from conf import *
+
 
 def preview(state_code, field):
   
@@ -264,7 +277,7 @@ def make_cpm_legend(palette, state_code,field,height=480):
    img = Image.new('RGB', (200,height), (0, 0, 0))
    block_size = int(height / 13) 
    img_d = ImageDraw.Draw(img)   
-   fnt = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', 15)
+   fnt = ImageFont.truetype(ORG_PATH + '/dist/font/FreeMono.ttf', 15)
    tp = len(palette) - 1
    cc = 0
    #img_d.text((50,10), "CASES PER M", font=fnt, fill=(255,255,255))
@@ -306,8 +319,8 @@ def make_legend(state_code,field,palette,max_val):
       return() 
 
    img = Image.new('RGB', (200,460), (255, 255, 255))
-   img_d = ImageDraw.Draw(img)   
-   fnt = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', 20)
+   img_d = ImageDraw.Draw(img)    
+   fnt = ImageFont.truetype(ORG_PATH + '/dist/font/FreeMono.ttf', 20)
    cc = 0
    tp = len(palette) - 1
    #for rgb in palette:
@@ -479,7 +492,7 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
    make_cpm_legend(palette, state_code,field,height=ih)
 
    leg_file = ANIM_PATH + "frames/legend-" + field + ".png"
-   fnt = ImageFont.truetype('Pillow/Tests/fonts/FreeMono.ttf', 15)
+   fnt = ImageFont.truetype(ORG_PATH + '/dist/font/FreeMono.ttf', 15)
   
    leg = Image.open(leg_file)
    lw,lh = leg.size

@@ -10,3 +10,5 @@
 conf_vince.py
 node_modules/
 err_log.txt
+/anim
+test.svg

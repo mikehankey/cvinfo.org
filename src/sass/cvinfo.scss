@@ -196,19 +196,26 @@
          max-width: 1280px;
          margin:0 auto;
       }
+
+      a  { 
+         display: inline-block;
+         padding: .3rem .4rem;
+         text-decoration: none;
+         background-color: #000000;
+         border-radius: 2px;
+         line-height: 1;
+         margin: .2rem;
+         color: #a2a2a2;
+         transition: all .15s;
+         border: 1px solid #000;
+
+         &.tt {
+            border-color:#fff;
+         }
+      }
    }
 
-   #bc a  { 
-      display: inline-block;
-      padding: .3rem .4rem;
-      text-decoration: none;
-      background-color: #000000;
-      border-radius: 2px;
-      line-height: 1;
-      margin: .2rem;
-      color: #a2a2a2;
-      transition: all .15s;
-   }
+   
 
    #bc a:hover, #bc a:focus, #bc a:active, #bc a.active {
    background-color: #000;

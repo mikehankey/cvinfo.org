@@ -33,9 +33,7 @@ This program :
 
 """
 
-#################################################################################################
-# GLOBAL VARS
-from conf import *	
+
  
 #UI
 COLORS=['b','g','y','o','r']
@@ -59,6 +57,16 @@ from datetime import datetime, timedelta
 import cv2
 
 import sys
+
+
+#################################################################################################
+# GLOBAL VARS
+dir_path = os.path.dirname(os.path.realpath(__file__))
+if('/var/www/projects/' in dir_path):
+   from conf_vince import *   
+else:
+   from conf import *
+
 
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
@@ -770,6 +778,17 @@ def make_state_page(this_state):
 
    template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
    
+
+   # We add all the svgs for cases
+   #all_svg = glob.glob( ANIM_PATH + "/frames/" + sjs['summary_info']['state_code'] + "*" + "cases" + "*" + "svg")
+   #print(ANIM_PATH + "/frames/" + sjs['summary_info']['state_code'] + "*" + "cases" + "*" + "svg")
+   #print(all_svg)
+   #sys.exit()
+
+   #template = template.replace("{ALL_SVG_MORTALITY}",state_svg_mortality_maps)
+
+
+
 
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")
