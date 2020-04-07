@@ -722,6 +722,9 @@ def string_to_date(s) :
 
 
 def make_state_page(this_state):
+   js_vals = [ 'cpm_vals', 'dpm_vals', 'gr_vals', 'mr_vals', 'death_vals', 'case_vals'] 
+
+
    #print("TS:",this_state)
    sjs = load_json_file("./json/" + this_state + ".json")
    county_table, state_svg_map = make_county_table(sjs)
@@ -731,6 +734,14 @@ def make_state_page(this_state):
    template = ""
    for line in fp:
       template += line
+
+   for js_field in js_vals:
+      if js_field in sjs['js_vals']:
+         js_ar = sjs['js_vals'][js_field]
+      else:
+         js_ar = []
+      js_tag = js_field.upper() 
+      template = template.replace("{" + js_tag + "}", str(js_ar))
 
    template = template.replace("{STATE_NAME}", sjs['summary_info']['state_name'])
    template = template.replace("{STATE_CODE}", sjs['summary_info']['state_code'])
