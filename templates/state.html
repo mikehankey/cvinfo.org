@@ -12,14 +12,13 @@
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <title>COVID-19 - {STATE_NAME} Statistics</title> 
+   <title>{STATE_NAME} COVID-19 Statistics</title> 
 
 	<meta name="author" content="Mike Hankey">
 	<meta name="description" content="COVID 19 (Coronavirus) Stats for {STATE_NAME}, USA, Per Million, By County, Historical">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="../dist/js/cvinfo.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
    <link href="../dist/css/cvinfo.css" rel="stylesheet"> 
    
@@ -176,34 +175,36 @@
                </div>
          </div>
       </div>
-    
-         <div id="state_counties_map">
+
+      <div class="anim">
+            <div class="anim_header">
+               <div>
+                  <h4>{STATE_NAME} - <span id="anim_date">{INIT_ANIM_DATE}</span></h4>
+                  <p><span id="cur_type_st">{CUR_TYPE}</span>: <span id="cur_type_val"></span></p>
+               </div>
+               <div>{ANIM_VIEW_SELECT}</div>
+            </div>
+            {ALL_SVG_ANIM}
+      </div> 
+         
+
+      <!--   <div id="state_counties_map">
             <h3>State Map</h3>
             {SVG_STATE_COUNTIES}
-         </div>
+         </div> -->
 
 
 
          <div class="table-holder">
             {COUNTY_TABLE} 
          </div>
-<!-- NEW GRAPH ANIM VIEWER 
-
-         <div class="anim">
-            <div id="anim_img" data-rel="cpm">
-               <ul id="cpm">{ALL_SVGS_cpm}</ul> 
-            </div>
-         </div>
-
--->
-
-
-
  
 
-
+         
    </div>
  
+
+   
 
   <div id="ft">
       cvinfo.org provides enhanced COVID-19 statistics and reports made from open source data<BR> 
@@ -219,30 +220,20 @@
          <div id="caption"></div>
    </div>
 
-<!-- COUNTY TOOL TIP DIVS 
+ 
 
 {COUNTY_TOOL_TIP_DIVS}
 
--->
+ 
 
-<script>
-   var cpm_vals = {CPM_VALS};
-   var dpm_vals = {DPM_VALS};
-   var cases_vals = {CASES_VALS};
-   var deaths_vals = {DEATHS_VALS};
-   var cg_med_vals = {CG_MED_VALS};
-   var dg_med_vals = {DG_MED_VALS};
-   var mortality_vals = {MORTALITY_VALS};
-   var new_case_vals = {NEW_CASES_VALS};
-   var new_deaths_vals = {NEW_DEATHS_VALS};
-</script>
+ 
 
 <script>
    
    var cur_state =  "{STATE_CODE_L}";
    cur_state = cur_state.toUpperCase();
 
-   // AMIM VALS
+   /* AMIM VALS */
    var cpm_vals = {CPM_VALS};
    var dpm_vals = {DPM_VALS};
    var cases_vals = {CASES_VALS};
@@ -253,93 +244,11 @@
    var new_case_vals = {NEW_CASES_VALS};
    var new_deaths_vals = {NEW_DEATHS_VALS};
 
-
-  function open_modal() {
-      var modal = document.getElementById("graph_img_viewer");
-      var modalImg = document.getElementById("img_fv"); 
-
-     $('.cell img').click(function() {
-         modal.style.display = "block";
-         modalImg.src = $(this).attr('src'); 
-     })
- 
-      // Get the <span> element that closes the modal
-      var span = document.getElementsByClassName("close")[0];
-
-      // When the user clicks on <span> (x), close the modal
-      span.onclick = function() {
-         modal.style.display = "none";
-      }
-  } 
-
-
-
-
-
-   function actionsOnSVGState() {
-         $('path,circle').mouseenter(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            $("path, tr,circle").removeClass('on');
-            $("path#"+state).addClass('on'); 
-            $("tr[data-state="+state+"]").addClass('on');
-            $('.selected').removeClass('selected');
- 
-         }).mouseleave(function() {
-            $('path, tr').removeClass('on');
-         }).click(function() {
-            var $t = $(this);
-            var state = $t.attr('id'); 
-            state = state.substring(5,state.length); // Remove "FIPS"
-            $('.selected').removeClass('selected');
-            $("html, body").animate({ scrollTop: $('#'+state).offset().top }, 150, function() {$('#'+state).addClass('selected') });
-         });
-      }
- 
+   /* DEFAULT */
+   var default_anim_view = "{DEFAULT_ANIM_VIEW}";
   
-
-
-
-
-  $(function() {
-
-      // Action
-      actionsOnSVGState(); 
-     
-     
-     // Table sorter
-     $("table thead th:eq(0)").data("sorter", false);
-     $('table').tablesorter({
-        widgets        : ['zebra', 'columns'],
-        usNumberFormat : false,
-        sortReset      : true,
-        sortRestart    : true
-     });
-     
-     // Click on stats image
-     open_modal();
-
-     // Set Active State
-     $('a[href="'+cur_state+'.html"]').addClass('active');
-
-  })
-
-
-
- 
-   
-
+  
 </script> 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-162794221-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-162794221-1');
-</script>
-
+<script src="../dist/js/cvinfo.min.js"></script>
 </body>
-</html>
-
+</html> 

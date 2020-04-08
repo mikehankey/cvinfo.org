@@ -68,6 +68,14 @@ else:
    from conf import *
 
 
+# Used for the dropdow above the animated maps on the state page
+ALL_OPTIONS = ['Cases','Deaths','Cases per Million','Deaths per Million']
+ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm']
+DEFAULT_OPTION = 2 # Index in the arrays above
+
+
+
+
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
 def update_data_sources():
@@ -739,42 +747,63 @@ def make_county_tool_tip(data):
 
 
 # ADD ALL THE SVG IMAGES FOR A GIVE PLAYER
-def add_svg_images(template,_type,_type_string,state):
-    # We add all the svgs for CPM
+def add_svg_images(code,_type,_type_string,state, state_name):
+   
+   # We add all the svgs for CPM
    all_svg = glob.glob( ANIM_PATH + "frames/" + state + "/*" + _type + "*" + "svg")
    all_svg_code = ""
-   all_dates = []
+   
      
    for i,svg in enumerate(all_svg):
       # Get date from the path
       svg_date = svg[-12:].replace('.svg','')
-      all_dates.append(svg)
-      
+
+      print(svg_date)
+  
       # Load svg map
       with open(svg, 'r') as f:  
          svg_code = f.read()  
 
       if(i==len(all_svg)-1):
-         all_svg_code += "<div id='cpm_"+ svg_date+"' class='anim_svg'><h4>"+ _type_string + " - " + string_to_date(svg_date)+"</h4>"+svg_code+"</div>"
+         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg'>"+svg_code+"</div>"
       else:
-         all_svg_code += "<div id='cpm_"+ svg_date+"' class='anim_svg' style='display:none'><h4>"+ _type_string + " - " + string_to_date(svg_date)+"</h4>"+svg_code+"</div>"
+         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg' style='display:none'>"+svg_code+"</div>"
 
-   template = template.replace("{ALL_SVGS_"+_type+"}",all_svg_code)
+      max_date = svg_date
 
-   return template
+   # Show only the default one
+
+   buttons_holder= "<div class='cont_svg'><a class='btn-anim btn-backward'><span></span></a><a class='btn-anim btn-play m'><span></span></a><a class='btn-anim btn-forward'><span></span></a></div>";
+
+   if(_type==ALL_OPTIONS_CODE[DEFAULT_OPTION]):
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"'>" +  buttons_holder  + all_svg_code + '</div>'
+   else:
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'>"+ buttons_holder + all_svg_code + '</div>'
+
+   return code  + all_svg_code, max_date
+
  
+
+# CREATE SELECT FOR SVG ANIM OPTIONS
+def create_svg_anim_select():
+   select = "<select class='select-css' id='anim_selector'>"
+   for i,code in enumerate(ALL_OPTIONS_CODE):
+      if(code == ALL_OPTIONS_CODE[DEFAULT_OPTION]):
+         select += "<option value='"+code+"'  selected>"+ALL_OPTIONS[i]+"</option>"
+      else:
+         select += "<option value='"+code+"' >"+ALL_OPTIONS[i]+"</option>"         
+   return select + "</select>"
+
+ 
+ 
+
 
 def make_state_page(this_state):
    js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
    sjs = load_json_file("./json/" + this_state + ".json")
-
-   print("YO")
-   county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
-   print("YO")
  
-
-   state_map = make_state_map(sjs)
-   print("YOYO")
+   county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
+   state_map = make_state_map(sjs) 
    
    fp = open("./templates/state.html", "r")
    template = ""
@@ -843,10 +872,37 @@ def make_state_page(this_state):
 
    template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
 
+
+   # Add select for Anim
+   template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select())
   
    # Add All images for SVG aims
-   template = add_svg_images(template,"cpm", "Cases per Million", sjs['summary_info']['state_code'])
+   all_svg_images_for_template = ""
+   r_max_date = ""
+   for i,opt in enumerate(ALL_OPTIONS):
+      #print("ADD SVG FOR " + ALL_OPTIONS_CODE[i] + " > " +  ALL_OPTIONS[i])
+      all_svg_images_for_template, max_date = add_svg_images(all_svg_images_for_template,ALL_OPTIONS_CODE[i], ALL_OPTIONS[i], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
+
+      # If we are at the default options, we get the max date
+      if(i==DEFAULT_OPTION):
+         r_max_date = max_date
+
+   # Max Date  
+   template = template.replace("{INIT_ANIM_DATE}", string_to_date(r_max_date))
+   
+   # Default Anim View
+   template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
+
+   # Default type in title
+   template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION])   
+
+   template = template.replace("{ALL_SVG_ANIM}", all_svg_images_for_template)
+
+ 
+   # Compress (a bit) the SVG...
+   template = template.replace("\n", "")
   
+
    if cfe(OUT_PATH + "/",1) == 0:
       os.makedirs(OUT_PATH + "/")
 

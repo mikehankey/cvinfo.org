@@ -4,6 +4,8 @@
    @import "socials";
    @import "palette";
    @import "player";
+   @import "anim";
+   @import "selects";
 
    body {
       margin:0;
@@ -89,9 +91,8 @@
     
    #ft {
       margin:0 auto 2rem;
-      color: dimgray;
+      color: #909090;
       text-align: center;
-         
       line-height: 1.5rem;
    }
 
@@ -162,16 +163,7 @@
       margin-bottom: 2.5rem;
    }
 
-   @media(max-width:800px) {
-      .table-holder {
-         margin:0 1rem 1.5rem;
-      }
-
-      #up {
-         margin-bottom: 1rem;
-      }
-
-   }
+  
 
    table {
       background-color: #fff;
@@ -274,9 +266,14 @@
       width: 100%;
    } 
 
+   #graphs {
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      margin: 2rem 0 2.5rem;
+      padding-bottom: 2rem;
+   }
+
    #state_counties_map {
-      border-top: 1px solid rgba(255,255,255,0.15);
-      margin-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.15); 
       margin: 2rem 0 2.5rem;
    }
 
@@ -462,5 +459,18 @@
       width: 100%;
       height: auto;
   }
+
+  #us_map h2 {
+   font-size: 1rem;
+   top: -.5rem;
+  }
+ 
+   .table-holder {
+      margin:0 .2rem 1.5rem;
+   }
+
+   
+
+ 
 }
  
