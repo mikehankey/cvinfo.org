@@ -54,9 +54,7 @@ function anim_play(type) {
    update_current_state_data(next_index,type);
 
 }
-
  
-
 
 $(function() {
    $('.btn-anim.m').click(function(e) {
@@ -89,10 +87,19 @@ $(function() {
       // We hide all the types
       $('.image_player').css('display','none');
       $('.image_player[data-rel='+new_type+']').css('display','block');
+      $('.anim_svg').css('display','none');
       
       // We display the cur_index one
-      $('.anim_svg').css('display','none');
+     
       var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg');
+      
+      if(typeof cur_index == "undefined") {
+          data_array = window[new_type+'_vals'];  
+          cur_index = data_array.length-2; // LAst one
+      }
+       
+
+
       $(all_anim[cur_index]).css('display','block');
 
       // We play immediatly
