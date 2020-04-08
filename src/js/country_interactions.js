@@ -9,11 +9,16 @@ function actionsOnSVGState() {
    }).mouseleave(function() {
       $('path, tr').removeClass('on');
    }).click(function() {
-      var $t = $(this);
-      var state = $t.attr('id'); 
-      if(state!='frames') {
-         window.location = "./states/" + state + ".html"
+
+      if($('#state_level').length==0) {
+         var $t = $(this);
+         var state = $t.attr('id'); 
+         if(state!='frames') {
+            window.location = "./states/" + state + ".html"
+         }
       }
+
+    
    });
 }
 
@@ -27,9 +32,11 @@ function actionOnTable() {
    }).mouseleave(function() {
       $('path, tr').removeClass('on');
    }).click(function() {
-      var $t = $(this);
-      var state = $t.attr('data-state'); 
-      window.location = "./states/" + state + ".html"
+      if($('#state_level').length==0) {
+         var $t = $(this);
+         var state = $t.attr('data-state'); 
+         window.location = "./states/" + state + ".html"
+      }
    });
 }
 

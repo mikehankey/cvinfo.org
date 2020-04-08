@@ -5,9 +5,7 @@
 # 
 from covid import cfe, load_json_file, save_json_file, load_state_names 
 
-
-
-
+ 
 import time
 import os
 import numpy as np
@@ -19,6 +17,7 @@ from PIL import Image, ImageFont, ImageDraw
 import glob
 import cv2
 
+ 
 
  
 #################################################################################################

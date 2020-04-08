@@ -68,13 +68,16 @@ else:
    from conf import *
 
 
+# UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
+# AND RE-RENERATE THE TEMPLATE
+CUR_VERSION = '1.25'
+
+
 # Used for the dropdow above the animated maps on the state page
 ALL_OPTIONS = ['Cases','Deaths','Cases per Million','Deaths per Million']
 ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm']
 DEFAULT_OPTION = 2 # Index in the arrays above
-
-
-
+  
 
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
@@ -90,7 +93,6 @@ def update_data_sources():
   os.system("cd "+ ORG_PATH + "/covid-19-data/; git pull")
   print("updating covidtracking.com daily.csv data file.")
   os.system("wget " + STATE_DAY_URL + " -O covid-19-data/covidtracking.com-daily.csv" )
-
  
 
 def main_menu(): 
@@ -246,6 +248,9 @@ def make_all_county_page():
          cc += 1
 
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+  
+
    html = table_header + rows + table_footer
    html = template.replace("{COUNTY_TABLE}", html)
    fp = open("all-counties.html", "w")
@@ -353,8 +358,7 @@ def merge_state_data():
    return(asd)
 
 def state_table(data,us_map_template):
-
-
+ 
    table_header = """
    <table id="states" class="tablesorter ">
          <thead>
@@ -514,6 +518,8 @@ def make_main_page():
    # and the default coloring of the map
    temp  = temp.replace('{MAP_TITLE}','Cases per Million')
  
+   # VERSIONING
+   temp= temp.replace("{VERSION}",str(CUR_VERSION))
 
    out = open("./index.html", "w+")
    out.write(temp)
@@ -875,7 +881,8 @@ def make_state_page(this_state):
    template = template.replace("{LAST_UPDATE}",  datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
    template = template.replace("{COUNTY_TABLE}", county_table)
 
-   template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
+   # NO NEED FOR THAT ANYMORE
+   #template = template.replace("{SVG_STATE_COUNTIES}", state_svg_map)
 
 
    # Add select for Anim
@@ -901,6 +908,9 @@ def make_state_page(this_state):
    template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION])   
 
    template = template.replace("{ALL_SVG_ANIM}", all_svg_images_for_template)
+
+   # VERSIONING
+   template= template.replace("{VERSION}",str(CUR_VERSION))
 
  
    # Compress (a bit) the SVG...
