@@ -1,10 +1,16 @@
-var playing_inter;
+var playing_inter; // Interval
+var cur_index;
+
 
 // Update  Date in title based
 function update_title_date(id) {
    // Transform id to date & display
    var _date = id.slice(-8);
-   $('#anim_date').text(_date.substring(0,4)+"-"+_date.substring(4,6)+"-"+_date.substring(6,10));
+   $('#anim_date').fadeOut(25, function() {
+      $('#anim_date').text(_date.substring(0,4)+"-"+_date.substring(4,6)+"-"+_date.substring(6,10));
+      $('#anim_date').fadeIn(100);
+   });
+
 }
 
 // Update Current State Date
@@ -23,7 +29,6 @@ function anim_play(type) {
    var cur = $container.find('.anim_svg:visible');
    
    var all_index = all.length-1;
-   var cur_index;
    var next_index;
 
    // Get the index of the current one
@@ -63,7 +68,7 @@ $(function() {
          
          $(this).removeClass('btn-play').addClass('btn-pause');
          
-         playing_inter = setInterval(function(){  anim_play(type); }, 1000);
+         playing_inter = setInterval(function(){  anim_play(type); }, 500);
       } else {
          $(this).removeClass('btn-pause').addClass('btn-play');
          clearInterval(playing_inter);
@@ -73,21 +78,26 @@ $(function() {
 
 
    $('#anim_selector').change(function() {
-      // We pause the player
-      clearInterval(playing_inter);
-      $('.btn-anim').removeClass('btn-play').addClass('btn-pause');
-
+      
       var new_type = $('#anim_selector').val();
 
-      // Hide all
-      $('.anim_svg').css('display','none');
+      // If playing, we pause
+      clearInterval(playing_inter);
+      $('.btn-anim').removeClass('btn-pause').addClass('btn-play');
 
       // Update string of cur_type_st
       $('#cur_type_st').text($('#anim_selector option:selected').text());
-
+ 
       // We hide all the types
       $('.image_player').css('display','none');
       $('.image_player[data-rel='+new_type+']').css('display','block');
-      $('.image_player[data-rel='+new_type+']').find('.btn-anim').click(); // We relaunch the animation
+      
+      // We display the cur_index one
+      $('.anim_svg').css('display','none');
+      var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg');
+      $(all_anim[cur_index]).css('display','block');
+
+      // We play immediatly
+      $('.image_player[data-rel='+new_type+']').find('.btn-anim').click();
    });
 })
