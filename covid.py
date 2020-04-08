@@ -70,7 +70,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '1.25'
+CUR_VERSION = '1.25111'
 
 
 # Used for the dropdow above the animated maps on the state page
@@ -914,7 +914,7 @@ def make_state_page(this_state):
 
  
    # Compress (a bit) the SVG...
-   template = template.replace("\n", "")
+   #template = template.replace("\n", "")
   
 
    if cfe(OUT_PATH + "/",1) == 0:
@@ -944,7 +944,9 @@ def make_all_plots(this_state,show=0):
    else:
       state_names, state_codes = load_state_names()
       for st in state_names:
-         if st is not "VI":
+         
+         if st != "VI":
+            print(st)
             make_state_plots(st,show)
 
 def make_state_plots(this_state_code, show=0):
@@ -1041,8 +1043,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
 
    if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
       ax1.bar(x - width/2,bin_sums,width,label=label1)
-      ax1.set_xticks(x)
-      ax1.set_xticklabels(bin_days)
+      #ax1.set_xticks(x)
+      #ax1.set_xticklabels(bin_days)
 
       try:
       #if True:
@@ -1599,8 +1601,6 @@ def enhance_cdata(this_state_code, cdata,cj):
    last_date = None
 
    for key in cdata:
-      print("COUNT:", key, cdata[key])
-      print("FIPS:", cdata[key]['fips'])
       cd_data, cd_objs,last_date = enhance_county(this_state_code, key,cdata[key],cj)
       cj[this_state_code][key]['county_stats'] = cd_objs 
       cj[this_state_code][key]['fips'] = cdata[key]['fips']

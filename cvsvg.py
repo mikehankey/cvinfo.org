@@ -33,7 +33,7 @@ def preview(state_code, field,data_only=0):
    
    if state_code == "USA":
       make_usa_vals()
-
+   print("STATE CODE:", state_code)
    data = load_json_file("json/" + state_code + ".json")
    if state_code != "USA":
       if "js_values2" not in data: 
@@ -77,7 +77,6 @@ def preview(state_code, field,data_only=0):
 
    for field in fields:
       for dd in ss:
-         print(dd) 
          dates.append(dd['date']) 
          vals.append(dd[field]) 
          if state_code != "USA":
@@ -85,15 +84,14 @@ def preview(state_code, field,data_only=0):
                data['js_vals'][field + "_vals"] = []
          if state_code != "USA":
             data['js_vals'][field + "_vals"].append(dd[field])
-      #print(dates)
 
    save_json_file("json/" + state_code + ".json", data)
-   if state_code != "USA":
-      print("SAVED JS VALS:", data['js_vals'])
+   #if state_code != "USA":
+   #   print("SAVED JS VALS:", data['js_vals'])
 
 
    js_vals = str(vals)
-   print("JS VALS:", js_vals)
+   #print("JS VALS:", js_vals)
 
    if data_only == 1:
       return()
@@ -101,10 +99,10 @@ def preview(state_code, field,data_only=0):
    sns.palplot(palette)
 
 
-   frame_wild = "anim/frames/" + state_code + "/" + state_code + "*-" + field + "*.png"
+   frame_wild = "anim/png/" + state_code + "/" + state_code + "*-" + field + "*.png"
    print(frame_wild)
    files = glob.glob(frame_wild)
-   print("FILES:", files)
+   #print("FILES:", files)
    imc = cv2.imread(files[0])
    ih,iw = imc.shape[:2]
    ih = int(ih * 1.5)
