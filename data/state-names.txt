@@ -49,3 +49,5 @@ Washington,WA
 West Virginia,WV
 Wisconsin,WI
 Wyoming,WY
+Washington D.C.,DC
+Virgin Islands,VI

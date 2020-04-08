@@ -75,15 +75,19 @@ def preview(state_code, field,data_only=0):
    else:
       fields.append(field)
 
+   if "dates" not in data['js_vals']:
+      data['js_vals']['dates'] = []
+
    for field in fields:
       for dd in ss:
          dates.append(dd['date']) 
          vals.append(dd[field]) 
-         if state_code != "USA":
+         if state_code != "USA": 
             if field + "_vals" not in data['js_vals']:
                data['js_vals'][field + "_vals"] = []
          if state_code != "USA":
             data['js_vals'][field + "_vals"].append(dd[field])
+            data['js_vals']['dates'].append(dd['date'])
 
    save_json_file("json/" + state_code + ".json", data)
    #if state_code != "USA":

@@ -70,7 +70,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '1.28.3'
+CUR_VERSION = '1.28.4'
 
 
 # Used for the dropdow above the animated maps on the state page
@@ -847,6 +847,11 @@ def create_svg_anim_select():
 
 def make_state_page(this_state):
 
+   plot_script = make_state_plots(this_state)
+
+
+   print(plot_script)
+
    js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
    if cfe("./json/" + this_state + ".json") == 0:
       return()
@@ -872,6 +877,7 @@ def make_state_page(this_state):
       js_tag = js_field.upper() 
       template = template.replace("{" + js_tag + "}", str(js_ar))
 
+   template = template.replace("{PLOT_SCRIPT}", plot_script)
    template = template.replace("{COUNTY_TOOL_TIP_DIVS}", tool_tips_html)
    template = template.replace("{STATE_NAME}", sjs['summary_info']['state_name'])
    template = template.replace("{STATE_CODE}", sjs['summary_info']['state_code'])
@@ -1055,15 +1061,68 @@ def make_state_plots(this_state_code, show=0):
       plot_data['dk']['ys1'].append(sobj['cg_med_decay'])
       plot_data['dk']['ys2'].append(sobj['dg_med_decay'])
 
-   make_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
-   make_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
-   make_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
-   make_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", show)
+   all_plots = "" 
+   all_plots += make_js_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
+   all_plots += make_js_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
+   all_plots += make_js_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
+   all_plots +=  make_js_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", show)
 
-   make_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
-   make_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
-   make_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
+   all_plots += make_js_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
+   all_plots += make_js_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
+   all_plots += make_js_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
+   return(all_plots)
       
+def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_id,show=0):
+   div_name = "plot_" + plot_id
+
+   plot_html = """
+
+   var trace1 = {
+     x: """ + str(bin_days) + """,
+     y: """ + str(bin_sums) + """, 
+     name: '""" + ya_label + """',
+     type: 'line'
+   };
+
+   var trace2 = {
+     x: """ + str(bin_days) + """,
+     y: """ + str(bin_sums2) + """, 
+     yaxis: 'y2',
+     name: '""" + ya2_label + """',
+     type: 'line'
+   };
+
+   var data = [trace1, trace2];
+
+   var layout = {
+     barmode: 'group',
+     title: '""" + plot_title + """',
+     yaxis: {title: '""" + ya_label + """'},
+     yaxis2: {
+       title: '""" + ya2_label + """',
+       titlefont: {color: 'rgb(148, 103, 189)'},
+       tickfont: {color: 'rgb(148, 103, 189)'},
+       overlaying: 'y',
+       side: 'right'
+     },
+     legend: {
+        x: 0,
+        y: 1 
+     }
+
+   };
+
+
+   Plotly.newPlot('""" + div_name + """', data, layout);
+
+
+   """
+
+
+   out = open("test.html", "w")
+   out.write(plot_html)
+   out.close()
+   return(plot_html)
 
 def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,show=0):
    fig, ax1 = plt.subplots()
@@ -1672,15 +1731,15 @@ def add_enhanced_growth_stats(state_code, l2s):
          first_death_date = date
 
       if len(case_grs) > 3:
-         cg_avg = round(np.mean(case_grs),2)
-         cg_med = round(np.median(case_grs),2)
+         cg_avg = round(np.mean(case_grs[-3:]),2)
+         cg_med = round(np.median(case_grs[-3:]),2)
       else:
          cg_avg = case_growth
          cg_med = case_growth
 
       if len(death_grs) > 3:
-         dg_avg = round(np.mean(death_grs),2)
-         dg_med = round(np.median(death_grs),2)
+         dg_avg = round(np.mean(death_grs[-3:]),2)
+         dg_med = round(np.median(death_grs[-3:]),2)
       else:
          dg_avg = death_growth 
          dg_med = death_growth 

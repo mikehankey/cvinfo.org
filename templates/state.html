@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
- 
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162991609-1"></script>
    <script>
    window.dataLayer = window.dataLayer || [];
@@ -153,24 +153,25 @@
       <div id="graphs" class="clearfix">
          <h3>Graphs</h3>
          <div class="graph_container">
+
                <div class="grid">
                   <div class="cell">
-                     <img src="../plots/{STATE_CODE}-cd.png">
+                     <div id=plot_cd></div>
                   </div>
                   <div class="cell">
-                     <img src="../plots/{STATE_CODE}-pm.png">
+                     <div id=plot_pm></div>
                   </div>
                   <div class="cell">
-                     <img src="../plots/{STATE_CODE}-in.png">
+                     <div id=plot_in></div>
                   </div>
                   <div class="cell">
-                     <img src="../plots/{STATE_CODE}-ts.png">
+                     <div id=plot_ts></div>
                   </div>
                   <div class="cell">
-                     <img src="../plots/{STATE_CODE}-gr.png">
+                     <div id=plot_gr></div>
                   </div>
                   <div class="cell">
-                     <img src="../plots/{STATE_CODE}-mt.png">
+                     <div id=plot_mt></div>
                   </div>
                </div>
          </div>
@@ -215,7 +216,6 @@
          <div id="caption"></div>
    </div>
 
- 
 
 {COUNTY_TOOL_TIP_DIVS}
 
@@ -245,5 +245,9 @@
   
 </script> 
 <script src="../dist/js/cvinfo.min.js?v={VERSION}"></script>
+<script>
+{PLOT_SCRIPT}
+</script>
+
 </body>
 </html> 
