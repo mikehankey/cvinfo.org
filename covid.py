@@ -772,10 +772,13 @@ def add_svg_images(code,_type,_type_string,state, state_name):
       max_date = svg_date
 
    # Show only the default one
+
+   buttons_holder= "<div class='cont_svg'><a class='btn-anim btn-backward'><span></span></a><a class='btn-anim btn-play m'><span></span></a><a class='btn-anim btn-forward'><span></span></a></div>";
+
    if(_type==ALL_OPTIONS_CODE[DEFAULT_OPTION]):
-      all_svg_code = "<div class='image_player' data-rel='"+_type+"'><a class='btn-anim btn-play'><span></span></a>" + all_svg_code + '</div>'
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"'>" +  buttons_holder  + all_svg_code + '</div>'
    else:
-      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'><a class='btn-anim btn-play'><span></span></a>" + all_svg_code + '</div>'
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'>"+ buttons_holder + all_svg_code + '</div>'
 
    return code  + all_svg_code, max_date
 

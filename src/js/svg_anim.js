@@ -59,15 +59,13 @@ function anim_play(type) {
 
 
 $(function() {
-   $('.btn-anim').click(function(e) {
+   $('.btn-anim.m').click(function(e) {
       e.stopPropagation();
    
       var type = $(this).closest('.image_player').attr('data-rel');
    
       if($(this).hasClass('btn-play')) {
-         
          $(this).removeClass('btn-play').addClass('btn-pause');
-         
          playing_inter = setInterval(function(){  anim_play(type); }, 500);
       } else {
          $(this).removeClass('btn-pause').addClass('btn-play');
@@ -83,7 +81,7 @@ $(function() {
 
       // If playing, we pause
       clearInterval(playing_inter);
-      $('.btn-anim').removeClass('btn-pause').addClass('btn-play');
+      $('.btn-anim.m').removeClass('btn-pause').addClass('btn-play');
 
       // Update string of cur_type_st
       $('#cur_type_st').text($('#anim_selector option:selected').text());
@@ -98,6 +96,26 @@ $(function() {
       $(all_anim[cur_index]).css('display','block');
 
       // We play immediatly
-      $('.image_player[data-rel='+new_type+']').find('.btn-anim').click();
+      // $('.image_player[data-rel='+new_type+']').find('.btn-anim.m').click();
+
+      // We update the value 
+      update_current_state_data(cur_index,new_type);
+
    });
+
+
+   // Backward
+   $('.btn-backward').click(function(e) {
+      e.stopPropagation();
+      var type = $(this).closest('.image_player').attr('data-rel');
+
+      // Show Previous
+      console.log("SHOW PREVIOUS");
+   });
+
+
+   // Init First State val 
+   // => Last one of default_anim_view
+   var data_array = window[default_anim_view+'_vals']; 
+   update_current_state_data(data_array.length-1,default_anim_view);
 })
