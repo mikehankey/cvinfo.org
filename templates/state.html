@@ -12,7 +12,7 @@
 
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <title>COVID-19 - {STATE_NAME} Statistics</title> 
+   <title>{STATE_NAME} COVID-19 Statistics</title> 
 
 	<meta name="author" content="Mike Hankey">
 	<meta name="description" content="COVID 19 (Coronavirus) Stats for {STATE_NAME}, USA, Per Million, By County, Historical">
@@ -176,11 +176,20 @@
                </div>
          </div>
       </div>
-    
-         <div id="state_counties_map">
+
+      <div class="anim">
+            <div class="anim_header">
+               <h4>{STATE_NAME} - <span id="anim_date">{INIT_ANIM_DATE}</span></h4>
+               <p> <span id="cur_state_data"></span> {ANIM_VIEW_SELECT}</p>
+            </div>
+            {ALL_SVG_ANIM}
+      </div> 
+         
+
+      <!--   <div id="state_counties_map">
             <h3>State Map</h3>
             {SVG_STATE_COUNTIES}
-         </div>
+         </div> -->
 
 
 
@@ -189,13 +198,7 @@
          </div>
  
 
-         <div class="anim">
-            <div class="anim_header">
-               <h4>{STATE_NAME} - {INIT_ANIM_DATE}</h4>
-               <p> <span id="cur_state_data"></span> {ANIM_VIEW_SELECT}</p>
-            </div>
-            {ALL_SVG_ANIM}
-         </div> 
+         
    </div>
  
 
@@ -228,7 +231,7 @@
    var cur_state =  "{STATE_CODE_L}";
    cur_state = cur_state.toUpperCase();
 
-   // AMIM VALS
+   /* AMIM VALS */
    var cpm_vals = {CPM_VALS};
    var dpm_vals = {DPM_VALS};
    var cases_vals = {CASES_VALS};
@@ -239,10 +242,8 @@
    var new_case_vals = {NEW_CASES_VALS};
    var new_deaths_vals = {NEW_DEATHS_VALS};
 
-   // DEFAUMT
+   /* DEFAULT */
    var default_anim_view = "{DEFAULT_ANIM_VIEW}";
-
-
   
   
 </script> 

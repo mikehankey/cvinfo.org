@@ -266,9 +266,14 @@
       width: 100%;
    } 
 
+   #graphs {
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      margin: 2rem 0 2.5rem;
+      padding-bottom: 2rem;
+   }
+
    #state_counties_map {
-      border-top: 1px solid rgba(255,255,255,0.15);
-      margin-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.15); 
       margin: 2rem 0 2.5rem;
    }
 

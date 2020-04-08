@@ -2,6 +2,10 @@
    display:none;
 }
 
+.anim {
+   margin-bottom:2rem;
+}
+
 .anim_header {
 
    text-align: center;
@@ -16,8 +20,57 @@
       font-size: 1rem;
       margin-top:0;
    }
-
-   
+ 
    
  
+}
+
+.image_player {
+   text-align: center;
+}
+
+.btn-anim {
+   width: 30px;
+   background-color: #cecece;
+   height: 30px;
+   display: inline-block;
+   border-radius: 50%;
+   padding: 5px;
+   border: 2px solid #000;
+   transition: all .15s;
+   cursor: pointer;
+  
+   span {
+      display: block;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      width: 25px;
+      height: 25px;
+      padding: 3px;
+   }
+   
+   &:hover {
+      background-color:#fff;
+   }
+
+   &.btn-play {
+      span {
+         background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjguNyAxNTQuNyI+PHRpdGxlPnBsYXk8L3RpdGxlPjxwYXRoIGQ9Ik0xMzcuMSw3Mi43TDM3LjEsNi43YTUsNSwwLDAsMC03LjgsNC4ybDAuNiwxMzNhNSw1LDAsMCwwLDcuOCw0LjFsOTkuNC02N0E1LDUsMCwwLDAsMTM3LjEsNzIuN1oiLz48L3N2Zz4=);
+      }
+   }
+   &.btn-pause {
+      span {
+         background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjguNyAxNTQuNyI+PHRpdGxlPnBhdXNlPC90aXRsZT48cmVjdCB4PSIyNS4zIiB5PSIxMS4zIiB3aWR0aD0iNTIuNyIgaGVpZ2h0PSIxMzIiIHJ4PSI1IiByeT0iNSIvPjxyZWN0IHg9IjkwLjciIHk9IjExLjMiIHdpZHRoPSI1Mi43IiBoZWlnaHQ9IjEzMiIgcng9IjUiIHJ5PSI1Ii8+PC9zdmc+);
+      }
+   }
+   &.btn-backward {
+      span {
+         background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjguNyAxNTQuNyI+PHRpdGxlPmJhY2t3YXJkPC90aXRsZT48cGF0aCBkPSJNMTYyLjEsMTAuNWE1LDUsMCwwLDAtNy44LTQuMUw1OC42LDcwLjlWMTguMmE1LDUsMCwwLDAtNS01SDEwLjlhNSw1LDAsMCwwLTUsNXYxMjJhNSw1LDAsMCwwLDUsNUg1My42YTUsNSwwLDAsMCw1LTVWODQuNkwxNTUsMTQ4LjNhNSw1LDAsMCwwLDcuOC00LjJaIi8+PC9zdmc+);
+      }
+   }
+   &.btn-forward {
+      span {
+         background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjguNyAxNTQuNyI+PHRpdGxlPmZvcndhcmQ8L3RpdGxlPjxwYXRoIGQ9Ik0xNTcuNyw5LjVIMTE1LjFhNSw1LDAsMCwwLTUsNVY3MC4xTDEzLjcsNi40YTUsNSwwLDAsMC03LjgsNC4yTDYuNSwxNDQuMmE1LDUsMCwwLDAsNy44LDQuMWw5NS44LTY0LjV2NTIuN2E1LDUsMCwwLDAsNSw1aDQyLjdhNSw1LDAsMCwwLDUtNVYxNC41QTUsNSwwLDAsMCwxNTcuNyw5LjVaIi8+PC9zdmc+);
+      }
+   }
 }

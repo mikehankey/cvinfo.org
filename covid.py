@@ -752,30 +752,32 @@ def add_svg_images(code,_type,_type_string,state, state_name):
    # We add all the svgs for CPM
    all_svg = glob.glob( ANIM_PATH + "frames/" + state + "/*" + _type + "*" + "svg")
    all_svg_code = ""
-   all_dates = []
+   
      
    for i,svg in enumerate(all_svg):
       # Get date from the path
       svg_date = svg[-12:].replace('.svg','')
 
-      all_dates.append(svg_date)
-
+      print(svg_date)
+  
       # Load svg map
       with open(svg, 'r') as f:  
          svg_code = f.read()  
 
       if(i==len(all_svg)-1):
-         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg'><h4>"+ state_name.upper() + " " + _type_string + " - " + string_to_date(svg_date)+"<span></span></h4>"+svg_code+"</div>"
+         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg'>"+svg_code+"</div>"
       else:
-         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg' style='display:none'><h4>"+ state_name.upper() + " " +  _type_string + " - " + string_to_date(svg_date)+"<span></span></h4>"+svg_code+"</div>"
+         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg' style='display:none'>"+svg_code+"</div>"
+
+      max_date = svg_date
 
    # Show only the default one
    if(_type==ALL_OPTIONS_CODE[DEFAULT_OPTION]):
-      all_svg_code = "<div class='image_player' data-rel='"+_type+"'><a class='play'><img src='../dist/img/play.svg'/></a>" + all_svg_code + '</div>'
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"'><a class='btn-anim btn-play'><span></span></a>" + all_svg_code + '</div>'
    else:
-      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'><a class='play'><img src='../dist/img/play.svg'/></a>" + all_svg_code + '</div>'
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'><a class='btn-anim btn-play'><span></span></a>" + all_svg_code + '</div>'
 
-   return code  + all_svg_code, all_dates
+   return code  + all_svg_code, max_date
 
  
 
@@ -872,12 +874,17 @@ def make_state_page(this_state):
   
    # Add All images for SVG aims
    all_svg_images_for_template = ""
+   r_max_date = ""
    for i,opt in enumerate(ALL_OPTIONS):
       #print("ADD SVG FOR " + ALL_OPTIONS_CODE[i] + " > " +  ALL_OPTIONS[i])
-      all_svg_images_for_template, all_dates = add_svg_images(all_svg_images_for_template,ALL_OPTIONS_CODE[i], ALL_OPTIONS[i], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
-    
+      all_svg_images_for_template, max_date = add_svg_images(all_svg_images_for_template,ALL_OPTIONS_CODE[i], ALL_OPTIONS[i], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
+
+      # If we are at the default options, we get the max date
+      if(i==DEFAULT_OPTION):
+         r_max_date = max_date
+
    # Max Date  
-   template = template.replace("{INIT_ANIM_DATE}", string_to_date(max(all_dates)))
+   template = template.replace("{INIT_ANIM_DATE}", string_to_date(r_max_date))
    
    # Default Anim View
    template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
