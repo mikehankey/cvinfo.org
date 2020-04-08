@@ -324,7 +324,8 @@ def merge_state_data():
    asd = []
    acd = []
    acd_all = []
-   del state_names["VI"]
+   if "VI" in state_names:
+      del state_names["VI"]
 
    for st in state_names:
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
@@ -736,8 +737,8 @@ def make_county_tool_tip(data):
 
    sd = data['county_stats'].sort(key=sort_date,reverse=False)
 
-   for dd in data['county_stats']:
-      print(dd) 
+   #for dd in data['county_stats']:
+   #   print(dd) 
 
    tool_tip = """
       County Details<BR>
@@ -759,7 +760,7 @@ def add_svg_images(code,_type,_type_string,state, state_name):
       # Get date from the path
       svg_date = svg[-12:].replace('.svg','')
 
-      print(svg_date)
+      #print(svg_date)
   
       # Load svg map
       with open(svg, 'r') as f:  
@@ -800,7 +801,10 @@ def create_svg_anim_select():
 
 
 def make_state_page(this_state):
+
    js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
+   if cfe("./json/" + this_state + ".json") == 0:
+      return()
    sjs = load_json_file("./json/" + this_state + ".json")
  
    county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
@@ -881,7 +885,6 @@ def make_state_page(this_state):
    all_svg_images_for_template = ""
    r_max_date = ""
    for i,opt in enumerate(ALL_OPTIONS):
-      #print("ADD SVG FOR " + ALL_OPTIONS_CODE[i] + " > " +  ALL_OPTIONS[i])
       all_svg_images_for_template, max_date = add_svg_images(all_svg_images_for_template,ALL_OPTIONS_CODE[i], ALL_OPTIONS[i], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
 
       # If we are at the default options, we get the max date
@@ -920,7 +923,9 @@ def make_state_pages(this_state):
       print("Make all state pages.")
       state_names, state_codes = load_state_names()
       for st in state_names:
-         if st is not "":
+         print("STATE:", st)
+         if st is not "" and st is not "VI":
+            print("ST:", st, "ST")
             make_state_page(st)
 
 def make_all_plots(this_state,show=0):
