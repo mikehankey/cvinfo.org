@@ -641,7 +641,9 @@ def make_map(state_code,rpt_date,field,scale,max_val):
    if cfe(ANIM_DIR, 1) == 0:
       os.makedirs(ANIM_DIR)
    outfile = ANIM_DIR + state_code + "-" + field + "-" + rpt_date + ".png"
-   
+   PNG_DIR = ANIM_DIR.replace("frames", "png")
+   if cfe(PNG_DIR, 1) == 0:
+      os.makedirs(PNG_DIR)
 
    make_svg_map(state_code,md,outfile)
    return(outfile,all_val)
@@ -832,6 +834,8 @@ def make_svg_map(state_code,data,outfile):
    ow = 555.22
    oh = 351.67
    # DON'T COMMENT THIS OUT AS IT IS NEEDED STILL FOR MAKING CUSTOM MOVIES/GIFS ANIMATIONS ETC
+
+   outfile = outfile.replace("frames", "png")
    svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
 
 

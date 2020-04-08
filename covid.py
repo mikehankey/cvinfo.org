@@ -755,7 +755,7 @@ def add_svg_images(code,_type,_type_string,state, state_name):
    all_svg = glob.glob( ANIM_PATH + "frames/" + state + "/*" + _type + "*" + "svg")
    all_svg_code = ""
    
-     
+   max_date = None  
    for i,svg in enumerate(all_svg):
       # Get date from the path
       svg_date = svg[-12:].replace('.svg','')
