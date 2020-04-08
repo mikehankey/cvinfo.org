@@ -187,13 +187,26 @@
          <div class="table-holder">
             {COUNTY_TABLE} 
          </div>
+<!-- NEW GRAPH ANIM VIEWER 
 
          <div class="anim">
             <div class="image_player" data-rel="cpm">
                <button class="play">Play</button>
                {ALL_SVGS_cpm} 
             </div>
+<<<<<<< HEAD
          </div> 
+=======
+         </div>
+
+-->
+
+
+
+ 
+
+
+>>>>>>> 952b38f2b154f3130be88606aaf312a4b0a6e7e4
    </div>
  
 
@@ -211,23 +224,51 @@
          <div id="caption"></div>
    </div>
 
-<!-- COUNTY TOOL TIP DIVS -->
+<!-- COUNTY TOOL TIP DIVS 
 
 {COUNTY_TOOL_TIP_DIVS}
 
- 
+-->
+
 <script>
 
 
    var cpm_vals = {CPM_VALS};
    var dpm_vals = {DPM_VALS};
-   var gr_vals = {GR_VALS};
-   var mr_vals = {MR_VALS};
-   var death_vals = {DEATH_VALS};
-   var cases_vals = {CASE_VALS};
+   var cases_vals = {CASES_VALS};
+   var deaths_vals = {DEATHS_VALS};
+   var cg_med_vals = {CG_MED_VALS};
+   var dg_med_vals = {DG_MED_VALS};
+   var mortality_vals = {MORTALITY_VALS};
+   var new_case_vals = {NEW_CASES_VALS};
+   var new_deaths_vals = {NEW_DEATHS_VALS};
+</script>
+
+<script>
    
    var cur_state =  "{STATE_CODE_L}";
    cur_state = cur_state.toUpperCase();
+
+   // AMIM VALS
+   var cpm_vals = {CPM_VALS};
+   var dpm_vals = {DPM_VALS};
+   var cases_vals = {CASES_VALS};
+   var deaths_vals = {DEATHS_VALS};
+   var cg_med_vals = {CG_MED_VALS};
+   var dg_med_vals = {DG_MED_VALS};
+   var mortality_vals = {MORTALITY_VALS};
+   var new_case_vals = {NEW_CASES_VALS};
+   var new_deaths_vals = {NEW_DEATHS_VALS};
+
+
+  function open_modal() {
+      var modal = document.getElementById("graph_img_viewer");
+      var modalImg = document.getElementById("img_fv"); 
+
+     $('.cell img').click(function() {
+         modal.style.display = "block";
+         modalImg.src = $(this).attr('src'); 
+     })
  
    function sleep(seconds){
       var waitUntil = new Date().getTime() + seconds*1000;
