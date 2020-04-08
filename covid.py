@@ -81,6 +81,45 @@ DEFAULT_OPTION = 2 # Index in the arrays above
 
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
+
+def make_svg_legends():
+   fp = open("templates/h-legend.svg")
+   temp =""
+   for line in fp:
+      temp += line
+
+   ranks = {}
+   ranks['cases'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+   ranks['deaths'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,20),(30,40),(40,50),(50,100),(100,200),(300,999999))
+   ranks['cpm'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+   ranks['dpm'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,25),(25,50),(50,100),(100,200),(200,300),(300,999999))
+   ranks['mortality'] = ((0,1),(1,2),(2,3),(3,4),(4,5),(6,7),(7,8),(8,9),(9,10),(10,15),(15,100))
+   ranks['cg_med'] = ((0,5),(5,10),(10,15),(15,20),(20,25),(25,30),(30,35),(35,40),(40,50),(50,75),(75,100))
+   ranks['dg_med'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+   ranks['new_cases'] = ((0,5),(5,10),(10,20),(20,30),(30,40),(40,50),(50,100),(100,200),(200,500),(500,1000),(1000,99999))
+   ranks['new_deaths'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+ 
+   for field in ranks:
+      svg = temp
+      print(field)
+      c = 0 
+      print("LEN:", len(ranks[field]))
+      for low,high in ranks[field] :
+         print(field, low, high)
+         if c < 10:
+            text = str(low) + " - " + str(high)
+         else:
+            text = str(low) + " + " 
+         tag = "{DAT_" + str(c) + "}"
+         print("TAG:", tag)
+         svg= svg.replace(tag, text) 
+         c += 1
+      of = "templates/legends/h-legend-" + field + ".svg";
+      out = open(of, "w")
+      out.write(svg)
+      print(svg)
+
+
 def update_data_sources():
   # US CITIES DB
   #https://simplemaps.com/static/data/us-cities/1.6/basic/simplemaps_uscities_basicv1.6.zip
@@ -1035,15 +1074,19 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
    print("make_plot")
    width = .35
    x = np.arange(len(bin_days))
+   print("BIN DAYS:", bin_days)
+   print("X:", x)
 
    if plot_type == 'ts':
       label1 = "Tests"
    else:
       label1 = "Cases"
 
+   # BAR STYLE PLOT
    if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
+      print(bin_days)   
       ax1.bar(x - width/2,bin_sums,width,label=label1)
-      #ax1.set_xticks(x)
+      ax1.set_xticks(x)
       #ax1.set_xticklabels(bin_days)
 
       try:
@@ -1067,9 +1110,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
       except:
          print("Couldn't fit data curve for ax1")
 
-
-
-
+   # LINE STYLE PLOT
    else:
       ax1.plot(bin_days,bin_sums)
       try:
@@ -1088,12 +1129,17 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
 
    ax1.set(xlabel=xa_label,ylabel=ya_label,title=plot_title)
    #ax1.grid()
+
+   # AXIS 2
+
    line_color = 'tab:red'
+   # BAR STYLE AX2
    if plot_type != 'in' and plot_type != 'cd' and plot_type != 'pm' and plot_type != 'ts':
       ax2 = ax1.twinx()
       ax2.plot(bin_days, bin_sums2 , color=line_color)
       ax2.set_ylabel(ya2_label)
    else: 
+      # LINE STYLE AX2
       ax2 = ax1.twinx()
       line_color = 'tab:red'
       if plot_type == 'ts':
@@ -1126,7 +1172,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
    if cfe("./plots/", 1) == 0:
       os.makedirs("./plots/")
    plot_file = "plots/" + state + "-" + plot_type + ".png"
-   #plt.show()
+   plt.show()
    plt.savefig(plot_file)
    print("SAVED:", plot_file, show)
    #if show == "1":
@@ -1995,5 +2041,6 @@ def cfe(file,dir = 0):
 
 
 if __name__ == "__main__":
-    # execute only if run as a script
-    main_menu()
+   # execute only if run as a script
+   #make_svg_legends() 
+   main_menu()

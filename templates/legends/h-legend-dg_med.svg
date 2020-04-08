@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 550 74.3">
+  <title>h-legend</title>
+  <rect class="cl_0" width="50" height="35"/>
+  <rect class="cl_1" x="450" width="50" height="35"/>
+  <rect class="cl_2" x="400" width="50" height="35"/>
+  <rect class="cl_3" x="350" width="50" height="35"/>
+  <rect class="cl_4" x="300" width="50" height="35"/>
+  <rect class="cl_5" x="250" width="50" height="35"/>
+  <rect class="cl_6" x="200" width="50" height="35"/>
+  <rect class="cl_7" x="150" width="50" height="35"/>
+  <rect class="cl_8" x="100" width="50" height="35"/>
+  <rect class="cl_9" x="50" width="50" height="35"/>
+  <rect class="cl_10" x="500" width="50" height="35"/>
+  <text class="l" transform="translate(14.8 47.1)">0 - 2</text>
+  <text class="l" transform="translate(464.8 47.1)">2 - 4</text>
+  <text class="l" transform="translate(413.7 47.1)">4 - 6</text>
+  <text class="l" transform="translate(356.4 47.1)">6 - 8</text>
+  <text class="l" transform="translate(314.8 47.1)">8 - 10</text>
+  <text class="l" transform="translate(264.8 47.1)">10 - 12</text>
+  <text class="l" transform="translate(214.8 47.1)">12 - 14</text>
+  <text class="l" transform="translate(164.8 47.1)">14 - 16</text>
+  <text class="l" transform="translate(114.8 47.1)">16 - 18</text>
+  <text class="l" transform="translate(64.8 47.1)">18 - 20</text>
+  <text class="l" transform="translate(514.8 47.1)">20 + </text>
+</svg>
