@@ -109,8 +109,76 @@ $(function() {
       e.stopPropagation();
       var type = $(this).closest('.image_player').attr('data-rel');
 
-      // Show Previous
-      console.log("SHOW PREVIOUS");
+      // Show Previous 
+      var $container = $('.image_player[data-rel='+type+']');
+
+      // Cur visible
+      var all = $container.find('.anim_svg');
+      var cur = $container.find('.anim_svg:visible');
+      
+      var all_index = all.length-1;
+      var next_index;
+
+      // Get the index of the current one
+      for(var i=0;i<all.length;i++) {
+         if($(all[i]).attr('id')==$(cur).attr('id')) {
+            cur_index = i;
+            break;
+         }
+      } 
+
+      if(cur_index==0) {
+         next_index = all_index
+      } else {
+         next_index = cur_index - 1
+      }
+
+      // We hide it
+      cur.hide(); 
+
+      // We show the Next one
+      $(all[next_index]).show();
+      update_title_date($(all[next_index]).attr('id'));
+      update_current_state_data(next_index,type);
+   });
+
+
+    // Backward
+    $('.btn-forward').click(function(e) {
+      e.stopPropagation();
+      var type = $(this).closest('.image_player').attr('data-rel');
+
+      // Show Previous 
+      var $container = $('.image_player[data-rel='+type+']');
+
+      // Cur visible
+      var all = $container.find('.anim_svg');
+      var cur = $container.find('.anim_svg:visible');
+      
+      var all_index = all.length-1;
+      var next_index;
+
+      // Get the index of the current one
+      for(var i=0;i<all.length;i++) {
+         if($(all[i]).attr('id')==$(cur).attr('id')) {
+            cur_index = i;
+            break;
+         }
+      } 
+
+      if(cur_index==all_index) {
+         next_index = 0
+      } else {
+         next_index = cur_index + 1
+      }
+
+      // We hide it
+      cur.hide(); 
+
+      // We show the Next one
+      $(all[next_index]).show();
+      update_title_date($(all[next_index]).attr('id'));
+      update_current_state_data(next_index,type);
    });
 
 
