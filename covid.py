@@ -786,13 +786,14 @@ def create_svg_anim_select():
    select = "<select class='select-css' id='anim_selector'>"
    for i,code in enumerate(ALL_OPTIONS_CODE):
       if(code == ALL_OPTIONS_CODE[DEFAULT_OPTION]):
-         select += "<option value='"+code+"' selected>"+ALL_OPTIONS[i]+"</option>"
+         select += "<option value='"+code+"'  selected>"+ALL_OPTIONS[i]+"</option>"
       else:
-         select += "<option value='"+code+"'>"+ALL_OPTIONS[i]+"</option>"         
+         select += "<option value='"+code+"' >"+ALL_OPTIONS[i]+"</option>"         
    return select + "</select>"
 
  
  
+
 
 def make_state_page(this_state):
    js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
@@ -888,8 +889,9 @@ def make_state_page(this_state):
    
    # Default Anim View
    template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
- 
 
+   # Default type in title
+   template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION])   
 
    template = template.replace("{ALL_SVG_ANIM}", all_svg_images_for_template)
 

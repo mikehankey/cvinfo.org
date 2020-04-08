@@ -19,7 +19,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-   <script src="../dist/js/cvinfo.min.js"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
    <link href="../dist/css/cvinfo.css" rel="stylesheet"> 
    
@@ -179,8 +178,11 @@
 
       <div class="anim">
             <div class="anim_header">
-               <h4>{STATE_NAME} - <span id="anim_date">{INIT_ANIM_DATE}</span></h4>
-               <p> <span id="cur_state_data"></span> {ANIM_VIEW_SELECT}</p>
+               <div>
+                  <h4>{STATE_NAME} - <span id="anim_date">{INIT_ANIM_DATE}</span></h4>
+                  <p><span id="cur_type_st">{CUR_TYPE}</span>: <span id="cur_type_val"></span></p>
+               </div>
+               <div>{ANIM_VIEW_SELECT}</div>
             </div>
             {ALL_SVG_ANIM}
       </div> 
@@ -247,5 +249,6 @@
   
   
 </script> 
+<script src="../dist/js/cvinfo.min.js"></script>
 </body>
 </html> 

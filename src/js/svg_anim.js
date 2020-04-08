@@ -1,3 +1,5 @@
+var playing_inter;
+
 // Update  Date in title based
 function update_title_date(id) {
    // Transform id to date & display
@@ -7,11 +9,10 @@ function update_title_date(id) {
 
 // Update Current State Date
 function update_current_state_data(index,type) {
-   var data_array = window[type+'_vals'];
-   console.log(type+"_vals")
-   console.log(window[type+'_vals'])
-   $('#cur_state_data').text(data_array[index]);
+   var data_array = window[type+'_vals']; 
+   $('#cur_type_val').text(data_array[index]);
 }
+ 
 
 // Here we get how many svg images we have per type
 function anim_play(type) {
@@ -49,30 +50,44 @@ function anim_play(type) {
 
 }
 
+ 
 
 
-// Here we get how many svg images we have per type
-function anim_pause(type) {
-   anim_play(type);
+$(function() {
+   $('.btn-anim').click(function(e) {
+      e.stopPropagation();
+   
+      var type = $(this).closest('.image_player').attr('data-rel');
+   
+      if($(this).hasClass('btn-play')) {
+         
+         $(this).removeClass('btn-play').addClass('btn-pause');
+         
+         playing_inter = setInterval(function(){  anim_play(type); }, 1000);
+      } else {
+         $(this).removeClass('btn-pause').addClass('btn-play');
+         clearInterval(playing_inter);
+      }
+      return false;
+   });
 
-   //var $container = $('.image_player[data-rel='+type+']');
-   //var all_images = $container.find('.anim_svg');
-}
 
+   $('#anim_selector').change(function() {
+      // We pause the player
+      clearInterval(playing_inter);
+      $('.btn-anim').removeClass('btn-play').addClass('btn-pause');
 
+      var new_type = $('#anim_selector').val();
 
+      // Hide all
+      $('.anim_svg').css('display','none');
 
-$('.btn-anim').click(function(e) {
-   e.stopPropagation();
+      // Update string of cur_type_st
+      $('#cur_type_st').text($('#anim_selector option:selected').text());
 
-   var type = $(this).closest('.image_player').attr('data-rel');
-
-   if($(this).hasClass('btn-play')) {
-      anim_pause(type);
-      $(this).removeClass('btn-play').addClass('btn-pause');
-   } else {
-      anim_play(type);
-      $(this).removeClass('btn-pause').addClass('btn-play');
-   }
-   return false;
-});
+      // We hide all the types
+      $('.image_player').css('display','none');
+      $('.image_player[data-rel='+new_type+']').css('display','block');
+      $('.image_player[data-rel='+new_type+']').find('.btn-anim').click(); // We relaunch the animation
+   });
+})
