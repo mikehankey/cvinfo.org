@@ -70,7 +70,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '1.28.1'
+CUR_VERSION = '1.28.3'
 
 
 # Used for the dropdow above the animated maps on the state page
@@ -1067,6 +1067,8 @@ def make_state_plots(this_state_code, show=0):
 
 def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,show=0):
    fig, ax1 = plt.subplots()
+   label1 = ya_label
+   label2 = ya2_label
    print("PLOT:", state, plot_title, show)
    print(bin_days)
    print(bin_sums)
@@ -1083,7 +1085,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
       label1 = "Cases"
 
    # BAR STYLE PLOT
-   if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
+   #if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
+   if plot_type == "bar":
       print(bin_days)   
       ax1.bar(x - width/2,bin_sums,width,label=label1)
       ax1.set_xticks(x)
@@ -1112,7 +1115,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
 
    # LINE STYLE PLOT
    else:
-      ax1.plot(bin_days,bin_sums)
+      ax1.plot(bin_days,bin_sums, label=label1)
       try:
          popt,pcov = curve_fit(curve_func,bin_days,bin_sums, maxfev=10000 )
          func_data = curve_func(np.array(bin_days), *popt)
@@ -1134,9 +1137,10 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
 
    line_color = 'tab:red'
    # BAR STYLE AX2
-   if plot_type != 'in' and plot_type != 'cd' and plot_type != 'pm' and plot_type != 'ts':
+   #if plot_type != 'in' and plot_type != 'cd' and plot_type != 'pm' and plot_type != 'ts':
+   if plot_type != 'bar':
       ax2 = ax1.twinx()
-      ax2.plot(bin_days, bin_sums2 , color=line_color)
+      ax2.plot(bin_days, bin_sums2 , color=line_color, label=label2)
       ax2.set_ylabel(ya2_label)
    else: 
       # LINE STYLE AX2
@@ -1172,7 +1176,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
    if cfe("./plots/", 1) == 0:
       os.makedirs("./plots/")
    plot_file = "plots/" + state + "-" + plot_type + ".png"
-   plt.show()
+   #plt.show()
    plt.savefig(plot_file)
    print("SAVED:", plot_file, show)
    #if show == "1":
@@ -1186,6 +1190,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
    bin_days = []
    bin_sums = []
    bin_sums2 = []
+
 
 
    # find first death date
@@ -1239,10 +1244,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
    width = .35
    x = np.arange(len(bin_days))
 
-   if plot_type == 'ts':
-      label1 = "Tests"
-   else:
-      label1 = "Cases"
+
 
    if plot_type == "in" or plot_type == 'cd' or plot_type == 'pm' or plot_type == 'ts':
       ax1.bar(x - width/2,bin_sums,width,label=label1)
