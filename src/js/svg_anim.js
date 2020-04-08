@@ -91,14 +91,12 @@ $(function() {
       
       // We display the cur_index one
      
-      var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg');
+      var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg'); 
       
       if(typeof cur_index == "undefined") {
           data_array = window[new_type+'_vals'];  
           cur_index = data_array.length-2; // LAst one
-      }
-       
-
+      } 
 
       $(all_anim[cur_index]).css('display','block');
 
