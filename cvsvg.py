@@ -505,6 +505,11 @@ def make_cpm_legend(palette, state_code,field,height=480):
    return(ANIM_PATH + "frames/legend-" + field + ".png")   
 
 def make_legend(state_code,field,palette,max_val):
+
+
+   
+
+
    print("LEGEND.",state_code,field)
    if field == 'cpm' or field == 'mortality':
  
