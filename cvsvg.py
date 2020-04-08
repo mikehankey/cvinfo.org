@@ -31,19 +31,20 @@ else:
 
 
 def preview(state_code, field,data_only=0):
- 
-   data = load_json_file("json/" + state_code + ".json")
-   if "js_values2" not in data:
-      data['js_vals'] = {
-         'cpm_vals' : [],
-         'dpm_vals' : [],
-         'cases_vals' : [],
-      }
-      data['js_values2'] = "updated"
+   
+   if state_code == "USA":
+      make_usa_vals()
 
-      # Added by Vince (there was a bug)
-      if('js_values' in data):
-         del(data['js_values'])
+   data = load_json_file("json/" + state_code + ".json")
+   if state_code != "USA":
+      if "js_values2" not in data: 
+         data['js_vals'] =  {
+         }
+         data['js_values2'] = "updated"
+         if 'js_values' in data:
+            del(data['js_values'])
+   else:
+      js_vals = {}
 
    field_desc = {
       'cpm' : "Cases Per Million",
@@ -59,18 +60,37 @@ def preview(state_code, field,data_only=0):
    dates = []
    vals = []
    state_names, state_codes = load_state_names()
-   state_name = state_names[state_code]
+   if state_code != 'USA':
+      state_name = state_names[state_code]
+   state_name = "USA"
    js = load_json_file("json/" + state_code + ".json")
-   ss = js['state_stats']
-   for dd in ss:
-      dates.append(dd['date']) 
-      vals.append(dd[field]) 
-      if field + "_vals" not in data['js_vals']:
-         data['js_vals'][field + "_vals"] = []
-      data['js_vals'][field + "_vals"].append(dd[field])
-   print(dates)
+   if state_code != 'USA':
+      ss = js['state_stats']
+   else:
+      ss = js['day_stats']
+
+   fields = []
+   if field == "ALL":
+      for ff in field_desc :
+         fields.append(ff) 
+   else:
+      fields.append(field)
+
+   for field in fields:
+      for dd in ss:
+         print(dd) 
+         dates.append(dd['date']) 
+         vals.append(dd[field]) 
+         if state_code != "USA":
+            if field + "_vals" not in data['js_vals']:
+               data['js_vals'][field + "_vals"] = []
+         if state_code != "USA":
+            data['js_vals'][field + "_vals"].append(dd[field])
+      #print(dates)
+
    save_json_file("json/" + state_code + ".json", data)
-   print("SAVED JS VALS:", data['js_vals'])
+   if state_code != "USA":
+      print("SAVED JS VALS:", data['js_vals'])
 
 
    js_vals = str(vals)
@@ -114,11 +134,14 @@ def preview(state_code, field,data_only=0):
       y1 = 25 
       y2 = 25 + ih
       custom_frame[y1:y2,x1:x2] = ims.copy()
-      desc = state_name + " " + field_desc[field] + " " + str(vals[cc])
-      cv2.putText(custom_frame, desc,  (40,25), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 1)
+      if cc < len(vals):
+         desc = state_name + " " + str(dates[cc]) + " " + field_desc[field] + " " + str(vals[cc]) 
+         #desc = state_name + " " + field_desc[field] + " " + str(dates[cc]) + " " + str(vals[cc]) 
+         cv2.putText(custom_frame, desc,  (40,25), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 1)
 
-      desc = dates[cc]
-      cv2.putText(custom_frame, desc,  (40,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
+      #if cc < len(vals):
+      #   desc = dates[cc]
+      #   cv2.putText(custom_frame, desc,  (40,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
 
       desc = "www.cvinfo.org"
       cv2.putText(custom_frame, desc,  (tw-160,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
@@ -130,27 +153,35 @@ def preview(state_code, field,data_only=0):
       del custom_frame
 
 
-
 def main_menu():
    state_code = sys.argv[1]  
    field = sys.argv[2]  
+   fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
 
    if len(sys.argv) > 3:
       cmd = sys.argv[3]  
       if cmd == 'prev':
-         preview(state_code,field)
+         if field == "ALL":
+            for field in fields:
+               preview(state_code,field)
+         else:
+               preview(state_code,field)
          exit()
       if cmd == 'prev_data':
 
          js = load_json_file("json/covid-19-level2-states.json")
          for data in js:
             state_code = data['summary_info']['state_code']
-            fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
             for ff in fields:
                preview(state_code,ff,1)
          exit()
    if state_code == "USA":
-      make_usa_map_seq(field )
+      if field != "ALL":
+         make_usa_map_seq(field )
+      else:
+         for field in fields:
+            make_usa_map_seq(field)
+  
       #make_usa_map(field, day)
       #check()
       #exit()
@@ -204,11 +235,79 @@ def main_menu():
    print("Scale Rank: ", scale_rank)
    print("Data Scheme: ", data_scheme)
 
+
 def get_county_field_val_for_day(data,day,field):
    for d in data:
       if day == d['date']:
          val = d[field]
          print("VAL FIND:", day, val)
+
+def make_usa_vals():
+   cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
+   all_usa_data = {}
+   days = {}
+   for data in cl2:
+      days[data['day'].replace("-", "")] = 1
+      usa_data = {}
+
+   #"zero_day" : zero_day,
+
+   #for date in sorted(days):
+   #   print(date)
+   for data in cl2:
+      date = data['day'].replace("-", "")
+      if date not in all_usa_data:
+         print("DATA:", data)
+         all_usa_data[date] = {
+         "date" : data['day'],
+         "cases" : data['cases'],
+         "deaths" : data['deaths'],
+         "new_cases" : data['new_cases'],
+         "new_deaths" : data['new_deaths'],
+         "tests" : 0,
+         "tpm" : 0,
+         "cpm" : 0,
+         "dpm" : 0,
+         "cg_last" : 0,
+         "dg_last" : 0,
+         "cg_avg" : 0,
+         "dg_avg" : 0,
+         "cg_med" : 0, 
+         "dg_med" : 0,
+         "cg_med_decay" : 0,
+         "dg_med_decay" : 0,
+         "mortality" : 0,
+         "hospital_now" : 0,
+         "icu_now" : 0,
+         "vent_now" : 0,
+         "recovered" : 0
+         }
+      else:
+         all_usa_data[date]['cases'] += data['cases']
+         all_usa_data[date]['deaths'] += data['deaths']
+         all_usa_data[date]['new_cases'] += data['new_cases']
+         all_usa_data[date]['new_deaths'] += data['new_deaths']
+
+   for date in all_usa_data :
+      data = all_usa_data[date]
+      all_usa_data[date]['cpm'] = round(data['cases'] / 327,2)
+      all_usa_data[date]['dpm'] = round(data['deaths'] / 327,2)
+      all_usa_data[date]['mortality'] = round((data['deaths'] / data['cases']) * 100, 2)
+
+
+   all_ar = []
+
+   for date in sorted(days):
+      if date in all_usa_data:
+         print("Date", date)
+         all_ar.append(all_usa_data[date])
+      else:
+         print("NO Date", date)
+
+   all_usa = {
+      "day_stats" : all_ar
+   }
+   save_json_file("json/USA.json", all_usa)
 
 def make_usa_map_seq(field):
    cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")

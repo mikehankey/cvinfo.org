@@ -813,7 +813,7 @@ def make_state_page(this_state):
 
    for js_field in js_vals:
       if 'js_vals' not in sjs:
-         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg.py " + this_state + " cpm prev_all"  )
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg.py " + this_state + " cpm prev_data"  )
          exit()
       else:
          if js_field in sjs['js_vals']:
@@ -929,7 +929,8 @@ def make_all_plots(this_state,show=0):
    else:
       state_names, state_codes = load_state_names()
       for st in state_names:
-         make_state_plots(st,show)
+         if st is not "VI":
+            make_state_plots(st,show)
 
 def make_state_plots(this_state_code, show=0):
    sj = load_json_file("json/" + this_state_code + ".json")
