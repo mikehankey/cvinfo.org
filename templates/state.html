@@ -187,28 +187,15 @@
          <div class="table-holder">
             {COUNTY_TABLE} 
          </div>
-<!-- NEW GRAPH ANIM VIEWER 
+ 
 
          <div class="anim">
-            <div class="image_player" data-rel="cpm">
-               <button class="play">Play</button>
-               {ALL_SVGS_cpm} 
-            </div>
-<<<<<<< HEAD
+            {ALL_SVG_ANIM}
          </div> 
-=======
-         </div>
-
--->
-
-
-
- 
-
-
->>>>>>> 952b38f2b154f3130be88606aaf312a4b0a6e7e4
    </div>
  
+
+   
 
   <div id="ft">
       cvinfo.org provides enhanced COVID-19 statistics and reports made from open source data<BR> 
@@ -224,25 +211,13 @@
          <div id="caption"></div>
    </div>
 
-<!-- COUNTY TOOL TIP DIVS 
+ 
 
 {COUNTY_TOOL_TIP_DIVS}
 
--->
+ 
 
-<script>
-
-
-   var cpm_vals = {CPM_VALS};
-   var dpm_vals = {DPM_VALS};
-   var cases_vals = {CASES_VALS};
-   var deaths_vals = {DEATHS_VALS};
-   var cg_med_vals = {CG_MED_VALS};
-   var dg_med_vals = {DG_MED_VALS};
-   var mortality_vals = {MORTALITY_VALS};
-   var new_case_vals = {NEW_CASES_VALS};
-   var new_deaths_vals = {NEW_DEATHS_VALS};
-</script>
+ 
 
 <script>
    
@@ -261,56 +236,8 @@
    var new_deaths_vals = {NEW_DEATHS_VALS};
 
 
-  function open_modal() {
-      var modal = document.getElementById("graph_img_viewer");
-      var modalImg = document.getElementById("img_fv"); 
-
-     $('.cell img').click(function() {
-         modal.style.display = "block";
-         modalImg.src = $(this).attr('src'); 
-     })
- 
-   function sleep(seconds){
-      var waitUntil = new Date().getTime() + seconds*1000;
-      while(new Date().getTime() < waitUntil) true;
-   }
-
-  $(function() {
- 
-
-     // Set Active State
-     $('a[href="'+cur_state+'.html"]').addClass('active');
-
-
-   
-   var all_anim = $(".play").closest('.image_player').find('.anim_svg'); 
-   var all_ids = [];
-   $(all_anim).each(function(){
-      all_ids.push($(this).attr('id'));
-   });
-   var cur_inx = 0;
-
-   $('.play').click(function() {
-    
-
-      $('.anim_svg').css('display','none'); 
-      $('#'+all_ids[cur_inx]).css('display','block'); 
-
-      if(cur_inx>  all_ids.length) {
-         cur_inx = 0;
-      } else {
-         cur_inx++;
-      }
-   })
   
-
- 
-
-  })
-
- 
-
+  
 </script> 
 </body>
-</html>
-
+</html> 

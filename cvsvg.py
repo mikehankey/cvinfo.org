@@ -31,9 +31,7 @@ else:
 
 
 def preview(state_code, field,data_only=0):
-
-
-
+ 
    data = load_json_file("json/" + state_code + ".json")
    if "js_values2" not in data:
       data['js_vals'] = {
@@ -42,7 +40,10 @@ def preview(state_code, field,data_only=0):
          'cases_vals' : [],
       }
       data['js_values2'] = "updated"
-      del(data['js_values'])
+
+      # Added by Vince (there was a bug)
+      if('js_values' in data):
+         del(data['js_values'])
 
    field_desc = {
       'cpm' : "Cases Per Million",
