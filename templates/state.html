@@ -190,6 +190,10 @@
  
 
          <div class="anim">
+            <div class="anim_header">
+               <h4>{STATE_NAME} - {INIT_ANIM_DATE}</h4>
+               <p> <span id="cur_state_data"></span> {ANIM_VIEW_SELECT}</p>
+            </div>
             {ALL_SVG_ANIM}
          </div> 
    </div>
@@ -234,6 +238,9 @@
    var mortality_vals = {MORTALITY_VALS};
    var new_case_vals = {NEW_CASES_VALS};
    var new_deaths_vals = {NEW_DEATHS_VALS};
+
+   // DEFAUMT
+   var default_anim_view = "{DEFAULT_ANIM_VIEW}";
 
 
   
