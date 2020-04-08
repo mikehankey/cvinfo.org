@@ -20,7 +20,7 @@
     
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="../dist/css/cvinfo.css" rel="stylesheet"> 
+   <link href="../dist/css/cvinfo.css?v={VERSION}" rel="stylesheet"> 
    
    <meta property="og:title" content="COVID-19 (Coronavirus) - {STATE_NAME}  Statistics - Last Update: {LAST_UPDATE}"/>
    <meta property="og:type" content="article"/>
@@ -176,7 +176,7 @@
          </div>
       </div>
 
-      <div class="anim">
+      <div id="state_level" class="anim">
             <div class="anim_header">
                <div>
                   <h4>{STATE_NAME} - <span id="anim_date">{INIT_ANIM_DATE}</span></h4>
@@ -187,12 +187,7 @@
             {ALL_SVG_ANIM}
       </div> 
          
-
-      <!--   <div id="state_counties_map">
-            <h3>State Map</h3>
-            {SVG_STATE_COUNTIES}
-         </div> -->
-
+ 
 
 
          <div class="table-holder">
@@ -249,6 +244,6 @@
   
   
 </script> 
-<script src="../dist/js/cvinfo.min.js"></script>
+<script src="../dist/js/cvinfo.min.js?v={VERSION}"></script>
 </body>
 </html> 
