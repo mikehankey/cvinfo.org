@@ -1,2 +1,0 @@
-# mikehankey
-cvinfo.org

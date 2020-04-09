@@ -797,7 +797,7 @@ def make_county_tool_tip(data):
 def add_svg_images(code,_type,_type_string,state, state_name):
    
    # We add all the svgs for CPM
-   all_svg = glob.glob( ANIM_PATH + "frames/" + state + "/" + state + "-" + _type + "*" + "svg")
+   all_svg = sorted(glob.glob( ANIM_PATH + "frames/" + state + "/" + state + "-" + _type + "*" + "svg"))
    all_svg_code = ""
    max_date = None
  
@@ -811,6 +811,7 @@ def add_svg_images(code,_type,_type_string,state, state_name):
       with open(svg, 'r') as f:  
          svg_code = f.read()  
 
+      # We can add svg_date inside anim_svg for debug purpose
       if(i==len(all_svg)-1):
          all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg'>"+svg_code+"</div>"
       else:
