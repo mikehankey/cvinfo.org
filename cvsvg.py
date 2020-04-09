@@ -28,6 +28,16 @@ if('/var/www/projects/' in dir_path):
 else:
    from conf import *
 
+def make_fb_prev_images():
+   #outfile = outfile.replace("frames", "png")
+   #svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
+   js = load_json_file("json/covid-19-level2-states.json")
+   for data in js:
+      state_code = data['summary_info']['state_code']
+      print("frames/" + state_code + "/" + state_code + "-" + "cpm*.svg")
+      files = sorted(glob.glob("anim/frames/" + state_code + "/" + state_code + "-" + "cpm*.svg"))
+      best_file = files[-1]
+      print("BEST", best_file)
 
 def preview(state_code, field,data_only=0):
    
@@ -859,4 +869,5 @@ def make_svg_map(state_code,data,outfile):
 
 if __name__ == "__main__":
     # execute only if run as a script
+    #make_fb_prev_images()
     main_menu()
