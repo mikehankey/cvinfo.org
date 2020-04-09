@@ -70,7 +70,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '1.79.3'
+CUR_VERSION = '2.02.3'
 
 
 # Used for the dropdow above the animated maps on the state page
