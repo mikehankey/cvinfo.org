@@ -34,10 +34,12 @@ def make_fb_prev_images():
    js = load_json_file("json/covid-19-level2-states.json")
    for data in js:
       state_code = data['summary_info']['state_code']
-      print("frames/" + state_code + "/" + state_code + "-" + "cpm*.svg")
+      #print("frames/" + state_code + "/" + state_code + "-" + "cpm*.svg")
       files = sorted(glob.glob("anim/frames/" + state_code + "/" + state_code + "-" + "cpm*.svg"))
       best_file = files[-1]
-      print("BEST", best_file)
+      #print("BEST", best_file)
+      # use to delete last file if data is missing.
+      print("rm " + best_file)
 
 def preview(state_code, field,data_only=0):
    
@@ -92,7 +94,7 @@ def preview(state_code, field,data_only=0):
    data['js_vals']['dates'] = []
 
    for field in fields:
-      for dd in ss:
+      for dd in ss[:-1]:
          dates.append(dd['date']) 
          vals.append(dd[field]) 
          if state_code != "USA": 
