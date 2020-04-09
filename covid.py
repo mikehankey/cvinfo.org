@@ -101,23 +101,23 @@ def make_svg_legends():
  
    for field in ranks:
       svg = temp
-      print(field)
+      #print(field)
       c = 0 
-      print("LEN:", len(ranks[field]))
+      #print("LEN:", len(ranks[field]))
       for low,high in ranks[field] :
-         print(field, low, high)
+         #print(field, low, high)
          if c < 10:
             text = str(low) + " - " + str(high)
          else:
             text = str(low) + " + " 
          tag = "{DAT_" + str(c) + "}"
-         print("TAG:", tag)
+         #print("TAG:", tag)
          svg= svg.replace(tag, text) 
          c += 1
-      of = "templates/legends/h-legend-" + field + ".svg";
+      of = "anim/legends/" + field + ".svg";
       out = open(of, "w")
       out.write(svg)
-      print(svg)
+      #print(svg)
 
 
 def update_data_sources():
@@ -148,7 +148,8 @@ def main_menu():
    print("5) Generate main page.")
    print("6) Generate all counties page.")
    print("7) Publish Site To PUB Folder.")
-   print("8) Quit.")
+   print("8) Make SVG Legends.")
+   print("9) Quit.")
 
    cmd = input("What function do you want to run: ")
    if cmd == "1":
@@ -178,6 +179,8 @@ def main_menu():
       make_all_county_page()
    if cmd == "7":
       publish_site()
+   if cmd == "8":
+      make_svg_legends()
 
 def make_all_county_page():
 
@@ -819,14 +822,21 @@ def add_svg_images(code,_type,_type_string,state, state_name):
 
       max_date = svg_date
 
-   # Show only the default one
-
    buttons_holder= "<div class='cont_svg'><a class='btn-anim btn-fastbackward'><span></span></a><a class='btn-anim btn-backward'><span></span></a><a class='btn-anim btn-play m'><span></span></a><a class='btn-anim btn-forward'><span></span></a><a class='btn-anim btn-fastforward'><span></span></a></div>";
 
+   # Insert the legend
+   legend_file_name = ORG_PATH + '/anim/legends/'+_type+'.svg'
+   legend_code = ''
+   try: 
+      with open(legend_file_name, 'r') as f:  
+            legend_code = f.read()  
+   except:
+      print("LEGEND " + legend_file_name + " not found. Generate the legends first.")
+
    if(_type==ALL_OPTIONS_CODE[DEFAULT_OPTION]):
-      all_svg_code = "<div class='image_player' data-rel='"+_type+"'>" +  buttons_holder  + all_svg_code + '</div>'
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"'>" +  buttons_holder  + all_svg_code + '<div class="legend">' + legend_code  + '</div></div>'
    else:
-      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'>"+ buttons_holder + all_svg_code + '</div>'
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'>"+ buttons_holder + all_svg_code + '<div class="legend">' +legend_code + '</div></div>'
 
    return code  + all_svg_code, max_date
 
@@ -960,7 +970,7 @@ def make_state_page(this_state):
 
  
    # Compress (a bit) the SVG...
-   #template = template.replace("\n", "")
+   template = template.replace("\n", "")
   
 
    if cfe(OUT_PATH + "/",1) == 0:
@@ -1149,7 +1159,7 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
    };
 
 
-   Plotly.newPlot('""" + div_name + """', data, layout);
+   Plotly.newPlot('""" + div_name + """', data, layout, {responsive: true});
 
 
    """
@@ -2141,5 +2151,4 @@ def cfe(file,dir = 0):
 
 if __name__ == "__main__":
    # execute only if run as a script
-   #make_svg_legends() 
    main_menu()
