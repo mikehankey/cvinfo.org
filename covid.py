@@ -76,7 +76,7 @@ CUR_VERSION = '2.02.8'
 
 # Used for the dropdow above the animated maps on the state page
 ALL_OPTIONS = ['Cases','Deaths','Cases per Million','Deaths per Million','New Deaths','New Cases','Mortality','Case Growth']
-ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm','new_deaths','new_case','mortality','cg_med']
+ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm','new_deaths','new_cases','mortality','cg_med']
 DEFAULT_OPTION = 2 # Index in the arrays above 
 # WARNING ONLY THE "DEFAULT_OPTION" is INCLUDED IN THE HTML PAGE
 # THE OTHER SVG ANIMS WILL BE LOADED ON DEMAND VIA  AJAX CALL 
