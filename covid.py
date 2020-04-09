@@ -846,11 +846,11 @@ def create_svg_anim_select():
 
 
 def make_state_page(this_state):
-
+   if this_state == "VI":
+      return()
    plot_script = make_state_plots(this_state)
 
 
-   print(plot_script)
 
    js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
    if cfe("./json/" + this_state + ".json") == 0:
@@ -978,9 +978,7 @@ def make_state_pages(this_state):
       print("Make all state pages.")
       state_names, state_codes = load_state_names()
       for st in state_names:
-         print("STATE:", st)
          if st is not "" and st is not "VI":
-            print("ST:", st, "ST")
             make_state_page(st)
 
 def make_all_plots(this_state,show=0):
@@ -1032,7 +1030,6 @@ def make_state_plots(this_state_code, show=0):
 
    for sobj in sj['state_stats']:
       #l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
-      print("SOBJ:", sobj)
       plot_data['cases_deaths']['xs'].append(sobj['zero_day'])
       plot_data['cases_deaths']['ys1'].append(sobj['cases'])
       plot_data['cases_deaths']['ys2'].append(sobj['deaths'])
@@ -1062,7 +1059,9 @@ def make_state_plots(this_state_code, show=0):
       plot_data['dk']['ys2'].append(sobj['dg_med_decay'])
 
    all_plots = "" 
+   print("YO")
    all_plots += make_js_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
+   print("YO")
    all_plots += make_js_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
    all_plots += make_js_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
    all_plots +=  make_js_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", show)
@@ -1070,12 +1069,30 @@ def make_state_plots(this_state_code, show=0):
    all_plots += make_js_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
    all_plots += make_js_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
    all_plots += make_js_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
+
    return(all_plots)
       
 def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_id,show=0):
+ 
    div_name = "plot_" + plot_id
 
+
+   # makecurv
+   try:
+      popt,pcov = curve_fit(curve_func,bin_days,bin_sums)
+      func_data = curve_func(np.array(bin_days), *popt)
+      fit1 = []
+      for ff in func_data:
+         if ff < .1:
+            ff = 0
+         fit1.append(ff)
+   except:
+      print("can't make curve")
+      fit1 = None 
+
+
    plot_html = """
+
 
    var trace1 = {
      x: """ + str(bin_days) + """,
@@ -1092,7 +1109,25 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
      type: 'line'
    };
 
-   var data = [trace1, trace2];
+   """
+
+   if fit1 is not None:
+      plot_html += """
+   var trace3 = {
+     x: """ + str(bin_days) + """,
+     y: """ + str(fit1) + """, 
+     name: '""" + 'fit' + """',
+     type: 'line'
+   };
+   var data = [trace1, trace2, trace3];
+   """
+   else: 
+      plot_html += """
+         var data = [trace1, trace2 ];
+      """
+
+   plot_html += """
+
 
    var layout = {
      barmode: 'group',
@@ -1117,7 +1152,6 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
 
 
    """
-
 
    out = open("test.html", "w")
    out.write(plot_html)

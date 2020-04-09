@@ -44,6 +44,7 @@ def preview(state_code, field,data_only=0):
             del(data['js_values'])
    else:
       js_vals = {}
+      data['js_vals'] = {}
 
    field_desc = {
       'cpm' : "Cases Per Million",
@@ -61,7 +62,8 @@ def preview(state_code, field,data_only=0):
    state_names, state_codes = load_state_names()
    if state_code != 'USA':
       state_name = state_names[state_code]
-   state_name = "USA"
+   else:
+      state_name = "USA"
    js = load_json_file("json/" + state_code + ".json")
    if state_code != 'USA':
       ss = js['state_stats']
@@ -75,6 +77,8 @@ def preview(state_code, field,data_only=0):
    else:
       fields.append(field)
 
+   if "js_vals" not in data:
+      data['js_vals'] = {}
    if "dates" not in data['js_vals']:
       data['js_vals']['dates'] = []
 
@@ -358,7 +362,9 @@ def make_usa_map(field, date, cl2 = None):
          print(mmm)
 
       #id="FIPS_02201"
-   outfile = "anim/frames/USA/USA-counties-" + field + "-" + day + ".png"
+   if cfe("anim/png/USA", 1) == 0:
+      os.makedirs("anim/png/USA")
+   outfile = "anim/png/USA/USA-counties-" + field + "-" + day + ".png"
    outsvg = outfile.replace(".png", ".svg")
    out = open(outsvg, "w")
    out.write(map)
