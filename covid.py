@@ -1434,16 +1434,19 @@ def make_all_level2_data():
    state_names, state_codes = load_state_names()
    county_pops = load_county_pop(state_codes)
    acdata = load_county_data()
-
+   os.system("rm json/*.json")
+   print("rm json/*.json")
    for state_code in state_names:
       print("STATE DATA:", state_data)
       #exit()
       if state_code != "VI":
          make_level2_data(state_code, state_data, state_pop,state_names,county_pops,acdata)
    merge_state_data()
+   os.system("./cvsvg.py AL cpm prev_data")
 
 def make_level2_data(this_state_code, state_data, state_pop,state_names,county_pops,acdata):
    cj = {}
+   
    if cfe("json/USAd.json") == 1:
       all_usa_data = load_json_file("json/USAd.json")
    else:
