@@ -1091,7 +1091,7 @@ def make_state_plots(this_state_code, show=0):
 
    all_plots += make_js_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
    all_plots += make_js_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
-   all_plots += make_js_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
+   #all_plots += make_js_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
 
    return(all_plots)
       
