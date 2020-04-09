@@ -1045,10 +1045,10 @@ def make_state_plots(this_state_code, show=0):
    plot_data['mt']['ys1'] = [] 
    plot_data['mt']['ys2'] = [] 
 
-   plot_data['dk'] = {}
-   plot_data['dk']['xs'] = [] 
-   plot_data['dk']['ys1'] = [] 
-   plot_data['dk']['ys2'] = [] 
+   #plot_data['dk'] = {}
+   #plot_data['dk']['xs'] = [] 
+   #plot_data['dk']['ys1'] = [] 
+   #plot_data['dk']['ys2'] = [] 
 
    for sobj in sj['state_stats']:
       #l2_state_data.append((sj['summary_info']['state_code'],sj['summary_info']['state_population'],sobj['date'],sobj['zero_day'],sobj['cases'],sobj['deaths'],sobj['new_cases'],sobj['new_deaths'],sobj['cg_last'],sobj['dg_last'],sobj['cg_avg'],sobj['dg_avg'],sobj['cg_med'],sobj['dg_med'],sobj['cg_med_decay'],sobj['dg_med_decay'],sobj['mortality'],sobj['tests'],sobj['tpm']))
@@ -1076,9 +1076,9 @@ def make_state_plots(this_state_code, show=0):
       plot_data['mt']['ys1'].append(sobj['mortality'])
       plot_data['mt']['ys2'].append(sobj['mortality'])
 
-      plot_data['dk']['xs'].append(sobj['zero_day'])
-      plot_data['dk']['ys1'].append(sobj['cg_med_decay'])
-      plot_data['dk']['ys2'].append(sobj['dg_med_decay'])
+      #plot_data['dk']['xs'].append(sobj['zero_day'])
+      #plot_data['dk']['ys1'].append(sobj['cg_med_decay'])
+      #plot_data['dk']['ys2'].append(sobj['dg_med_decay'])
 
    all_plots = "" 
    print("YO")
