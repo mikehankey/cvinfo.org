@@ -821,7 +821,7 @@ def add_svg_images(code,_type,_type_string,state, state_name):
 
    # Show only the default one
 
-   buttons_holder= "<div class='cont_svg'><a class='btn-anim btn-backward'><span></span></a><a class='btn-anim btn-play m'><span></span></a><a class='btn-anim btn-forward'><span></span></a></div>";
+   buttons_holder= "<div class='cont_svg'><a class='btn-anim btn-fastbackward'><span></span></a><a class='btn-anim btn-backward'><span></span></a><a class='btn-anim btn-play m'><span></span></a><a class='btn-anim btn-forward'><span></span></a><a class='btn-anim btn-fastforward'><span></span></a></div>";
 
    if(_type==ALL_OPTIONS_CODE[DEFAULT_OPTION]):
       all_svg_code = "<div class='image_player' data-rel='"+_type+"'>" +  buttons_holder  + all_svg_code + '</div>'

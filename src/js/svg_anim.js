@@ -1,5 +1,6 @@
 var playing_inter; // Interval
 var cur_index;
+var max_index;
 
 
 // Update Date in title based
@@ -21,7 +22,7 @@ function update_current_state_data(index,type) {
  
 
 // Start playing
-function anim_play(type, dir) {
+function anim_play(type, dir, the_cur_index) {
    var $container = $('.image_player[data-rel='+type+']');
 
    // Cur visible
@@ -32,12 +33,14 @@ function anim_play(type, dir) {
    var next_index;
 
    // Get the index of the current one
-   for(var i=0;i<all.length;i++) {
-      if($(all[i]).attr('id')==$(cur).attr('id')) {
-         cur_index = i;
-         break;
-      }
-   } 
+   if(the_cur_index==-1) {
+      for(var i=0;i<all.length;i++) {
+         if($(all[i]).attr('id')==$(cur).attr('id')) {
+            cur_index = i;
+            break;
+         }
+      } 
+    }
 
    if(dir=="next") {
       if(cur_index==all_index) {
@@ -74,6 +77,7 @@ $(function() {
    
    var data_array = window[default_anim_view+'_vals'];  
    cur_index = data_array.length-1;  
+   max_index = cur_index;
 
    // Init First State val 
    // => Last one of default_anim_view
@@ -99,9 +103,7 @@ $(function() {
    $('#anim_selector').change(function() {
       
       var new_type = $('#anim_selector').val();
-
-      console.log("CUR INDEX", cur_index);
-
+ 
       // If playing, we pause
       clearInterval(playing_inter);
       $('.btn-anim.m').removeClass('btn-pause').addClass('btn-play');
@@ -118,33 +120,44 @@ $(function() {
       var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg'); 
       $(all_anim[cur_index]).css('display','block');
 
-       // We update the value 
-       update_current_state_data(cur_index,new_type);
-
-        // We update the date 
-        update_title_date($(all_anim[cur_index]).attr('id'));
-
-      // We play immediatly
-      // $('.image_player[data-rel='+new_type+']').find('.btn-anim.m').click();
-
-     
-
+      // We update the value 
+      update_current_state_data(cur_index,new_type);
+      
+      // We update the date 
+      update_title_date($(all_anim[cur_index]).attr('id'));
+ 
    });
 
 
    // Backward
    $('.btn-backward').click(function(e) {
       var new_type = $('#anim_selector').val();
-      anim_play(new_type,'prev');
+      anim_play(new_type,'prev',-1);
    });
 
 
-    // Backward
+    // Forward
     $('.btn-forward').click(function(e) {
       var new_type = $('#anim_selector').val();
-      anim_play(new_type,'next');
+      anim_play(new_type,'next',-1);
    });
 
+
+   // FastBackward
+   $('.btn-fastbackward').click(function(e) {
+      var new_type = $('#anim_selector').val();
+      cur_index = 1
+      anim_play(new_type,'prev',cur_index);
+   });
+   
+   
+   // Forward
+   $('.btn-fastforward').click(function(e) {
+      var new_type = $('#anim_selector').val();
+      cur_index = max_index -1
+      anim_play(new_type,'next',cur_index);
+   });
+   
 
    
 })
