@@ -101,23 +101,21 @@ def make_svg_legends():
  
    for field in ranks:
       svg = temp
-      #print(field)
-      c = 0 
-      #print("LEN:", len(ranks[field]))
+      c = 0  
       for low,high in ranks[field] :
-         #print(field, low, high)
          if c < 10:
             text = str(low) + " - " + str(high)
          else:
             text = str(low) + " + " 
-         tag = "{DAT_" + str(c) + "}"
-         #print("TAG:", tag)
+            print("+++++")
+         tag = "{DAT_" + str(c) + "}" 
          svg= svg.replace(tag, text) 
          c += 1
+
       of = "anim/legends/" + field + ".svg";
       out = open(of, "w")
       out.write(svg)
-      #print(svg)
+
 
 
 def update_data_sources():
