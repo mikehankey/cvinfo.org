@@ -79,8 +79,7 @@ def preview(state_code, field,data_only=0):
 
    if "js_vals" not in data:
       data['js_vals'] = {}
-   if "dates" not in data['js_vals']:
-      data['js_vals']['dates'] = []
+   data['js_vals']['dates'] = []
 
    for field in fields:
       for dd in ss:
@@ -175,6 +174,14 @@ def main_menu():
       if cmd == 'prev_data':
 
          js = load_json_file("json/covid-19-level2-states.json")
+         # reset all js_vals
+         for data in js:
+            state_code = data['summary_info']['state_code']
+            ttt = load_json_file("json/" + state_code + ".json")
+            if "js_vals" in ttt: 
+               del ttt['js_vals']
+            save_json_file("json/" + state_code + ".json", ttt)
+
          for data in js:
             state_code = data['summary_info']['state_code']
             for ff in fields:
@@ -426,7 +433,10 @@ def make_seq(state_code, field):
          ANIM_DIR = ANIM_PATH + "/frames/" + state_code + "/"
          ss_date = ss['date'].replace("-", "")
          outfile = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".png"
-         if cfe(outfile) == 0:
+    
+         svgout = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".svg"
+         print(outfile)
+         if cfe(svgout) == 0:
             print("MAKE :", state_code, ss['date'])
             outfile, all_val = make_map(state_code, ss_date, field, "1", max_val)
             cc += 1
@@ -589,8 +599,8 @@ def get_val_rank(val,type='cpm'):
 def make_map(state_code,rpt_date,field,scale,max_val):
    info = load_covid_state_map_data(state_code,rpt_date)
    
-   for i in info['county_stats']:
-      print("INFO:", i)
+   #for i in info['county_stats']:
+   #   print("INFO:", i)
 
    all_val = 0   
    map_data = [] 
@@ -599,7 +609,7 @@ def make_map(state_code,rpt_date,field,scale,max_val):
       if "fips" in cdata:
          fips = cdata['fips']
          val = cdata[field]
-         print("MAP DATA:", fips,val)
+         #print("MAP DATA:", fips,val)
          map_data.append((fips, val))
          vals.append(val)
 
@@ -632,7 +642,6 @@ def make_map(state_code,rpt_date,field,scale,max_val):
  
 
       if fips not in unqx:
-         print("FIPS:", fips, color)
          md.append((fips, color, colorCss) )
          unqx[fips] = 1
       cc += 1
@@ -657,7 +666,7 @@ def make_map(state_code,rpt_date,field,scale,max_val):
 
 def load_covid_state_map_data(state_code, rpt_date = None):
 
-   print("LOAD STATE MAP DATA:", state_code, rpt_date)
+   #print("LOAD STATE MAP DATA:", state_code, rpt_date)
 
    sd = load_json_file("json/" + state_code + ".json")
    state_code = sd['summary_info']['state_code']
@@ -773,7 +782,7 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
       last_file_ex = last_file_ex.replace("frames", "marked")
       cmd = "cp " + last_file + " " + last_file_ex
       os.system(cmd)
-      print(cmd)
+      #print(cmd)
 
    time.sleep(1)
 
