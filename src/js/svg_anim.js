@@ -71,6 +71,69 @@ function anim_play(type, dir, the_cur_index) {
 }
  
 
+function change_type(new_type) {
+      // Update string of cur_type_st
+      $('#cur_type_st').text($('#anim_selector option:selected').text());
+ 
+      // We hide all the types
+      $('.image_player').css('display','none');
+      $('.anim_svg').css('display','none');
+        
+
+      $('.image_player[data-rel='+new_type+']').css('display','block');
+      // We display the cur_index one
+      var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg'); 
+      $(all_anim[cur_index]).css('display','block');
+
+      // We update the value 
+      update_current_state_data(cur_index,new_type);
+      
+      // We update the date 
+      update_title_date($(all_anim[cur_index]).attr('id'));
+}
+
+
+
+function init_anim_selector() {
+   
+
+   $('#anim_selector').change(function() {
+      
+      var new_type = $('#anim_selector').val();
+ 
+      // If playing, we pause
+      clearInterval(playing_inter);
+      $('.btn-anim.m').removeClass('btn-pause').addClass('btn-play').attr('disabled','disable');
+ 
+      // We test if the new type is on the page
+      if($('.image_player[data-rel='+new_type+']').length==0) {
+         // cur_state  is defined on the page
+         var path_to_the_data = "../states/" + cur_state  + '-data/' + new_type + ".html";
+
+         // We show the loading stuff
+         $('<div class="loading"><div></div></div>').appendTo($('.image_player:visible'));
+
+         // We get the content
+         $.ajax({
+            url: path_to_the_data,
+            success: function(result){
+               $("#state_level").append($(result));
+               change_type(new_type);
+               $('.loading').remove();
+         }});
+       
+
+
+      } else {
+         change_type(new_type)
+      }
+ 
+      
+ 
+   });
+
+}
+
 $(function() {
 
    // Init Cur_index
@@ -82,6 +145,8 @@ $(function() {
    // Init First State val 
    // => Last one of default_anim_view
    update_current_state_data(data_array.length-1,default_anim_view);
+
+   init_anim_selector();
 
 
    $('.btn-anim.m').click(function(e) {
@@ -97,35 +162,6 @@ $(function() {
          clearInterval(playing_inter);
       }
       return false;
-   });
-
-
-   $('#anim_selector').change(function() {
-      
-      var new_type = $('#anim_selector').val();
- 
-      // If playing, we pause
-      clearInterval(playing_inter);
-      $('.btn-anim.m').removeClass('btn-pause').addClass('btn-play');
-
-      // Update string of cur_type_st
-      $('#cur_type_st').text($('#anim_selector option:selected').text());
- 
-      // We hide all the types
-      $('.image_player').css('display','none');
-      $('.image_player[data-rel='+new_type+']').css('display','block');
-      $('.anim_svg').css('display','none');
-      
-      // We display the cur_index one
-      var all_anim = $('.image_player[data-rel='+new_type+'] .anim_svg'); 
-      $(all_anim[cur_index]).css('display','block');
-
-      // We update the value 
-      update_current_state_data(cur_index,new_type);
-      
-      // We update the date 
-      update_title_date($(all_anim[cur_index]).attr('id'));
- 
    });
 
 

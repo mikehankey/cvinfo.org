@@ -70,13 +70,15 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '1.28.5'
+CUR_VERSION = '1.79.3'
 
 
 # Used for the dropdow above the animated maps on the state page
 ALL_OPTIONS = ['Cases','Deaths','Cases per Million','Deaths per Million']
 ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm']
-DEFAULT_OPTION = 2 # Index in the arrays above
+DEFAULT_OPTION = 2 # Index in the arrays above 
+# WARNING ONLY THE "DEFAULT_OPTION" is INCLUDED IN THE HTML PAGE
+# THE OTHER SVG ANIMS WILL BE LOADED ON DEMAND VIA  AJAX CALL 
   
 
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
@@ -850,20 +852,18 @@ def create_svg_anim_select():
          select += "<option value='"+code+"' >"+ALL_OPTIONS[i]+"</option>"         
    return select + "</select>"
 
- 
- 
-
+  
 
 def make_state_page(this_state):
    if this_state == "VI":
       return()
    plot_script = make_state_plots(this_state)
-
-
-
+ 
    js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
+
    if cfe("./json/" + this_state + ".json") == 0:
       return()
+      
    sjs = load_json_file("./json/" + this_state + ".json")
  
    county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
@@ -943,14 +943,27 @@ def make_state_page(this_state):
    template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select())
   
    # Add All images for SVG aims
-   all_svg_images_for_template = ""
+   svg_anim_for_template = ""
    r_max_date = ""
-   for i,opt in enumerate(ALL_OPTIONS):
-      all_svg_images_for_template, max_date = add_svg_images(all_svg_images_for_template,ALL_OPTIONS_CODE[i], ALL_OPTIONS[i], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
 
-      # If we are at the default options, we get the max date
-      if(i==DEFAULT_OPTION):
-         r_max_date = max_date
+   svg_anim_for_template, max_date = add_svg_images(svg_anim_for_template,ALL_OPTIONS_CODE[DEFAULT_OPTION], ALL_OPTIONS[DEFAULT_OPTION], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
+   r_max_date = max_date
+
+   
+   for i,opt in enumerate(ALL_OPTIONS):
+      if(i!=DEFAULT_OPTION):
+         all_svg_images_for_template, max_date = add_svg_images("",ALL_OPTIONS_CODE[i], ALL_OPTIONS[i], sjs['summary_info']['state_code'], sjs['summary_info']['state_name'])
+         
+         folder_where_to_save = ORG_PATH + '/states/' +  sjs['summary_info']['state_code'] + "-data/"
+         if not os.path.exists(folder_where_to_save):
+            os.makedirs(folder_where_to_save)
+         
+         # We save all the CSV anim we didn't put on the page
+         outfp = open(folder_where_to_save + ALL_OPTIONS_CODE[i] + ".html", "w+")
+         print(folder_where_to_save + ALL_OPTIONS_CODE[i] + ".html - saved")
+         outfp.write(all_svg_images_for_template)
+         outfp.close()
+ 
 
    # Max Date  
    template = template.replace("{INIT_ANIM_DATE}", string_to_date(r_max_date))
@@ -961,7 +974,7 @@ def make_state_page(this_state):
    # Default type in title
    template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION])   
 
-   template = template.replace("{ALL_SVG_ANIM}", all_svg_images_for_template)
+   template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
 
    # VERSIONING
    template= template.replace("{VERSION}",str(CUR_VERSION))
