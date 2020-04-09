@@ -120,12 +120,13 @@ function init_anim_selector() {
                $("#state_level").append($(result));
                change_type(new_type);
                $('.loading').remove();
+               init_all_actions();
          }});
        
 
 
       } else {
-         change_type(new_type)
+         change_type(new_type);
       }
  
       
@@ -134,22 +135,10 @@ function init_anim_selector() {
 
 }
 
-$(function() {
 
-   // Init Cur_index
-   
-   var data_array = window[default_anim_view+'_vals'];  
-   cur_index = data_array.length-1;  
-   max_index = cur_index;
+function init_all_actions() {
 
-   // Init First State val 
-   // => Last one of default_anim_view
-   update_current_state_data(data_array.length-1,default_anim_view);
-
-   init_anim_selector();
-
-
-   $('.btn-anim.m').click(function(e) {
+   $('.btn-anim.m').unbind('click').click(function(e) {
       e.stopPropagation();
    
       var type = $(this).closest('.image_player').attr('data-rel');
@@ -166,21 +155,21 @@ $(function() {
 
 
    // Backward
-   $('.btn-backward').click(function(e) {
+   $('.btn-backward').unbind('click').click(function(e) {
       var new_type = $('#anim_selector').val();
       anim_play(new_type,'prev',-1);
    });
 
 
     // Forward
-    $('.btn-forward').click(function(e) {
+    $('.btn-forward').unbind('click').click(function(e) {
       var new_type = $('#anim_selector').val();
       anim_play(new_type,'next',-1);
    });
 
 
    // FastBackward
-   $('.btn-fastbackward').click(function(e) {
+   $('.btn-fastbackward').unbind('click').click(function(e) {
       var new_type = $('#anim_selector').val();
       cur_index = 1
       anim_play(new_type,'prev',cur_index);
@@ -188,12 +177,31 @@ $(function() {
    
    
    // Forward
-   $('.btn-fastforward').click(function(e) {
+   $('.btn-fastforward').unbind('click').click(function(e) {
       var new_type = $('#anim_selector').val();
       cur_index = max_index -1
       anim_play(new_type,'next',cur_index);
    });
    
+}
+
+
+
+$(function() {
+
+   // Init Cur_index
+   
+   var data_array = window[default_anim_view+'_vals'];  
+   cur_index = data_array.length-1;  
+   max_index = cur_index;
+
+   // Init First State val 
+   // => Last one of default_anim_view
+   update_current_state_data(data_array.length-1,default_anim_view);
+
+   init_anim_selector();
+   init_all_actions();
+
 
    
 })
