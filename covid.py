@@ -968,7 +968,7 @@ def make_state_page(this_state):
 
  
    # Compress (a bit) the SVG...
-   template = template.replace("\n", "")
+   #template = template.replace("\n", "")
   
 
    if cfe(OUT_PATH + "/",1) == 0:
