@@ -151,7 +151,7 @@ def build_marked(state_code, field, data_only=0):
    
    cc = 0
 
-   title = "cvinfo.org - COVID-19 Pandemic "
+   org_title = "cvinfo.org - COVID-19 Pandemic "
    sources = "sources: nytimes.com, covidtracking.com - more maps and data on cvinfo.org"
  
    # We marked all the frames
@@ -167,7 +167,7 @@ def build_marked(state_code, field, data_only=0):
          started = 1 
 
          if cc < len(dates):
-            title += state_name  + " - " + field_desc[field] 
+            title = org_title +  " "  + state_name  + " - " + field_desc[field] 
          else: 
             title = "missing data for " + str(cc)
          
@@ -184,14 +184,8 @@ def build_marked(state_code, field, data_only=0):
          draw.text((1220, 1000),sources, font=ImageFont.truetype("./dist/font/Lato-Regular.ttf", 20))
 
       org_frame.save('out.png')
-      cc+=1
-      sys.exit(0)   
-      
-
-      #legend_frame = np.zeros((1920,1080,3),dtype=np.uint8) 
-      #legend_frame[0:lw,0:lh] = limg.copy()
-      
-
+      cc+=1 
+       
 
 
 
