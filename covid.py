@@ -980,7 +980,10 @@ def make_state_page(this_state):
  
 
    # Max Date  
-   template = template.replace("{INIT_ANIM_DATE}", string_to_date(r_max_date))
+   if sjs['summary_info']['state_code'] != "DC":  
+      template = template.replace("{INIT_ANIM_DATE}", string_to_date(r_max_date))
+   else:
+      template = template.replace("{INIT_ANIM_DATE}", "2020-03-01")
    
    # Default Anim View
    template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])

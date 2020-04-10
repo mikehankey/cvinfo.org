@@ -28,6 +28,30 @@ if('/var/www/projects/' in dir_path):
 else:
    from conf import *
 
+def check_vals_files():
+   cl2 = load_json_file("json/covid-19-level2-states.json")
+   flat_stats = []
+   for state_obj in cl2:
+      state_code = state_obj['summary_info']['state_code']
+      js = load_json_file("json/" + state_code + ".json")
+      len_dates = len(js['js_vals']['dates'])
+      dates = js['js_vals']['dates']
+      fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
+      for ff in fields:
+         wild = "anim/frames/" + state_code + "/" + state_code + "-" + ff + "*.svg" 
+         gfiles = glob.glob(wild)
+         print(state_code, len_dates, len(gfiles))
+         for gfile in gfiles:
+            el = gfile.split("-")
+            fd = el[2]
+            fd = fd.replace(".svg", "")
+            if fd not in dates:
+               print(fd, "NOT FOUND!")
+               cmd = "rm " + gfile
+               print(cmd)
+               os.system(cmd)
+        
+
 def make_fb_prev_images():
    #outfile = outfile.replace("frames", "png")
    #svg2png(bytestring=svg_code,write_to=outfile, parent_width=ow*1.5,parent_height=oh*1.5)
@@ -76,8 +100,6 @@ def preview(state_code, field,data_only=0):
    
    if state_code == "USA":
       make_usa_vals_from_state()
-      print("USA VALS!")
-      exit()
    print("STATE CODE:", state_code)
    data = load_json_file("json/" + state_code + ".json")
 
@@ -131,31 +153,40 @@ def preview(state_code, field,data_only=0):
       data['js_vals'] = {}
    data['js_vals']['dates'] = []
 
-   cstats = js['county_stats']
-   cdays = {}
-   for county in cstats:
-      for row in cstats[county]['county_stats']:
-         day = row['day'].replace("-", "")
-         cdays[day] = 1
+   if state_code != "USA":
+      cstats = js['county_stats']
+      cdays = {}
+      for county in cstats:
+         for row in cstats[county]['county_stats']:
+            day = row['day'].replace("-", "")
+            cdays[day] = 1
 
-   print("CDAYS", cdays) 
+      print("CDAYS", cdays) 
+   else:
+      cdays = {}
 
-   for field in fields:
-      for dd in ss:
-         if dd['date'] in cdays:
-            dates.append(dd['date']) 
-            vals.append(dd[field]) 
-            if field + "_vals" not in data['js_vals']:
-               data['js_vals'][field + "_vals"] = []
-            data['js_vals'][field + "_vals"].append(dd[field])
-            data['js_vals']['dates'].append(dd['date'])
-            print("JS VALS:", dd['date'], field, dd[field])
-   print("JS VALS:", data['js_vals'])
-   save_json_file("json/" + state_code + ".json", data)
-
+  
+   if state_code != "USA": 
+      for field in fields:
+         for dd in ss:
+            if dd['date'] in cdays and dd['cases'] > 0:
+               dates.append(dd['date']) 
+               vals.append(dd[field]) 
+               if field + "_vals" not in data['js_vals']:
+                  data['js_vals'][field + "_vals"] = []
+               data['js_vals'][field + "_vals"].append(dd[field])
+               data['js_vals']['dates'].append(dd['date'])
+               print("JS VALS:", dd['date'], field, dd[field])
+            else:
+               print("cases < 0")
+      print("JS VALS:", data['js_vals'])
+      save_json_file("json/" + state_code + ".json", data)
+   else:
+      dates = js['js_vals']['dates']
+      vals = js['js_vals'][field]
+      print("VALS:", len(vals))
 
    js_vals = str(vals)
-   #print("JS VALS:", js_vals)
 
    if data_only == 1:
       print("DONE PREV DATA:")
@@ -187,11 +218,17 @@ def preview(state_code, field,data_only=0):
    th = lh + 50
    cc = 0
    started = 0
-   for file in sorted(files[:-1]):
+   print(files[:-1])
+
+   #for file in sorted(files[:-1]):
+
+   for file in sorted(files):
       print("FILE:", file)
       fn = file.split("/")[-1]
       custom_frame = np.zeros((th,tw,3),dtype=np.uint8)
       imc = cv2.imread(file)
+      cv2.imshow('pepe2', imc)
+      cv2.waitKey(100)
       ims = cv2.resize(imc, (int(iw),int(ih)))
       x1 = 10
       x2 = 10 + lw
@@ -205,9 +242,15 @@ def preview(state_code, field,data_only=0):
       y2 = 25 + ih
       custom_frame[y1:y2,x1:x2] = ims.copy()
 
+      #if cc < len(dates):
       if True:
          started = 1
-         desc = state_name + " " + str(dates[cc]) + " " + field_desc[field] + " " + str(vals[cc]) 
+         print(cc, len(dates), len(vals)) 
+         
+         if cc < len(dates):
+            desc = state_name + " " + str(dates[cc]) + " " + field_desc[field] + " " + str(vals[cc]) 
+         else: 
+            desc = "missing data for " + str(cc)
          #desc = state_name + " " + field_desc[field] + " " + str(dates[cc]) + " " + str(vals[cc]) 
          cv2.putText(custom_frame, desc,  (40,25), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 1)
 
@@ -237,7 +280,7 @@ def preview(state_code, field,data_only=0):
          cv2.imshow('pepe', custom_frame)
          cv2.waitKey(250)
          cc += 1
-         del custom_frame
+      del custom_frame
 
 def preview_data(state_code):
    fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
@@ -247,6 +290,9 @@ def preview_data(state_code):
 
 
    js = load_json_file("json/covid-19-level2-states.json")
+
+
+
    # reset all js_vals for all states
    if state_code == 'ALL':
       for data in js:
@@ -317,6 +363,7 @@ def main_menu():
       #exit()
    elif state_code == "ALL": 
       make_seq_all(field)
+      check_vals_files()
    else:
       if field != 'ALL':
          make_seq(state_code, field)
@@ -701,8 +748,9 @@ def make_seq(state_code, field):
    cdays = {}
    for county in cstats:
       for row in cstats[county]['county_stats']:
-         cdays[row['day']] = 1
 
+         day = row['day'].replace("-", "")
+         cdays[day] = 1
 
 
    files = []
@@ -713,22 +761,22 @@ def make_seq(state_code, field):
    for ss in stats:
       cases = ss['cases']
       print(ss['date'], ss['cases'])
-      if cc < ts - 1 and cases > 0:
+      if int(cases) > 0 and ss['date'] in cdays:
          ANIM_DIR = ANIM_PATH + "/frames/" + state_code + "/"
          ss_date = ss['date'].replace("-", "")
          outfile = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".png"
     
          svgout = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".svg"
          print(outfile)
-         if cfe(svgout) == 0 and ss_date in cdays:
+         if cfe(svgout) == 0 :
             print("MAKE :", state_code, ss['date'])
-            outfile, all_val = make_map(state_code, ss_date, field, "1", max_val)
-            cc += 1
+            outfile, all_val = make_map(state_code, ss_date, field, "1", max_val) 
          else:
             print("ALREADY MADE :", state_code, ss['date'])
 
       else:
-         print("SKIP FRAME NO CASES!")
+         print("SKIP FRAME NO CASES DATA", ss, ss['date'], cdays)
+      cc += 1
 
    return(outfile)
 
@@ -1151,4 +1199,7 @@ if __name__ == "__main__":
     # execute only if run as a script
     #make_fb_prev_images()
     #make_movie_from_frames("USA", "ALL")
-    main_menu()
+    if sys.argv[1] == "check":
+       check_vals_files()
+    else:
+       main_menu()
