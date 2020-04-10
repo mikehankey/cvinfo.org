@@ -180,12 +180,52 @@ def build_marked(state_code, field, data_only=0):
          font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 38)
          draw.text((20, 20),title,(255,255,255),font=font)
 
-         # ADD RECTANGLE WITH DATE
-         draw.rectangle(((1485, 25), (1870, 80)), fill="#212121")
-         draw.text((1580, 33), string_to_date(dates[cc]), font=ImageFont.truetype("./dist/font/Lato-Bold.ttf", 34))
+         # UPDATE SOURCES
+         
 
-         # Add sources & info 
-         draw.text((1220, 1000),sources, font=ImageFont.truetype("./dist/font/Lato-Regular.ttf", 20))
+         # ADD RECTANGLE WITH DATE
+         rect = Image.new('RGB', (385, 55), (33,33,33,1))
+         draw = ImageDraw.Draw(rect)
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 34)
+         text = string_to_date(dates[cc])
+         text_w, text_h = draw.textsize(text,font)  
+         draw.text(((385 - text_w) / 2,  7), text, font=font) 
+         offset = (1485,25)
+         org_frame.paste(rect, offset)
+ 
+
+         # ADD RECTANGLE TOTAL OF DEATHS
+         rect = Image.new('RGB', (385, 385), (33,33,33,1))
+         draw = ImageDraw.Draw(rect)
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 28)
+         text = "Total Deaths" 
+         text_w, text_h = draw.textsize(text,font)  
+         draw.text(((385 - text_w) / 2,  12), text, font=font) 
+
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 34)
+         text = "356,152"
+         text_w, text_h = draw.textsize(text,font)  
+         draw.text(((385 - text_w) / 2,  48), text, font=font, fill=(206,5,12,255))
+         offset = (1485,95)
+         org_frame.paste(rect, offset)
+
+
+         # ADD RECTANGLE  WITH NEW CASES
+         rect = Image.new('RGB', (385, 385), (33,33,33,1))
+         draw = ImageDraw.Draw(rect)
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 28)
+         text = "New Cases" 
+         text_w, text_h = draw.textsize(text,font)  
+         draw.text(((385 - text_w) / 2,  12), text, font=font) 
+
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 34)
+         text = "356,152"
+         text_w, text_h = draw.textsize(text,font)  
+         draw.text(((385 - text_w) / 2,  48), text, font=font,fill=(255,255,164,255))
+         offset = (1485,500)
+         org_frame.paste(rect, offset)
+ 
+         
 
       mark_file = mark_dir + "/" + state_code + "-" + field + "-" + str(dates[cc]) + ".png"
       org_frame.save(mark_file)
