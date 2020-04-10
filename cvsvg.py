@@ -1334,10 +1334,11 @@ def make_svg_map(state_code,data,outfile):
 if __name__ == "__main__":
     # execute only if run as a script
     #make_fb_prev_images()
-    #make_movie_from_frames("USA", "ALL")
     if sys.argv[1] == "usavals":
        make_usa_vals_from_county()
     elif sys.argv[1] == "check":
        check_vals_files()
+    elif sys.argv[1] == "mm":
+       make_movie_from_frames("USA", "ALL")
     else:
        main_menu()
