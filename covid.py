@@ -54,6 +54,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from scipy.optimize import curve_fit
 from datetime import datetime, timedelta
+from cairosvg import svg2png
 import cv2
 
 import sys
@@ -85,6 +86,58 @@ DEFAULT_OPTION = 2 # Index in the arrays above
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
 
 
+def make_png_legends_for_videos():
+   fp = open("templates/h-legend-for-video.svg")
+   temp =""
+   for line in fp:
+      temp += line
+
+   ranks = {}
+   ranks['cases'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+   ranks['deaths'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,20),(30,40),(40,50),(50,100),(100,200),(300,999999))
+   ranks['cpm'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+   ranks['dpm'] = ((1,2),(2,3),(3,4),(4,5),(5,10),(10,25),(25,50),(50,100),(100,200),(200,300),(300,999999))
+   ranks['mortality'] = ((0,1),(1,2),(2,3),(3,4),(4,5),(6,7),(7,8),(8,9),(9,10),(10,15),(15,100))
+   ranks['cg_med'] = ((0,5),(5,10),(10,15),(15,20),(20,25),(25,30),(30,35),(35,40),(40,50),(50,75),(75,100))
+   ranks['dg_med'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+   ranks['new_cases'] = ((0,5),(5,10),(10,20),(20,30),(30,40),(40,50),(50,100),(100,200),(200,500),(500,1000),(1000,99999))
+   ranks['new_deaths'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+ 
+   for field in ranks:
+      svg = temp
+      c = 0  
+      for low,high in ranks[field] :
+         if c < 10:
+            text = str(low) + " - " + str(high)
+         else:
+            text = str(low) + " + "  
+         tag = "{DAT_" + str(c) + "}" 
+         svg= svg.replace(tag, text) 
+         c += 1
+ 
+      # Here we build the legend for the videos (with the color hardcoded instead of the css classes)
+      svg = svg.replace('class="cl_0"',"fill=\"#fee7dc\"")
+      svg = svg.replace("class=\"cl_1\"","fill=\"#fdd4c2\"")
+      svg = svg.replace("class=\"cl_2\"","fill=\"#fcbaa0\"")
+      svg = svg.replace("class=\"cl_3\"","fill=\"#fc9f81\"")
+      svg = svg.replace("class=\"cl_4\"","fill=\"#fb8464\"")
+      svg = svg.replace("class=\"cl_5\"","fill=\"#fa6949\"")
+      svg = svg.replace("class=\"cl_6\"","fill=\"#f24a35\"")   
+      svg = svg.replace("class=\"cl_7\"","fill=\"#e32f27\"")
+      svg = svg.replace("class=\"cl_8\"","fill=\"#ca171c\"")
+      svg = svg.replace("class=\"cl_9\"","fill=\"#b11117\"")
+      svg = svg.replace("class=\"cl_10\"","fill=\"#8f0912\"")
+      svg = svg.replace("class=\"l\"","style=\"fill: #f2f2f2; stroke: none; font-size: 12px; font-family:Arial\"")
+      of = "anim/legends/" + field + "-for-video.png";
+     
+      svg2png(bytestring=svg,write_to=of)
+
+      print("LEGENDS CREATED " + of)
+
+
+
+
+
 def make_svg_legends():
    fp = open("templates/h-legend.svg")
    temp =""
@@ -109,8 +162,7 @@ def make_svg_legends():
          if c < 10:
             text = str(low) + " - " + str(high)
          else:
-            text = str(low) + " + " 
-            print("+++++")
+            text = str(low) + " + "  
          tag = "{DAT_" + str(c) + "}" 
          svg= svg.replace(tag, text) 
          c += 1
@@ -118,6 +170,10 @@ def make_svg_legends():
       of = "anim/legends/" + field + ".svg";
       out = open(of, "w")
       out.write(svg)
+
+   make_png_legends_for_videos()
+
+         
 
 
 

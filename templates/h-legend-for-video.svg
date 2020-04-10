@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 839.9 67">
+   <g id="bg">
+      <rect fill="#353333" width="100%" height="100%"/> 
+   </g>
+  <rect class="cl_0" x="0" width="76.4" height="38.18"><title>{DAT_0}</title></rect>
+  <rect class="cl_1" x="76.4" width="76.4" height="38.18"><title>{DAT_1}</title></rect>
+  <rect class="cl_2" x="152.7" width="76.4" height="38.18"><title>{DAT_2}</title></rect>
+  <rect class="cl_3" x="229.1" width="76.4" height="38.18"><title>{DAT_3}</title></rect>
+  <rect class="cl_4" x="305.4" width="76.4" height="38.18"><title>{DAT_4}</title></rect>
+  <rect class="cl_5" x="381.8" width="76.4" height="38.18"><title>{DAT_5}</title></rect>
+  <rect class="cl_6" x="458.1" width="76.4" height="38.18"><title>{DAT_6}</title></rect>
+  <rect class="cl_7" x="534.5" width="76.4" height="38.18"><title>{DAT_7}</title></rect>
+  <rect class="cl_8" x="610.8" width="76.4" height="38.18"><title>{DAT_8}</title></rect>
+  <rect class="cl_9" x="687.2" width="76.4" height="38.18"><title>{DAT_9}</title></rect>
+  <rect class="cl_10" x="763.5" width="76.4" height="38.18"><title>{DAT_10}</title></rect>
+  <text class="l" transform="translate(3.1 61.1)">{DAT_0}</text>
+  <text class="l" transform="translate(79.4 61.1)">{DAT_1}</text>
+  <text class="l" transform="translate(155.8 61.1)">{DAT_2}</text>
+  <text class="l" transform="translate(232.1 61.1)">{DAT_3}</text>
+  <text class="l" transform="translate(308.5 61.1)">{DAT_4}</text>
+  <text class="l" transform="translate(384.8 61.1)">{DAT_5}</text>
+  <text class="l" transform="translate(461.2 61.1)">{DAT_6}</text>
+  <text class="l" transform="translate(537.5 61.1)">{DAT_7}</text>
+  <text class="l" transform="translate(613.9 61.1)">{DAT_8}</text>
+  <text class="l" transform="translate(690.2 61.1)">{DAT_9}</text>
+  <text class="l" transform="translate(766.6 61.1)">{DAT_10}</text>
+</svg>
