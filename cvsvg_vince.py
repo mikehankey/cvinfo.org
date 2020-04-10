@@ -757,6 +757,9 @@ def make_usa_map_seq(field):
       else:
          print("Already exists: ", day)
 
+
+
+
 def make_usa_map(field, date, cl2 = None):
    
    # UPDATE:
@@ -789,19 +792,22 @@ def make_usa_map(field, date, cl2 = None):
       color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
 
       if val > 0:
-         map = map.replace("id=\"FIPS_" + fips + "\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" ")
-          
+         map = map.replace("id=\"FIPS_" + fips + "\" fill=\"#ffffff\" stroke=\"#C0C0C0\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" ")
+    
+
 
    if cfe("anim/png/USA", 1) == 0:
       os.makedirs("anim/png/USA")
-
+   
+   
    outfile = "anim/png/USA/USA-counties-" + field + "-" + day + ".png"
-   outsvg = outfile.replace(".png", ".svg")
-   out = open(outsvg, "w")
-   out.write(map)
-   out.close() 
- 
+   #outsvg = outfile.replace(".png", ".svg")
+   #out = open(outsvg, "w")
+   #out.write(map)
+   #out.close() 
+     
    svg2png(bytestring=map,write_to=outfile)
+   print(outfile + " created")
   
 
 def find_max_county_val(state_code, field,sj):
