@@ -99,7 +99,7 @@ def preview(state_code, field,data_only=0):
       os.makedirs(mark_dir)
    
    if state_code == "USA":
-      make_usa_vals_from_state()
+      make_usa_vals_from_county()
    print("STATE CODE:", state_code)
    data = load_json_file("json/" + state_code + ".json")
 
@@ -418,6 +418,142 @@ def get_county_field_val_for_day(data,day,field):
          val = d[field]
          print("VAL FIND:", day, val)
 
+def make_usa_vals_from_county():
+   flat_stats = []
+   cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
+   all_usa_data = {}
+   days = {}
+   for data in cl2:
+      days[data['day'].replace("-", "")] = 1
+      data['date'] = data['day'].replace("-", "")
+      flat_stats.append(data)
+
+   sorted_days = []
+   for day in days:
+      sorted_days.append(day)
+   sorted_days = sorted(sorted_days)
+
+   usa_day = {}
+   for s in flat_stats:
+      date = s['date']
+      cases = s['cases']
+      deaths = s['deaths']
+      new_cases = s['new_cases']
+      new_deaths = s['new_deaths']
+      if date not in usa_day:
+         usa_day[date] = {}
+         usa_day[date]['cases'] = cases
+         usa_day[date]['deaths'] = deaths
+         usa_day[date]['new_cases'] = new_cases
+         usa_day[date]['new_deaths'] = new_deaths
+      else:
+         usa_day[date]['cases'] += cases
+         usa_day[date]['deaths'] += deaths
+         usa_day[date]['new_cases'] += new_cases
+         usa_day[date]['new_deaths'] += new_deaths
+
+
+   case_grs = []
+   death_grs = []
+   last_cases = 0
+   last_deaths = 0
+   dc = 0
+   for date in sorted_days:
+      usa_day[date]['cpm'] = round(usa_day[date]['cases'] / 327.2, 2)
+      usa_day[date]['dpm'] = round(usa_day[date]['deaths'] / 327.2, 2)
+      usa_day[date]['mortality'] = round((usa_day[date]['deaths'] / usa_day[date]['cases']) * 100, 2)
+      cases = usa_day[date]['cases']
+      deaths = usa_day[date]['deaths']
+
+      if int(cases) > 0:
+         print("GROWTH:", last_cases , "/", cases)
+         case_growth = (1 - (int(last_cases) / int(cases))) * 100
+      else:
+         case_growth = 0
+      if int(deaths) > 0:
+         death_growth = (1 - (int(last_deaths) / int(deaths))) * 100
+      else:
+         death_growth = 0
+
+
+      if len(case_grs) > 3:
+         cg_avg = round(np.mean(case_grs[-3:]),2)
+         cg_med = round(np.median(case_grs[-3:]),2)
+      else:
+         cg_avg = case_growth
+         cg_med = case_growth
+
+      if len(death_grs) > 3:
+         dg_avg = round(np.mean(death_grs[-3:]),2)
+         dg_med = round(np.median(death_grs[-3:]),2)
+      else:
+         dg_avg = death_growth
+         dg_med = death_growth
+
+      # growth fields
+      usa_day[date]['case_growth'] =  case_growth
+      usa_day[date]['death_growth'] =  death_growth
+      usa_day[date]['cg_med'] = cg_med
+      usa_day[date]['dg_med'] =  dg_med
+      usa_day[date]['cg_avg'] = cg_avg
+      usa_day[date]['dg_avg'] =  dg_avg
+      usa_day[date]['date'] =  date
+
+
+
+      if cases > 0:
+         case_grs.append(case_growth)
+      if deaths > 0:
+         death_grs.append(death_growth)
+      last_cases = int(cases)
+      last_deaths = int(deaths)
+      dc = dc + 1
+
+
+   js_vals = {
+      'dates' : [],
+      'cpm' : [],
+      'dpm' : [],
+      'cases' : [],
+      'deaths' : [],
+      'new_cases' : [],
+      'new_deaths' : [],
+      'case_growth' : [],
+      'death_growth' : [],
+      'cg_med' : [],
+      'dg_med' : [],
+      'mortality' : [],
+      'new_deaths' : [],
+      'new_cases' : []
+   }
+   flat_usa = []
+   for day in sorted_days:
+      print("DAY:", day)
+      dd = usa_day[day]
+      flat_usa.append(dd)
+      print(day, usa_day[day])
+      js_vals['dates'].append(day)
+      js_vals['cases'].append(dd['cases'])
+      js_vals['deaths'].append(dd['deaths'])
+      js_vals['new_cases'].append(dd['new_cases'])
+      js_vals['new_deaths'].append(dd['new_deaths'])
+      js_vals['cpm'].append(dd['cpm'])
+      js_vals['dpm'].append(dd['dpm'])
+      js_vals['case_growth'].append(dd['case_growth'])
+      js_vals['death_growth'].append(dd['death_growth'])
+      js_vals['cg_med'].append(dd['cg_med'])
+      js_vals['dg_med'].append(dd['dg_med'])
+      js_vals['mortality'].append(dd['mortality'])
+      print("JSON DATES:", js_vals['dates'])
+
+   print(4)
+   usa_json = load_json_file("json/USA.json")
+   usa_json['day_stats'] = flat_usa 
+   usa_json['js_vals'] = js_vals
+   save_json_file("json/USA.json", usa_json)
+
+
+
 def make_usa_vals_from_state():
 
    cl2 = load_json_file("json/covid-19-level2-states.json")
@@ -547,9 +683,9 @@ def make_usa_vals_from_state():
    usa_json = load_json_file("json/USA.json")
    usa_json['day_stats'] = usa_day
    usa_json['js_vals'] = js_vals 
-   save_json_file("json/USA.json", usa_json)
+   save_json_file("json/USA-state.json", usa_json)
 
-def make_usa_vals_from_county():
+def make_usa_vals_from_county_old():
    js_vals = {
       'dates' : [],
       'cpm' : [],
@@ -639,7 +775,7 @@ def make_usa_vals_from_county():
    all_usa = {
       "day_stats" : all_ar
    }
-   all_usa['json_vals'] = json_vals
+   all_usa['js_vals'] = js_vals
    save_json_file("json/USA.json", all_usa)
 
 def make_usa_map_seq(field):
@@ -1199,7 +1335,9 @@ if __name__ == "__main__":
     # execute only if run as a script
     #make_fb_prev_images()
     #make_movie_from_frames("USA", "ALL")
-    if sys.argv[1] == "check":
+    if sys.argv[1] == "usavals":
+       make_usa_vals_from_county()
+    elif sys.argv[1] == "check":
        check_vals_files()
     else:
        main_menu()
