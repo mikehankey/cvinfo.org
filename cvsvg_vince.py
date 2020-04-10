@@ -92,7 +92,11 @@ def make_movie_from_frames(state, field):
 
 # Build the PNGs used for the videos
 # FOR THE ENTIRE USA **********************
+# PUT BACK THE BEGINNING OF preview() from csvsvg.py 
+# IF YOU WANT THE SAME AT THE STATE LEVEL
 def build_marked(state_code, field, data_only=0):
+   
+   mark_dir = "anim/marked/" + state_code 
 
    field_desc = {
       'cpm' : "Cases Per Million",
@@ -183,7 +187,9 @@ def build_marked(state_code, field, data_only=0):
          # Add sources & info 
          draw.text((1220, 1000),sources, font=ImageFont.truetype("./dist/font/Lato-Regular.ttf", 20))
 
-      org_frame.save('out.png')
+      mark_file = mark_dir + "/" + state_code + "-" + field + "-" + str(dates[cc]) + ".png"
+      org_frame.save(mark_file)
+      print(state_code + "-" + field + "-" + str(dates[cc]) + ".png - SAVED")
       cc+=1 
        
 
