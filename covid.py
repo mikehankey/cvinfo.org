@@ -148,7 +148,7 @@ def main_menu():
    print("4) Generate state pages.")
    print("5) Generate main page.")
    print("6) Generate all counties page.")
-   print("7) Publish Site To PUB Folder.")
+   print("7) Rsync Site.")
    print("8) Make SVG Legends.")
    print("9) Quit.")
 
@@ -300,8 +300,21 @@ def make_all_county_page():
    fp.write(html)
    fp.close()
 
-
 def publish_site():
+   tcmd = "rsync -L --exclude-from='./exclude.txt' -rave 'ssh -i ~/.ssh/mikevm.pem' /home/ams/cvinfo.org/{WILD} ubuntu@ec2-35-165-208-121.us-west-2.compute.amazonaws.com:/home/ubuntu/cvinfo.org/{DEST}"
+   dirs = sorted(glob.glob("states/*data*"))
+   for dir in dirs:
+      cmd = tcmd.replace("{WILD}", dir) 
+      cmd = cmd.replace("{DEST}", "states/") 
+      
+      print(cmd)
+      os.system(cmd)
+   cmd = "rsync -L --exclude-from='./exclude.txt' -rave 'ssh -i ~/.ssh/mikevm.pem' /home/ams/cvinfo.org/ ubuntu@ec2-35-165-208-121.us-west-2.compute.amazonaws.com:/home/ubuntu/cvinfo.org/"
+   print(cmd)
+   os.system(cmd)
+      
+
+def publish_site_old():
    print("""
    Select publishing option:
       1) Publish just HTML 
@@ -877,7 +890,7 @@ def make_state_page(this_state):
 
    for js_field in js_vals:
       if 'js_vals' not in sjs:
-         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg.py " + this_state + " cpm prev_data"  )
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg.py prev_data" + state  )
          exit()
       else:
          if js_field in sjs['js_vals']:
@@ -1464,7 +1477,7 @@ def make_all_level2_data():
       if state_code != "VI":
          make_level2_data(state_code, state_data, state_pop,state_names,county_pops,acdata)
    merge_state_data()
-   os.system("./cvsvg.py AL cpm prev_data")
+   os.system("./cvsvg.py prev_data ALL")
 
 def make_level2_data(this_state_code, state_data, state_pop,state_names,county_pops,acdata):
    cj = {}

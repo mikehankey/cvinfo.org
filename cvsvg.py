@@ -41,22 +41,45 @@ def make_fb_prev_images():
       # use to delete last file if data is missing.
       print("rm " + best_file)
 
+def make_movie_from_frames(state, field):
+   if field != "ALL":
+      wild = "anim/marked/" + state + "/" + state + "-" + field 
+   else:
+      wild = "anim/marked/" + state + "/" + state 
+   
+   files = sorted(glob.glob(wild))
+   frames = []
+   for file in files:
+      print(file)
+   #   frame = cv2.imread(file)
+   #   frames.append(frame)
+   outdir = "anim/mov/"
+   if cfe(outdir,1) == 0:
+      os.makedirs(outdir)
+   outfile = outdir + state + "-" + field + ".mp4"
+
+   cmd = """/usr/bin/ffmpeg -y -framerate 3 -pattern_type glob -i '""" + wild + """*.png' \
+        -c:v libx264 -r 25 -pix_fmt yuv420p """ + outfile
+   print(cmd)
+   os.system(cmd)
+
+
+
+
+
+
 def preview(state_code, field,data_only=0):
+   print("PREVIEW", state_code,field)
+   mark_dir = "anim/marked/" + state_code 
+   if cfe(mark_dir,1) == 0:
+      os.makedirs(mark_dir)
    
    if state_code == "USA":
-      make_usa_vals()
+      make_usa_vals_from_state()
+      print("USA VALS!")
+      exit()
    print("STATE CODE:", state_code)
    data = load_json_file("json/" + state_code + ".json")
-   if state_code != "USA":
-      if "js_values2" not in data: 
-         data['js_vals'] =  {
-         }
-         data['js_values2'] = "updated"
-         if 'js_values' in data:
-            del(data['js_values'])
-   else:
-      js_vals = {}
-      data['js_vals'] = {}
 
    field_desc = {
       'cpm' : "Cases Per Million",
@@ -69,6 +92,19 @@ def preview(state_code, field,data_only=0):
       'new_deaths' : "New Deaths Per Day",
       'new_cases' : "New Cases Per Day"
    }
+   field_alias = {
+      'cpm' : "3cpm",
+      'dpm' : "3dpm",
+      'cases' : "2cases",
+      'deaths' : "2deaths",
+      'cg_med' : "4cg_med",
+      'dg_med' : "5dg_med",
+      'mortality' : "6mortality",
+      'new_cases' : "1new_cases",
+      'new_deaths' : "1new_deaths"
+   }
+
+
    dates = []
    vals = []
    state_names, state_codes = load_state_names()
@@ -77,6 +113,8 @@ def preview(state_code, field,data_only=0):
    else:
       state_name = "USA"
    js = load_json_file("json/" + state_code + ".json")
+
+
    if state_code != 'USA':
       ss = js['state_stats']
    else:
@@ -93,35 +131,48 @@ def preview(state_code, field,data_only=0):
       data['js_vals'] = {}
    data['js_vals']['dates'] = []
 
+   cstats = js['county_stats']
+   cdays = {}
+   for county in cstats:
+      for row in cstats[county]['county_stats']:
+         day = row['day'].replace("-", "")
+         cdays[day] = 1
+
+   print("CDAYS", cdays) 
+
    for field in fields:
-      for dd in ss[:-1]:
-         dates.append(dd['date']) 
-         vals.append(dd[field]) 
-         if state_code != "USA": 
+      for dd in ss:
+         if dd['date'] in cdays:
+            dates.append(dd['date']) 
+            vals.append(dd[field]) 
             if field + "_vals" not in data['js_vals']:
                data['js_vals'][field + "_vals"] = []
-         if state_code != "USA":
             data['js_vals'][field + "_vals"].append(dd[field])
             data['js_vals']['dates'].append(dd['date'])
-
+            print("JS VALS:", dd['date'], field, dd[field])
+   print("JS VALS:", data['js_vals'])
    save_json_file("json/" + state_code + ".json", data)
-   #if state_code != "USA":
-   #   print("SAVED JS VALS:", data['js_vals'])
 
 
    js_vals = str(vals)
    #print("JS VALS:", js_vals)
 
    if data_only == 1:
+      print("DONE PREV DATA:")
       return()
    palette = sns.color_palette("Reds", n_colors=11)
    sns.palplot(palette)
 
 
    frame_wild = "anim/png/" + state_code + "/" + state_code + "*-" + field + "*.png"
-   print(frame_wild)
+   print("FRAME WILD:", frame_wild)
    files = glob.glob(frame_wild)
-   #print("FILES:", files)
+   if len(files) == 0:
+      print("NO FILES FOUND!:", frame_wild)
+      exit()
+   else:
+      print("FILES:", files)
+
    imc = cv2.imread(files[0])
    ih,iw = imc.shape[:2]
    ih = int(ih * 1.5)
@@ -135,7 +186,10 @@ def preview(state_code, field,data_only=0):
    tw = lw + iw + 50
    th = lh + 50
    cc = 0
-   for file in sorted(files):
+   started = 0
+   for file in sorted(files[:-1]):
+      print("FILE:", file)
+      fn = file.split("/")[-1]
       custom_frame = np.zeros((th,tw,3),dtype=np.uint8)
       imc = cv2.imread(file)
       ims = cv2.resize(imc, (int(iw),int(ih)))
@@ -150,23 +204,74 @@ def preview(state_code, field,data_only=0):
       y1 = 25 
       y2 = 25 + ih
       custom_frame[y1:y2,x1:x2] = ims.copy()
-      if cc < len(vals):
+
+      if True:
+         started = 1
          desc = state_name + " " + str(dates[cc]) + " " + field_desc[field] + " " + str(vals[cc]) 
          #desc = state_name + " " + field_desc[field] + " " + str(dates[cc]) + " " + str(vals[cc]) 
          cv2.putText(custom_frame, desc,  (40,25), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 1)
 
-      #if cc < len(vals):
-      #   desc = dates[cc]
-      #   cv2.putText(custom_frame, desc,  (40,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
 
-      desc = "www.cvinfo.org"
-      cv2.putText(custom_frame, desc,  (tw-160,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
+         desc = "www.cvinfo.org"
+         cv2.putText(custom_frame, desc,  (tw-160,th-2), cv2.FONT_HERSHEY_SIMPLEX, .6, (255, 255, 255), 1)
+
+         dd = fn.split("-")
+         if "USA" not in fn:
+            state_code = dd[0]
+            field = dd[1]
+            date = dd[2]
+         else:
+            state_code = dd[0]
+            field = dd[2]
+            date = dd[3]
+
+         new_field = field_alias[field]
+
+         print("NEW FIELD:", field, new_field)
+
+         mark_fn = state_code + "-" + new_field + "-" + date + ".png"
+
+         mark_file = mark_dir + "/" + mark_fn 
+         cv2.imwrite(mark_file, custom_frame)
+
+         cv2.imshow('pepe', custom_frame)
+         cv2.waitKey(250)
+         cc += 1
+         del custom_frame
+
+def preview_data(state_code):
+   fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
+   print("PREVIEW DATA")
+
+   # DELETE JS_VALS THAT PREVIOUSLY EXISTED
 
 
-      cv2.imshow('pepe', custom_frame)
-      cv2.waitKey(250)
-      cc += 1
-      del custom_frame
+   js = load_json_file("json/covid-19-level2-states.json")
+   # reset all js_vals for all states
+   if state_code == 'ALL':
+      for data in js:
+         state_code = data['summary_info']['state_code']
+         ttt = load_json_file("json/" + state_code + ".json")
+         if "js_vals" in ttt:
+            del ttt['js_vals']
+            ttt['js_vals'] = {}
+         save_json_file("json/" + state_code + ".json", ttt)
+   else:
+      # reset all js_vals for this state
+      ttt = load_json_file("json/" + state_code + ".json")
+      if "js_vals" in ttt:
+         del ttt['js_vals']
+         ttt['js_vals'] = {}
+      save_json_file("json/" + state_code + ".json", ttt)
+      if state_code == 'ALL':
+         for data in js:
+            state_code = data['summary_info']['state_code']
+            for ff in fields:
+               preview(state_code,ff,1)
+      else:
+         for ff in fields:
+            preview(state_code,ff,1)
+
 
 
 def main_menu():
@@ -174,31 +279,32 @@ def main_menu():
    field = sys.argv[2]  
    fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
 
-   if len(sys.argv) > 3:
-      cmd = sys.argv[3]  
-      if cmd == 'prev':
-         if field == "ALL":
-            for field in fields:
-               preview(state_code,field)
-         else:
-               preview(state_code,field)
-         exit()
-      if cmd == 'prev_data':
+   if state_code == 'preview':
+      cmd = 'preview'
+      state_code = sys.argv[2] 
+      field = sys.argv[3] 
+      if field != "ALL":
+         preview(state_code, field)
+      else:
+         for field in fields:
+            preview(state_code, field)
 
+      exit()
+   if state_code == 'prev_data':
+      cmd = state_code
+      state_code = sys.argv[2]  
+      if state_code != "ALL":
+         preview_data(state_code)
+      else:
          js = load_json_file("json/covid-19-level2-states.json")
-         # reset all js_vals
          for data in js:
             state_code = data['summary_info']['state_code']
-            ttt = load_json_file("json/" + state_code + ".json")
-            if "js_vals" in ttt: 
-               del ttt['js_vals']
-            save_json_file("json/" + state_code + ".json", ttt)
+            preview_data(state_code)
 
-         for data in js:
-            state_code = data['summary_info']['state_code']
-            for ff in fields:
-               preview(state_code,ff,1)
-         exit()
+
+      exit()
+
+
    if state_code == "USA":
       if field != "ALL":
          make_usa_map_seq(field )
@@ -222,7 +328,6 @@ def main_menu():
    exit()
    #make_map("MD", "20200401", "cases", "1")
    #make_map("MD", "20200402", "cases", "1")
-   exit()
 
    print("""
       cvsvg.py -- interface for making map images with covid data
@@ -266,13 +371,157 @@ def get_county_field_val_for_day(data,day,field):
          val = d[field]
          print("VAL FIND:", day, val)
 
-def make_usa_vals():
+def make_usa_vals_from_state():
+
+   cl2 = load_json_file("json/covid-19-level2-states.json")
+   flat_stats = []
+   for state_obj in cl2:
+      stats = state_obj['state_stats']
+      for stat in stats:
+         
+         flat_stats.append(stat)
+
+   usa_day = {}
+
+   for s in flat_stats:
+      print(s)
+      date = s['date']
+      cases = s['cases']
+      deaths = s['deaths']
+      new_cases = s['new_cases']
+      new_deaths = s['new_deaths']
+      if date not in usa_day: 
+         usa_day[date] = {}
+         usa_day[date]['cases'] = cases
+         usa_day[date]['deaths'] = deaths
+         usa_day[date]['new_cases'] = new_cases
+         usa_day[date]['new_deaths'] = new_deaths
+      else:
+         usa_day[date]['cases'] += cases
+         usa_day[date]['deaths'] += deaths
+         usa_day[date]['new_cases'] += new_cases 
+         usa_day[date]['new_deaths'] += new_deaths
+
+   days = []
+   for dd in usa_day:
+      days.append(dd)
+   days = sorted(days)
+
+   case_grs = []
+   death_grs = []
+   last_cases = 0
+   last_deaths = 0
+   dc = 0
+   for date in days:
+      usa_day[date]['cpm'] = round(usa_day[date]['cases'] / 327.2, 2)
+      usa_day[date]['dpm'] = round(usa_day[date]['deaths'] / 327.2, 2)
+      usa_day[date]['mortality'] = round((usa_day[date]['deaths'] / usa_day[date]['cases']) * 100, 2)
+      cases = usa_day[date]['cases']
+      deaths = usa_day[date]['deaths']
+
+      if int(cases) > 0:
+         print("GROWTH:", last_cases , "/", cases)
+         case_growth = (1 - (int(last_cases) / int(cases))) * 100
+      else: 
+         case_growth = 0
+      if int(deaths) > 0:
+         death_growth = (1 - (int(last_deaths) / int(deaths))) * 100
+      else:
+         death_growth = 0
+
+
+      if len(case_grs) > 3:
+         cg_avg = round(np.mean(case_grs[-3:]),2)
+         cg_med = round(np.median(case_grs[-3:]),2)
+      else:
+         cg_avg = case_growth
+         cg_med = case_growth
+
+      if len(death_grs) > 3:
+         dg_avg = round(np.mean(death_grs[-3:]),2)
+         dg_med = round(np.median(death_grs[-3:]),2)
+      else:
+         dg_avg = death_growth
+         dg_med = death_growth
+
+      # growth fields
+      usa_day[date]['case_growth'] =  case_growth
+      usa_day[date]['death_growth'] =  death_growth
+      usa_day[date]['cg_med'] = cg_med 
+      usa_day[date]['dg_med'] =  dg_med 
+      usa_day[date]['cg_avg'] = cg_avg
+      usa_day[date]['dg_avg'] =  dg_avg
+      usa_day[date]['date'] =  date
+
+
+
+      if cases > 0:
+         case_grs.append(case_growth)
+      if deaths > 0:
+         death_grs.append(death_growth)
+      last_cases = int(cases)
+      last_deaths = int(deaths)
+      dc = dc + 1
+
+
+   js_vals = {
+      'dates' : [],
+      'cpm' : [],
+      'dpm' : [],
+      'cases' : [],
+      'deaths' : [],
+      'new_cases' : [],
+      'new_deaths' : [],
+      'case_growth' : [],
+      'death_growth' : [],
+      'cg_med' : [],
+      'dg_med' : [],
+      'mortality' : [],
+      'new_deaths' : [],
+      'new_cases' : [] 
+   }
+
+   for day in days:
+      dd = usa_day[day]
+      print(day, usa_day[day])
+      js_vals['dates'].append(dd['date'])
+      js_vals['cases'].append(dd['cases'])
+      js_vals['deaths'].append(dd['deaths'])
+      js_vals['new_cases'].append(dd['new_cases'])
+      js_vals['new_deaths'].append(dd['new_deaths'])
+      js_vals['cpm'].append(dd['cpm'])
+      js_vals['dpm'].append(dd['dpm'])
+      js_vals['case_growth'].append(dd['case_growth'])
+      js_vals['death_growth'].append(dd['death_growth'])
+      js_vals['cg_med'].append(dd['cg_med'])
+      js_vals['dg_med'].append(dd['dg_med'])
+      js_vals['mortality'].append(dd['mortality'])
+
+   usa_json = load_json_file("json/USA.json")
+   usa_json['day_stats'] = usa_day
+   usa_json['js_vals'] = js_vals 
+   save_json_file("json/USA.json", usa_json)
+
+def make_usa_vals_from_county():
+   js_vals = {
+      'dates' : [],
+      'cpm' : [],
+      'dpm' : [],
+      'cases' : [],
+      'deaths' : [],
+      'cg_med' : [],
+      'dg_med' : [],
+      'mortality' : [],
+      'new_deaths' : [],
+      'new_cases' : [] 
+   }
+
+
    cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
    all_usa_data = {}
    days = {}
    for data in cl2:
       days[data['day'].replace("-", "")] = 1
-      usa_data = {}
 
    #"zero_day" : zero_day,
 
@@ -281,7 +530,7 @@ def make_usa_vals():
    for data in cl2:
       date = data['day'].replace("-", "")
       if date not in all_usa_data:
-         print("DATA:", data)
+         #print("DATA:", data)
          all_usa_data[date] = {
          "date" : data['day'],
          "cases" : data['cases'],
@@ -312,6 +561,18 @@ def make_usa_vals():
          all_usa_data[date]['new_cases'] += data['new_cases']
          all_usa_data[date]['new_deaths'] += data['new_deaths']
 
+      js_vals['dates'].append(data['day'])
+      js_vals['cases'].append(data['cases'])
+      js_vals['deaths'].append(data['deaths'])
+      js_vals['new_cases'].append(data['new_cases'])
+      js_vals['new_deaths'].append(data['new_deaths'])
+      js_vals['cpm'].append(data['cpm'])
+      js_vals['dpm'].append(data['dpm'])
+      js_vals['cg_med'].append(data['cg_med'])
+      js_vals['dg_med'].append(data['dg_med'])
+      if data['cases'] > 0:
+         js_vals['mortality'].append(round(data['deaths']/data['cases'],2))
+
    for date in all_usa_data :
       data = all_usa_data[date]
       all_usa_data[date]['cpm'] = round(data['cases'] / 327,2)
@@ -331,6 +592,7 @@ def make_usa_vals():
    all_usa = {
       "day_stats" : all_ar
    }
+   all_usa['json_vals'] = json_vals
    save_json_file("json/USA.json", all_usa)
 
 def make_usa_map_seq(field):
@@ -435,25 +697,38 @@ def make_seq(state_code, field):
    legend = make_legend(state_code,field,palette,max_val)
 
    stats = data['state_stats']
+   cstats = data['county_stats']
+   cdays = {}
+   for county in cstats:
+      for row in cstats[county]['county_stats']:
+         cdays[row['day']] = 1
+
+
+
    files = []
    dates = []
    all_vals = []
    ts = len(stats)
    cc = 0
    for ss in stats:
-      if cc < ts - 1:
+      cases = ss['cases']
+      print(ss['date'], ss['cases'])
+      if cc < ts - 1 and cases > 0:
          ANIM_DIR = ANIM_PATH + "/frames/" + state_code + "/"
          ss_date = ss['date'].replace("-", "")
          outfile = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".png"
     
          svgout = ANIM_DIR + state_code + "-" + field + "-" + ss_date + ".svg"
          print(outfile)
-         if cfe(svgout) == 0:
+         if cfe(svgout) == 0 and ss_date in cdays:
             print("MAKE :", state_code, ss['date'])
             outfile, all_val = make_map(state_code, ss_date, field, "1", max_val)
             cc += 1
          else:
             print("ALREADY MADE :", state_code, ss['date'])
+
+      else:
+         print("SKIP FRAME NO CASES!")
 
    return(outfile)
 
@@ -757,6 +1032,9 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
 
    images = []
    fc = 0
+
+   print("FILES!", files)
+
    for file in files:
       im = Image.open(file)
       iw,ih = im.size
@@ -872,4 +1150,5 @@ def make_svg_map(state_code,data,outfile):
 if __name__ == "__main__":
     # execute only if run as a script
     #make_fb_prev_images()
+    #make_movie_from_frames("USA", "ALL")
     main_menu()
