@@ -321,6 +321,8 @@ def preview_data(state_code):
 
 
 def main_menu():
+   print("FCU")
+   exit()
    state_code = sys.argv[1]  
    field = sys.argv[2]  
    fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
@@ -352,6 +354,8 @@ def main_menu():
 
 
    if state_code == "USA":
+      print("USA")
+      exit()
       if field != "ALL":
          make_usa_map_seq(field )
       else:
@@ -788,7 +792,9 @@ def make_usa_map_seq(field):
       print(day)
       if cfe("anim/frames/USA/", 1) == 0:
          os.makedirs("anim/frames/USA/")
-      outfile = "anim/frames/USA/USA-counties-" + field + "-" + day + ".png"
+      outfile = "anim/png/USA/USA-" + field + "-" + day + ".png"
+      print(outfile)
+      exit()
       if cfe(outfile) == 0:
          make_usa_map(field,day,cl2)
       else:
@@ -1333,6 +1339,8 @@ def make_svg_map(state_code,data,outfile):
 
 if __name__ == "__main__":
     # execute only if run as a script
+    print("FUCK!")
+    exit()
     #make_fb_prev_images()
     if sys.argv[1] == "usavals":
        make_usa_vals_from_county()

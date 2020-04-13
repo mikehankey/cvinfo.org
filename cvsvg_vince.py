@@ -17,6 +17,8 @@ from PIL import Image, ImageFont, ImageDraw
 import glob
 import cv2
 
+from cvsvg import preview
+
  
 
  
@@ -27,6 +29,20 @@ if('/var/www/projects/' in dir_path):
    from conf_vince import *   
 else:
    from conf import *
+
+def load_state_fips():
+   #fips,county_name,state_abbr,state_name,long_name,sumlev,region,division,state,county,crosswalk,region_name,division_name^M
+   #1001,Autauga County,AL,Alabama,Autauga County AL,50,3,6,1,1,3-6-1-1,South,East South Central^M
+   fp = open("data/county_fips_master.csv", "r", encoding = "ISO-8859-1")
+   state_fips = {}
+   for line in fp:
+      data = line[0:100].split(",")
+      fips = data[0]
+      state = data[2]
+      if state not in state_fips:
+         state_fips[state] = []
+      state_fips[state].append(fips)
+   return(state_fips)
 
 def check_vals_files():
    cl2 = load_json_file("json/covid-19-level2-states.json")
@@ -70,7 +86,8 @@ def make_movie_from_frames(state, field):
       wild = "anim/marked/" + state + "/" + state + "-" + field 
    else:
       wild = "anim/marked/" + state + "/" + state 
-   
+
+   print("WILD:", wild)
    files = sorted(glob.glob(wild))
    frames = []
    for file in files:
@@ -94,20 +111,78 @@ def make_movie_from_frames(state, field):
 # FOR THE ENTIRE USA **********************
 # PUT BACK THE BEGINNING OF preview() from csvsvg.py 
 # IF YOU WANT THE SAME AT THE STATE LEVEL
+
+
+def make_transition(last_img_file, dur=25):
+   trans_files = []
+   for i in range(0,dur):
+      tfile = last_img_file.replace(".png", "-trans" + str(i) + ".png")
+      cmd = "cp " + last_img_file + " " + tfile
+      trans_files.append(tfile)
+      print(cmd)
+      os.system (cmd)
+   return(trans_files)
+
+def add_trans_text(trans_files, trans_text):
+   print(trans_text)
+
+def make_title_clip(title_text, dur=25):
+   print(trans_text)
+
+def all_movie(): 
+   # FPS settings / considerations num seconds * FPS for video
+   fps = 3
+   title_dur = 1 * fps
+   end_seq_dir = 1 * fps
+   trans_text_dir = 1 * fps
+
+
+   field_desc = {
+      'new_cases' : "New Cases ",
+      'new_deaths' : "New Deaths ",
+      'cases' : "Total Cases",
+      'deaths' : "Total Deaths",
+      'cpm' : "Cases Per Million",
+      'dpm' : "Deaths Per Million",
+      'cg_med' : "Case Growth ",
+      'dg_med' : "Death Growth ",
+      'mortality' : "Mortality Percent",
+      'recovered' : "Recovered",
+      'hospital_now' : "Hospitalized",
+      'icu_now' : "In ICU",
+      'vent_now' : "On Ventilator"
+   }
+
+   for field in field_desc:
+      mark_wild = "anim/marked/USA/USA-" + field + "-*.png" 
+      files = glob.glob(mark_wild)
+      # Add ending 'pause' frames at the end of each field clip sequence 
+      print(field, mark_wild)
+      last_file = files[-1]
+      trans_files = make_transition(last_file, end_seq_dir)
+      print("TRANS:", trans_files)
+
+   # Make opening and closing title and credits clips.
+
+
 def build_marked(state_code, field, data_only=0):
    
    mark_dir = "anim/marked/" + state_code 
 
    field_desc = {
+      'new_cases' : "New Cases ",
+      'new_deaths' : "New Deaths ",
+      'cases' : "Total Cases",
+      'deaths' : "Total Deaths",
       'cpm' : "Cases Per Million",
       'dpm' : "Deaths Per Million",
-      'cases' : "Cases",
-      'deaths' : "Deaths",
-      'cg_med' : "Case Growth Percent",
-      'dg_med' : "Death Growth Percent",
+      'cg_med' : "Case Growth ",
+      'dg_med' : "Death Growth ",
       'mortality' : "Mortality Percent",
-      'new_deaths' : "New Deaths Per Day",
-      'new_cases' : "New Cases Per Day"
+      'recovered' : "Recovered",
+      'hospital_now' : "Hospitalized",
+      'icu_now' : "In ICU",
+      'vent_now' : "On Ventilator"
    }
    field_alias = {
       'cpm' : "3cpm",
@@ -132,7 +207,7 @@ def build_marked(state_code, field, data_only=0):
  
    dates = js['js_vals']['dates']
    vals = js['js_vals'][field]
-
+   js_vals = js['js_vals']
    palette = sns.color_palette("Reds", n_colors=11)
    sns.palplot(palette)
    frame_wild = "anim/png/" + state_code + "/" + state_code + "*-" + field + "*.png"
@@ -155,23 +230,47 @@ def build_marked(state_code, field, data_only=0):
    
    cc = 0
 
-   org_title = "cvinfo.org - COVID-19 Pandemic "
-   sources = "sources: nytimes.com, covidtracking.com - more maps and data on cvinfo.org"
- 
+   # Load the graphs
+   graph_dir = "anim/graphs/USA/*" + field + "*.png"  
+   graphs = sorted(glob.glob(graph_dir))
+
+   org_title = "COVID-19 STATS"
+   sources = "cvinfo.org"
+   started = 0 
    # We marked all the frames
+
+   #truncate js_vals for some fields.
+   if field == 'recovered' or field == 'hospital_now' or field == 'icu_now' or field == 'vent_now':
+      plen = len(files)
+      jvals = js_vals[field][-plen:]
+      jdates = js_vals['dates'][-plen:]
+      js_vals[field] = jvals
+      js_vals['dates'][:-plen] = jdates
+      print("VALS:", jvals)
+      print("DATES:", jdates)
+
+
    for file in sorted(files):
+      print("DATA:", file, field, started, js_vals[field][cc])
+      if started == 1 or js_vals[field][cc] > 0:  
+         #load graph image for this frame
+         gimg = cv2.imread(graphs[cc])
+         gimg = cv2.resize(gimg, (int(365),int(365)))
+         gcimg = cv2.cvtColor(gimg, cv2.COLOR_BGR2RGB)
+         gimg_pil = Image.fromarray(gcimg)
 
-      # ADD THE LEGENGS
-      org_frame = Image.open(file, 'r')  
-      org_w, org_h = org_frame.size
-      offset = (86,977)
-      org_frame.paste(limg, offset)
-
-      if True:
+         #cv2.imshow('pepe', gimg)
+         #cv2.waitKey(30)
+         # ADD THE LEGENGS
+         org_frame = Image.open(file, 'r')  
+         org_w, org_h = org_frame.size
+         offset = (86,977)
+         org_frame.paste(limg, offset)
+  
          started = 1 
 
          if cc < len(dates):
-            title = org_title +  " "  + state_name  + " - " + field_desc[field] 
+            title = org_title +  " "  + state_name  + " - " + field_desc[field].upper()
          else: 
             title = "missing data for " + str(cc)
          
@@ -179,6 +278,10 @@ def build_marked(state_code, field, data_only=0):
          draw = ImageDraw.Draw(org_frame)
          font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 38)
          draw.text((20, 20),title,(255,255,255),font=font)
+
+         # Add footer
+         font_small = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 18)
+         draw.text((1500,1000), sources , font=font_small, fill=(255,255,255))
 
          # UPDATE SOURCES
          
@@ -193,19 +296,53 @@ def build_marked(state_code, field, data_only=0):
          offset = (1485,25)
          org_frame.paste(rect, offset)
  
-
+         # TOP RECTANGLE
          # ADD RECTANGLE TOTAL OF DEATHS
          rect = Image.new('RGB', (385, 385), (33,33,33,1))
          draw = ImageDraw.Draw(rect)
-         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 28)
-         text = "Total Deaths" 
-         text_w, text_h = draw.textsize(text,font)  
-         draw.text(((385 - text_w) / 2,  12), text, font=font) 
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 24)
 
-         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 34)
-         text = "356,152"
-         text_w, text_h = draw.textsize(text,font)  
-         draw.text(((385 - text_w) / 2,  48), text, font=font, fill=(206,5,12,255))
+         c = 0
+         for ff in field_desc :
+            text = field_desc[ff]
+            text_w, text_h = draw.textsize(text,font)  
+            spacer = (c * 35 ) + 10
+            print("SPACER:", spacer)
+            draw.text((10,  spacer), text, font=font) 
+
+            if "cases" in ff or "deaths" in ff or "pm" in ff or "recovered" in ff:
+               text = "{0:,d}".format(int(js_vals[ff][cc]))
+            else:
+               text = "{0:,.2f}".format(round(js_vals[ff][cc],2))
+
+            if "mortality" in ff or "med" in ff:
+               text += "%" 
+
+            text_w, text_h = draw.textsize(text,font)  
+            if "recovered" in ff:
+               draw.text((250,  spacer), text, font=font,fill=(5,206,12,255))
+            else:
+               draw.text((250,  spacer), text, font=font,fill=(206,5,12,255))
+
+
+            c += 1
+
+
+
+
+
+         font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 28)
+         # TOP VAL
+         #text = "{:,d}".format(js_vals['deaths'][cc])
+         #text_w, text_h = draw.textsize(text,font)  
+         #draw.text((300 , 68), text, font=font, fill=(206,5,12,255))
+
+
+
+
+
+
+
          offset = (1485,95)
          org_frame.paste(rect, offset)
 
@@ -214,22 +351,26 @@ def build_marked(state_code, field, data_only=0):
          rect = Image.new('RGB', (385, 385), (33,33,33,1))
          draw = ImageDraw.Draw(rect)
          font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 28)
-         text = "New Cases" 
+
+         text = field_desc[field] 
+
          text_w, text_h = draw.textsize(text,font)  
          draw.text(((385 - text_w) / 2,  12), text, font=font) 
 
          font = ImageFont.truetype("./dist/font/Lato-Bold.ttf", 34)
-         text = "356,152"
+         text = "{:,d}".format(js_vals['deaths'][cc])
          text_w, text_h = draw.textsize(text,font)  
          draw.text(((385 - text_w) / 2,  48), text, font=font,fill=(255,255,164,255))
          offset = (1485,500)
          org_frame.paste(rect, offset)
- 
-         
+         org_frame.paste(gimg_pil, (offset[0]+10, offset[1]+10))
 
-      mark_file = mark_dir + "/" + state_code + "-" + field + "-" + str(dates[cc]) + ".png"
-      org_frame.save(mark_file)
-      print(state_code + "-" + field + "-" + str(dates[cc]) + ".png - SAVED")
+
+         mark_file = mark_dir + "/" + state_code + "-" + field + "-" + str(dates[cc]) + ".png"
+         if cfe(mark_dir + "/" + state_code, 1) == 0:
+            os.makedirs(mark_dir + "/" + state_code)
+         org_frame.save(mark_file)
+         print(state_code + "-" + field + "-" + str(dates[cc]) + ".png - SAVED")
       cc+=1 
        
 
@@ -276,7 +417,7 @@ def preview_data(state_code):
 def main_menu():
    state_code = sys.argv[1]  
    field = sys.argv[2]  
-   fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths']
+   fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths', 'recovered', 'hospital_now', 'icu_now', 'ventilator_now']
 
    
 
@@ -314,7 +455,10 @@ def main_menu():
          make_usa_map_seq(field )
       else:
          for field in fields:
-            make_usa_map_seq(field)
+            cmd = "./cvsvg_vince.py USA " + field + " &"
+            print(cmd)
+            os.system(cmd)
+            #make_usa_map_seq(field)
   
    elif state_code == "ALL": 
 
@@ -405,11 +549,41 @@ def make_usa_vals_from_county():
          usa_day[date]['deaths'] = deaths
          usa_day[date]['new_cases'] = new_cases
          usa_day[date]['new_deaths'] = new_deaths
+         usa_day[date]['recovered'] = 0
+         usa_day[date]['hospital_now'] = 0
+         usa_day[date]['icu_now'] = 0
+         usa_day[date]['vent_now'] = 0
       else:
          usa_day[date]['cases'] += cases
          usa_day[date]['deaths'] += deaths
          usa_day[date]['new_cases'] += new_cases
          usa_day[date]['new_deaths'] += new_deaths
+
+
+   ## ADD IN VALUES FROM STATES FILE (That are not present in county data sets)
+   cl2 = load_json_file("json/covid-19-level2-states.json")
+   state_flat_stats = []
+   for state_obj in cl2:
+      stats = state_obj['state_stats']
+      for stat in stats:
+         state_flat_stats.append(stat)
+
+   for s in state_flat_stats:
+      date = s['date']
+      recovered = int(s['recovered'])
+      hospital_now = int(s['hospital_now'])
+      icu_now = int(s['icu_now'])
+      vent_now = int(s['vent_now'])
+
+      if date in usa_day:
+         usa_day[date]['recovered'] += recovered
+         usa_day[date]['hospital_now'] += hospital_now
+         usa_day[date]['icu_now'] += icu_now 
+         usa_day[date]['vent_now'] += vent_now 
+      else:
+         print("DATE NOT IN usa_day!", date)
+
+
 
 
    case_grs = []
@@ -483,7 +657,11 @@ def make_usa_vals_from_county():
       'dg_med' : [],
       'mortality' : [],
       'new_deaths' : [],
-      'new_cases' : []
+      'new_cases' : [],
+      'recovered' : [],
+      'hospital_now' : [],
+      'icu_now' : [],
+      'vent_now' : []
    }
    flat_usa = []
    for day in sorted_days:
@@ -503,6 +681,10 @@ def make_usa_vals_from_county():
       js_vals['cg_med'].append(dd['cg_med'])
       js_vals['dg_med'].append(dd['dg_med'])
       js_vals['mortality'].append(dd['mortality'])
+      js_vals['recovered'].append(dd['recovered'])
+      js_vals['hospital_now'].append(dd['hospital_now'])
+      js_vals['vent_now'].append(dd['vent_now'])
+      js_vals['icu_now'].append(dd['icu_now'])
       print("JSON DATES:", js_vals['dates'])
 
    print(4)
@@ -739,9 +921,24 @@ def make_usa_vals_from_county_old():
 
 def make_usa_map_seq(field):
    cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
+
+   state_data = load_json_file("json/covid-19-level2-states.json")
+   cl2 = load_json_file("json/covid-19-level2-states.json")
+   state_flat_stats = []
+   for state_obj in state_data:
+      stats = state_obj['state_stats']
+      for stat in stats:
+         state_flat_stats.append(stat)
+
+
+
    days = {}
-   for data in cl2:
-      days[data['day'].replace("-", "")] = 1
+   for data in state_flat_stats:
+      if field == 'recovered' or field == 'hospital_now' or field == 'icu_now' or field == 'vent_now':
+         if int(data[field]) > 0:
+            days[data['date'].replace("-", "")] = 1
+      else:
+         days[data['date'].replace("-", "")] = 1
 
    for day in sorted(days):
       
@@ -750,48 +947,96 @@ def make_usa_map_seq(field):
       if cfe("anim/frames/USA/", 1) == 0:
          os.makedirs("anim/frames/USA/")
 
-      outfile = "anim/frames/USA/USA-counties-" + field + "-" + day + ".png"
+      outfile = "anim/png/USA/USA-counties-" + field + "-" + day + ".png"
       
       if cfe(outfile) == 0:
-         make_usa_map(field,day,cl2)
+         make_usa_map(field,day,cl2, state_flat_stats)
       else:
          print("Already exists: ", day)
 
 
 
 
-def make_usa_map(field, date, cl2 = None):
+def make_usa_map(field, date, cl2 = None, state_stats = None):
    
    # UPDATE:
    # TEMPLATE FOR VIDEOS
+
+   # If this is a field that has 'state only' data, use the state map not the county one. (if state map template doesn't exist, then replace all counties color with state data not 1 county at a time.)
+   # Also loop over state_stats to get vals and not county stats
+
+   state_fips = load_state_fips()
    fp = open("templates/USA_Counties_with_FIPS_and_names_for_video.svg")
+
+
    map = ""
    for line in fp:
       map += line
    if cl2 is None: 
       cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
-   palette = sns.color_palette("Reds", n_colors=11)
+   if field == 'recovered':
+      palette = sns.color_palette("Greens", n_colors=11)
+   else:
+      palette = sns.color_palette("Reds", n_colors=11)
    sns.palplot(palette)
    md = []
    vals = []
-   for data in cl2:
-      day = data['day'].replace("-", "")
-      if day == date:
+
+   # here if we are dealing with a state field (recovered, hospital_now, icu_now, vent_now), we must add ALL FIPs to the array for each state. 
+
+   if field == 'recovered' or field == 'hospital_now' or field == 'icu_now' or field == 'vent_now':
+      print ("Build ALL FIPS data from state and county ALL FIPS list. Not the county data.")
+      for ss in state_stats:
+         data = ss
+         day = data['date'].replace("-", "")
+         if day == date:
+            state = data['state_code']
+            for fips in state_fips[state]:
+
+               if field in data:
+                  val = data[field]
+               else:
+                  val = 0
+               color_rank,ranks,rankCss = get_val_rank(val, field)
+               color = palette[color_rank]
+               add = 1
+
+               if field == 'recovered' and data['recovered'] == 0:              
+                  add = 0
+               if field == 'hospital_now' and data['hospital_now'] == 0:              
+                  add = 0
+               if field == 'icu_now' and data['icu_now'] == 0:              
+                  add = 0
+               if field == 'vent_now' and data['vent_now'] == 0:              
+                  add = 0
+  
+               if add == 1:
+                  md.append((day,state,fips,fips,val,color_rank,color))
+                  vals.append(val)
+
+   else:
+      print("Building data for ", field)
+      for data in cl2:
+         day = data['day'].replace("-", "")
+         if day == date:
     
-         state = data['state']
-         county = data['county']
-         fips = data['fips']
-         val = data[field]
-         color_rank,ranks,rankCss = get_val_rank(val, field)
-         color = palette[color_rank]
-         md.append((day,state,county,fips,val,color_rank,color))
-         vals.append(val)
+            state = data['state']
+            county = data['county']
+            fips = data['fips']
+            if field in data:
+               val = data[field]
+            else:
+               val = 0
+            color_rank,ranks,rankCss = get_val_rank(val, field)
+            color = palette[color_rank]
+            md.append((day,state,county,fips,val,color_rank,color))
+            vals.append(val)
 
    for mmm in md:
       (day,state,county,fips,val,color_rank,rgb) = mmm
       color = str(int(rgb[0]*255)) + "," + str(int(rgb[1]*255)) + "," + str(int(rgb[2]*255)) + "," + str(1)
 
-      if val > 0:
+      if float(val) > 0:
          map = map.replace("id=\"FIPS_" + fips + "\" fill=\"#ffffff\" stroke=\"#C0C0C0\"", "id=\"FIPS_" + fips + "\" fill=\"rgba(" + color + ") \" stroke=\"#C0C0C0\" ")
     
 
@@ -829,7 +1074,7 @@ def make_seq_all(field):
    js = load_json_file("json/covid-19-level2-states.json")
    for data in js:
       state_code = data['summary_info']['state_code']
-      cmd = "./cvsvg.py " + state_code + " " + "ALL"
+      cmd = "./cvsvg_vince.py " + state_code + " " + "ALL"
       print(cmd)
       os.system(cmd)
       #preview(state_code, field)
@@ -1029,10 +1274,14 @@ def get_val_rank(val,type='cpm'):
       ranks['dg_med'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
       ranks['new_cases'] = ((0,5),(5,10),(10,20),(20,30),(30,40),(40,50),(50,100),(100,200),(200,500),(500,1000),(1000,99999))
       ranks['new_deaths'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+      ranks['recovered'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+      ranks['hospital_now'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+      ranks['icu_now'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+      ranks['vent_now'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
       rc = 0
       for i,r in enumerate(ranks[type]):
  
-         if r[0] < val <= r[1]:
+         if r[0] < float(val) <= r[1]:
             #print("RANK:", r[0], "<", val, "<=", r[1])
             rank = i
             rankcss= rc
@@ -1044,6 +1293,8 @@ def make_map(state_code,rpt_date,field,scale,max_val):
  
 
    info = load_covid_state_map_data(state_code,rpt_date)
+   print("INFO:", info)
+   exit()
    
    #for i in info['county_stats']:
    #   print("INFO:", i)
@@ -1176,6 +1427,7 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
 
    leg_file = ANIM_PATH + "frames/legend-" + field + ".png"
    fnt = ImageFont.truetype(ORG_PATH + '/dist/font/FreeMono.ttf', 15)
+   fnt_small = ImageFont.truetype(ORG_PATH + '/dist/font/FreeMono.ttf', 10)
   
    leg = Image.open(leg_file)
    lw,lh = leg.size
@@ -1210,9 +1462,10 @@ def make_gif(files, dates, all_vals,state_code,field,base_file,palette):
          field_desc += " % "
       #draw.text((10,10), "COVID-19 " + field.upper() + " + dates[fc], font=fnt, fill=(255,255,255))
       draw.text((10,10), "COVID-19 " + field_desc.upper() + " " + str(all_vals[fc]), font=fnt, fill=(255,255,255))
+      draw.text((100,100), "cvinfo.org " , font=fnt_small, fill=(100,255,255))
       
       draw.text((10,ih-20), dates[fc], font=fnt, fill=(255,255,255))
-      draw.text((cw-100,ih-20), "cvinfo.org " , font=fnt, fill=(255,255,255))
+      draw.text((cw-100,ih-50), "cvinfo.org " , font=fnt, fill=(255,255,255))
 
       #new_im.show()
       images.append(new_im)
@@ -1311,13 +1564,39 @@ def make_svg_map(state_code,data,outfile):
 if __name__ == "__main__":
     # execute only if run as a script
     #make_fb_prev_images()
-    #make_movie_from_frames("USA", "ALL")
+    fields = ['cases', 'deaths','cpm','dpm','cg_med', 'dg_med','mortality', 'new_cases', 'new_deaths', 'recovered']
+    if sys.argv[1] == 'usa':
+       # need to check_running in between these calls since they are multiprocessing and run in the BG
+       # also add MP=1 to conf to enable & background calling. (for speed) 
+       os.system("./cvsvg_vince.py USA ALL")
+       os.system("./cvsvg_vince.py build_marked ALL")
+       os.system("./graph.py ")
+       os.system("./cvsvg_vince.py am")
+       os.system("./cvsvg_vince.py mm ALL")
+       os.system("./cat-videos.py ")
+    if sys.argv[1] == 'mm':
+       if sys.argv[2] == "ALL":
+          for ff in fields:
+             make_movie_from_frames("USA", ff)
+       else:
+             make_movie_from_frames("USA", sys.argv[2])
+
+       exit()
+    if sys.argv[1] == "am":
+       all_movie()
+       exit()
     if sys.argv[1] == "usavals":
        make_usa_vals_from_county()
     elif sys.argv[1] == "check":
        check_vals_files()
     # Build all usa marked map for a given field (sys.argv[2])
     elif sys.argv[1] == "build_marked": 
-       build_marked("USA",sys.argv[2])
+       if sys.argv[2] != "ALL":
+          build_marked("USA",sys.argv[2])
+       else:
+          for ff in fields:
+             cmd = "./cvsvg_vince.py build_marked " + ff + " &"
+             print(cmd)
+             os.system(cmd)
     else:
        main_menu()

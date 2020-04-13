@@ -102,6 +102,11 @@ def make_png_legends_for_videos():
    ranks['dg_med'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
    ranks['new_cases'] = ((0,5),(5,10),(10,20),(20,30),(30,40),(40,50),(50,100),(100,200),(200,500),(500,1000),(1000,99999))
    ranks['new_deaths'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+   ranks['recovered'] = ((1,10),(10,25),(25,50),(50,100),(100,150),(150,200),(200,250),(250,300),(300,400),(400,500),(500,999999))
+   ranks['hospital_now'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+   ranks['icu_now'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+   ranks['vent_now'] = ((0,2),(2,4),(4,6),(6,8),(8,10),(10,12),(12,14),(14,16),(16,18),(18,20),(20,100))
+
  
    for field in ranks:
       svg = temp
@@ -116,18 +121,36 @@ def make_png_legends_for_videos():
          c += 1
  
       # Here we build the legend for the videos (with the color hardcoded instead of the css classes)
-      svg = svg.replace('class="cl_0"',"fill=\"#fee7dc\"")
-      svg = svg.replace("class=\"cl_1\"","fill=\"#fdd4c2\"")
-      svg = svg.replace("class=\"cl_2\"","fill=\"#fcbaa0\"")
-      svg = svg.replace("class=\"cl_3\"","fill=\"#fc9f81\"")
-      svg = svg.replace("class=\"cl_4\"","fill=\"#fb8464\"")
-      svg = svg.replace("class=\"cl_5\"","fill=\"#fa6949\"")
-      svg = svg.replace("class=\"cl_6\"","fill=\"#f24a35\"")   
-      svg = svg.replace("class=\"cl_7\"","fill=\"#e32f27\"")
-      svg = svg.replace("class=\"cl_8\"","fill=\"#ca171c\"")
-      svg = svg.replace("class=\"cl_9\"","fill=\"#b11117\"")
-      svg = svg.replace("class=\"cl_10\"","fill=\"#8f0912\"")
-      svg = svg.replace("class=\"l\"","style=\"fill: #f2f2f2; stroke: none; font-size: 12px; font-family:Arial\"")
+      if field != "recovered":
+         svg = svg.replace('class="cl_0"',"fill=\"#fee7dc\"")
+         svg = svg.replace("class=\"cl_1\"","fill=\"#fdd4c2\"")
+         svg = svg.replace("class=\"cl_2\"","fill=\"#fcbaa0\"")
+         svg = svg.replace("class=\"cl_3\"","fill=\"#fc9f81\"")
+         svg = svg.replace("class=\"cl_4\"","fill=\"#fb8464\"")
+         svg = svg.replace("class=\"cl_5\"","fill=\"#fa6949\"")
+         svg = svg.replace("class=\"cl_6\"","fill=\"#f24a35\"")   
+         svg = svg.replace("class=\"cl_7\"","fill=\"#e32f27\"")
+         svg = svg.replace("class=\"cl_8\"","fill=\"#ca171c\"")
+         svg = svg.replace("class=\"cl_9\"","fill=\"#b11117\"")
+         svg = svg.replace("class=\"cl_10\"","fill=\"#8f0912\"")
+         svg = svg.replace("class=\"l\"","style=\"fill: #f2f2f2; stroke: none; font-size: 12px; font-family:Arial\"")
+      else:
+
+         svg = svg.replace('class="cl_0"',"fill=\"#fee7dc\"")
+         svg = svg.replace("class=\"cl_1\"","fill=\"#d4fdc2\"")
+         svg = svg.replace("class=\"cl_2\"","fill=\"#bafca0\"")
+         svg = svg.replace("class=\"cl_3\"","fill=\"#9ffc81\"")
+         svg = svg.replace("class=\"cl_4\"","fill=\"#84fb64\"")
+         svg = svg.replace("class=\"cl_5\"","fill=\"#69fa49\"")
+         svg = svg.replace("class=\"cl_6\"","fill=\"#4af235\"")   
+         svg = svg.replace("class=\"cl_7\"","fill=\"#2fe327\"")
+         svg = svg.replace("class=\"cl_8\"","fill=\"#17ca1c\"")
+         svg = svg.replace("class=\"cl_9\"","fill=\"#17b117\"")
+         svg = svg.replace("class=\"cl_10\"","fill=\"#098712\"")
+         svg = svg.replace("class=\"l\"","style=\"fill: #f2f2f2; stroke: none; font-size: 12px; font-family:Arial\"")
+ 
+
+
       of = "anim/legends/" + field + "-for-video.png";
      
       svg2png(bytestring=svg,write_to=of)
@@ -946,7 +969,7 @@ def make_state_page(this_state):
 
    for js_field in js_vals:
       if 'js_vals' not in sjs:
-         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg.py prev_data" + state  )
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data" + state  )
          exit()
       else:
          if js_field in sjs['js_vals']:
@@ -1536,7 +1559,7 @@ def make_all_level2_data():
       if state_code != "VI":
          make_level2_data(state_code, state_data, state_pop,state_names,county_pops,acdata)
    merge_state_data()
-   os.system("./cvsvg.py prev_data ALL")
+   os.system("./cvsvg_vince.py prev_data ALL")
 
 def make_level2_data(this_state_code, state_data, state_pop,state_names,county_pops,acdata):
    cj = {}
@@ -1648,7 +1671,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          "hospital_now" : hospital_now,
          "icu_now" : icu_now,
          "vent_now" : vent_now,
-         "recovered" :recovered 
+         "recovered" :int(recovered)
       }
       state_stats.append(stat_obj)
    sorted_state_stats = state_stats.sort(key=sort_date,reverse=False)
@@ -1680,7 +1703,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    state_obj['summary_info']['hospital_now'] = hospital_now
    state_obj['summary_info']['icu_now'] = icu_now
    state_obj['summary_info']['vent_now'] = vent_now
-   state_obj['summary_info']['recovered'] = recovered 
+   state_obj['summary_info']['recovered'] = int(recovered)
    state_obj['summary_info']['state_data_last_updated'] = level2_data[-1][2] 
    if last_c_date is not None:
       state_obj['summary_info']['county_data_last_updated'] = last_c_date.replace("-", "")
@@ -2027,6 +2050,8 @@ def load_state_data():
             hospital_now = 0
          if recovered == "":
             recovered = 0
+         else:
+            recovered = int(recovered)
          if tests == "":
             tests = 0
          if death_increase == "":
