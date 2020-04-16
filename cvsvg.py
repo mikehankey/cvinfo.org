@@ -174,8 +174,9 @@ def preview(state_code, field,data_only=0):
                vals.append(dd[field]) 
                if field + "_vals" not in data['js_vals']:
                   data['js_vals'][field + "_vals"] = []
-               data['js_vals'][field + "_vals"].append(dd[field])
-               data['js_vals']['dates'].append(dd['date'])
+               if int(dd['cases']) > 0 and dd['date'] in cdays:
+                  data['js_vals'][field + "_vals"].append(dd[field])
+                  data['js_vals']['dates'].append(dd['date'])
                print("JS VALS:", dd['date'], field, dd[field])
             else:
                print("cases < 0")

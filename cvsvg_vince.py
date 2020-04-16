@@ -184,17 +184,6 @@ def build_marked(state_code, field, data_only=0):
       'icu_now' : "In ICU",
       'vent_now' : "On Ventilator"
    }
-   field_alias = {
-      'cpm' : "3cpm",
-      'dpm' : "3dpm",
-      'cases' : "2cases",
-      'deaths' : "2deaths",
-      'cg_med' : "4cg_med",
-      'dg_med' : "5dg_med",
-      'mortality' : "6mortality",
-      'new_cases' : "1new_cases",
-      'new_deaths' : "1new_deaths"
-   }
 
    dates = []
    vals = []
@@ -204,7 +193,7 @@ def build_marked(state_code, field, data_only=0):
    else:
       state_name = "USA"
    js = load_json_file("json/" + state_code + ".json")
- 
+   print("JS VALS:", js['js_vals'])
    dates = js['js_vals']['dates']
    vals = js['js_vals'][field]
    js_vals = js['js_vals']
@@ -240,7 +229,8 @@ def build_marked(state_code, field, data_only=0):
    # We marked all the frames
 
    #truncate js_vals for some fields.
-   if field == 'recovered' or field == 'hospital_now' or field == 'icu_now' or field == 'vent_now':
+   #if field == 'recovered' or field == 'hospital_now' or field == 'icu_now' or field == 'vent_now' or field == 'deaths' or field == 'dpm':
+   if True:
       plen = len(files)
       jvals = js_vals[field][-plen:]
       jdates = js_vals['dates'][-plen:]
@@ -923,7 +913,7 @@ def make_usa_map_seq(field):
    cl2 = load_json_file("json/covid-19-level2-counties-all-days.json")
 
    state_data = load_json_file("json/covid-19-level2-states.json")
-   cl2 = load_json_file("json/covid-19-level2-states.json")
+   #cl2 = load_json_file("json/covid-19-level2-states.json")
    state_flat_stats = []
    for state_obj in state_data:
       stats = state_obj['state_stats']
@@ -1017,6 +1007,7 @@ def make_usa_map(field, date, cl2 = None, state_stats = None):
    else:
       print("Building data for ", field)
       for data in cl2:
+         print(data)
          day = data['day'].replace("-", "")
          if day == date:
     
@@ -1294,7 +1285,6 @@ def make_map(state_code,rpt_date,field,scale,max_val):
 
    info = load_covid_state_map_data(state_code,rpt_date)
    print("INFO:", info)
-   exit()
    
    #for i in info['county_stats']:
    #   print("INFO:", i)

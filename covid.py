@@ -218,12 +218,27 @@ def main_menu():
 
    if len(sys.argv) > 1:
       print("What are the args we have here???")
+      cmd = sys.argv[1]
+      if cmd == "update":
+         update_data_sources()
+         make_all_level2_data()
+         os.system("./cvsvg_vince.py ALL ALL")
+         make_state_pages("ALL")
+         make_main_page()
+         make_all_county_page()
+         make_all_county_page('cg_med')
+         make_all_county_page('mortality')
+         os.system("tar -cvf states.tar states/")
+         os.system("gzip states.tar")
+      
+         exit()
+
    print("cvinfo.org -- COVID-19 DATA ANALYZER AND REPORTING APPLICATION ")
    print("Select Function")
    print("---------------")
    print("1) Update data sources.")
    print("2) Analyze data and make level2 state and county files.")
-   print("3) Generate state plots.")
+   print("3) Covid Calculator (forecaster).")
    print("4) Generate state pages.")
    print("5) Generate main page.")
    print("6) Generate all counties page.")
@@ -239,15 +254,8 @@ def main_menu():
       print ("Making Level 2 Data.")
       make_all_level2_data()
    if cmd == "3":
-      this_state = input("Enter state code or ALL to do all states.").upper()
-      show = input("Show plot as you go? Press enter for NO or 1 for yes.")
-      if show == "1":
-         show = 1 
-      else:
-         show = 0
-      
-      print ("Making plots for .", this_state)
-      make_all_plots(this_state,show)
+      this_state = input("Enter state code: ").upper()
+      model(this_state)
    if cmd == "4":
       this_state = input("Enter state code or ALL to do all states.").upper()
       if this_state == "":
@@ -257,12 +265,14 @@ def main_menu():
       make_main_page()
    if cmd == "6":
       make_all_county_page()
+      make_all_county_page('cg_med')
+      make_all_county_page('mortality')
    if cmd == "7":
       publish_site()
    if cmd == "8":
       make_svg_legends()
 
-def make_all_county_page():
+def make_all_county_page(sort_field = None):
 
    fp = open("./templates/all-counties.html", "r")
    template = ""
@@ -270,7 +280,20 @@ def make_all_county_page():
       template += line
 
    cl2 = load_json_file("json/covid-19-level2-counties.json")
-   cl2.sort(key=sort_cpm,reverse=True)
+   if sort_field is None:
+      cl2.sort(key=sort_cpm,reverse=True)
+   if sort_field == 'cg_med':
+      cl2.sort(key=sort_cg_med,reverse=True)
+   if sort_field == 'mortality':
+      cl2.sort(key=sort_mort,reverse=True)
+
+   if sort_field is None:
+      page_desc = "COVID-19 US Hot Spots -- data for all USA Counties, sorted by Cases Per Million"
+   elif sort_field == 'cg_med':
+      page_desc = "COVID-19 US Hot Spots -- Fastest growing counties for COVID-19, sorted by median case growth (rolling 3 day average)"
+   elif sort_field == 'mortality':
+      page_desc = "COVID-19 US Hot Spots -- Highest mortality for COVID-19, all US counties sorted by mortality"
+
    total_c = len(cl2)
 
    table_header = """
@@ -279,8 +302,8 @@ def make_all_county_page():
             <thead>
                <tr>
                   <th>&nbsp;</th>
-                  <th>State</th>
                   <th>County</th>
+                  <th>State</th>
                   <th>Population</th>
                   <th>Cases</th>
                   <th>Deaths</th>
@@ -350,32 +373,32 @@ def make_all_county_page():
                   </tr>
          """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
 
-
-         #row = row_html
-         #row = row.replace("{STATE_CODE}", dr['state'])
-         #row = row.replace("{FIP}", dr['fips'])
-         #row = row.replace("{COLOR}", color)
-         #row = row.replace("{COUNTY}", dr['county'])
-         #row = row.replace("{CASES}", str(dr['cases']))
-
-         #row = row.replace("{COUNTY_POP}", str(dr['population']))
-         #row = row.replace("{DEATHS}", str(dr['deaths']))
-         #row = row.replace("{CPM}", str(dr['cpm']))
-         #row = row.replace("{DPM}", str(dr['dpm']))
-         #row = row.replace("{CGR}", str(dr['cg_med']))
-         #row = row.replace("{DGR}", str(dr['dg_med']))
-         #row = row.replace("{MORTALITY}", str(dr['mortality']))
-         #row = row.replace("{LAST_UPDATE}", update)
-         rows += row_html
+         if sort_field is None:
+            rows += row_html
+         if sort_field == 'cg_med' :
+            if int(dr['cases']) > 50:
+               print("GROWTH CASES:", dr['cases'])
+               rows += row_html
+         if sort_field == 'mortality':
+            if int(dr['cases']) > 50:
+               rows += row_html
          cc += 1
 
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+   template= template.replace("{VERSION}",CUR_VERSION)
+   template= template.replace("{PAGE_DESC}",page_desc)
 
   
 
    html = table_header + rows + table_footer
    html = template.replace("{COUNTY_TABLE}", html)
-   fp = open("all-counties.html", "w")
+   out_file = "all-counties.html"
+   if sort_field == 'cg_med':
+      out_file = "all-counties-growth.html"
+   if sort_field == 'mortality':
+      out_file = "all-counties-mortality.html"
+
+   fp = open(out_file, "w")
    fp.write(html)
    fp.close()
 
@@ -387,7 +410,7 @@ def publish_site():
       cmd = cmd.replace("{DEST}", "states/") 
       
       print(cmd)
-      os.system(cmd)
+      #os.system(cmd)
    cmd = "rsync -L --exclude-from='./exclude.txt' -rave 'ssh -i ~/.ssh/mikevm.pem' /home/ams/cvinfo.org/ ubuntu@ec2-35-165-208-121.us-west-2.compute.amazonaws.com:/home/ubuntu/cvinfo.org/"
    print(cmd)
    os.system(cmd)
@@ -711,7 +734,7 @@ def make_state_map(sjs):
    out.close()
    return(state_map_template)
 
-def make_county_table(sjs):
+def make_county_table(sjs, sort_field = None):
    tool_tips_html = ""   
    state_code = sjs['summary_info']['state_code']
 
@@ -787,7 +810,12 @@ def make_county_table(sjs):
       tool_tips_html += make_county_tool_tip(sjs['county_stats'][county])
       tool_tips_html += "</div>\n "
    
-   cd.sort(key=sort_cpm,reverse=True)
+   if sort_field is None: 
+      cd.sort(key=sort_cpm,reverse=True)
+   else:
+      key = "sort_" + sort_field
+      cd.sort(key=sort_field,reverse=True)
+   
    scd = cd
    total_c = len(scd)
    cc = 1
@@ -958,6 +986,8 @@ def make_state_page(this_state):
       return()
       
    sjs = load_json_file("./json/" + this_state + ".json")
+
+
  
    county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
    state_map = make_state_map(sjs) 
@@ -993,8 +1023,8 @@ def make_state_page(this_state):
    template = template.replace("{DPM}", str('{:,d}'.format(int(sjs['summary_info']['dpm']))))
    template = template.replace("{CASE_INCREASE}", str('{:,d}'.format(sjs['summary_info']['new_cases'])))
    template = template.replace("{DEATH_INCREASE}", str('{:,d}'.format(sjs['summary_info']['new_deaths'])))
-   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_last'],2))+"%")
-   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_last'],2))+"%")
+   template = template.replace("{CASE_GROWTH}", str(round(sjs['summary_info']['cg_med'],2))+"%")
+   template = template.replace("{DEATH_GROWTH}", str(round(sjs['summary_info']['dg_med'],2))+"%")
    template = template.replace("{MORTALITY}", str(round(sjs['summary_info']['mortality'],2))+"%")
    template = template.replace("{TESTS}", str('{:,d}'.format(sjs['summary_info']['tests'])))
    template = template.replace("{TPM}", str('{:,d}'.format(int(sjs['summary_info']['tpm']))))
@@ -1105,7 +1135,6 @@ def make_all_plots(this_state,show=0):
    else:
       state_names, state_codes = load_state_names()
       for st in state_names:
-         
          if st != "VI":
             print(st)
             make_state_plots(st,show)
@@ -1178,19 +1207,245 @@ def make_state_plots(this_state_code, show=0):
 
    all_plots = "" 
    print("YO")
-   all_plots += make_js_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", show)
+   all_plots += make_js_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", "line",show)
    print("YO")
-   all_plots += make_js_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", show)
-   all_plots += make_js_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", show)
-   all_plots +=  make_js_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", show)
+   all_plots += make_js_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", "line", show)
+   all_plots += make_js_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", "line", show)
+   all_plots +=  make_js_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", "line", show)
 
-   all_plots += make_js_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr",show)
-   all_plots += make_js_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", show)
-   #all_plots += make_js_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk",show)
+   all_plots += make_js_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr","line", show)
+   all_plots += make_js_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", "line", show)
+   #all_plots += make_js_plot(this_state_code, plot_data['dk']['xs'], plot_data['dk']['ys1'], plot_data['dk']['ys2'], "CASE AND DEATH GROWTH DECAY", "Zero Day", "Case Growth Decay", "Death Growth Decay", "dk","line", show)
 
    return(all_plots)
+
+def get_temp(template):
+   temp = ""
+   fp = open(template, "r")
+   for line in fp:
+      temp += line
+   return(temp)
+
+def get_calc_data(st):
+   js = load_json_file("json/" + st + ".json")
+   js_vals = js['js_vals']
+   last_cg = 0
+   decay_ar = []
+
+   last_cases = 0
+   last_growth = 0
+   last_decays = []
+   growth_ar = []
+   for i in range(0, len(js_vals['cases_vals'])):
+      cases = js_vals['cases_vals'][i]
+      growth = (1 - (last_cases / cases)) * 100
+      growth_ar.append(growth) 
+      decay_ar.append(growth - last_growth)
+      last_growth  = growth
+      last_cases = cases 
+
+   last_decay = decay_ar[-7:]
+   decay = float(np.mean(last_decay) )
+
+   print("STATE:", st)
+   print("GROWTH ARRAY:", growth_ar)
+   print("DECAY ARRAY:", decay_ar)
+   print("DECAY ARRAY:", last_decay)
+   print("DECAY :", decay)
+
+   all_dates = js_vals['dates']
+   all_cases = js_vals['cases_vals']
+   all_deaths = js_vals['deaths_vals']
+
+   cases = int(js_vals['cases_vals'][-1])
+   deaths = int(js_vals['deaths_vals'][-1])
+   date = js_vals['dates'][-1]
+   growth = float(js_vals['cg_med_vals'][-1])
+   mortality = float(js_vals['mortality_vals'][-1] )
+   pop = int(js['summary_info']['state_population'] * 1000000)
+ 
+   print("INFO:", st, cases, date, growth, mortality, pop)
+
+   js_code = """
+      '""" + st + """' : {
+      'all_cases' : """ + str(all_cases) + """,
+      'all_deaths' : """ + str(all_deaths) + """,
+      'all_days' : """ + str(all_dates) + """,
+      'cases' : """ + str(cases) + """,
+      'deaths' :  """ + str(deaths) + """,
+      'growth' :  """ + str(growth) + """,
+      'decay': """ + str(decay) + """,
+      'mortality' :  """ + str(mortality) + """,
+      'pop' :   """ + str(pop) + """
+      }
+   """
+   return(js_code )
+
+def make_calc_page():
+
+
+   calc_temp = get_temp("templates/covid-calc.html")
+   files = glob.glob("json/*.json")
+   js_data = ""
+
+   state_names, state_codes = load_state_names()
+   sopt = ""
+   
+   for st in state_names:
+
+      if st != "USA" and st != "DC" and st != 'VI':
+         sopt += "<option value=" + st + ">" + state_names[st]
+         if js_data != "" :
+            js_data += ","
+         js_data += get_calc_data(st)
+
+   jsf = "{ " + js_data + " }"
+
+   calc_temp = calc_temp.replace("{JS_DATA}", jsf)
+   calc_temp = calc_temp.replace("{UPDATE_DATE}",str(datetime.now().strftime('%Y-%m-%d')))
+
+   calc_temp = calc_temp.replace("{STATE_OPTIONS}", sopt)
+   out = open("corona-calc.html", "w")
+   out.write(calc_temp)
+        
+
+def model(state_code):
+   make_calc_page()
+   exit()
+   js = load_json_file("json/" + state_code + ".json")
+   js_vals = js['js_vals']
+
+
+   last_cg = 0
+   decay_ar = []
+   for i in range(0, len(js_vals['cg_med_vals'])):
+      cg = js_vals['cg_med_vals'][i]
+      decay_ar.append(cg - last_cg)
+      last_cg = cg
+
+   for dd in decay_ar:
+      print(dd)
+
+   last_decay = decay_ar[-7:]
+   print(last_decay)
+   decay = np.mean(last_decay) 
+
+   cases = js_vals['cases_vals'][-1]
+   date = js_vals['dates'][-1]
+   growth = js_vals['cg_med_vals'][-1]
+   mortality = js_vals['mortality_vals'][-1] / 100
+   pop = js['summary_info']['state_population'] * 1000000
+
+   print("Model Data Through:", date)
+   print("Current Cases:", cases)
+   print("Current Growth Rate:", growth)
+   print("Decay (7 day average):", decay)
+   print("Mortality (7 day average):", mortality)
+   print("State Population:", pop)
+   decay = (decay / 7)
+   print("#", "New Case Growth %", "New Cases", "Total Cases")
+   for i in range(0,365):
+      new_cases = int(cases * (growth/100))
+      if new_cases > 0 and cases < pop:
+         cases = cases + new_cases 
+         growth = growth + decay
+         day = datetime.strftime(datetime.now() + timedelta(i), '%Y_%m_%d')
+         deaths = int (cases * mortality)
+         print(day, i, growth, new_cases, cases,deaths )
       
-def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_id,show=0):
+
+   #density = 10
+   
+
+def make_usa_plots():
+   sj = load_json_file("json/" + "USA" + ".json")
+
+   js_vals = sj['js_vals']
+ 
+   # zero day
+   zero_days = []
+   zd = None
+   for i in range(0,len(js_vals['dates'])):
+      if js_vals['cases'][i] > 0 and zd == None:
+         zd = i
+   for i in range(0,len(js_vals['dates'])):
+      zday = i - zd
+      zero_days.append(zday)
+   
+
+   plot_data = {}
+
+   for field in js_vals:
+      print("FIELD:", field)
+      if field == 'dates':
+         dates = js_vals['dates']
+      else:
+         if field not in plot_data:
+            if field == 'cases' or field == 'deaths':
+               pfield = 'cases_deaths'
+            if field == 'cpm' or field == 'dpm':
+               pfield = 'cdpm'
+            if field == 'new_cases' or field == 'new_deaths':
+               pfield = 'in'
+            if field == 'tests' or field == 'tpm':
+               pfield = 'ts'
+            if field == 'cg_med' or field == 'dg_med':
+               pfield = 'gr'
+            if field == 'mortality':
+               pfield = 'mt'
+            print("PFIELD:")
+            plot_data[pfield] = {}
+            ln = len(js_vals[field])
+            plot_data[pfield]['xs'] = zero_days[0:ln]
+            plot_data[pfield]['ys1'] = []
+            plot_data[pfield]['ys2'] = []
+
+
+   plot_data['cases_deaths']['ys1'] = js_vals['cases']
+   plot_data['cases_deaths']['ys2'] = js_vals['deaths']
+
+   plot_data['cdpm']['ys1'] = js_vals['cpm']
+   plot_data['cdpm']['ys2'] = js_vals['dpm']
+
+   plot_data['in']['ys1'] = js_vals['new_cases']
+   plot_data['in']['ys2'] = js_vals['new_deaths']
+
+   #plot_data['ts']['ys1'] = js_vals['tests']
+   #plot_data['ts']['ys2'] = js_vals['tpm']
+
+   plot_data['gr']['ys1'] = js_vals['cg_med']
+   plot_data['gr']['ys2'] = js_vals['dg_med']
+
+   plot_data['mt']['ys1'] = js_vals['mortality']
+   plot_data['mt']['ys2'] = js_vals['mortality']
+
+      #plot_data['dk']['ys1'].append(sobj['cg_med_decay'])
+      #plot_data['dk']['ys2'].append(sobj['dg_med_decay'])
+
+   all_plots = ""
+   this_state_code = "USA"
+   show = 0
+   all_plots += make_js_plot(this_state_code, plot_data['cases_deaths']['xs'], plot_data['cases_deaths']['ys1'], plot_data['cases_deaths']['ys2'], "CASES AND DEATHS", "Zero Day", "Cases", "Deaths", "cd", "line", show)
+
+   print("YO")
+   all_plots += make_js_plot(this_state_code, plot_data['cdpm']['xs'], plot_data['cdpm']['ys1'], plot_data['cdpm']['ys2'], "CASES AND DEATHS PER MILLION", "Zero Day", "Cases Per Million", "Deaths Per Million", "pm", "line", show)
+   all_plots += make_js_plot(this_state_code, plot_data['in']['xs'], plot_data['in']['ys1'], plot_data['in']['ys2'], "CASES AND DEATHS INCREASE", "Zero Day", "Case Increase", "Death Increase", "in", "line", show)
+   #all_plots +=  make_js_plot(this_state_code, plot_data['ts']['xs'], plot_data['ts']['ys1'], plot_data['ts']['ys2'], "TESTS AND TESTS PER MILLION", "Zero Day", "Tests ", "Test PM", "ts", "line", show)
+
+   all_plots += make_js_plot(this_state_code, plot_data['gr']['xs'], plot_data['gr']['ys1'], plot_data['gr']['ys2'], "CASE AND DEATH MEDIAN GROWTH", "Zero Day", "Case Growth Percentage", "Death Growth Percentage", "gr","line", show)
+   all_plots += make_js_plot(this_state_code, plot_data['mt']['xs'], plot_data['mt']['ys1'], plot_data['mt']['ys2'], "MORTALITY", "Zero Day", "Mortality", "Mortality", "mt", "line",show)
+   
+   us_temp = ""
+   fp = open("us-plot-temp.html")
+   for line in fp:
+      us_temp += line
+   us_temp = us_temp.replace("{PLOT_SCRIPT}", all_plots)
+   out = open("us-plot.html", "w")
+   out.write(us_temp)
+   out.close()
+   return(all_plots)
+      
+def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_id,plot_type, show=0):
  
    div_name = "plot_" + plot_id
 
@@ -1216,15 +1471,17 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
      x: """ + str(bin_days) + """,
      y: """ + str(bin_sums) + """, 
      name: '""" + ya_label + """',
-     type: 'line'
+     opacity: .5,
+     type: '""" + plot_type + """'
    };
+
 
    var trace2 = {
      x: """ + str(bin_days) + """,
      y: """ + str(bin_sums2) + """, 
      yaxis: 'y2',
      name: '""" + ya2_label + """',
-     type: 'line'
+     type: '""" + plot_type + """'
    };
 
    """
@@ -1234,7 +1491,7 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
    var trace3 = {
      x: """ + str(bin_days) + """,
      y: """ + str(fit1) + """, 
-     name: '""" + 'fit' + """',
+     name: '""" + 'curve' + """',
      type: 'line'
    };
    var data = [trace1, trace2, trace3];
@@ -1276,7 +1533,7 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
    out.close()
    return(plot_html)
 
-def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,show=0):
+def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,graph_type='line',show=0):
    fig, ax1 = plt.subplots()
    label1 = ya_label
    label2 = ya2_label
@@ -1320,7 +1577,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                fff = 0
             temp.append(fff)
          func_data = temp 
-         ax1.plot(func_data, label='fit')
+         ax1.plot(func_data, label='curve')
       except:
          print("Couldn't fit data curve for ax1")
 
@@ -1337,7 +1594,7 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                fff = 0
             temp.append(fff)
          func_data = temp 
-         ax1.plot(bin_days,func_data, label='fit')
+         ax1.plot(bin_days,func_data, label='curve')
       except:
          print("failed to fit curve for ax1")
 
@@ -1375,8 +1632,8 @@ def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,
                fff = 0
             temp.append(fff)
          func_data = temp
-         #ax2.plot(func_data, label='fit', color='tab:red')
-         ax2.plot(func_data, label='fit', color='tab:red')
+         #ax2.plot(func_data, label='curve', color='tab:red')
+         ax2.plot(func_data, label='curve', color='tab:red')
       except:
          print("Couldn't fit data curve for ax2")
 
@@ -1479,7 +1736,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                fff = 0
             temp.append(fff)
          func_data = temp 
-         ax1.plot(func_data, label='fit')
+         ax1.plot(func_data, label='curve')
       except:
          print("Couldn't fit data curve")
 
@@ -1498,7 +1755,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                fff = 0
             temp.append(fff)
          func_data = temp 
-         ax1.plot(bin_days,func_data, label='fit')
+         ax1.plot(bin_days,func_data, label='curve')
       except:
          print("failed to fit curve for ax2")
 
@@ -1529,8 +1786,8 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
                fff = 0
             temp.append(fff)
          func_data = temp
-         #ax2.plot(func_data, label='fit', color='tab:red')
-         ax22.plot(bin_days,func_data, label='fit')
+         #ax2.plot(func_data, label='curve', color='tab:red')
+         ax22.plot(bin_days,func_data, label='curve')
       except:
          print("Couldn't fit data curve")
 
@@ -1765,39 +2022,47 @@ def enhance_county(this_state_code, this_county, data, cj):
    gr = [] 
    last_cases = 0 
    last_deaths = 0 
+   last_new_cases = 0 
+   last_new_deaths = 0 
    day = None
    for zz in zd:
       (day,zero_day,cases,deaths,pm_cases,pm_deaths,mortality) = zz
       new_cases = cases - last_cases
       new_deaths = deaths - last_deaths
-      if int(cases) > 0:
+
+
+      if int(new_cases) > 0:
          case_growth = (1 - (int(last_cases) / int(cases))) * 100
          case_growth = round(case_growth,2)
       else: 
          case_growth = 0
-      if deaths != 0:
+      if new_deaths > 0:
          death_growth = (1 - (last_deaths / deaths)) * 100
          death_growth = round(death_growth,2)
       else:
          death_growth = 0
+
+
       if case_growth > 0:
          cgr_last.append(case_growth) 
          dgr_last.append(death_growth) 
       if len(cgr_last) > 3:
-         cgr_avg = np.mean(cgr_last)
-         cgr_med = np.median(cgr_last)
+         cgr_avg = np.mean(cgr_last[-3:])
+         cgr_med = np.median(cgr_last[-3:])
       else:
           cgr_avg = 0
           cgr_med = 0
       if len(dgr_last) > 3:
-         dgr_avg = np.mean(dgr_last)
-         dgr_med = np.median(dgr_last)
+         dgr_avg = np.mean(dgr_last[-3:])
+         dgr_med = np.median(dgr_last[-3:])
       else:
          dgr_avg = 0
          dgr_med = 0
       gr.append((day,zero_day,cases,deaths,pm_cases,pm_deaths,new_cases,new_deaths,mortality,round(case_growth,2),round(death_growth,2),round(cgr_avg,2),round(dgr_avg,2),round(cgr_med,2),round(dgr_med,2)))
       last_cases = cases
       last_deaths = deaths
+      last_new_cases = new_cases
+      last_new_deaths = new_deaths
 
    # Add cgr/dgr growth decay
    decay = []
@@ -1851,6 +2116,19 @@ def enhance_county(this_state_code, this_county, data, cj):
 
 def sort_date(json):
    return(int(json['zero_day']))
+
+
+def sort_cg_med(json):
+   try:
+      return(int(json['cg_med']))
+   except:
+      return(0)
+
+def sort_mort(json):
+   try:
+      return(int(json['mortality']))
+   except:
+      return(0)
 
 def sort_cpm(json):
    try:
@@ -2260,4 +2538,6 @@ def cfe(file,dir = 0):
 
 if __name__ == "__main__":
    # execute only if run as a script
+   #make_usa_plots()
+   #exit()
    main_menu()
