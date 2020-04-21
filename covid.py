@@ -1635,8 +1635,8 @@ def make_status_seq_data(state, js_vals):
       x_data = slopes[14]['growth']['x_data']
       yv = slopes[14]['growth']['y_vals']
       yd = slopes[14]['growth']['y_data']
-      title = "growth " + state + " " + date_range_14[-1]
-      outfile = "anim/status/" + state + "/" + state + "-" + "CASE GROWTH PERCENT" + "-" + date_range_14[-1]
+      title = "GROWTH " + state + " " + date_range_14[-1]
+      outfile = "anim/status/" + state + "/" + state + "-" + "growth" + "-" + date_range_14[-1]
       plot_vars(xd, x_data, yv, yd, title, date_range_14[-1], outfile)
 
 
