@@ -104,6 +104,23 @@ def make_movie_from_frames(state, field):
    print(cmd)
    os.system(cmd)
 
+def make_movie(wild, outfile):
+
+   print("WILD:", wild)
+   files = sorted(glob.glob(wild))
+   frames = []
+   for file in files:
+      print(file)
+   #   frame = cv2.imread(file)
+   #   frames.append(frame)
+   outdir = "anim/mov/"
+   if cfe(outdir,1) == 0:
+      os.makedirs(outdir)
+
+   cmd = """/usr/bin/ffmpeg -y -framerate 3 -pattern_type glob -i '""" + wild + """*.png' \
+        -c:v libx264 -r 25 -pix_fmt yuv420p """ + outfile
+   print(cmd)
+   os.system(cmd)
 
 
 

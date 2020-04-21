@@ -41,6 +41,7 @@ COLORS=['b','g','y','o','r']
 # END GLOBAL VARS
 #################################################################################################
 
+import math
 import glob
 from PIL import Image, ImageFont, ImageDraw
 import json
@@ -84,6 +85,227 @@ DEFAULT_OPTION = 2 # Index in the arrays above
   
 
 STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
+def abline_old(slope, intercept, s7=None, i7=None, xs=[],ys=[],st="",title=""):
+
+
+    plot_data = {}
+
+
+    # Add future EXTRA days to day range
+    extra = 60
+    lx = xs[-1]
+    for i in range(1,60):
+       xs.append(lx + i)
+       ys.append(0)
+       #ys2.append(0)
+
+
+    x_vals = np.array(xs)
+    y_vals = intercept + slope * x_vals
+    y_vals7 = i7 + s7 * x_vals
+    #y_vals3 = i3 + s3 * x_vals
+
+
+    #print("MB1:", slope, intercept)
+    #print("MB1:", s3, i3)
+    #print("MB1:", s7, i7)
+
+
+    #print("MB214:", m2, b2)
+    #print("MB27:", m2_7, b2_7)
+    #print("MB23:", m2_3, b2_3)
+
+
+    #y2_vals = m2 + b2 * x_vals
+    #y2_vals3 = m2_3 + b2_3 * x_vals
+    #y2_vals7 = m2_7 + b2_7 * x_vals
+
+
+
+
+    plot_data['xs'] = [int(i) for i in xs]
+    plot_data['x_vals'] = [int(i) for i in x_vals]
+    plot_data['y_vals14'] = [int(i) for i in y_vals]
+    plot_data['y_vals7'] = [int(i) for i in y_vals7]
+    #plot_data['y_vals3'] = [int(i) for i in y_vals3]
+
+    #plot_data['y2_vals14'] = [int(i) for i in y2_vals]
+    #plot_data['y2_vals7'] = [int(i) for i in y2_vals7]
+    #plot_data['y2_vals3'] = [int(i) for i in y2_vals3]
+
+    plot_data['growth'] = [int(i) for i in ys]
+    #plot_data['new_cases'] = [int(i) for i in ys]
+    make_plot = 1
+    if make_plot == 1 :
+       fig = plt.figure()
+       """Plot a line from slope and intercept"""
+       axes = plt.gca()
+
+       g = 0 
+       if g == 0:
+          plt.plot(x_vals, y_vals, '-', label='14 Day Trajectory', color='blue')
+          plt.plot(x_vals, y_vals7, '--', label='7 Day Trajectory', color='green')
+          #plt.plot(x_vals, y_vals3, ':', label='3 Day Trajectory', color='red')
+          plt.title(title, fontsize=16)
+          plt.xlabel('days since first case')
+          plt.ylabel('new cases')
+          ylim_max = max(ys)
+          if len(xs) > 0:
+             plt.bar(xs, ys, label='new cases', color='orange')
+       else:
+          plt.plot(x_vals, y2_vals, '-', label='14 Day Trajectory', color='blue')
+          plt.plot(x_vals, y2_vals7, '--', label='7 Day Trajectory', color='green')
+          plt.plot(x_vals, y2_vals3, ':', label='3 Day Trajectory', color='red')
+          plt.title(title, fontsize=16)
+          plt.xlabel('days since first case')
+          plt.ylabel('new cases')
+          if len(xs) > 0:
+             plt.bar(xs, ys2, label='growth %', color='orange')
+             ylim_max = max(ys2)
+
+
+
+       plt.ylim(0,ylim_max)
+
+       desc = "" #date
+       tpos = x_vals[0] + 13
+       plt.text(tpos, 40, desc, rotation=90, va='center')
+       plt.legend()
+
+       plt.axvline(x=xs[13], color='.55', linestyle='--', label='today' )
+       outfile = "None"
+       if outfile is None:
+          plt.savefig("status_plots/" + st + ".png")
+       else:
+          plt.savefig(outfile)
+       #plt.show()
+
+       fig.clear()
+       plt.close(fig)
+
+    return(x_vals, y_vals)
+
+
+
+def abline(slope, intercept, s7=None, i7=None, s3=None, i3=None, m2=None, b2=None, m2_7=None, b2_7=None, m2_3=None, b2_3=None, xs=[],ys=[],ys2=[],st="",title="",outfile=None,date="test", make_plot=0,ylim_max=1000):
+    plot_data = {}
+
+
+    # Add future EXTRA days to day range
+    extra = 60
+    lx = xs[-1]
+    for i in range(1,60):
+       xs.append(lx + i)
+       ys.append(0)
+       ys2.append(0)
+
+
+    x_vals = np.array(xs)
+    y_vals = intercept + slope * x_vals
+    y_vals7 = i7 + s7 * x_vals
+    y_vals3 = i3 + s3 * x_vals
+
+
+    print("MB1:", slope, intercept)
+    print("MB1:", s3, i3)
+    print("MB1:", s7, i7)
+
+
+    print("MB214:", m2, b2)
+    print("MB27:", m2_7, b2_7)
+    print("MB23:", m2_3, b2_3)
+
+
+    y2_vals = m2 + b2 * x_vals
+    y2_vals3 = m2_3 + b2_3 * x_vals
+    y2_vals7 = m2_7 + b2_7 * x_vals
+
+
+    print("title=", title)
+    print("ys=", ys)
+    print("ys2=", ys2)
+    print("xvals=", x_vals)
+    print("y1vals=", y_vals)
+    print("y2vals=", y2_vals)
+
+
+    plot_data['xs'] = [int(i) for i in xs]
+    plot_data['x_vals'] = [int(i) for i in x_vals]
+    plot_data['y_vals14'] = [int(i) for i in y_vals]
+    plot_data['y_vals7'] = [int(i) for i in y_vals7]
+    plot_data['y_vals3'] = [int(i) for i in y_vals3]
+
+    plot_data['y2_vals14'] = [int(i) for i in y2_vals]
+    plot_data['y2_vals7'] = [int(i) for i in y2_vals7]
+    plot_data['y2_vals3'] = [int(i) for i in y2_vals3]
+
+    plot_data['growth'] = [int(i) for i in ys2]
+    plot_data['new_cases'] = [int(i) for i in ys]
+    make_plot = 1
+    if make_plot == 1 :
+       fig = plt.figure()
+       """Plot a line from slope and intercept"""
+       axes = plt.gca()
+
+       g = 1
+       if g == 0:     
+          plt.plot(x_vals, y_vals, '-', label='14 Day Trajectory', color='blue')
+          plt.plot(x_vals, y_vals7, '--', label='7 Day Trajectory', color='green')
+          plt.plot(x_vals, y_vals3, ':', label='3 Day Trajectory', color='red')
+          plt.title(title, fontsize=16)
+          plt.xlabel('days since first case')
+          plt.ylabel('new cases')
+          ylim_max = max(ys)
+          if len(xs) > 0:
+             plt.bar(xs, ys, label='new cases', color='orange')
+       else:
+          plt.plot(x_vals, y2_vals, '-', label='14 Day Trajectory', color='blue')
+          plt.plot(x_vals, y2_vals7, '--', label='7 Day Trajectory', color='green')
+          plt.plot(x_vals, y2_vals3, ':', label='3 Day Trajectory', color='red')
+          plt.title(title, fontsize=16)
+          plt.xlabel('days since first case')
+          plt.ylabel('new cases')
+          if len(xs) > 0:
+             plt.bar(xs, ys2, label='growth %', color='orange')
+             ylim_max = max(ys2)
+
+
+
+       plt.ylim(0,ylim_max)  
+
+       desc = date 
+       tpos = x_vals[0] + 13
+       plt.text(tpos, 40, desc, rotation=90, va='center')
+       plt.legend()
+
+       plt.axvline(x=xs[13], color='.55', linestyle='--', label='today' )
+
+       if outfile is None:
+          plt.savefig("status_plots/" + st + ".png")
+       else:
+          plt.savefig(outfile)
+       plt.show()
+
+       fig.clear()
+       plt.close(fig)
+
+    return(plot_data)
+
+def best_fit_slope_and_intercept(xs,ys):
+    xs = np.array(xs, dtype=np.float64)
+    ys = np.array(ys, dtype=np.float64)
+    print("XS:", xs)
+    print("YS:", ys)
+
+    m = (((np.mean(xs)*np.mean(ys)) - np.mean(xs*ys)) /
+         ((np.mean(xs)*np.mean(xs)) - np.mean(xs*xs)))
+
+    b = np.mean(ys) - m*np.mean(xs)
+    if math.isnan(m) is True:
+       m = 1
+       b = 1
+
+    return m, b
 
 
 def make_png_legends_for_videos():
@@ -212,6 +434,20 @@ def update_data_sources():
   os.system("cd "+ ORG_PATH + "/covid-19-data/; git pull")
   print("updating covidtracking.com daily.csv data file.")
   os.system("wget " + STATE_DAY_URL + " -O covid-19-data/covidtracking.com-daily.csv" )
+
+def update_all():
+   if True:
+      if True:
+         update_data_sources()
+         make_all_level2_data()
+         os.system("./cvsvg_vince.py ALL ALL")
+         make_state_pages("ALL")
+         make_main_page()
+         make_all_county_page()
+         make_all_county_page('cg_med')
+         make_all_county_page('mortality')
+         os.system("tar -cvf states.tar states/")
+         os.system("gzip states.tar")
  
 
 def main_menu(): 
@@ -1226,6 +1462,428 @@ def get_temp(template):
       temp += line
    return(temp)
 
+
+def make_movie(wild, outfile):
+
+   print("WILD:", wild)
+   files = sorted(glob.glob(wild))
+   frames = []
+   for file in files:
+      print(file)
+   #   frame = cv2.imread(file)
+   #   frames.append(frame)
+   outdir = "anim/mov/"
+   if cfe(outdir,1) == 0:
+      os.makedirs(outdir)
+
+   cmd = """/usr/bin/ffmpeg -y -framerate 1 -pattern_type glob -i '""" + wild + """*.png' \
+        -c:v libx264 -r 25 -pix_fmt yuv420p """ + outfile
+   print(cmd)
+   os.system(cmd)
+
+def test_anim_data(state, date, data, field='new_cases' ):
+   fig = plt.figure()
+   outfile = "anim/status/" + state + "-" + field + "-" + date + ".png"
+   print(state, date)
+   print(data)
+   #exit()
+   xs = data['xs']
+   x_vals = data['x_vals']
+
+   if field== 'new_cases':
+      y_vals = data['y_vals14']
+      y_vals7 = data['y_vals7']
+      y_vals3 = data['y_vals3']
+      ys = data['new_cases']
+      title = "NEW CASES TRAJECTORY \n" + state + " " + date
+      y_lab = "new cases per day"
+   else:
+      y_vals = data['y2_vals14']
+      y_vals7 = data['y2_vals7']
+      y_vals3 = data['y2_vals3']
+      ys = data['growth']
+      title = "GROWTH TRAJECTORY \n" + state + " " + date
+      y_lab = "new case growth percentage"
+   
+   ylim_max = max(ys)
+
+   if True:
+       """Plot a line from slope and intercept"""
+       axes = plt.gca()
+       print("YVALS:", field, y_vals)
+       plt.plot(x_vals, y_vals, '-', label='14 Day Trajectory', color='blue')
+       plt.plot(x_vals, y_vals7, '--', label='7 Day Trajectory', color='green')
+       plt.plot(x_vals, y_vals3, ':', label='3 Day Trajectory', color='red')
+       plt.title(title, fontsize=16)
+       plt.xlabel('days since first case')
+       plt.ylabel(y_lab)
+
+
+
+       plt.ylim(0,ylim_max) 
+
+       desc = date
+       tpos = x_vals[0] + 13
+       plt.text(tpos, 40, desc, rotation=90, va='center')
+       plt.legend()
+       if len(xs) > 0:
+          plt.bar(xs, ys, label='growth %', color='orange')
+       plt.axvline(x=xs[13], color='.55', linestyle='--', label='today' )
+
+       if outfile is None:
+          plt.savefig("status_plots/" + st + ".png")
+       else:
+          plt.savefig(outfile)
+       plt.show()
+
+       fig.clear()
+       plt.close(fig)
+
+def status_anim():
+   state = "FL" 
+   wild_dir = "anim/status/" + state + "/"
+   new_cases_files = sorted(glob.glob(wild_dir + state + "*new_cases*.png"))
+   growth_files = sorted(glob.glob(wild_dir + state + "*growth*.png"))
+   for i in range(0, len(new_cases_files)):
+      print(new_cases_files[i] )
+      print(growth_files[i] )
+      dual = new_cases_files[i].replace("-new_cases", "-dual")
+      outwild = new_cases_files[i].replace("-new_cases", "*")
+      if cfe(dual) == 0:
+         cmd = "montage -mode concatenate -tile 2x1 -geometry +10+10 " + outwild + " " + dual 
+         print(cmd)
+
+def make_status_data():
+   #for each day in series, group data 14/7/3 days prev to that day: find slope/intercept, prep data arrays, plot data (for testing)
+   apd = {} 
+   seq_data = {} 
+   state_names, state_codes = load_state_names()
+   for st in state_names:
+      if st is not "" and st is not "VI":
+         if cfe("json/" + st + ".json") == 1:
+            js = load_json_file("json/" + st + ".json")
+            js_vals = {}
+            js_vals['dates'] = []
+            js_vals['cases_vals'] = []
+            js_vals['new_cases_vals'] = []
+            js_vals['case_growth_vals'] = []
+
+            for data in js['state_stats']:
+               js_vals['dates'].append(data['date'])
+               js_vals['cases_vals'].append(data['cases'])
+               js_vals['new_cases_vals'].append(data['new_cases'])
+               js_vals['case_growth_vals'].append(data['cg_last'])
+
+            print(js_vals)
+            seq_data[st] = make_status_seq_data(st, js_vals)
+   save_json_file("json/seq_data_status.json", seq_data)
+   exit()
+
+def make_status_seq_data(state, js_vals):
+   xs = []
+   ys = []
+   slopes = {}
+   for i in range(0,len(js_vals['dates'])):
+      xs.append(i-14)
+
+   print(len(xs))
+   print(len(js_vals['case_growth_vals']))
+
+   for i in range(14,len(js_vals['dates'])):
+      date_range_14 = js_vals['dates'][i-14:i]
+      date_range_7 = js_vals['dates'][i-7:i]
+      date_range_3 = js_vals['dates'][i-3:i]
+
+      xdata_14 = xs[i-14:i]
+      xdata_7 = xs[i-7:i]
+      xdata_3 = xs[i-3:i]
+
+      x_vals = np.array(xs)
+      # New cases
+      new_cases_14 = js_vals['new_cases_vals'][i-14:i]
+      new_cases_7 = js_vals['new_cases_vals'][i-7:i]
+      new_cases_3 = js_vals['new_cases_vals'][i-3:i]
+
+
+      # Growth 
+      growth_14 = js_vals['case_growth_vals'][i-14:i]
+      growth_7 = js_vals['case_growth_vals'][i-7:i]
+      growth_3 = js_vals['case_growth_vals'][i-3:i]
+
+      print("14:", len(xdata_14), len(new_cases_14), len(growth_14))
+
+      slopes = build_slope_vars(xdata_14, new_cases_14, date_range_14, 14, 'new_cases', slopes) 
+      slopes = build_slope_vars(xdata_14, growth_14, date_range_14, 14, 'growth', slopes) 
+
+      xd = slopes[14]['new_cases']['xd']
+      x_data = slopes[14]['new_cases']['x_data']
+      yv = slopes[14]['new_cases']['y_vals']
+      yd = slopes[14]['new_cases']['y_data']
+      title = "NEW CASES " + state + " " + date_range_14[-1]
+
+      outdir = "anim/status/" + state 
+      if cfe(outdir, 1) == 0:
+         os.makedirs(outdir)
+      outfile = "anim/status/" + state + "/" + state + "-" + "new_cases" + "-" + date_range_14[-1]
+      if cfe(outfile + ".png") == 0:
+         print("make:", outfile)
+         plot_vars(xd, x_data, yv, yd, title, date_range_14[-1], outfile)
+      else:
+         print("skip:", outfile)
+
+      xd = slopes[14]['growth']['xd']
+      x_data = slopes[14]['growth']['x_data']
+      yv = slopes[14]['growth']['y_vals']
+      yd = slopes[14]['growth']['y_data']
+      title = "growth " + state + " " + date_range_14[-1]
+      outfile = "anim/status/" + state + "/" + state + "-" + "CASE GROWTH PERCENT" + "-" + date_range_14[-1]
+      plot_vars(xd, x_data, yv, yd, title, date_range_14[-1], outfile)
+
+
+   return(slopes)
+
+def plot_vars(x_vals, x_data, y_vals, y_vals2 = None, title = "", date="", outfile = ""):
+
+   fig = plt.figure()
+   axes = plt.gca()
+
+   plt.plot(x_data, y_vals, '-', label='14 Day Trajectory', color='blue')
+   #plt.plot(x_vals, y_vals7, '--', label='7 Day Trajectory', color='green')
+   #plt.plot(x_vals, y_vals3, ':', label='3 Day Trajectory', color='red')
+   plt.title(title, fontsize=16)
+   plt.xlabel('days')
+   if "GROWTH" in title:
+      plt.ylabel('case growth percentage')
+   else:
+      plt.ylabel('new cases')
+   if y_vals2 is not None: 
+      plt.bar(x_data, y_vals2, label='new cases', color='orange')
+
+   ylim_max = max(y_vals2)
+
+   plt.ylim(0,ylim_max)
+
+   desc = date
+   tpos = x_data[0] + 13
+   plt.text(tpos, ylim_max/2, desc, rotation=0, va='center')
+   plt.legend()
+
+   plt.axvline(x=x_data[13], color='.55', linestyle='--', label=date )
+   if outfile != "":
+      plt.savefig(outfile)
+      print("Saved: ", outfile)
+   #plt.show()
+
+   fig.clear()
+
+
+
+def build_slope_vars(xdata_in, ydata, dates, traj_range, traj_type, slopes) :
+   xdata = [] 
+   for x in xdata_in:
+      xdata.append(x)
+   print("TRAJ: XDATA:", xdata_in)
+   print("TRAJ: YDATA:", ydata)
+   print("TRAJ: DATES:", dates)
+   xd = []
+   yd = []
+
+   if traj_range not in slopes:
+      slopes[traj_range] = {}
+   if traj_type not in slopes[traj_range]:
+      slopes[traj_range][traj_type] = {}
+
+
+   for i in range(0, len(xdata)):
+      xd.append(i)
+      yd.append(ydata[i])
+
+   m,b = best_fit_slope_and_intercept(xdata,ydata)
+
+   #y_vals = m + b * np.array(xd)
+   lx = xdata[-1]
+
+   for i in range(1,60):
+      xdata.append(lx + i)
+      xd.append(lx + i)
+      yd.append(0)
+
+   print("XD:", len(xd))
+   print("YD:", len(yd))
+
+   y_vals = [(m*x)+b for x in xdata]
+
+
+   print("TRAJ:", traj_range, traj_type)
+   print("TRAJ: XD", xd)
+   print("TRAJ: YV", y_vals)
+   yv = []
+   for y in y_vals:
+      yv.append(y)
+   
+
+   slopes[traj_range][traj_type]['mb']  = [m,b]
+   slopes[traj_range][traj_type]['y_vals'] = yv 
+   slopes[traj_range][traj_type]['x_data'] = xdata
+   slopes[traj_range][traj_type]['xd'] = xd
+   slopes[traj_range][traj_type]['y_data'] = yd 
+   title = traj_type + "-" + str(traj_range)
+
+   return(slopes)
+
+
+
+def make_status_all():
+   make_status_data()
+   state = "MD"
+   test = 0 
+   # test adp
+   if test == 1:
+      apd = load_json_file("apd.json")
+      sapd = apd[state]
+      for day in sapd:
+         print("KEY:", day)
+         data = sapd[day]
+         test_anim_data(state, day, data, 'new_cases')
+         test_anim_data(state, day, data, 'growth')
+      exit()
+
+   state_names, state_codes = load_state_names()
+   sopt = ""
+   apd = {} 
+   for st in state_names:
+      if st is not "" and st is not "VI":
+         if cfe("json/" + st + ".json") == 1:
+            apd[st] = make_status_anim(st)
+            out = "anim/mov/status-" + st + "-growth.mp4"
+            wild = "anim/status/" + st + "*"
+            if cfe(out) == 0:
+               make_movie(wild, out)
+            print(apd)
+            exit()
+   save_json_file("apd.json", apd)
+
+
+def make_status_anim(state):
+   all_plot_data = {}
+   print("STATUS ANIM:", state)
+   js = load_json_file("json/" + state + ".json")
+   state_stats = js['state_stats']
+   js_vals = js['js_vals']
+   last_cases = 0
+   last_growth = 0
+   xs = []
+   ys = []
+   ys2 = []
+   growth_ar = []
+   new_ar = []
+   decay_ar = []
+
+   js_vals = {}
+   js_vals['cases_vals'] = []
+   js_vals['dates'] = []
+   for data in state_stats:
+      print(data)
+      js_vals['dates'].append(data['date'])
+      js_vals['cases_vals'].append(data['cases'])
+
+   new_cases = 0
+   last_cases = 0
+   for i in range(0, len(js_vals['cases_vals'])):
+      cases = js_vals['cases_vals'][i]
+      new_cases = cases - last_cases
+      if cases > 0:
+         growth = (1 - (last_cases / cases)) * 100
+      else:
+         growth = 0
+      growth_ar.append(growth) 
+      new_ar.append(new_cases) 
+      decay_ar.append(growth - last_growth)
+      last_growth  = growth
+      last_cases = cases 
+      xs.append(i)
+      ys.append(new_cases)
+      ys2.append(growth)
+
+
+   #Starting at the 14th day from start, for each day after that determine the 3 fit lines for appropriate data up to that point
+   first_date = js_vals['dates'][14]
+   dates = js_vals['dates']
+   xdata = []
+   for i in range(0,len(js_vals['dates'])):
+      xdata.append(i)
+
+   for i in range(14,len(js_vals['dates'])):
+      date_range_14 = dates[i-14:i] 
+      date_range_7 = dates[i-7:i] 
+      date_range_3 = dates[i-3:i] 
+
+      xdata_14 = xdata[i-14:i]
+      xdata_7 = xdata[i-7:i]
+      xdata_3 = xdata[i-3:i]
+
+      # New cases
+      ydata_14 = ys[i-14:i]
+      ydata_7 = ys[i-7:i]
+      ydata_3 = ys[i-3:i]
+
+      # growth 
+      ydata2_14 = ys2[i-14:i]
+      ydata2_7 = ys2[i-7:i]
+      ydata2_3 = ys2[i-3:i]
+
+      print(date_range_14)
+      print(date_range_7)
+      print(date_range_3)
+
+      #last_decay = decay_ar[-14:]
+      #decay = float(np.mean(last_decay) )
+
+      m,b = best_fit_slope_and_intercept(xdata_14,ydata_14)
+      m7,b7 = best_fit_slope_and_intercept(xdata_7,ydata_7)
+      m3,b3 = best_fit_slope_and_intercept(xdata_3,ydata_3)
+
+
+      print("YDATA1:", ydata_14)
+      print("YDATA2:", ydata2_14)
+      print("YDATA1:", ydata_7)
+      print("YDATA2:", ydata2_7)
+      print("YDATA1:", ydata_3)
+      print("YDATA2:", ydata2_3)
+
+      m2,b2 = best_fit_slope_and_intercept(xdata_14,ydata2_14)
+      m2_7,b2_7 = best_fit_slope_and_intercept(xdata_7,ydata2_7)
+      m2_3,b2_3 = best_fit_slope_and_intercept(xdata_3,ydata2_3)
+
+      print("MB2:", m2,b2)
+      print("MB2:", m2_7,b2_7)
+      print("MB2:", m2_3,b2_3)
+
+      today = date_range_14[-1]
+      date = date_range_14[-1]
+      #today = datetime.now().strftime('%Y-%m-%d')
+
+      #date = js_vals['dates'][-1]
+      title = "COVID-19 TRAJECTORY FOR " + state + "\n" + today
+      outfile = "anim/status/" + state + "-" + date + "-growth.png"
+      date = date_range_14[-1]
+      ylim_max = max(ys2) + 100
+
+      print("XXX", len(ys), len(ys2))
+
+      plot_data = abline(m, b, m7, b7, m3, b3, m2, b2, m2_7, b2_7, m2_3, b2_3, xdata_14, ydata_14, ydata2_14,state,title,outfile, date, 1,ylim_max)
+      all_plot_data[date] = plot_data
+
+
+      print(all_plot_data)
+      for k in all_plot_data:
+         for j in all_plot_data[k]:
+            print(j, len(all_plot_data[k][j]))
+   return(all_plot_data)     
+
+
+
+
 def get_calc_data(st):
    js = load_json_file("json/" + st + ".json")
    js_vals = js['js_vals']
@@ -1236,6 +1894,8 @@ def get_calc_data(st):
    last_growth = 0
    last_decays = []
    growth_ar = []
+   xs = []
+   ys = []
    for i in range(0, len(js_vals['cases_vals'])):
       cases = js_vals['cases_vals'][i]
       growth = (1 - (last_cases / cases)) * 100
@@ -1243,15 +1903,30 @@ def get_calc_data(st):
       decay_ar.append(growth - last_growth)
       last_growth  = growth
       last_cases = cases 
+      xs.append(i)
+      ys.append(growth)
 
-   last_decay = decay_ar[-7:]
+   last_decay = decay_ar[-14:]
    decay = float(np.mean(last_decay) )
+
+   m,b = best_fit_slope_and_intercept(xs[-14:],ys[-14:])
+   m7,b7 = best_fit_slope_and_intercept(xs[-7:],ys[-7:])
+   today = datetime.now().strftime('%Y-%m-%d')
+   title = "COVID-19 TRAJECTORY FOR " + st + "\n" + today
+   xvals, yvals = abline_old(m, b, m7, b7, xs[-14:],ys[-14:],st,title)
+
+   #xvals7, yvals7 = abline_old(m7, b7, xs[-7:],ys[-7:],st)
+
+   print("SLOPE:", m,b)
+   print("X:", xvals)
+   print("Y:", yvals)
 
    print("STATE:", st)
    print("GROWTH ARRAY:", growth_ar)
    print("DECAY ARRAY:", decay_ar)
    print("DECAY ARRAY:", last_decay)
    print("DECAY :", decay)
+   #exit()
 
    all_dates = js_vals['dates']
    all_cases = js_vals['cases_vals']
@@ -1534,7 +2209,7 @@ def make_js_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_lab
    return(plot_html)
 
 def make_plot(state, bin_days, bin_sums, bin_sums2,plot_title,xa_label,ya_label,ya2_label,plot_type,graph_type='line',show=0):
-   fig, ax1 = plt.subplots()
+   fig = plt.subplots()
    label1 = ya_label
    label2 = ya2_label
    print("PLOT:", state, plot_title, show)
@@ -2540,4 +3215,14 @@ if __name__ == "__main__":
    # execute only if run as a script
    #make_usa_plots()
    #exit()
-   main_menu()
+   if len(sys.argv) > 1:
+      if sys.argv[1] == 'mm':
+         make_movie(sys.argv[2], sys.argv[3])
+      if sys.argv[1] == 'status':
+         make_status_all()
+      if sys.argv[1] == 'status_anim':
+         status_anim()
+      if sys.argv[1] == 'update':
+         update_all()
+   else:
+      main_menu()

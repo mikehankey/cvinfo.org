@@ -2,6 +2,24 @@
 <html>
 <head data-live-domain="codeorigin.jquery.com">
 <style>
+body {
+  font-family: 'Lato', sans-serif;
+
+  background-color: #353333;
+  color: #ccc;
+  text-align: center;
+}
+
+.plot {
+
+}
+.plot_con {
+  background-color: #353333;
+  color: white;
+  margin: 20px;
+  padding: 20px;
+}
+
 .modebar{
       display: none !important;
 }
@@ -19,27 +37,30 @@
    <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        <title>Corona Calculator - COVID-19 Forcasting Tool</title>
+        <title>Corona Calculator - COVID-19 Forecasting Tool</title>
 
         <meta name="author" content="Mike Hankey">
-        <meta name="description" content="Simple math based forcasting tool for helping to predict when corona virus will end.">
+        <meta name="description" content="Simple math based forecasting tool for helping to predict when corona virus will end.">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!--   <script src="./dist/js/cvinfo.min.js?v={VERSION}"></script>-->
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-   <link href="./dist/css/cvinfo.css?v={VERSION}" rel="stylesheet">
 
-   <meta property="og:title" content="Corona Calculator - COVID-19 Forcasting Tool"/>
+<!--
+   <link href="./dist/css/cvinfo.css?v={VERSION}" rel="stylesheet">
+-->
+
+   <meta property="og:title" content="Corona Calculator - COVID-19 Forecasting Tool"/>
    <meta property="og:type" content="article"/>
    <meta property="og:url" content="http://cvinfo.org/"/>
-   <meta property="og:site_name" content="Corona Calculator - COVID-19 Forcasting Tool"/>
-   <meta property="og:description" content="Corona Calculator - COVID-19 Forcasting Tool"/>
+   <meta property="og:site_name" content="Corona Calculator - COVID-19 Forecasting Tool"/>
+   <meta property="og:description" content="Corona Calculator - COVID-19 Forecasting Tool"/>
 
 </head>
 <body>
    <div id="header">
-      <h1>Corona Calculator - COVID-19 Forcasting Tool</h1>
+      <h1>Corona Calculator - COVID-19 Forecasting Tool</h1>
       <div id="up"><a href="http://www.cvinfo.org/">Back to CVInfo.org</a></div>
 
    </div>
@@ -60,7 +81,7 @@ Inital values are based on current cases, growth % and growth decay factors. Dat
 This is a linear calculator and not a model. <BR>
 Perform what if analysis by changing the growth percent and decay variables. <BR>
 Test the impacts of 'herd immunity' by increasing the decay and phantom factors . <BR> 
-Values are based on current data, but can change day to day. Current values for growth decay based on rolling 7 day growth average.  <BR>
+Values are based on current data, but can change day to day. Current values for growth decay based on rolling 14 day growth average.  <BR>
 Updated daily with latest info. 
 </div>
 </td></tr></table>
@@ -72,15 +93,10 @@ Updated daily with latest info.
 {STATE_OPTIONS}
 </select>
 </td></tr>
-<!--
-<tr><td colspan=2>
-<input type=button value="Load Data" onclick="load_data(); return(true);"> 
-</td></tr>
--->
 
 <tr><td>
 Current Cases: </td><td><input id="cases" type=text size=4 maxsize=2 > Curent Cases as of {UPDATE_DATE}</td></tr>
-<tr><td>Current Growth: </td><td><input id="growth" type=text size=4 > Current growth rate. (Last 7 day average) </td></tr>
+<tr><td>Current Growth: </td><td><input id="growth" type=text size=4 > Current growth rate. (Last 14 day average) </td></tr>
 <tr><td>Growth Decay: </td><td><input id="decay" type=text size=4 > Point change to daily growth per day +/- </td></tr>
 <tr><td>Mortality: </td><td><input id="mortality" type=text size=4 > Percentage of cases that end in death.</td></tr>
 <tr><td>Phantom Factor: </td><td><input id="phantom" type=text size=4 value=1> The number of people per case who are asmptomatic or had mild symptoms and never reported or knew. </td></tr>
@@ -89,39 +105,56 @@ Current Cases: </td><td><input id="cases" type=text size=4 maxsize=2 > Curent Ca
 <input type=button onclick="history(); return(true);" value=History> 
 <input type=button onclick="forcast(); return(true);" value=Forecast> 
 </td></tr>
-</form>
 </table>
+
+</form>
 
 NOTE: This forecast is based on a constant factor of growth and is intended for eye-balling the current status or performing what-if scenarios. <br>
 True outcome will most likely vary from these results. <br>
-The forcast will end when either the growth rate of new cases reaches zero or the entire population has been infected. <br> 
+The forecast will end when either the growth rate of new cases reaches zero or the entire population has been infected. <br> 
 
-<table style="background-color:#353333">
-<tr><td valign=top >
-<h3>History</h3>
-<div id='plot_hist_cases'></div>
-<div id='plot_new_cases'></div>
-<div id='plot_hist_death'></div>
-<div id='plot_growth'></div>
-<div id='plot_decay'></div>
-<div id='history'></div>
-</td>
-</tr><tr>
-<td valign=top >
-
-
-<h3>Forcast</h3>
-<div id='plot_f_cases'></div>
-<div id='plot_f_new_cases'></div>
-<div id='plot_f_death'></div>
-<div id='plot_f_growth'></div>
-<div id='plot_f_pie'></div>
-
-
+<h3>Forecast</h3>
 <div id='results'></div>
-</tr>
-</table>
 </div>
+<div class="plot_con">
+<div id='plot_f_cases' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_f_new_cases' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_f_death' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_f_growth' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_f_pie' class="plot"></div>
+</div>
+
+<h3>History</h3>
+<div class="plot_con">
+<div id='plot_hist_cases' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_new_cases' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_hist_death' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_growth' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='plot_decay' class="plot"></div>
+</div>
+<div class="plot_con">
+<div id='history' class="plot"></div>
+</div>
+
+
+
+
 
 <script>
 
@@ -171,7 +204,7 @@ function load_data() {
    state = document.getElementById("state").value;
    document.getElementById("cases").value = data[state]['cases']
    document.getElementById("growth").value = data[state]['growth']
-   document.getElementById("decay").value = data[state]['decay']
+   document.getElementById("decay").value = data[state]['decay'].toFixed(2)
    document.getElementById("pop").value = data[state]['pop']
    document.getElementById("mortality").value = data[state]['mortality']
    history()
@@ -182,7 +215,7 @@ function load_data() {
 function getAvg(dd,n) {
   total = 0
 
-  for (xx = 0; xx <= 6; xx++) {
+  for (xx = 0; xx <= 13; xx++) {
      k = dd.length - xx - 1
      if (k < 0) {
         k = 0
@@ -192,7 +225,7 @@ function getAvg(dd,n) {
         total = total + parseFloat(val)
      }
   }
-  tavg = total / 7;
+  tavg = total / 14;
   return tavg.toFixed(4)
 }
 
@@ -209,7 +242,7 @@ function history() {
    si = data[state] 
    last_cases = 0 
    last_gr = 0 
-   out = "<h3>History</h3><table border=1 style='background-color:#353333'><tr><td>Day</td><td>Growth</td><td>Growth Decay</td><td>7-Day Decay Avg</td><td>New Cases</td><td>Total Cases</td><td>Total Deaths</td><td>Death %</td><td>Total Infected</td><td>Infected %</td></tr>"
+   out = "<h3>History</h3><table border=1 style='background-color:#353333'><tr><td>Day</td><td>Growth</td><td>Decay</td><td>Decay Avg</td><td>New Cases</td><td>Total Cases</td><td>Total Deaths</td><td>Death %</td><td>Total Infected</td><td>Infected %</td></tr>"
    for (i=0;i<si['all_cases'].length;i++) {
       cases = si['all_cases'][i]
       deaths = si['all_deaths'][i]
@@ -236,21 +269,14 @@ function history() {
       iperc = ip.toFixed(2)
 
       last_cases = cases 
-      if (i < 7) {
-         num = i 
-      }
-      else {
-         num = 7
-      }
-      if (num >= 7) {
+      if (i >= 14) {
          dv_avg = 1
          console.log(dk_ar)
-         console.log(num)
          
-         dk_avg = getAvg(dk_ar, 7)
+         dk_avg = getAvg(dk_ar, 14)
       }
       else {
-         dk_avg = 0
+         dk_avg = "NA"
       }
 
  
@@ -285,7 +311,7 @@ function forcast() {
 
 
    tday = new Date() 
-   out = "<h3>Forcast</h3><table border=1 style='background-color:#353333'><tr><td>Day</td><td>Growth</td><td>New Cases</td><td>Total Cases</td><td>Total Deaths</td><td>Death %<td>Total Infected</td><td>Infected %</td></tr>"
+   out = "<table border=1 style='background-color:#353333'><tr><td>Day</td><td>Growth</td><td>New Cases</td><td>Total Cases</td><td>Total Deaths</td><td>Death %<td>Total Infected</td><td>Infected %</td></tr>"
    for (i=0;i<365;i++) {
       new_cases = parseInt(cases * (growth/100))
       if (new_cases > 0 && cases < pop) {
@@ -316,17 +342,17 @@ function forcast() {
    }
    out += "</table>"
    document.getElementById("results").innerHTML= out
-   plot_data(days_ar, cs_ar,"","","Total Cases Forcast ", "plot_f_cases", "bar")
-   plot_data(days_ar, new_ar, "","","New Case Forcast", "plot_f_new_cases", "bar")
-   plot_data(days_ar, gr_ar, "","","Growth Forcast", "plot_f_growth", "bar")
-   plot_data(days_ar, dt_ar, "","","Deaths Forcast", "plot_f_death", "bar")
+   plot_data(days_ar, cs_ar,"","","Total Cases Forecast ", "plot_f_cases", "bar")
+   plot_data(days_ar, new_ar, "","","New Case Forecast", "plot_f_new_cases", "bar")
+   plot_data(days_ar, gr_ar, "","","Growth Forecast", "plot_f_growth", "bar")
+   plot_data(days_ar, dt_ar, "","","Deaths Forecast", "plot_f_death", "bar")
    
    ni = pop - infected
    vls = [ni,infected,deaths]
    lbs= ["Not Infected","Infected","Deaths"]
 
    plot_pie(vls,lbs ,"Final Results","plot_f_pie") 
-   //plot_data(days_ar, dk_ar, "","","Growth Decay Forcast", "plot_f_decay", "line")
+   //plot_data(days_ar, dk_ar, "","","Growth Decay Forecast", "plot_f_decay", "line")
 
 }
 
