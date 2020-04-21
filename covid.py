@@ -72,7 +72,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '2.02.8'
+CUR_VERSION = '2.02.9'
  
 
 
@@ -839,11 +839,11 @@ def state_table(data,us_map_template):
             <td>{:s}</td>
       """.format(state_code,color_of_state,state_name)
       row_html += """
-            <td>{:d}</td>
-            <td>{:d}</td>
-            <td>{:d}</td>
-            <td>{:d}</td>
-            <td>{:d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
             <td>{:0.2f}%</td>
             <td>{:0.2f}%</td>
          </tr>
@@ -893,7 +893,7 @@ def make_main_page():
    rk = 0
    for data in state_rank_list:
       (state_code, state_name, state_population, cases, deaths, new_cases, new_deaths, cpm, dpm, cg_med, dg_med, mortality ) = data
-      print(rk, state_code)
+      #print(rk, state_code)
 
 
    state_table_html,us_map_template = state_table(state_rank_list, us_map_template)
@@ -1235,7 +1235,7 @@ def make_state_page(this_state):
 
    for js_field in js_vals:
       if 'js_vals' not in sjs:
-         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data" + state  )
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data" + this_state  )
          exit()
       else:
          if js_field in sjs['js_vals']:

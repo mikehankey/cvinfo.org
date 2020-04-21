@@ -14,14 +14,16 @@
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <title>COVID-19 - All USA Counties Statistics</title>
 
-        <meta name="author" content="Mike Hankey">
-        <meta name="description" content="COVID 19 (Coronavirus) Stats for {STATE_NAME}, USA, Per Million, By County, Historical">
+   <meta name="author" content="Mike Hankey">
+   <meta name="description" content="COVID 19 (Coronavirus) Stats for all US counties, USA, Per Million, By County, Historical">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
    <script src="./dist/js/cvinfo.min.js?{VERSION}"></script>
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
    <link href="./dist/css/cvinfo.css?{VERSION}" rel="stylesheet">
+
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
 
    <meta property="og:title" content="COVID-19 (Coronavirus) - All USA Counties - Last Update: {LAST_UPDATE}"/>
    <meta property="og:type" content="article"/>
@@ -31,11 +33,12 @@
 
 </head>
 <body>
-
-   <h1>COVID 19 - US Stats</h1> 
-   <div id="up">Last Update: {LAST_UPDATE} <BR>
-   COVID-19 Statistics for all US Counties</div> 
+   <div id="header">
+      <h1>COVID 19 - US Stats</h1> 
+      <div id="up">Last Update: {LAST_UPDATE}</div>
+   </div> 
    <div id="us_map">
+         <h2>COVID-19 Statistics for all US Counties </h2>
    </div>
    <div id="bc"> 
          <div class="hbc">

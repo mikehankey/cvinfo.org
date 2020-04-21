@@ -26,7 +26,9 @@ function actionOnSVGCounty() {
 
 $(function() {
     // Set Active State
-    $('a[href="'+cur_state+'.html"]').addClass('active');
+    if(typeof cur_state != "undefined") {
+      $('a[href="'+cur_state+'.html"]').addClass('active');
+    }
 })
 
 
