@@ -72,7 +72,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '2.02.21'
+CUR_VERSION = '2.02.26'
  
 
 
@@ -1990,7 +1990,7 @@ def get_calc_data(st):
 def make_calc_page():
 
 
-   calc_temp = get_temp("templates/covid-calc.html")
+   calc_temp = get_temp("templates/covid-calc-vince.html")
    files = glob.glob("json/*.json")
    js_data = ""
 

@@ -1,0 +1,86 @@
+/*************
+  Dark Theme (by thezoggy)
+ *************/
+/* overall */
+.reg-table {
+	width: 100%; 
+	color: #ccc;
+	text-align: left;
+	background-color: #353333;
+	border-spacing: 0;
+}
+
+/* header */
+
+.reg-table thead { 
+      border: 1px solid #333;
+      text-transform: uppercase;
+      font-size: .8rem;
+}
+
+
+.reg-table th,
+.reg-table thead td {
+	padding: .75rem; 
+	font-weight: bold;
+	color: #fff;
+	background-color: #000;
+   border-collapse: collapse;
+  
+}
+
+
+.reg-table thead th:first-child {
+   border-radius: 5px 0 0 0;
+}
+
+.reg-table thead th:last-child {
+   border-radius: 0 0 5px  0;
+}
+ 
+
+/* tbody */
+.reg-table td {
+	padding: .75rem .45rem;
+	background-color: #000;
+	border-bottom: #333 1px solid;
+	color: #ccc;
+}
+
+/* hovered row colors */
+.reg-table tbody > tr.hover > td,
+.reg-table tbody > tr:hover > td,
+.reg-table tbody > tr.even:hover > td,
+.reg-table tbody > tr.odd:hover > td {
+	background-color: #000;
+}
+
+/* table processing indicator */
+.reg-table .reg-table-processing {
+	background-position: center center !important;
+	background-repeat: no-repeat !important;
+	/* background-image: url(images/loading.gif) !important; */
+	background-image: url('data:image/gif;base64,R0lGODlhFAAUAKEAAO7u7lpaWgAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBCgACACwAAAAAFAAUAAACQZRvoIDtu1wLQUAlqKTVxqwhXIiBnDg6Y4eyx4lKW5XK7wrLeK3vbq8J2W4T4e1nMhpWrZCTt3xKZ8kgsggdJmUFACH5BAEKAAIALAcAAAALAAcAAAIUVB6ii7jajgCAuUmtovxtXnmdUAAAIfkEAQoAAgAsDQACAAcACwAAAhRUIpmHy/3gUVQAQO9NetuugCFWAAAh+QQBCgACACwNAAcABwALAAACE5QVcZjKbVo6ck2AF95m5/6BSwEAIfkEAQoAAgAsBwANAAsABwAAAhOUH3kr6QaAcSrGWe1VQl+mMUIBACH5BAEKAAIALAIADQALAAcAAAIUlICmh7ncTAgqijkruDiv7n2YUAAAIfkEAQoAAgAsAAAHAAcACwAAAhQUIGmHyedehIoqFXLKfPOAaZdWAAAh+QQFCgACACwAAAIABwALAAACFJQFcJiXb15zLYRl7cla8OtlGGgUADs=') !important;
+}
+
+/* Zebra Widget - row alternating colors */
+.reg-table tr.odd > td {
+	background-color: #202020;
+}
+.reg-table tr.even > td {
+	background-color: #101010;
+}
+ 
+ 
+ 
+.reg-table tfoot td {
+   text-align: right;
+   font-weight: bold
+}
+
+
+table.reg-table tbody tr td:nth-child(2), table.reg-table tbody tr td:nth-child(1) {
+   font-weight: bold;
+   text-align: left;
+}
+ 
