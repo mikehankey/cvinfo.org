@@ -1539,19 +1539,31 @@ def test_anim_data(state, date, data, field='new_cases' ):
        fig.clear()
        plt.close(fig)
 
-def status_anim():
-   state = "FL" 
-   wild_dir = "anim/status/" + state + "/"
-   new_cases_files = sorted(glob.glob(wild_dir + state + "*new_cases*.png"))
-   growth_files = sorted(glob.glob(wild_dir + state + "*growth*.png"))
-   for i in range(0, len(new_cases_files)):
-      print(new_cases_files[i] )
-      print(growth_files[i] )
-      dual = new_cases_files[i].replace("-new_cases", "-dual")
-      outwild = new_cases_files[i].replace("-new_cases", "*")
-      if cfe(dual) == 0:
-         cmd = "montage -mode concatenate -tile 2x1 -geometry +10+10 " + outwild + " " + dual 
-         print(cmd)
+def status_anim(state):
+   sts = []
+   if state == "ALL":
+      state_names, state_codes = load_state_names()
+      for st in state_names:
+         if st != "VI": 
+            sts.append(st)
+   else:
+      sts.append(state)
+   for state in sts:
+      wild_dir = "anim/status/" + state + "/"
+      new_cases_files = sorted(glob.glob(wild_dir + state + "*new_cases*.png"))
+      growth_files = sorted(glob.glob(wild_dir + state + "*growth*.png"))
+      for i in range(0, len(new_cases_files)):
+         print(new_cases_files[i] )
+         print(growth_files[i] )
+         dual = new_cases_files[i].replace("-new_cases", "-dual")
+         outwild = new_cases_files[i].replace("-new_cases", "*")
+         #if cfe(dual) == 0:
+         if True:
+            cmd = "montage -mode concatenate -tile 2x1 -geometry +10+10 " + new_cases_files[i] + " " + growth_files[i] + " " + dual 
+            os.system(cmd)
+            print(cmd)
+         else:
+            print("EXISTS?", dual)
 
 def make_status_data():
    #for each day in series, group data 14/7/3 days prev to that day: find slope/intercept, prep data arrays, plot data (for testing)
@@ -1654,10 +1666,12 @@ def plot_vars(x_vals, x_data, y_vals, y_vals2 = None, title = "", date="", outfi
    plt.xlabel('days')
    if "GROWTH" in title:
       plt.ylabel('case growth percentage')
+      lab = "growth %"
    else:
       plt.ylabel('new cases')
+      lab = "new cases"
    if y_vals2 is not None: 
-      plt.bar(x_data, y_vals2, label='new cases', color='orange')
+      plt.bar(x_data, y_vals2, label=lab, color='orange')
 
    ylim_max = max(y_vals2)
 
@@ -3221,7 +3235,7 @@ if __name__ == "__main__":
       if sys.argv[1] == 'status':
          make_status_all()
       if sys.argv[1] == 'status_anim':
-         status_anim()
+         status_anim(sys.argv[2])
       if sys.argv[1] == 'update':
          update_all()
    else:
