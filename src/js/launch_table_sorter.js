@@ -1,6 +1,6 @@
 function launch_sorter() {
  
-   $('table').tablesorter({
+   $('table.tablesorter').tablesorter({
       widgets        : ['zebra', 'columns'],
       usNumberFormat : true,
       sortReset      : true,
