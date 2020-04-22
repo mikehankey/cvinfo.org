@@ -14,3 +14,12 @@ err_log.txt
 /anim
 test.svg
 test.html
+index.html
+main.html
+all-counties-growth.html
+all-counties-mortality.html
+all-counties.html
+*.gz
+None.png
+corona-calc-vince.html
+corona-calc.html

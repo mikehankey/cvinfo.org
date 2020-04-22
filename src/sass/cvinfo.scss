@@ -7,12 +7,21 @@
    @import "anim";
    @import "selects";
    @import "graphs";
+   @import "form";
 
    body {
       margin:0;
       font-family: 'Lato', sans-serif; 
       background-color:$bg_color;
       color: $font_color;
+   }
+
+   hr {
+     border-color: rgba(150,150,150,.4);
+   }
+
+   #bc hr {
+      margin: 1rem;
    }
 
    #header {
@@ -71,8 +80,23 @@
       cursor: pointer;
    }
 
+   #sub-t {
+      text-align: center;
+      margin: 2rem auto;
+      max-width: 1100px;
+      color: #fff;
+ 
+      h2 {
+         text-align: center;
+      }
+
+      p {
+         margin-top: 0.5rem
+      }
+   }
+
    #us_map {
-      margin: 1.5rem auto;
+      margin: 1.5rem auto 3rem;
       max-width: 800px; 
       position: relative;
 
@@ -172,7 +196,8 @@
    }
 
    table tbody tr td:nth-child(2), 
-   table tbody tr td:nth-child(1){
+   table tbody tr td:nth-child(1),
+   table tbody tr td.l {
       font-weight: bold;
       text-align:  left;
    } 
@@ -189,7 +214,7 @@
 
       .hbc {
          max-width: 1280px;
-         margin:0 auto;
+         margin:0 auto .5rem;
       }
 
       a  { 
@@ -214,7 +239,7 @@
 
    #bc a:hover, #bc a:focus, #bc a:active, #bc a.active {
    background-color: #000;
-   color: #fff; 
+   color: #ffd333; 
    }
 
   
@@ -303,7 +328,33 @@
    dl {
       display: block;
       column-count: 2;   
+
+      &.col1 {
+         column-count: 1;   
+
+         dd, dt {
+            margin-bottom:.8rem;
+         }
+      }
    }
+
+   #state .col1 dd {
+      color: #b1b1b1; 
+   }
+
+   #state dd {
+      span {
+         margin-top: 0;
+         color:#fff;
+         font-weight: bold;
+         display: inline;
+      }
+      i {
+         font-weight:  normal;
+         padding-left: 1rem;
+      }
+   }
+
 
    dd {
       float:left;
@@ -318,7 +369,9 @@
       float:left; 
       width: 150px;
       color: #b1b1b1;
+      text-align: left;
    }
+
 
 
 

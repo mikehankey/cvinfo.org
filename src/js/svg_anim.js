@@ -190,17 +190,19 @@ function init_all_actions() {
 $(function() {
 
    // Init Cur_index
+   if(typeof default_anim_view != 'undefined') {
+      var data_array = window[default_anim_view+'_vals'];  
+      cur_index = data_array.length-1;  
+      max_index = cur_index;
    
-   var data_array = window[default_anim_view+'_vals'];  
-   cur_index = data_array.length-1;  
-   max_index = cur_index;
+      // Init First State val 
+      // => Last one of default_anim_view
+      update_current_state_data(data_array.length-1,default_anim_view);
+   
+      init_anim_selector();
+      init_all_actions();
+   }
 
-   // Init First State val 
-   // => Last one of default_anim_view
-   update_current_state_data(data_array.length-1,default_anim_view);
-
-   init_anim_selector();
-   init_all_actions();
 
 
    

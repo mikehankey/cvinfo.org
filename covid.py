@@ -72,7 +72,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '2.02.8'
+CUR_VERSION = '2.02.21'
  
 
 
@@ -510,6 +510,7 @@ def main_menu():
 
 def make_all_county_page(sort_field = None):
 
+ 
    fp = open("./templates/all-counties.html", "r")
    template = ""
    for line in fp:
@@ -524,11 +525,11 @@ def make_all_county_page(sort_field = None):
       cl2.sort(key=sort_mort,reverse=True)
 
    if sort_field is None:
-      page_desc = "COVID-19 US Hot Spots -- data for all USA Counties, sorted by Cases Per Million"
+      page_desc = "COVID-19 US Hot Spots - data for all USA Counties, sorted by Cases Per Million"
    elif sort_field == 'cg_med':
-      page_desc = "COVID-19 US Hot Spots -- Fastest growing counties for COVID-19, sorted by median case growth (rolling 3 day average)"
+      page_desc = "COVID-19 US Hot Spots - Fastest growing counties for COVID-19, sorted by median case growth (rolling 3 day average)"
    elif sort_field == 'mortality':
-      page_desc = "COVID-19 US Hot Spots -- Highest mortality for COVID-19, all US counties sorted by mortality"
+      page_desc = "COVID-19 US Hot Spots - Highest mortality for COVID-19, all US counties sorted by mortality"
 
    total_c = len(cl2)
 
@@ -537,7 +538,7 @@ def make_all_county_page(sort_field = None):
       <table id="states" class="tablesorter ">
             <thead>
                <tr>
-                  <th>&nbsp;</th>
+                  <th data-sorter="false">&nbsp;</th>
                   <th>County</th>
                   <th>State</th>
                   <th>Population</th>
@@ -596,16 +597,17 @@ def make_all_county_page(sort_field = None):
                   <tr data-state="{:s}" id="{:s}">
                      <td><span class="cl {:s}"></span></td>
                      <td>{:s}</td>
-                     <td>{:s}</td>
+                     <td  class="l">{:s}</td>
          """.format(dr['state'],dr['fips'],color,dr['county'],dr['state'])
+
          row_html += """
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:0.2f}</td>
-                     <td>{:0.2f}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:0.2f}%</td>
+                     <td>{:0.2f}%</td>
                   </tr>
          """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
 
@@ -623,16 +625,24 @@ def make_all_county_page(sort_field = None):
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
    template= template.replace("{VERSION}",CUR_VERSION)
    template= template.replace("{PAGE_DESC}",page_desc)
-
   
 
    html = table_header + rows + table_footer
    html = template.replace("{COUNTY_TABLE}", html)
-   out_file = "all-counties.html"
+
+
    if sort_field == 'cg_med':
       out_file = "all-counties-growth.html"
-   if sort_field == 'mortality':
+      html = html.replace("{active_growth}",'active')
+      html = html.replace("{DEFAUT_SORT_COL}",'8')
+   elif sort_field == 'mortality':
       out_file = "all-counties-mortality.html"
+      html = html.replace("{active_mortality}",'active')
+      html = html.replace("{DEFAUT_SORT_COL}",'5')
+   else:
+      out_file = "all-counties.html"
+      html = html.replace("{active_all}",'active')
+      html = html.replace("{DEFAUT_SORT_COL}",'6')
 
    fp = open(out_file, "w")
    fp.write(html)
@@ -757,7 +767,7 @@ def state_table(data,us_map_template):
    <table id="states" class="tablesorter ">
          <thead>
             <tr>
-               <th>&nbsp;</th>
+               <th data-sorter="false">&nbsp;</th>
                <th>State</th>
                <th>Population</th>
                <th>Cases</th>
@@ -839,11 +849,11 @@ def state_table(data,us_map_template):
             <td>{:s}</td>
       """.format(state_code,color_of_state,state_name)
       row_html += """
-            <td>{:d}</td>
-            <td>{:d}</td>
-            <td>{:d}</td>
-            <td>{:d}</td>
-            <td>{:d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
+            <td>{:,d}</td>
             <td>{:0.2f}%</td>
             <td>{:0.2f}%</td>
          </tr>
@@ -893,7 +903,7 @@ def make_main_page():
    rk = 0
    for data in state_rank_list:
       (state_code, state_name, state_population, cases, deaths, new_cases, new_deaths, cpm, dpm, cg_med, dg_med, mortality ) = data
-      print(rk, state_code)
+      #print(rk, state_code)
 
 
    state_table_html,us_map_template = state_table(state_rank_list, us_map_template)
@@ -1235,7 +1245,7 @@ def make_state_page(this_state):
 
    for js_field in js_vals:
       if 'js_vals' not in sjs:
-         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data" + state  )
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data" + this_state  )
          exit()
       else:
          if js_field in sjs['js_vals']:
@@ -1931,15 +1941,15 @@ def get_calc_data(st):
 
    #xvals7, yvals7 = abline_old(m7, b7, xs[-7:],ys[-7:],st)
 
-   print("SLOPE:", m,b)
-   print("X:", xvals)
-   print("Y:", yvals)
+   #print("SLOPE:", m,b)
+   #print("X:", xvals)
+   #print("Y:", yvals)
 
-   print("STATE:", st)
-   print("GROWTH ARRAY:", growth_ar)
-   print("DECAY ARRAY:", decay_ar)
-   print("DECAY ARRAY:", last_decay)
-   print("DECAY :", decay)
+   #print("STATE:", st)
+   #print("GROWTH ARRAY:", growth_ar)
+   #print("DECAY ARRAY:", decay_ar)
+   #print("DECAY ARRAY:", last_decay)
+   #print("DECAY :", decay)
    #exit()
 
    all_dates = js_vals['dates']
@@ -1992,8 +2002,9 @@ def make_calc_page():
 
    calc_temp = calc_temp.replace("{JS_DATA}", jsf)
    calc_temp = calc_temp.replace("{UPDATE_DATE}",str(datetime.now().strftime('%Y-%m-%d')))
-
    calc_temp = calc_temp.replace("{STATE_OPTIONS}", sopt)
+   calc_temp = calc_temp.replace("{VERSION}",CUR_VERSION)  
+
    out = open("corona-calc.html", "w")
    out.write(calc_temp)
         
