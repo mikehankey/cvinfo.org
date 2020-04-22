@@ -72,7 +72,7 @@ else:
 
 # UPDATE THIS NUMBER WHEN THE JS or CSS ARE CACHED
 # AND RE-RENERATE THE TEMPLATE
-CUR_VERSION = '2.02.9'
+CUR_VERSION = '2.02.18'
  
 
 
@@ -596,16 +596,17 @@ def make_all_county_page(sort_field = None):
                   <tr data-state="{:s}" id="{:s}">
                      <td><span class="cl {:s}"></span></td>
                      <td>{:s}</td>
-                     <td>{:s}</td>
+                     <td  class="l">{:s}</td>
          """.format(dr['state'],dr['fips'],color,dr['county'],dr['state'])
+
          row_html += """
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:d}</td>
-                     <td>{:0.2f}</td>
-                     <td>{:0.2f}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:,d}</td>
+                     <td>{:0.2f}%</td>
+                     <td>{:0.2f}%</td>
                   </tr>
          """.format(int(dr['population']),int(dr['cases']),int(dr['deaths']),int(dr['cpm']),int(dr['dpm']),float(dr['cg_med']),float(dr['mortality']))
 
@@ -623,16 +624,21 @@ def make_all_county_page(sort_field = None):
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
    template= template.replace("{VERSION}",CUR_VERSION)
    template= template.replace("{PAGE_DESC}",page_desc)
-
+ 
   
 
    html = table_header + rows + table_footer
    html = template.replace("{COUNTY_TABLE}", html)
    out_file = "all-counties.html"
+
    if sort_field == 'cg_med':
       out_file = "all-counties-growth.html"
+      template = template.replace('{active_growth}','active')
    if sort_field == 'mortality':
       out_file = "all-counties-mortality.html"
+      template = template.replace('{active_mortality}','active')
+   else:
+      template = template.replace('{active_all}','active')
 
    fp = open(out_file, "w")
    fp.write(html)
@@ -757,7 +763,7 @@ def state_table(data,us_map_template):
    <table id="states" class="tablesorter ">
          <thead>
             <tr>
-               <th>&nbsp;</th>
+               <th data-sorter="false">&nbsp;</th>
                <th>State</th>
                <th>Population</th>
                <th>Cases</th>

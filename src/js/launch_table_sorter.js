@@ -1,20 +1,20 @@
 function launch_sorter() {
+ 
+   $('table').tablesorter({
+      widgets        : ['zebra', 'columns'],
+      usNumberFormat : true,
+      sortReset      : true,
+      sortRestart    : true
+   });
 
-  // if($('#country-table').length!=0) {
-      $.tablesorter.addParser({ 
-         id: 'us_format',
-         is: function(s) {   return false;  }, 
-         format: function(s) {
-             // format your data for normalization 
-             return s.replace(',','').replace(/,/g,'');
-         }, 
-         // set type, either numeric or text 
-         type: 'numeric' 
-     }); 
-     
-
-      $("table thead th:eq(0)").data("sorter", false);
-      $('table').tablesorter({
+   if(typeof dsc !='undefined') {
+      $('th[data-column='+dsc+']').click().click();
+   }
+   
+   // Color column
+   /*
+   $("table thead th:eq(0)").data("sorter", false);
+   $('table').tablesorter({
          widgets        : ['zebra', 'columns'],
          usNumberFormat : false,
          sortReset      : true,
@@ -24,14 +24,14 @@ function launch_sorter() {
             3:{ sorter:'us_format'},
             4:{ sorter:'us_format'},
             5:{ sorter:'us_format'},
-            6:{ sorter:'us_format'} 
+            6:{ sorter:'us_format'},
+            7:{ sorter:'us_format'},
+            8:{ sorter:'us_format'} 
          }
-      });
+   });
 
-      // Default Sorting: CPM
-      $('th[data-column=5]').click().click();
- 
+   // Default Sorting: CPM
    
-
+  */
   
 }
