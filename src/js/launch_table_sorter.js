@@ -8,6 +8,7 @@ function launch_sorter() {
    });
 
    if(typeof dsc !='undefined') {
+      console.log("DSC ", dsc);
       $('th[data-column='+dsc+']').click().click();
    }
    

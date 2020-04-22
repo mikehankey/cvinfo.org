@@ -7,6 +7,7 @@
    @import "anim";
    @import "selects";
    @import "graphs";
+   @import "form";
 
    body {
       margin:0;
@@ -81,8 +82,10 @@
 
    #sub-t {
       text-align: center;
-      margin: 2rem 0;
-
+      margin: 2rem auto;
+      max-width: 1100px;
+      color: #fff;
+ 
       h2 {
          text-align: center;
       }
@@ -325,7 +328,33 @@
    dl {
       display: block;
       column-count: 2;   
+
+      &.col1 {
+         column-count: 1;   
+
+         dd, dt {
+            margin-bottom:.8rem;
+         }
+      }
    }
+
+   #state .col1 dd {
+      color: #b1b1b1; 
+   }
+
+   #state dd {
+      span {
+         margin-top: 0;
+         color:#fff;
+         font-weight: bold;
+         display: inline;
+      }
+      i {
+         font-weight:  normal;
+         padding-left: 1rem;
+      }
+   }
+
 
    dd {
       float:left;
@@ -340,7 +369,9 @@
       float:left; 
       width: 150px;
       color: #b1b1b1;
+      text-align: left;
    }
+
 
 
 
