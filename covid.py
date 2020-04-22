@@ -1586,15 +1586,21 @@ def make_status_data():
             js = load_json_file("json/" + st + ".json")
             js_vals = {}
             js_vals['dates'] = []
+            js_vals['zero_days'] = []
             js_vals['cases_vals'] = []
             js_vals['new_cases_vals'] = []
             js_vals['case_growth_vals'] = []
-
+            zd = 0
+            started = 0
             for data in js['state_stats']:
+               js_vals['zero_days'].append(zd)
                js_vals['dates'].append(data['date'])
                js_vals['cases_vals'].append(data['cases'])
                js_vals['new_cases_vals'].append(data['new_cases'])
                js_vals['case_growth_vals'].append(data['cg_last'])
+               if data['cases'] > 0 or started > 0:
+                  zd += 1
+                  started = 1
 
             print(js_vals)
             seq_data[st] = make_status_seq_data(st, js_vals)
@@ -1606,7 +1612,8 @@ def make_status_seq_data(state, js_vals):
    ys = []
    slopes = {}
    for i in range(0,len(js_vals['dates'])):
-      xs.append(i-14)
+      #xs.append(i-14)
+      xs.append(js_vals['zero_days'][i])
 
    print(len(xs))
    print(len(js_vals['case_growth_vals']))
@@ -1673,7 +1680,7 @@ def plot_vars(x_vals, x_data, y_vals, y_vals2 = None, title = "", date="", outfi
    #plt.plot(x_vals, y_vals7, '--', label='7 Day Trajectory', color='green')
    #plt.plot(x_vals, y_vals3, ':', label='3 Day Trajectory', color='red')
    plt.title(title, fontsize=16)
-   plt.xlabel('days')
+   plt.xlabel('days since first case')
    if "GROWTH" in title:
       plt.ylabel('case growth percentage')
       lab = "growth %"
