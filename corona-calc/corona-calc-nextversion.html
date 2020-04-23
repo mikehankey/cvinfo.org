@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>COVID-19 Forecasting Tool - Corona Calculator</title>   
+
+	<meta name="author" content="Mike Hankey">
+	<meta name="description" content="Simple math based forecasting tool for helping to predict when corona virus will end.">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+   <meta property="og:title" content="Corona Calculator - COVID-19 Forecasting Tool"/>
+   <meta property="og:type" content="article"/>
+   <meta property="og:url" content="http://cvinfo.org/"/>
+   <meta property="og:site_name" content="COVID-19 Statistics"/>
+   <meta property="og:description" content="Simple math based forecasting tool for helping to predict when corona virus will end."/>
+   
+   <style>
+
+      body {
+         margin:0;
+         font-family: 'Lato', sans-serif;  
+         color:#676a6c;
+      }
+
+      /* Layout */
+      #header {
+         text-align: center;
+      }
+
+      #main-content {
+         text-align: center;
+         max-width: 1100px;
+         margin: 0 auto;
+      }
+      
+      #results {
+         margin: 2rem 1rem;
+      }
+
+      /* Typo */ 
+      h1 {
+         margin-bottom:.5em;
+      }
+
+      h2 {
+         margin-top: 0;
+      }
+      
+      select {
+         display: inline-block;
+         width: 100%;
+         max-width: 20rem;
+         height: calc(1.5em + .75rem + 2px);
+         padding: .375rem 1.75rem .375rem .75rem;
+         font-size: 1rem;
+         font-weight: 400;
+         line-height: 1.5;
+         color: #495057;
+         vertical-align: middle;
+         background: #fff url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjUiIHZpZXdCb3g9IjAgMCA0IDUiPjxwYXRoIGZpbGw9IiUyMzM0M2E0MCIgZD0iTTIgMEwwIDJoNHptMCA1TDAgM2g0eiIvPjwvc3ZnPg==") no-repeat right .75rem center/8px 10px;
+         border: 1px solid #ced4da;
+         border-radius: .25rem;
+         -webkit-appearance: none;
+         -moz-appearance: none;
+         appearance: none;
+         transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+         word-wrap: normal;
+      }
+
+      #loader img {
+         max-width: 100px;
+         display: block;
+         margin: 0 auto;
+      }
+
+      /* Gauges */
+      .gauge_cont {
+         max-width: 800px;
+         margin: 0 auto;
+      }
+
+      .metric {
+         display: inline-block;
+         width: 24%;
+         margin-top: 2rem;
+      }
+
+      .metric svg {
+         margin:1rem;
+      }
+
+      .metric path {
+         stroke-width: 75;
+         stroke: #ecf0f1;
+         fill: none;
+      }
+
+      .metric .title {
+         font-size: 4.5em;
+      }  
+
+      .metric.good path.data-arc {
+         stroke: green;
+      }
+      
+      .metric.good text {
+         fill: green;
+      }
+
+      .metric.bad path.data-arc {
+         stroke: orange;
+      }
+      
+      .metric.bad text {
+         fill: orange;
+      }
+
+      .metric.ugly path.data-arc {
+         stroke: #c30202;
+      }
+      
+      .metric.ugly text {
+         fill: #c30202;
+      }
+ 
+ 
+   </style>
+</head>
+<body>
+   <div id="header">
+      <h1>Corona Calculator</h1>
+      <h2>COVID-19 Forecasting Tool</h2>
+   </div>
+   <div id="main-content">
+      <div id="state_select"></div>
+ 
+      <div id="results">
+         <div id="loader" style="display:none"><img src="./img/loader.svg"/></div>
+          
+         <div id="graphs">
+               <div id="new_cases_forecast_cont">
+                  <div class="gauge_cont" style="visibility:hidden">
+                        <div class="metric 14days" data-ratio=".99">
+                           <svg viewBox="0 0 1000 500">
+                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
+                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold">0 days</text>
+                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 14 days trend</text>
+                           </svg>
+                        </div>
+                        <div class="metric 7days"  data-ratio=".69">
+                           <svg viewBox="0 0 1000 500">
+                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
+                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="300" font-size="140" font-weight="bold">0 days</text>
+                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 7 days trend</text>
+                           </svg>
+                        </div>
+                        <div class="metric 3days"  data-ratio=".49">
+                           <svg viewBox="0 0 1000 500">
+                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
+                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="300" font-size="140" font-weight="bold">0 days</text>
+                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 3 days trend</text>
+                           </svg>
+                        </div>
+                        <div class="metric new"  data-ratio=".19">
+                           <svg viewBox="0 0 1000 500">
+                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
+                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="300" font-size="140" font-weight="bold">0 days</text>
+                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on latest</text>
+                           </svg>
+                        </div>
+                  </div>
+                  <div id="new_cases_forecast"></div>
+               </div>
+            
+               <div id="new_cases_div"></div>
+               <div id="growth_forecast"></div>
+               <div id="growth_div"></div>
+               <div id="decay_div"></div>
+               <div id="new_deaths_div"></div>
+               <div id="deaths_growth_div"></div>
+         </div>
+
+      </div>
+   </div>
+   <div id="footer">
+
+   </div>
+
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script>
+<script src="./js/corona-ui.js"></script>
+<script src="./js/corona-calc.js"></script>
+<script src="./js/regression.js"></script>
+<script>
+$(function() {
+
+   var polar_to_cartesian, svg_circle_arc_path, animate_arc;
+
+   polar_to_cartesian = function(cx, cy, radius, angle) {
+   var radians;
+   radians = (angle - 90) * Math.PI / 180.0;
+   return [Math.round((cx + (radius * Math.cos(radians))) * 100) / 100, Math.round((cy + (radius * Math.sin(radians))) * 100) / 100];
+   };
+
+   svg_circle_arc_path = function(x, y, radius, start_angle, end_angle) {
+   var end_xy, start_xy;
+   start_xy = polar_to_cartesian(x, y, radius, end_angle);
+   end_xy = polar_to_cartesian(x, y, radius, start_angle);
+   return "M " + start_xy[0] + " " + start_xy[1] + " A " + radius + " " + radius + " 0 0 0 " + end_xy[0] + " " + end_xy[1];
+   };
+
+   animate_arc = function(ratio, svg, perc) {
+      var arc, center, radius, startx, starty;
+      arc = svg.path('');
+      center = 500;
+      radius = 450;
+      startx = 0;
+      starty = 450;
+      return Snap.animate(0, ratio, (function(val) {
+         var path;
+         arc.remove();
+         path = svg_circle_arc_path(500, 500, 450, -90, val * 180.0 - 90);
+         arc = svg.path(path);
+         arc.attr({
+            class: 'data-arc'
+         });
+         perc.text(Math.round(val * 100) + ' days');
+      }), Math.round(2000 * ratio), mina.easeinout);
+   };
+
+   function start_gauges(cont) {
+      $('#' + cont + '.metric').each(function() {
+         var ratio, svg, perc;
+         ratio = $(this).data('ratio');
+         svg = Snap($(this).find('svg')[0]);
+         perc = $(this).find('text.percentage');
+         if(ratio<=0.3) {
+            $(this).addClass('good');
+         } else if(ratio<=0.6) {
+            $(this).addClass('bad');
+         } else {
+            $(this).addClass('ugly'); 
+         }
+         animate_arc(ratio, svg, perc);
+      });
+   }
+ 
+});
+</script>
+</body>
+</html>
