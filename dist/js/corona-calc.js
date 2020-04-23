@@ -116,9 +116,7 @@ function doSomethingWithJsonData(json_data ) {
 
 
    fitsObj = getFits(zdv4, decay_vals)
-   alert(yd2)
-   alert(yd3)
-   out2 = plot_data_line(zdv4, decay_vals,fitsObj.yd2, fitsObj.yd3, fitsObj.yd4, fitsObj.exp_yd, "zero day", "growth decay", title, "decay_div", "line")
+   out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "zero day", "growth decay", title, "decay_div", "line")
 
 }
 
@@ -162,7 +160,6 @@ function getFits(xs,ys) {
    lr_xs = xs.slice(Math.max(xs.length - 14, 1))
    lr_ys = ys.slice(Math.max(ys.length - 14, 1))
    lx_14 = linearRegression(lr_xs,lr_ys)
-
    // 7 DAY FIT
    lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
    lr_ys = ys.slice(Math.max(ys.length - 7, 1))
@@ -208,10 +205,48 @@ function getFits(xs,ys) {
       ys4.push(PY3)
       //out += PY.toString() + "<BR>";
    }
-   alert(ys2)
-   alert(ys3)
-   alert(ys4)
-   alert(exp_ys)
+
+   // add 60 day projections
+   last_x = X
+   last_zd14_day = 9999
+   last_zd7_day = 9999
+   last_zd3_day = 9999
+   last_exp_day = 9999
+
+   proj_days = 60
+   exp_pos = 0
+   for (var i = 0; i <= proj_days; i++) {
+      TX = last_x + i
+      PY14 = lx_14['slope'] * TX + lx_14['intercept']
+      PY7 = lx_7['slope'] * TX + lx_7['intercept']
+      PY3 = lx_3['slope'] * TX + lx_3['intercept']
+      xs.push(TX)
+      ys.push(0)
+      ys2.push(PY14)
+      ys3.push(PY7)
+      ys4.push(PY3)
+      if (last_zd14_day == 9999 && PY14 <= 0) {
+         last_zd14_day = i
+      }
+      if (last_zd7_day == 9999 && PY7 <= 0) {
+         last_zd7_day = i
+      }
+      if (last_zd3_day == 9999 && PY3 <= 0) {
+         last_zd3_day = i
+      }
+      if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+         last_exp_day = i
+      }
+      if (exp_ys[i+last_x] > 0) {
+         exp_pos = 1
+      }
+
+   }
+
+
+
+
+
    robj = {
       "nxs" : nxs,
       "ys2" : ys2,
@@ -219,6 +254,10 @@ function getFits(xs,ys) {
       "ys4" : ys4,
       "exp_ys" : exp_ys
    }
+
+
+
+
    return(robj)
 }
 
