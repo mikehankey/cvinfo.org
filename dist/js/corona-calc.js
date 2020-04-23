@@ -23,7 +23,40 @@ function linearRegression(x,y){
         return lr;
 }
 
-function doSomethingWithJsonData(json_data, div_id) {
+function forecast_html(pred, type, state_name) {
+   out = ""
+   if (pred[0] == 9999) {
+      out += "<li class='bad'>Based on the " + type + " 14 day trajectory, " + state_name + " will not reach a zero day. </li>"
+   }
+   else {
+      out += "<li class='good'>Based on the " + type + " 14 day trajectory, " + state_name + " will reach the zero day in " + pred[0].toString() + " more days.</li>"
+   }
+   if (pred[1] == 9999) {
+      out += "<li class='bad'>Based on the " + type + " 7 day trajectory, " + state_name + " will not reach a zero day. "
+   }
+   else {
+      out += "<li class='good'>Based on the " + type + " 7 day trajectory, " + state_name + " will reach the zero day in " + pred[1].toString() + " more days."
+   }
+   if (pred[2] == 9999) {
+      out += "<li class='bad'>Based on the " + type + " 3 day trajectory, " + state_name + " will not reach a zero day. "
+   }
+   else {
+      out += "<li class='good'>Based on the " + type + " 3 day trajectory, " + state_name + " will reach the zero day in " + pred[2].toString() + " more days."
+   }
+   if (pred[3] == 9999) {
+      out += "<li class='bad'>Based on the " + type + " curve, " + state_name + " will not reach a zero day in the next 60 days. "
+   }
+   else if (pred[3] <= 0) {
+      out += "<li class='good'>Based on the " + type + " curve, the zero day for " + state_name + " has already passed. "
+   }
+   else {
+      out += "<li class='good'>Based on the " + type + " curve, " +  state_name + " will reach the zero day in " + pred[3].toString() + " more days."
+   }
+   out += "</ul>"
+   return(out)
+}
+
+function doSomethingWithJsonData(json_data ) {
    out = ""
    state_name = json_data['summary_info'].state_name
    ss = json_data['state_stats']
@@ -32,39 +65,121 @@ function doSomethingWithJsonData(json_data, div_id) {
    var zero_day_vals = []
    var total_cases_vals = []
    var new_cases_vals = []
-   var deaths_vals = []
+   var new_deaths_vals = []
    var case_growth_vals = []
    var death_growth_vals = []
+   var decay_vals = []
 
    zd = 0
+   last_growth = 0
    ss.forEach(function (arrayItem) {
       date_vals.push(arrayItem.date);
       zero_day_vals.push(zd);
       total_cases_vals.push(arrayItem.cases);
       new_cases_vals.push(arrayItem.new_cases);
-      deaths_vals.push(arrayItem.deaths);
+      new_deaths_vals.push(arrayItem.new_deaths);
       case_growth_vals.push(arrayItem.cg_last);
       death_growth_vals.push(arrayItem.dg_last);
       zd = zd + 1
       last_date = arrayItem.date
+      decay = arrayItem.cg_last - last_growth
+      decay_vals.push(decay);
+      last_growth = arrayItem.cg_last 
    });
+
    title = state_name.toUpperCase() + " NEW CASES " + last_date
    fit_days = 14
-   out = makeGraph(zero_day_vals, new_cases_vals,title, "zero day", "new cases", "new_cases_div", fit_days, 60)
-   document.getElementById("results_panel").innerHTML= out
+   zdv = zero_day_vals.slice();
+   zdv2 = zero_day_vals.slice();
+   zdv3 = zero_day_vals.slice();
+   zdv4 = zero_day_vals.slice();
+   pred = makeGraph(zero_day_vals, new_cases_vals,title, "zero day", "new cases", "new_cases_div", fit_days, 60)
+   out = forecast_html(pred, "new case ", state_name, )
+
+
+
+   document.getElementById("new_cases_forecast").innerHTML= out
+
+   title = state_name.toUpperCase() + " GROWTH " + last_date
+   pred = makeGraph(zdv, case_growth_vals,title, "zero day", "growth", "growth_div", fit_days, 60)
+   out = forecast_html(pred, "growth", state_name, )
+   document.getElementById("growth_forecast").innerHTML= out
+
+   title = state_name.toUpperCase() + " NEW DEATHS " + last_date
+   out2 = makeGraph(zdv2, new_deaths_vals,title, "zero day", "new deaths", "new_deaths_div", fit_days, 60)
+   //document.getElementById("results_panel").innerHTML= out
+
+   title = state_name.toUpperCase() + " DEATH GROWTH " + last_date
+   out2 = makeGraph(zdv3, death_growth_vals,title, "zero day", "death growth", "deaths_growth_div", fit_days, 60)
+
+   title = state_name.toUpperCase() + " GROWTH DECAY " + last_date
+   out2 = plot_data_line(zdv4, decay_vals,"zero day", "growth decay", title, "decay_div", "line")
 
 }
 
-function makeGraph(xs,ys,title,xlab,ylab,div_id,fit_days,proj_days) {
+function extraPoints(data,polyReg) {
+    name = "polynomial"
+    var extrapolatedPts = [];
+    for(var i = 0; i < data.length; i++){
+        var val = data[i][0];
+        switch(name){
+        case "polynomial":
+            extrapolatedPts.push({x: val, y: polyReg.equation[2] * Math.pow(val,2) + polyReg.equation[1] * val + polyReg.equation[0]});
+            break;
+        case "exponential":
+            extrapolatedPts.push({x: val, y: expoReg.equation[0] * Math.exp(val * expoReg.equation[1])}); //or use numbers.js per https://gist.github.com/zikes/4279121, var regression = numbers.statistic.exponentialRegression(pts);
+            break;
+        case "power":
+            extrapolatedPts.push({x: val, y: powReg.equation[0] * Math.pow(val,powReg.equation[1])});
+            break;
+        case "logarithmic":
+            extrapolatedPts.push({x: val, y: logReg.equation[0] + logReg.equation[1] * Math.log(val)});
+            break;
+        case "linear":
+        default:
+            extrapolatedPts.push({x: val, y: linReg.equation[0] * val + linReg.equation[1]});
+        }
+    }
+    return extrapolatedPts;
+}
 
-   out = ""
+function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
+   var xs = xs_in
+   var ys = ys_in
+   var out = ""
    // Make fit lines
    // 14 days
-   ys2 = []
+   var ys2 = []
    // 7 days
-   ys3 = []
+   var ys3 = []
    // 3 days
-   ys4 = []
+   var ys4 = []
+
+   // curve fit
+
+   var rdata = []
+   for (var i  = 0; i <= xs.length -1; i++) {
+      var point = [xs[i], ys[i]]
+      rdata.push(point)
+      var last_x = xs[i]
+   }
+   
+   var linReg = regression('polynomial', rdata);
+   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+   for (var i = 0; i<= 60; i++) {
+      tx = last_x + i
+      point = [tx, ys[i]]
+      rdata.push(point)
+
+   }
+   
+   var exp = extraPoints(rdata,linReg)
+
+   var exp_ys = []
+   for (var i  = 0; i <= exp.length -1; i++) {
+      ey = exp[i].y
+      exp_ys.push(ey)
+   } 
 
    // 14 DAY FIT
    lr_xs = xs.slice(Math.max(xs.length - fit_days, 1))
@@ -102,6 +217,15 @@ function makeGraph(xs,ys,title,xlab,ylab,div_id,fit_days,proj_days) {
       else {
          PY3 = 0
       }
+      if (PY14 < 0) {
+         PY14 = 0
+      }
+      if (PY7 < 0) {
+         PY7 = 0
+      }
+      if (PY3 < 0) {
+         PY3 = 0
+      }
       ys2.push(PY14)
       ys3.push(PY7)
       ys4.push(PY3)
@@ -109,7 +233,12 @@ function makeGraph(xs,ys,title,xlab,ylab,div_id,fit_days,proj_days) {
    }
 
    last_x = X
+   last_zd14_day = 9999
+   last_zd7_day = 9999
+   last_zd3_day = 9999
+   last_exp_day = 9999
 
+   exp_pos = 0
    for (var i = 0; i <= proj_days; i++) {
       TX = last_x + i   
       PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
@@ -120,23 +249,73 @@ function makeGraph(xs,ys,title,xlab,ylab,div_id,fit_days,proj_days) {
       ys2.push(PY14)
       ys3.push(PY7)
       ys4.push(PY3)
+      if (last_zd14_day == 9999 && PY14 <= 0) {
+         last_zd14_day = i
+      }
+      if (last_zd7_day == 9999 && PY7 <= 0) {
+         last_zd7_day = i
+      }
+      if (last_zd3_day == 9999 && PY3 <= 0) {
+         last_zd3_day = i
+      }
+      if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+         last_exp_day = i
+      }
+      if (exp_ys[i+last_x] > 0) {
+         exp_pos = 1
+      }
+      
    } 
+   if (last_exp_day == 9999) {
+      if (exp_ys.slice(-1)[0] <= 0) {
+         last_exp_day = 0
+      }
+      
+   }
+
+   //last_zd14_val = ys2.slice(-1)[0] 
+   //last_zd7_val = ys3.slice(-1)[0] 
+   //last_zd3_val = ys4.slice(-1)[0] 
 
 
+   out = [last_zd14_day, last_zd7_day, last_zd3_day, last_exp_day]
 
-   plot_data(xs,ys,ys2,ys3,ys4, xlab,ylab,title,div_id,"bar") 
+   plot_data(xs,ys,ys2,ys3,ys4,exp_ys, xlab,ylab,title,div_id,"bar") 
 
    return(out)
 
 }
 
-function getJSONData(url, div_id) {
+function load_data() {
+   var state = $('#state_selector').val();
+   var state_name = $('#state_selector option:selected').text();
+   var url = "./json/" + state + ".json"
+   getJSONData(url, 1)
+
+}
+
+function makeStateSelect(states) {
+   sel = "<form><select id=\"state_selector\" onchange='load_data()' >"
+   for (var i = 0; i < states.length; i++) {
+      sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
+   }
+   sel += "</select></form>"
+   document.getElementById("state_select").innerHTML= sel
+}
+
+function getJSONData(url, cb_func) {
    $.ajax({
       type: "get",
       url:  url,
       dataType: "json",
+ 
       success: function (result, status, xhr) {
-          doSomethingWithJsonData(result, div_id);
+          if (cb_func == 1) {
+             doSomethingWithJsonData(result );
+          }
+          if (cb_func == 2) {
+             makeStateSelect(result );
+          }
       },
       error: function (xhr, status, error) {
         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
@@ -144,7 +323,52 @@ function getJSONData(url, div_id) {
    });
 }
 
-function plot_data(xd,yd,yd2,yd3,yd4,xl,yl,t,dv,type) {
+
+function plot_data_line(xd,yd,xl,yl,t,dv,type) {
+   var trace1 = {
+      x: xd,
+      y: yd,
+      name: yl,
+      type: type
+   }
+   var data = [trace1 ]
+   var layout = {
+      title : t,
+      yaxis : {
+         title: {
+            text: yl
+         },
+         autorange: true,
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000'
+      },
+      xaxis : {
+         title: {
+            text: xl
+         },
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000'
+
+      }
+   }
+
+   Plotly.newPlot(dv, data, layout, {responsive: true});
+
+}
+
+function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
+
+   ymax = Math.max.apply(Math, yd)
    var trace1 = {
       x: xd,
       y: yd,
@@ -169,13 +393,46 @@ function plot_data(xd,yd,yd2,yd3,yd4,xl,yl,t,dv,type) {
       name: "3 Day Traj",
       type: "line" 
    }
-   var data = [trace1, trace2, trace3,trace4]
+   var trace5 = {
+      x: xd,
+      y: exp_y,
+      name: "Curve",
+      type: "line" 
+   }
+   var data = [trace1, trace2, trace3,trace4,trace5]
    var config = {responsive: true}
+ 
 
    var layout = {
-      title : t
+      title : t,
+      yaxis : {
+         title: {
+            text: yl
+         },
+         range: [0,ymax],
+         autorange: false,
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000'
+      }, 
+      xaxis : {
+         title: {
+            text: xl
+         },
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000'
+
+      } 
    }
-   alert(dv)
    Plotly.newPlot(dv, data, layout, {responsive: true});
 }
 

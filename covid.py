@@ -729,6 +729,7 @@ def publish_site_old():
 
 def merge_state_data():
 
+   sjson = []
    state_names, state_codes = load_state_names()
    asd = []
    acd = []
@@ -3177,6 +3178,8 @@ def load_county_data():
 
 
 def load_state_names():
+   js = []
+
    fp = open("./data/state-names.txt", "r")
    state_names = {}
    state_codes = {}
@@ -3185,6 +3188,13 @@ def load_state_names():
       name,st = line.split(",")
       state_names[st] = name
       state_codes[name] = st 
+      stj = {
+         "state_code": st,
+         "state_name": name,
+      }
+      js.append(stj)
+
+   save_json_file("json/states.json", js)
    return(state_names, state_codes)
 
 def load_state_pop():
