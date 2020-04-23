@@ -69,6 +69,7 @@ function doSomethingWithJsonData(json_data ) {
    var case_growth_vals = []
    var death_growth_vals = []
    var decay_vals = []
+   var mortality_vals = []
 
    zd = 0
    last_growth = 0
@@ -80,6 +81,7 @@ function doSomethingWithJsonData(json_data ) {
       new_deaths_vals.push(arrayItem.new_deaths);
       case_growth_vals.push(arrayItem.cg_last);
       death_growth_vals.push(arrayItem.dg_last);
+      mortality_vals.push(arrayItem.mortality);
       zd = zd + 1
       last_date = arrayItem.date
       decay = arrayItem.cg_last - last_growth
@@ -93,6 +95,7 @@ function doSomethingWithJsonData(json_data ) {
    zdv2 = zero_day_vals.slice();
    zdv3 = zero_day_vals.slice();
    zdv4 = zero_day_vals.slice();
+   zdv5 = zero_day_vals.slice();
    pred = makeGraph(zero_day_vals, new_cases_vals,title, "zero day", "new cases", "new_cases_div", fit_days, 60)
    out = forecast_html(pred, "new case ", state_name, )
 
@@ -114,10 +117,15 @@ function doSomethingWithJsonData(json_data ) {
 
    title = state_name.toUpperCase() + " GROWTH DECAY " + last_date
 
-
+   // case decay
    fitsObj = getFits(zdv4, decay_vals)
- 
-   out2 = plot_data_line(zdv4, decay_vals,fitsObj.yd2, fitsObj.yd3, fitsObj.yd4, fitsObj.exp_yd, "zero day", "growth decay", title, "decay_div", "line")
+   out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "zero day", "growth decay", title, "decay_div", "line")
+
+   // mortality div
+   fitsObj = getFits(zdv5, mortality_vals)
+   title = state_name.toUpperCase() + " MORTALITY " + last_date
+
+   out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "zero day", "mortality percentage", title, "mortality_div", "line")
 
 }
 
@@ -161,7 +169,6 @@ function getFits(xs,ys) {
    lr_xs = xs.slice(Math.max(xs.length - 14, 1))
    lr_ys = ys.slice(Math.max(ys.length - 14, 1))
    lx_14 = linearRegression(lr_xs,lr_ys)
-
    // 7 DAY FIT
    lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
    lr_ys = ys.slice(Math.max(ys.length - 7, 1))
@@ -207,10 +214,48 @@ function getFits(xs,ys) {
       ys4.push(PY3)
       //out += PY.toString() + "<BR>";
    }
-   console.log(ys2)
-   console.log(ys3)
-   console.log(ys4)
-   console.log(exp_ys)
+
+   // add 60 day projections
+   last_x = X
+   last_zd14_day = 9999
+   last_zd7_day = 9999
+   last_zd3_day = 9999
+   last_exp_day = 9999
+
+   proj_days = 60
+   exp_pos = 0
+   for (var i = 0; i <= proj_days; i++) {
+      TX = last_x + i
+      PY14 = lx_14['slope'] * TX + lx_14['intercept']
+      PY7 = lx_7['slope'] * TX + lx_7['intercept']
+      PY3 = lx_3['slope'] * TX + lx_3['intercept']
+      xs.push(TX)
+      ys.push(0)
+      ys2.push(PY14)
+      ys3.push(PY7)
+      ys4.push(PY3)
+      if (last_zd14_day == 9999 && PY14 <= 0) {
+         last_zd14_day = i
+      }
+      if (last_zd7_day == 9999 && PY7 <= 0) {
+         last_zd7_day = i
+      }
+      if (last_zd3_day == 9999 && PY3 <= 0) {
+         last_zd3_day = i
+      }
+      if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+         last_exp_day = i
+      }
+      if (exp_ys[i+last_x] > 0) {
+         exp_pos = 1
+      }
+
+   }
+
+
+
+
+
    robj = {
       "nxs" : nxs,
       "ys2" : ys2,
@@ -218,6 +263,10 @@ function getFits(xs,ys) {
       "ys4" : ys4,
       "exp_ys" : exp_ys
    }
+
+
+
+
    return(robj)
 }
 
@@ -390,10 +439,26 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
    return(out)
 
 }
- 
+
+function load_data() {
+   var state = $('#state_selector').val();
+   var state_name = $('#state_selector option:selected').text();
+   var url = "../json/" + state + ".json"
+   getJSONData(url, 1)
+
+}
+
+function makeStateSelect(states) {
+   sel = "<form><select id=\"state_selector\" onchange='load_data()' >"
+   for (var i = 0; i < states.length; i++) {
+      sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
+   }
+   sel += "</select></form>"
+   document.getElementById("state_select").innerHTML= sel
+}
 
 function getJSONData(url, cb_func) {
-   show_loader();
+   show_loader();	
    $.ajax({
       type: "get",
       url:  url,
@@ -406,11 +471,11 @@ function getJSONData(url, cb_func) {
           if (cb_func == 2) {
              makeStateSelect(result );
           }
-          hide_loader();
+          hide_loader();	
       },
       error: function (xhr, status, error) {
-        alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        hide_loader();
+        alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+        hide_loader();	
       }
    });
 }
