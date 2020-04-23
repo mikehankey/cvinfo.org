@@ -113,9 +113,115 @@ function doSomethingWithJsonData(json_data ) {
    out2 = makeGraph(zdv3, death_growth_vals,title, "zero day", "death growth", "deaths_growth_div", fit_days, 60)
 
    title = state_name.toUpperCase() + " GROWTH DECAY " + last_date
-   out2 = plot_data_line(zdv4, decay_vals,"zero day", "growth decay", title, "decay_div", "line")
+
+
+   fitsObj = getFits(zdv4, decay_vals)
+   alert(yd2)
+   alert(yd3)
+   out2 = plot_data_line(zdv4, decay_vals,fitsObj.yd2, fitsObj.yd3, fitsObj.yd4, fitsObj.exp_yd, "zero day", "growth decay", title, "decay_div", "line")
 
 }
+
+function getFits(xs,ys) {
+   nxs = []
+   ys2  = []
+   ys3  = []
+   ys4  = []
+   exp_ys  = []
+   for (var i = 0; i <= xs.length; i++) {
+      nxs.push(xs[i])
+   }
+
+   // curve fit
+
+   var rdata = []
+   for (var i  = 0; i <= xs.length -1; i++) {
+      var point = [xs[i], ys[i]]
+      rdata.push(point)
+      var last_x = xs[i]
+   }
+  
+   var linReg = regression('polynomial', rdata);
+   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+   for (var i = 0; i<= 60; i++) {
+      tx = last_x + i
+      point = [tx, ys[i]]
+      rdata.push(point)
+
+   }
+
+   var exp = extraPoints(rdata,linReg)
+
+   var exp_ys = []
+   for (var i  = 0; i <= exp.length -1; i++) {
+      ey = exp[i].y
+      exp_ys.push(ey)
+   }
+
+   // 14 DAY FIT
+   lr_xs = xs.slice(Math.max(xs.length - 14, 1))
+   lr_ys = ys.slice(Math.max(ys.length - 14, 1))
+   lx_14 = linearRegression(lr_xs,lr_ys)
+
+   // 7 DAY FIT
+   lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
+   lr_ys = ys.slice(Math.max(ys.length - 7, 1))
+   lx_7 = linearRegression(lr_xs,lr_ys)
+
+   lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
+   lr_ys = ys.slice(Math.max(ys.length - 3, 1))
+   lx_3 = linearRegression(lr_xs,lr_ys)
+
+
+   for (var i  = 0; i <= xs.length -1; i++) {
+      X = xs[i]
+      Y = ys[i]
+      if (xs.length - 14 < i + 1) {
+         PY14 = lx_14['slope'] * X + lx_14['intercept']
+      }
+      else {
+         PY14 = 0
+      }
+      if (xs.length - 7 < i + 1) {
+         PY7 = lx_7['slope'] * X + lx_7['intercept']
+      }
+      else {
+         PY7 = 0
+      }
+      if (xs.length - 3 < i + 1) {
+         PY3 = lx_3['slope'] * X + lx_3['intercept']
+      }
+      else {
+         PY3 = 0
+      }
+      if (PY14 < 0) {
+         PY14 = 0
+      }
+      if (PY7 < 0) {
+         PY7 = 0
+      }
+      if (PY3 < 0) {
+         PY3 = 0
+      }
+      ys2.push(PY14)
+      ys3.push(PY7)
+      ys4.push(PY3)
+      //out += PY.toString() + "<BR>";
+   }
+   alert(ys2)
+   alert(ys3)
+   alert(ys4)
+   alert(exp_ys)
+   robj = {
+      "nxs" : nxs,
+      "ys2" : ys2,
+      "ys3" : ys3,
+      "ys4" : ys4,
+      "exp_ys" : exp_ys
+   }
+   return(robj)
+}
+
 
 function extraPoints(data,polyReg) {
     name = "polynomial"
@@ -324,14 +430,50 @@ function getJSONData(url, cb_func) {
 }
 
 
-function plot_data_line(xd,yd,xl,yl,t,dv,type) {
+function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
+   console.log("YD2:")
+   console.log(yd2)
+   console.log("YD3:")
+   console.log(yd3)
+   console.log("YD4:")
+   console.log(yd4)
+   console.log("EXPY:")
+   console.log(exp_yd)
    var trace1 = {
       x: xd,
       y: yd,
       name: yl,
       type: type
    }
-   var data = [trace1 ]
+   var trace2 = {
+      x: xd,
+      y: yd2,
+      name: yl,
+      name: "14 Day Traj",
+      type: type  
+   }
+   var trace3 = {
+      x: xd,
+      y: yd3,
+      name: yl,
+      name: "7 Day Traj",
+      type: type  
+   }
+   var trace4 = {
+      x: xd,
+      y: yd4,
+      name: yl,
+      name: "3 Day Traj",
+      type: type  
+   }
+   var trace5 = {
+      x: xd,
+      y: exp_yd,
+      name: yl,
+      name: "Curve",
+      type: type  
+   }
+   var data = [trace1 , trace2, trace3,trace4,trace5]
    var layout = {
       title : t,
       yaxis : {
