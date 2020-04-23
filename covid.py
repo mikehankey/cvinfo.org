@@ -629,8 +629,7 @@ def make_all_county_page(sort_field = None):
 
    html = table_header + rows + table_footer
    html = template.replace("{COUNTY_TABLE}", html)
-
-
+ 
    if sort_field == 'cg_med':
       out_file = "all-counties-growth.html"
       html = html.replace("{active_growth}",'active')
@@ -638,7 +637,7 @@ def make_all_county_page(sort_field = None):
    elif sort_field == 'mortality':
       out_file = "all-counties-mortality.html"
       html = html.replace("{active_mortality}",'active')
-      html = html.replace("{DEFAUT_SORT_COL}",'5')
+      html = html.replace("{DEFAUT_SORT_COL}",'9')
    else:
       out_file = "all-counties.html"
       html = html.replace("{active_all}",'active')
@@ -1989,8 +1988,7 @@ def get_calc_data(st):
    return(js_code )
 
 def make_calc_page():
-
-
+ 
    calc_temp = get_temp("templates/covid-calc-vince.html")
    files = glob.glob("json/*.json")
    js_data = ""
