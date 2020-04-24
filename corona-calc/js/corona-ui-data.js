@@ -7,12 +7,33 @@ function fillSummary(state_name,fr) {
    var $new =  $gaugesCont.find('.new'); 
  
    var fr_html = "<h3>Predicted outcome based on new case trajectories and curve for "+state_name+"</h3>";
-   fr_html += "<h4>the pandemic in "+state_name+" could end in</h4>";
+   fr_html += "<h4>the pandemic in "+state_name+" could end in</h4><div id='sum_main'><div>";
    document.getElementById("summary").innerHTML= fr_html;
   
    fr_html = "";
 
-   // Recreate the SVG
+
+   // Create main text
+  
+   var main_summary_text = state_name ;
+   if (fr['14_day'].zero_day_met > 0) {   
+      main_summary_text += " could have zero cases in <span class='good_t'>" + fr['14_day'].zero_day_met + "</span> days.";
+   } else {
+      main_summary_text += " won't end before <span class='bad_t'>" + fr['14_day'].herd_immunity_met + "</span> days.";
+   }
+   
+   if (fr['3_day'].zero_day_met > 0 && parseInt(fr['14_day'].zero_day_met) <  parseInt(fr['3_day'].zero_day_met)) {
+      main_summary_text += "<br>But the latest 3 days data says it could happend in <span class='good_t'>" + fr['3_day'].zero_day_met + "</span> days.";
+   }
+
+
+
+   $('#sum_main').html(main_summary_text);
+    
+ 
+
+
+   // Recreate the Gauges
    $('#sum_peak').html('')
    createSvg('summary');
 

@@ -40,7 +40,7 @@ function getJSONData(url, cb_func) {
       },
       error: function (xhr, status, error) {
         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        hide_loader(true);
+        hide_loader();
       }
    });
 }
@@ -48,6 +48,7 @@ function getJSONData(url, cb_func) {
 
 function show_loader() {
    $('body').addClass('wait');
+   $('.box').css('visibility','hidden');
     
    //$('.percentage').text('0 days');
    //$('.data-arc').remove();
@@ -56,15 +57,9 @@ function show_loader() {
 }
 
 function hide_loader(show_graphs) {
-   /*
-   setTimeout(function() {
-      $('#loader').css('display','none');
-      if(show_graphs)  {
-         $('#graphs,.gauge_cont').css('visibility','visible'); 
-      }
-   }, 50);
-   */
-   $('body').removeClass('wait');
+  if(typeof show_graphs == "undefined" ) show_graphs=true;
+  if(show_graphs) $('.box').css('visibility','visible');
+  $('body').removeClass('wait');
 }
 
 function createSvg(which) {

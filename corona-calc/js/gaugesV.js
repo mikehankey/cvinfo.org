@@ -20,7 +20,7 @@ function animate_arc(ratio, svg, perc) {
    starty = 450; 
    return Snap.animate(0, ratio, (function(val) {
       var path;
-      if(val<=1) {
+      if(val<1) {
          arc.remove();
          path = svg_circle_arc_path(500, 500, 450, -90, val * 180.0 - 90);
          arc = svg.path(path);
@@ -40,8 +40,8 @@ function animate_arc(ratio, svg, perc) {
          path = svg_circle_arc_path(500, 500, 450, -90, 180.0 - 90);
          arc = svg.path(path);
          arc.attr({ class: 'data-arc'});
-         value = Math.round(val * 100);
          perc.text(Math.round(ratio * 100) + ' days'); 
+         console.log(ratio * 100 + "!!!!")
       }
      
    }), Math.round(1000 * ratio), mina.easeinout, function() { /* Nothing */} );
