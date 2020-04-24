@@ -13,7 +13,7 @@ function fillSummary(state_name,fr) {
    var $gaugesCont = $('#forecast'); 
    var $forteen_days = $gaugesCont.find('.14days');
    var $seven_days = $gaugesCont.find('.7days');
-   var $three_days = $gaugesCont.find('.3days');
+   //var $three_days = $gaugesCont.find('.3days');
    var $new =  $gaugesCont.find('.new'); 
  
    var fr_html = "<h3>Predicted outcome based on new case trajectories and curve for "+state_name+"</h3>";
@@ -32,8 +32,8 @@ function fillSummary(state_name,fr) {
       main_summary_text += " won't have zero cases before <span class='"+goodBadOrUgly(fr['14_day'].herd_immunity_met)+"'>" + fr['14_day'].herd_immunity_met + "</span> days based on the latest 14 days data.";
    }
    
-   if (fr['3_day'].zero_day_met > 0 && parseInt(fr['14_day'].zero_day_met) <  parseInt(fr['3_day'].zero_day_met)) {
-      main_summary_text += "<br>But the latest 3 days data says it could now happened in <span class='"+goodBadOrUgly(fr['3_day'].zero_day_met)+"'>" + fr['3_day'].zero_day_met + "</span> days.";
+   if (fr['7_day'].zero_day_met > 0 && parseInt(fr['14_day'].zero_day_met) <  parseInt(fr['7_day'].zero_day_met)) {
+      main_summary_text += "<br>But the latest 7 days data says it could now happened in <span class='"+goodBadOrUgly(fr['7_day'].zero_day_met)+"'>" + fr['7_day'].zero_day_met + "</span> days.";
    }
 
 
@@ -65,6 +65,7 @@ function fillSummary(state_name,fr) {
       //fr_html += "<span class='bad'><b>7-Day Trajectory</b>: herd immunity will occur " + fr['7_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
    }
 
+   /*
    if (fr['3_day'].zero_day_met > 0) {
       $three_days.attr('data-ratio',fr['3_day'].zero_day_met/100);
       //fr_html += "<span class='good'><b>3-Day Trajectory</b>: zero day will occur " + fr['3_day'].zero_day_met.toString() + " days after the first reported case.</span><br>"
@@ -73,6 +74,7 @@ function fillSummary(state_name,fr) {
       $three_days.attr('data-ratio',fr['3_day'].herd_immunity_met/100);
       //fr_html += "<span class='bad'><b>3-Day Trajectory</b>: herd immunity will occur " + fr['3_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
    }
+   */
 
      
    if (fr['exp'].zero_day_met > 0) {
