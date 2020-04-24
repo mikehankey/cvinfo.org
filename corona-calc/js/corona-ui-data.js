@@ -16,8 +16,9 @@ function fillSummary(state_name,fr) {
    //var $three_days = $gaugesCont.find('.3days');
    var $new =  $gaugesCont.find('.new'); 
  
-   var fr_html = "<h3>Predicted outcome based on new case trajectories and curve for "+state_name+"</h3>";
-   fr_html += "<h4>the pandemic in "+state_name+" could end in</h4><div id='sum_main'><div>";
+   var fr_html = "<h3>Current forecast and predicted outcome for " + state_name + " </h3>based on 7 and 14-day NEW CASE trends ";
+   //fr_html += "<h4>the pandemic in "+state_name+" could end in</h4><div id='sum_main'><div>";
+   fr_html += "<div id='sum_main'><div>";
    document.getElementById("summary").innerHTML= fr_html;
   
    fr_html = "";
@@ -27,9 +28,9 @@ function fillSummary(state_name,fr) {
   
    var main_summary_text = state_name ;
    if (fr['14_day'].zero_day_met > 0) {   
-      main_summary_text += " could have zero cases in <span class='"+goodBadOrUgly(fr['14_day'].zero_day_met)+"'>" + fr['14_day'].zero_day_met + "</span> days.";
+      main_summary_text += " could reach zero cases in <span class='"+goodBadOrUgly(fr['14_day'].zero_day_met)+"'>" + fr['14_day'].zero_day_met + "</span> days.";
    } else {
-      main_summary_text += " won't have zero cases before <span class='"+goodBadOrUgly(fr['14_day'].herd_immunity_met)+"'>" + fr['14_day'].herd_immunity_met + "</span> days based on the latest 14 days data.";
+      main_summary_text += " could reach herd immunity in <span class='"+goodBadOrUgly(fr['14_day'].herd_immunity_met)+"'>" + fr['14_day'].herd_immunity_met + "</span> days based on the latest 14-day new case trend.";
    }
    
    if (fr['7_day'].zero_day_met > 0 && parseInt(fr['14_day'].zero_day_met) <  parseInt(fr['7_day'].zero_day_met)) {

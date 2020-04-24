@@ -70,7 +70,7 @@ function createSvg(which) {
       <svg viewBox="0 0 1000 500">\
          <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold"></text>\
-         <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 14 days trend</text>\
+         <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">Zero Cases</text>\
       </svg>'); 
       $('.7days .title').text('based on 7 days trend');
       //$('.3days .title').text('based on 3 days trend');
@@ -85,11 +85,11 @@ function createSvg(which) {
          <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold"></text>\
          <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">\
-         <tspan class="trend" x="500" dy="-.35em">based on 14 days trend</tspan>\
-         <tspan x="500" dy="1em">after the first reported case </tspan>\
+         <tspan class="trend" x="500" dy="-.35em">Zero Cases </tspan>\
+         <tspan x="500" dy="1em"> </tspan>\
          </text>\
          </svg>');
-      $('#forecast .7days .trend').text('based on 7 days trend');
+      $('#forecast .7days .trend').text('Zero Cases');
       //$('#forecast .3days .trend').text('based on 3 days trend');
       $('#forecast .new .trend').text('based on curve');
    } 
