@@ -13,26 +13,10 @@ function goodBadOrUgly(days,outcome) {
 
 function goodBadOrUglyMike(days,outcome) {
    if (outcome == 'zeroday') {
-      alert(outcome)
-      return("good_t")
-      // use green colors
-      if(days<30) {
-         return "good_t";
-      } else if(days < 60) {
-         return "good_t";
-      } else {
-         return "good_t";
-      }
+       return("good_t")
    }
    else {
-      // use red colors
-      if(days<30) {
-         return "good_t";
-      } else if(days < 60) {
-         return "bad_t";
-      } else {
-         return "ugly_t";
-      }
+      
    }
 
 }
