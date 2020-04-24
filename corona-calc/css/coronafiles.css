@@ -41,7 +41,8 @@ a, a:visited {
    box-shadow: 1px 1px 4px 0 rgba(0,0,0,.1);
    width: 100%;
    z-index: 3;
- }
+   position:relative;
+}
  
  .header ul {
    margin: 0;
@@ -75,11 +76,19 @@ a, a:visited {
     display: block;
     float: left;
     font-size: 1.9rem;
-    padding: 10px 20px;
+    padding: 10px 10px 10px 70px;
     text-decoration: none;
     font-weight: bold;
  }
  
+ .logo  img {
+   position: absolute;
+   top:3px;
+   left:10px;
+
+ }
+ 
+
  /* menu */
  
  .header .menu {
