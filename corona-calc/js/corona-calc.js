@@ -144,7 +144,8 @@ function doSomethingWithJsonData(json_data ) {
    out = "";
    document.getElementById("new_cases_forecast").innerHTML= out;
  
-
+   alert("zdv")
+   alert(zdv.length)
 
    zdv2 = zero_day_vals.slice();
    zdv3 = zero_day_vals.slice();
@@ -152,12 +153,17 @@ function doSomethingWithJsonData(json_data ) {
    zdv5 = zero_day_vals.slice();
    zdv6 = zero_day_vals.slice();
    title = state_name.toUpperCase() + " GROWTH " + last_date
+
    pred = makeGraph(zdv, case_growth_vals,title, "zero day", "growth", "growth_div", fit_days, 60)
    out = forecast_html(pred, "growth", state_name, )
    out = ""
    document.getElementById("growth_forecast").innerHTML= out
+   alert("zdv2")
+   alert(zdv.length)
 
    title = state_name.toUpperCase() + " NEW DEATHS " + last_date
+   alert(zdv2.length)
+   alert(new_deaths_vals.length)
    out2 = makeGraph(zdv2, new_deaths_vals,title, "zero day", "new deaths", "new_deaths_div", fit_days, 60)
    //document.getElementById("results_panel").innerHTML= out
 
@@ -597,91 +603,93 @@ function forecast(xs,fys,total_cases,motality,phantom,state_pop,current_zero_day
 }
 
 function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
-   var xs = xs_in
-   var ys = ys_in
+   var local_xs = xs_in.slice(0)
+   var local_ys = ys_in.slice(0)
    var out = ""
    // Make fit lines
    // 14 days
-   var ys2 = []
+   var local_ys2 = []
    // 7 days
-   var ys3 = []
+   var local_ys3 = []
    // 3 days
-   var ys4 = []
+   var local_ys4 = []
 
    // curve fit
 
    var rdata = []
-   for (var i  = 0; i <= xs.length -1; i++) {
-      var point = [xs[i], ys[i]]
+   for (var i  = 0; i <= local_xs.length -1; i++) {
+      var point = [local_xs[i], local_ys[i]]
       rdata.push(point)
-      var last_x = xs[i]
+      var last_x = local_xs[i]
    }
    
    var linReg = regression('polynomial', rdata);
    var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+   var tx = 0
    for (var i = 0; i<= 60; i++) {
       tx = last_x + i
-      point = [tx, ys[i]]
+      point = [tx, local_ys[i]]
       rdata.push(point)
 
    }
    
    var exp = extraPoints(rdata,linReg)
 
-   var exp_ys = []
+   var local_exp_ys = []
+   var ey = 0
    for (var i  = 0; i <= exp.length -1; i++) {
       ey = exp[i].y
-      exp_ys.push(ey)
+      local_exp_ys.push(ey)
    } 
 
    // 14 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - fit_days, 1))
-   lr_ys = ys.slice(Math.max(ys.length - fit_days, 1))
-   lx_14 = linearRegression(lr_xs,lr_ys)
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - fit_days, 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - fit_days, 1))
+   var lx_14 = linearRegression(lr_xs,lr_ys)
 
    // 7 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 7, 1))
-   lx_7 = linearRegression(lr_xs,lr_ys)
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - 7 , 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
+   var lx_7 = linearRegression(lr_xs,lr_ys)
 
-   lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 3, 1))
-   lx_3 = linearRegression(lr_xs,lr_ys)
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - 3 , 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - 3, 1))
+   var lx_3 = linearRegression(lr_xs,lr_ys)
 
 
-   for (var i  = 0; i <= xs.length -1; i++) {
-      X = xs[i]
-      Y = ys[i]
-      if (xs.length - 14 < i + 1) {
-         PY14 = lx_14['slope'] * X + lx_14['intercept'] 
+   for (var i  = 0; i <= local_xs.length -1; i++) {
+      var X = local_xs[i]
+      var Y = local_ys[i]
+      if (local_xs.length - 14 < i + 1) {
+         var PY14 = lx_14['slope'] * X + lx_14['intercept'] 
       }
       else {
-         PY14 = 0
+         var PY14 = 0
       }
-      if (xs.length - 7 < i + 1) {
-         PY7 = lx_7['slope'] * X + lx_7['intercept'] 
-      }
-      else {
-         PY7 = 0
-      }
-      if (xs.length - 3 < i + 1) {
-         PY3 = lx_3['slope'] * X + lx_3['intercept'] 
+      if (local_xs.length - 7 < i + 1) {
+         var PY7 = lx_7['slope'] * X + lx_7['intercept'] 
       }
       else {
-         PY3 = 0
+         var PY7 = 0
+      }
+      if (local_xs.length - 3 < i + 1) {
+         var PY3 = lx_3['slope'] * X + lx_3['intercept'] 
+      }
+      else {
+         var PY3 = 0
       }
       if (PY14 < 0) {
-         PY14 = 0
+         var PY14 = 0
       }
       if (PY7 < 0) {
-         PY7 = 0
+         var PY7 = 0
       }
       if (PY3 < 0) {
-         PY3 = 0
+         var PY3 = 0
       }
-      ys2.push(PY14)
-      ys3.push(PY7)
-      ys4.push(PY3)
+      local_ys2.push(PY14)
+      local_ys3.push(PY7)
+      local_ys4.push(PY3)
       //out += PY.toString() + "<BR>";
    }
 
@@ -697,11 +705,11 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
       PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
       PY7 = lx_7['slope'] * TX + lx_7['intercept'] 
       PY3 = lx_3['slope'] * TX + lx_3['intercept'] 
-      xs.push(TX)
-      ys.push(0)
-      ys2.push(PY14)
-      ys3.push(PY7)
-      ys4.push(PY3)
+      local_xs.push(TX)
+      local_ys.push(0)
+      local_ys2.push(PY14)
+      local_ys3.push(PY7)
+      local_ys4.push(PY3)
       if (last_zd14_day == 9999 && PY14 <= 0) {
          last_zd14_day = i
       }
@@ -711,16 +719,16 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
       if (last_zd3_day == 9999 && PY3 <= 0) {
          last_zd3_day = i
       }
-      if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+      if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
          last_exp_day = i
       }
-      if (exp_ys[i+last_x] > 0) {
+      if (local_exp_ys[i+last_x] > 0) {
          exp_pos = 1
       }
       
    } 
    if (last_exp_day == 9999) {
-      if (exp_ys.slice(-1)[0] <= 0) {
+      if (local_exp_ys.slice(-1)[0] <= 0) {
          last_exp_day = 0
       }
       
@@ -733,7 +741,7 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
 
    out = [last_zd14_day, last_zd7_day, last_zd3_day, last_exp_day]
 
-   plot_data(xs,ys,ys2,ys3,ys4,exp_ys, xlab,ylab,title,div_id,"bar") 
+   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
 
    return(out)
 
