@@ -40,7 +40,7 @@ function getJSONData(url, cb_func) {
       },
       error: function (xhr, status, error) {
         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        hide_loader(true);
+        hide_loader();
       }
    });
 }
@@ -48,6 +48,7 @@ function getJSONData(url, cb_func) {
 
 function show_loader() {
    $('body').addClass('wait');
+   $('.box').css('visibility','hidden');
     
    //$('.percentage').text('0 days');
    //$('.data-arc').remove();
@@ -56,34 +57,30 @@ function show_loader() {
 }
 
 function hide_loader(show_graphs) {
-   /*
-   setTimeout(function() {
-      $('#loader').css('display','none');
-      if(show_graphs)  {
-         $('#graphs,.gauge_cont').css('visibility','visible'); 
-      }
-   }, 50);
-   */
-   $('body').removeClass('wait');
+  if(typeof show_graphs == "undefined" ) show_graphs=true;
+  if(show_graphs) $('.box').css('visibility','visible');
+  $('body').removeClass('wait');
 }
 
 function createSvg(which) {
    // Clean all the gauges
    if(which != 'summary') {
-      $('.14days,.7days,.3days,.new').html('\
+      // ,.3days
+      $('.14days,.7days,.new').html('\
       <svg viewBox="0 0 1000 500">\
          <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold"></text>\
          <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 14 days trend</text>\
       </svg>'); 
       $('.7days .title').text('based on 7 days trend');
-      $('.3days .title').text('based on 3 days trend');
+      //$('.3days .title').text('based on 3 days trend');
       $('.new .title').text('based on curve');
    }
 
    // For the Summary 
    if(which == 'summary' || which == 'all') { 
-      $('#forecast .14days,#forecast .7days,#forecast .3days,#forecast .new').html('\
+      // #forecast .3days,
+      $('#forecast .14days,#forecast .7days,#forecast .new').html('\
       <svg viewBox="0 0 1000 500">\
          <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold"></text>\
@@ -93,7 +90,7 @@ function createSvg(which) {
          </text>\
          </svg>');
       $('#forecast .7days .trend').text('based on 7 days trend');
-      $('#forecast .3days .trend').text('based on 3 days trend');
+      //$('#forecast .3days .trend').text('based on 3 days trend');
       $('#forecast .new .trend').text('based on curve');
    } 
 }
