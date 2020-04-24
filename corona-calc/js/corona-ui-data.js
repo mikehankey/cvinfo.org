@@ -16,8 +16,7 @@ function fillSummary(state_name,fr) {
    //var $three_days = $gaugesCont.find('.3days');
    var $new =  $gaugesCont.find('.new'); 
  
-   var fr_html = "<h3>Predicted outcome based on new case trajectories and curve for "+state_name+"</h3>";
-   fr_html += "<h4>the pandemic in "+state_name+" could end in</h4><div id='sum_main'><div>";
+   var fr_html =   "<div id='sum_main'><div>";
    document.getElementById("summary").innerHTML= fr_html;
   
    fr_html = "";

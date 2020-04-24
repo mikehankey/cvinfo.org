@@ -86,7 +86,7 @@ function createSvg(which) {
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold"></text>\
          <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">\
          <tspan class="trend" x="500" dy="-.35em">based on 14 days trend</tspan>\
-         <tspan x="500" dy="1em">after the first reported case </tspan>\
+         <tspan x="500" dy="1em">from today </tspan>\
          </text>\
          </svg>');
       $('#forecast .7days .trend').text('based on 7 days trend');
