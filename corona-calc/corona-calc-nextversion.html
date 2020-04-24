@@ -33,6 +33,10 @@
          color:#676a6c;
       }
 
+      body.wait {
+         cursor: wait;
+      }
+
       /* Layout */
       #header {
          text-align: center;
@@ -99,7 +103,6 @@
       .metric {
          display: inline-block;
          width: 24%;
-         margin-top: 2rem;
       }
 
       .metric svg {
@@ -156,50 +159,50 @@
          <div id="loader" style="display:none"><img src="./img/loader.svg"/></div>
           
          <div id="graphs">
-               <div id="new_cases_forecast_cont">
-                  <div class="gauge_cont" style="visibility:hidden">
-                        <div class="metric 14days" data-ratio=".99">
-                           <svg viewBox="0 0 1000 500">
-                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
-                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold">0 days</text>
-                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 14 days trend</text>
-                           </svg>
-                        </div>
-                        <div class="metric 7days"  data-ratio=".69">
-                           <svg viewBox="0 0 1000 500">
-                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
-                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="300" font-size="140" font-weight="bold">0 days</text>
-                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 7 days trend</text>
-                           </svg>
-                        </div>
-                        <div class="metric 3days"  data-ratio=".49">
-                           <svg viewBox="0 0 1000 500">
-                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
-                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="300" font-size="140" font-weight="bold">0 days</text>
-                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on 3 days trend</text>
-                           </svg>
-                        </div>
-                        <div class="metric new"  data-ratio=".19">
-                           <svg viewBox="0 0 1000 500">
-                              <path d="M 950 500 A 450 450 0 0 0 50 500"></path>
-                              <text class='percentage' text-anchor="middle" alignment-baseline="middle" x="500" y="300" font-size="140" font-weight="bold">0 days</text>
-                              <text class='title' text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">based on latest</text>
-                           </svg>
-                        </div>
+               <div id="newcase_cont" >
+                  <div class="gauge_cont">
+                     <h3>Based on the number of covid cases, the pandemic could end in</h3>
+                     <div class="metric 14days"></div>
+                     <div class="metric 7days"></div>
+                     <div class="metric 3days"></div>
+                     <div class="metric new"></div>
                   </div>
                   <div id="new_cases_forecast"></div>
+<<<<<<< HEAD
                   <div class="pie_chart" id="new_cases_pie_14"></div>
                   <div id="new_cases_pie_7"></div>
                   <div id="new_cases_pie_3"></div>
                   <div id="new_cases_pie_exp"></div>
 
 
+=======
+                  <div id="new_cases_div"></div>
+>>>>>>> 2209c930849eb5aa851a6f01fa0fc1caaed422cc
                </div>
-            
-               <div id="new_cases_div"></div>
-               <div id="growth_forecast"></div>
-               <div id="growth_div"></div>
-               <div id="decay_div"></div>
+
+               <div id="growth_cont">
+                  <div class="gauge_cont">
+                     <h3>Based on the growth of covid cases, the pandemic could end in</h3>
+                     <div class="metric 14days"></div>
+                     <div class="metric 7days"></div>
+                     <div class="metric 3days"></div>
+                     <div class="metric new"></div>
+                  </div>
+                  <div id="growth_forecast"></div>
+                  <div id="growth_div"></div>
+               </div>    
+
+               <div id="decay_cont">
+                  <div class="gauge_cont">
+                     <div class="metric 14days"></div>
+                     <div class="metric 7days"></div>
+                     <div class="metric 3days"></div>
+                     <div class="metric new"></div>
+                  </div>
+                  <div id="decay_forecast"></div>
+                  <div id="decay_div"></div>
+               </div>    
+ 
                <div id="new_deaths_div"></div>
                <div id="deaths_growth_div"></div>
                <div id="mortality_div"></div>
@@ -215,64 +218,10 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script>
-<script src="./js/corona-ui.js"></script>
-<script src="./js/corona-calc.js"></script>
+<script src="./js/gaugesV.js"></script>
+<script src="./js/corona-uiV.js"></script>
+<script src="./js/corona-calcV.js"></script>
 <script src="./js/regression.js"></script>
-<script>
-$(function() {
-
-   var polar_to_cartesian, svg_circle_arc_path, animate_arc;
-
-   polar_to_cartesian = function(cx, cy, radius, angle) {
-   var radians;
-   radians = (angle - 90) * Math.PI / 180.0;
-   return [Math.round((cx + (radius * Math.cos(radians))) * 100) / 100, Math.round((cy + (radius * Math.sin(radians))) * 100) / 100];
-   };
-
-   svg_circle_arc_path = function(x, y, radius, start_angle, end_angle) {
-   var end_xy, start_xy;
-   start_xy = polar_to_cartesian(x, y, radius, end_angle);
-   end_xy = polar_to_cartesian(x, y, radius, start_angle);
-   return "M " + start_xy[0] + " " + start_xy[1] + " A " + radius + " " + radius + " 0 0 0 " + end_xy[0] + " " + end_xy[1];
-   };
-
-   animate_arc = function(ratio, svg, perc) {
-      var arc, center, radius, startx, starty;
-      arc = svg.path('');
-      center = 500;
-      radius = 450;
-      startx = 0;
-      starty = 450;
-      return Snap.animate(0, ratio, (function(val) {
-         var path;
-         arc.remove();
-         path = svg_circle_arc_path(500, 500, 450, -90, val * 180.0 - 90);
-         arc = svg.path(path);
-         arc.attr({
-            class: 'data-arc'
-         });
-         perc.text(Math.round(val * 100) + ' days');
-      }), Math.round(2000 * ratio), mina.easeinout);
-   };
-
-   function start_gauges(cont) {
-      $('#' + cont + '.metric').each(function() {
-         var ratio, svg, perc;
-         ratio = $(this).data('ratio');
-         svg = Snap($(this).find('svg')[0]);
-         perc = $(this).find('text.percentage');
-         if(ratio<=0.3) {
-            $(this).addClass('good');
-         } else if(ratio<=0.6) {
-            $(this).addClass('bad');
-         } else {
-            $(this).addClass('ugly'); 
-         }
-         animate_arc(ratio, svg, perc);
-      });
-   }
  
-});
-</script>
 </body>
 </html>
