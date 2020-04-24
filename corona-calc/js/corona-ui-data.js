@@ -75,22 +75,22 @@ function fillSummary(state_name,fr) {
       if  (fr['14_day'].zero_day_met > 0 ) {
          var  main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
          main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met.toString() 
-         main_summary_text += " days .</span> " 
+         main_summary_text += "  days, </span> <br> but based on the 7-day trend,  " 
       }
       else {
          var  main_summary_text = "<span class='ugly_t'>Based on the 14-day trend, " + state_name 
          main_summary_text += " could reach herd immunity in " + fr['14_day'].herd_immunity_met.toString() 
-         main_summary_text += " days .</span> " 
+         main_summary_text += " days, </span> <br> but based on the 7-day trend, " 
 
       }
       if  (fr['7_day'].zero_day_met > 0 ) {
-         main_summary_text += "<br><span class='good_t'>Based on the 7-day trend, " + state_name
-         main_summary_text += " could have zero cases in " + fr['7_day'].zero_day_met.toString()
+         main_summary_text += "<br><span class='good_t'> " 
+         main_summary_text += " it could have zero cases in " + fr['7_day'].zero_day_met.toString()
          main_summary_text += " days .</span> " 
       }
       else {
-         main_summary_text += "<br><span class='ugly_t'>Based on the 7-day trend, " + state_name
-         main_summary_text += " could reach herd immunity in " + fr['7_day'].herd_immunity_met.toString()
+         main_summary_text += "<br><span class='ugly_t'> "  
+         main_summary_text += " it could reach herd immunity in " + fr['7_day'].herd_immunity_met.toString()
          main_summary_text += " days .</span> "
 
       }
