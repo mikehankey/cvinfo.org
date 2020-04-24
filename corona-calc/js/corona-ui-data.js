@@ -8,6 +8,14 @@ function goodBadOrUgly(days) {
    }
 }
 
+function goodBadOrUglyMike(type) {
+   if(type=="zero_day") {
+      return "good_t";
+   }  else {
+      return "ugly_t";
+   }
+}
+
 function fillSummary(state_name,fr) {
  
    var $gaugesCont = $('#forecast'); 
