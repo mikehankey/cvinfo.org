@@ -21,6 +21,12 @@
    
    <style>
 
+      .pie_chart {
+
+         width: 40%;
+         max-width: 400;
+      }
+
       body {
          margin:0;
          font-family: 'Lato', sans-serif;  
@@ -30,6 +36,12 @@
       /* Layout */
       #header {
          text-align: center;
+      }
+      .good {
+         color: green;
+      }
+      .bad {
+         color: red;
       }
 
       #main-content {
@@ -140,6 +152,7 @@
       <div id="state_select"></div>
  
       <div id="results">
+         <div id="forecast_div"></div>
          <div id="loader" style="display:none"><img src="./img/loader.svg"/></div>
           
          <div id="graphs">
@@ -175,6 +188,12 @@
                         </div>
                   </div>
                   <div id="new_cases_forecast"></div>
+                  <div class="pie_chart" id="new_cases_pie_14"></div>
+                  <div id="new_cases_pie_7"></div>
+                  <div id="new_cases_pie_3"></div>
+                  <div id="new_cases_pie_exp"></div>
+
+
                </div>
             
                <div id="new_cases_div"></div>

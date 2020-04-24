@@ -59,6 +59,7 @@ function forecast_html(pred, type, state_name) {
 function doSomethingWithJsonData(json_data ) {
    out = ""
    state_name = json_data['summary_info'].state_name
+   state_pop = json_data['summary_info'].state_population * 1000000
    ss = json_data['state_stats']
 
    var date_vals = []
@@ -91,13 +92,17 @@ function doSomethingWithJsonData(json_data ) {
 
    title = state_name.toUpperCase() + " NEW CASES " + last_date
    fit_days = 14
+   nc_org = new_cases_vals.slice();
+   nc_org2 = new_cases_vals.slice();
    zdv = zero_day_vals.slice();
    zdv2 = zero_day_vals.slice();
    zdv3 = zero_day_vals.slice();
    zdv4 = zero_day_vals.slice();
    zdv5 = zero_day_vals.slice();
-   pred = makeGraph(zero_day_vals, new_cases_vals,title, "zero day", "new cases", "new_cases_div", fit_days, 60)
+   zdv6 = zero_day_vals.slice();
+   pred = makeGraph(zero_day_vals, nc_org,title, "zero day", "new cases", "new_cases_div", fit_days, 60)
    out = forecast_html(pred, "new case ", state_name, )
+   out = ""
 
 
 
@@ -106,6 +111,7 @@ function doSomethingWithJsonData(json_data ) {
    title = state_name.toUpperCase() + " GROWTH " + last_date
    pred = makeGraph(zdv, case_growth_vals,title, "zero day", "growth", "growth_div", fit_days, 60)
    out = forecast_html(pred, "growth", state_name, )
+   out = ""
    document.getElementById("growth_forecast").innerHTML= out
 
    title = state_name.toUpperCase() + " NEW DEATHS " + last_date
@@ -127,7 +133,63 @@ function doSomethingWithJsonData(json_data ) {
 
    out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "zero day", "mortality percentage", title, "mortality_div", "line")
 
+    var total_cases = new_cases_vals.reduce(function(a, b){
+        return a + b;
+    }, 0);
+
+   phantom = 4
+   mortality = .02
+   current_zero_day = nc_org2.length
+
+   // This is the MAIN summary at the top of the page.
+
+   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day ) 
+   fr_html = "Predicted outcome based on new case trajectories and curve<br>"
+   if (fr['14_day'].zero_day_met > 0) {
+      fr_html += "<span class='good'><b>14-Day Trajectory</b>: zero day will occur " + fr['14_day'].zero_day_met.toString() + " days after the first reported case.</span><br>"
+   }
+   else {
+      fr_html += "<span class='bad'><b>14-Day Trajectory</b>: herd immunity will occur " + fr['14_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
+   }
+   if (fr['7_day'].zero_day_met > 0) {
+      fr_html += "<span class='good'><b>7-Day Trajectory</b>: zero day will occur " + fr['7_day'].zero_day_met.toString() + " days after the first reported case.<br></span>"
+   }
+   else {
+      fr_html += "<span class='bad'><b>7-Day Trajectory</b>: herd immunity will occur " + fr['7_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
+   }
+   if (fr['3_day'].zero_day_met > 0) {
+      fr_html += "<span class='good'><b>3-Day Trajectory</b>: zero day will occur " + fr['3_day'].zero_day_met.toString() + " days after the first reported case.</span><br>"
+   }
+   else {
+      fr_html += "<span class='bad'><b>3-Day Trajectory</b>: herd immunity will occur " + fr['3_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
+   }
+   if (fr['exp'].zero_day_met > 0) {
+      fr_html += "<span class='good'><b>Curve</b>: zero day will occur " + fr['exp'].zero_day_met.toString() + " days after the first reported case.</span><br>"
+   }
+   else {
+      if (fr['exp'].herd_immunity_met > 0) {
+      fr_html += "<span class='bad'><b>Curve</b>: herd immunity will occur " + fr['exp'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
+      }
+      else {
+      fr_html += "<span class='bad'><b>The curve has not peaked.</span><br>"
+
+      }
+   }
+   fr_html += ""
+
+   pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
+   pie_lb = ['Confirmed Cases ' + parseInt(fr['14_day'].total_cases).toString(), 'Infected ' + parseInt(fr['14_day'].total_infected).toString(), 'Not Infected ' + parseInt(fr['14_day'].total_not_infected).toString(), 'Deaths ' + parseInt(fr['14_day'].total_dead).toString()]
+   title = "Predicted Outcome (14-day trajectory)"
+   dv = "new_cases_pie_14"
+   plot_pie(pie_data,pie_lb,title,dv) 
+   
+
+   document.getElementById("forecast_div").innerHTML= fr_html
+   
+
 }
+
+
 
 function getFits(xs,ys) {
    nxs = []
@@ -297,6 +359,232 @@ function extraPoints(data,polyReg) {
     return extrapolatedPts;
 }
 
+function plot_pie(xd,lb,title,dv) {
+   var data = [{
+      labels: lb,
+      values: xd,
+      type: 'pie'
+   }];
+   var layout = {
+      title: title
+   }
+   Plotly.newPlot(dv, data,layout)
+}
+
+
+function forecast(xs,fys,total_cases,motality,phantom,state_pop,current_zero_day ) {
+   // this function projects the data forward to find end zero days or herd immunity and outcome values.
+   ys = fys
+   total_cases_org = total_cases
+   // 14 DAY FIT
+   lr_xs = xs.slice(Math.max(xs.length - 14 , 1))
+   lr_ys = ys.slice(Math.max(ys.length - 14, 1))
+   lx_14 = linearRegression(lr_xs,lr_ys)
+
+   // 7 DAY FIT
+   lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
+   lr_ys = ys.slice(Math.max(ys.length - 7, 1))
+   lx_7 = linearRegression(lr_xs,lr_ys)
+
+   // 3 DAY FIT
+   lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
+   lr_ys = ys.slice(Math.max(ys.length - 3, 1))
+   lx_3 = linearRegression(lr_xs,lr_ys)
+
+   // poly fit
+   forecast_result = {
+      "14_day" : {},
+      "7_day" : {},
+      "3_day" : {},
+      "exp" : {}
+   }
+
+   var rdata = []
+   for (var i  = 0; i <= xs.length -1; i++) {
+      var point = [xs[i], ys[i]]
+      rdata.push(point)
+      var last_x = xs[i]
+      last_x = i
+   }
+   var linReg = regression('polynomial', rdata);
+   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+   for (var i = 0; i<= 1200; i++) {
+      tx = last_x + i
+      point = [tx, 0]
+      rdata.push(point)
+
+   }
+  
+   var exp = extraPoints(rdata,linReg)
+
+
+
+   var exp_ys = []
+   last_ey = 0
+   curve_total_cases = total_cases_org
+   curve_start_day = xs.length
+   curve_end = 0
+   forecast_result['exp']['herd_immunity_met'] = 0
+
+   for (var i  = 0; i <= exp.length -1; i++) {
+      ey = exp[i].y
+      if (i > 0 && last_ey < ey) {
+         console.log(i, "curve moving up", ey)
+      }
+      else {
+         if (ey < 0 && curve_end == 0 && i > 5) {
+            curve_end = i
+            console.log(i, "curve ended.", )
+         }
+      if (ey > 0) {
+         curve_total_cases += ey      
+      }
+        
+      }
+      forecast_result['exp']['total_cases'] = curve_total_cases 
+      forecast_result['exp']['total_dead'] = curve_total_cases * mortality
+      forecast_result['exp']['death_percent'] =  ((curve_total_cases * mortality)/ state_pop) * 100
+      forecast_result['exp']['total_infected'] = curve_total_cases * phantom
+      forecast_result['exp']['infected_percent'] = ((curve_total_cases * phantom) / state_pop) * 100
+      if (forecast_result['exp']['death_percent'] + forecast_result['exp']['infected_percent'] >= 80 && final_status14 == 0) {
+         forecast_result['exp']['herd_immunity_met'] = i
+      }
+
+
+      
+      exp_ys.push(ey)
+      last_ey = ey
+   }
+
+   forecast_result['exp']['zero_day_met'] = curve_end
+   forecast_result['exp']['total_cases'] = curve_total_cases
+
+   forecast_result['exp']['total_not_infected'] = state_pop - forecast_result['exp']['total_infected'] - forecast_result['exp']['total_dead']
+   forecast_result['exp']['niperc'] = (forecast_result['exp']['total_not_infected'] / state_pop) * 100
+
+  
+
+   fxs_14 = []
+   fxs_7 = []
+   fxs_3 = []
+   fxs_exp = []
+
+   fys_14 = []
+   fys_7 = []
+   fys_3 = []
+   fys_exp = []
+
+   // run out 14 day traj
+   final_status = 0 
+   zero_day_met = 0
+   herd_met = 0
+   i = 0
+   
+   total_cases_14 = total_cases
+   total_cases_7 = total_cases
+   total_cases_3 = total_cases
+   total_cases_exp = total_cases
+
+
+   forecast_result['14_day']['zero_day_met'] = 0
+   forecast_result['7_day']['zero_day_met'] = 0
+   forecast_result['3_day']['zero_day_met'] = 0
+
+   // run forecast for 14 day traj
+   final_status14 = 0
+   final_status7 = 0
+   final_status3 = 0
+   forecast_result['14_day']['herd_immunity_met'] = 0
+   forecast_result['7_day']['herd_immunity_met'] = 0
+   forecast_result['3_day']['herd_immunity_met'] = 0
+   while(final_status14 == 0 || final_status7 == 0 || final_status3 == 0) {
+      TX = current_zero_day + i
+      PY14 = lx_14['slope'] * TX + lx_14['intercept']
+      PY7 = lx_7['slope'] * TX + lx_7['intercept']
+      PY3 = lx_3['slope'] * TX + lx_3['intercept']
+      if (PY14 > 0 && final_status14 == 0) {
+         total_cases_14 += PY14
+      }
+      if (PY7 > 0) {
+      total_cases_7 += PY7
+      }
+      if (PY3 > 0) {
+      total_cases_3 += PY3
+      }
+
+      if (PY14 <= 0 && forecast_result['14_day']['zero_day_met'] == 0) {
+         forecast_result['14_day']['zero_day_met'] = TX
+         final_status14 = 1
+      }
+      if (PY7 <= 0 && forecast_result['7_day']['zero_day_met'] == 0) {
+         forecast_result['7_day']['zero_day_met'] = TX
+         final_status7 = 1
+      }
+      if (PY3 <= 0 && forecast_result['3_day']['zero_day_met'] == 0) {
+         forecast_result['3_day']['zero_day_met'] = TX
+         final_status3 = 1
+      }
+      if (final_status14 != 1) {
+         forecast_result['14_day']['total_cases'] = total_cases_14 
+         forecast_result['14_day']['total_dead'] = total_cases_14 * mortality 
+         forecast_result['14_day']['death_percent'] =  ((total_cases_14 * mortality)/ state_pop) * 100
+         forecast_result['14_day']['total_infected'] = total_cases_14 * phantom
+         forecast_result['14_day']['infected_percent'] = ((total_cases_14 * phantom) / state_pop) * 100
+      }
+
+      forecast_result['7_day']['total_cases'] = total_cases_7
+      forecast_result['7_day']['total_dead'] = total_cases_7 * mortality 
+      forecast_result['7_day']['death_percent'] =  ((total_cases_7 * mortality)/ state_pop) * 100
+      forecast_result['7_day']['total_infected'] = total_cases_7 * phantom
+      forecast_result['7_day']['infected_percent'] = ((total_cases_7 * phantom) / state_pop) * 100
+
+      forecast_result['3_day']['total_cases'] = total_cases_3
+      forecast_result['3_day']['total_dead'] = total_cases_3 * mortality 
+      forecast_result['3_day']['death_percent'] =  ((total_cases_3 * mortality)/ state_pop) * 100
+      forecast_result['3_day']['total_infected'] = total_cases_3 * phantom
+      forecast_result['3_day']['infected_percent'] = ((total_cases_3 * phantom) / state_pop) * 100
+
+      impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
+
+      //if (forecast_result['14_day']['death_percent'] + forecast_result['14_day']['infected_percent'] >= 80 && final_status14 == 0) {
+      if (impacted_14 > .8 && final_status14 == 0) {
+         final_status14 = 1
+         forecast_result['14_day']['herd_immunity_met'] = TX
+      }
+
+      if (forecast_result['7_day']['death_percent'] + forecast_result['7_day']['infected_percent'] >= 80 && final_status7 == 0) {
+         final_status7 = 1
+         forecast_result['7_day']['herd_immunity_met'] = TX
+      }
+
+      if (forecast_result['3_day']['death_percent'] + forecast_result['3_day']['infected_percent'] >= 80 && final_status3 == 0) {
+         final_status3 = 1
+         forecast_result['3_day']['herd_immunity_met'] = TX
+      }
+
+      i = i + 1
+      if (i > 3000) {
+         final_status7 = 1
+         final_status14 = 1
+         final_status3 = 1
+      }
+
+   }
+
+   forecast_result['14_day']['total_not_infected'] = state_pop - forecast_result['14_day']['total_infected'] - forecast_result['14_day']['total_dead'] - forecast_result['14_day']['total_cases']
+   forecast_result['14_day']['niperc'] = (forecast_result['14_day']['total_not_infected'] / state_pop) * 100
+   forecast_result['7_day']['total_not_infected'] = state_pop - forecast_result['7_day']['total_infected'] - forecast_result['7_day']['total_dead']
+   forecast_result['7_day']['niperc'] = (forecast_result['7_day']['total_not_infected'] / state_pop) * 100
+   forecast_result['3_day']['total_not_infected'] = state_pop - forecast_result['3_day']['total_infected'] - forecast_result['3_day']['total_dead']
+   forecast_result['3_day']['niperc'] = (forecast_result['3_day']['total_not_infected'] / state_pop) * 100
+
+
+
+
+   return(forecast_result)
+
+}
+
 function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
    var xs = xs_in
    var ys = ys_in
@@ -449,7 +737,7 @@ function load_data() {
 }
 
 function makeStateSelect(states) {
-   sel = "<form><select id=\"state_selector\" onchange='load_data()' >"
+   sel = "<form><select id=\"state_selector\" onchange='load_data()' ><option value='AL'>SELECT STATE</option>"
    for (var i = 0; i < states.length; i++) {
       sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
    }
@@ -482,14 +770,6 @@ function getJSONData(url, cb_func) {
 
 
 function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
-   console.log("YD2:")
-   console.log(yd2)
-   console.log("YD3:")
-   console.log(yd3)
-   console.log("YD4:")
-   console.log(yd4)
-   console.log("EXPY:")
-   console.log(exp_yd)
    var trace1 = {
       x: xd,
       y: yd,
@@ -500,21 +780,21 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
       x: xd,
       y: yd2,
       name: yl,
-      name: "14 Day Traj",
+      name: "14-Day Trajectory",
       type: type  
    }
    var trace3 = {
       x: xd,
       y: yd3,
       name: yl,
-      name: "7 Day Traj",
+      name: "7-Day Trajectory",
       type: type  
    }
    var trace4 = {
       x: xd,
       y: yd4,
       name: yl,
-      name: "3 Day Traj",
+      name: "3-Day Trajectory",
       type: type  
    }
    var trace5 = {
