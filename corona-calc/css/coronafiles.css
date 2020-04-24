@@ -370,6 +370,10 @@ select {
       float:none;
    }
 
+   .pie_chart {
+      display:none; /* waiting for more options */
+   }
+
    .box {
     margin-top: .5rem;
    }
