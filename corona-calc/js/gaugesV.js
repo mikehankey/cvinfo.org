@@ -1,7 +1,9 @@
 $.fn.extend({ 
-   update_gauge:function(ratio,text) {
+   update_gauge:function(ratio,text,cl) {
       $(this).attr('data-ratio',ratio);
       $(this).find('.title').text(text);
+      $(this).removeClass('good bad ugly')
+      $(this).addClass(cl);
    }
 })
 
@@ -61,6 +63,7 @@ function start_gauges($cont) {
       ratio = $(this).attr('data-ratio'); 
       svg   = Snap($(this).find('svg')[0]);
       perc  = $(this).find('text.percentage');  
+      /*
       if(ratio<=0.3) {
          $(this).removeClass('good bad ugly').addClass('good');
       } else if(ratio<=0.6) {
@@ -68,6 +71,7 @@ function start_gauges($cont) {
       } else {
          $(this).removeClass('good bad ugly').addClass('ugly'); 
       } 
+      */
       animate_arc(ratio, svg, perc); 
    });
 }
