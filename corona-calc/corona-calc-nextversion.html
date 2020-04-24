@@ -36,7 +36,7 @@
       <input class="menu-btn" type="checkbox" id="menu-btn" />
       <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
       <ul class="menu">
-         <li><a href="./corona-calc-nextversion.html">Forecast</a></li>
+         <li class="active"><a href="./corona-calc-nextversion.html">Forecast</a></li>
          <li><a href="./about.html">About</a></li> 
       </ul>
    </header>
@@ -102,25 +102,25 @@
                   <div id="decay_div"></div>
                </div>    
  
-               <div class="box" id="new_deaths_div" style="visibility:hidden"></div>
-               <div class="box" id="deaths_growth_div" style="visibility:hidden"></div>
-               <div class="box" id="mortality_div" style="visibility:hidden"></div>
+               <div class="box"  style="visibility:hidden"><div id="new_deaths_div"></div></div>
+               <div class="box"  style="visibility:hidden"><div id="deaths_growth_div"></div></div>
+               <div class="box"  style="visibility:hidden"><div id="mortality_div"></div></div>
          </div>
 
       </div>
    </div>
    <div id="footer">
-
+         coronafiles.org provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
+         <br/>contact: mike.hankey[@]gmail.com
    </div>
 
-
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script>
-<script src="./js/gaugesV.js"></script>
-<script src="./js/corona-ui-data.js"></script>
-<script src="./js/corona-calc.js"></script>
-<script src="./js/regression.js"></script>
-<script src="./js/corona-uiV.js"></script>
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/snap.svg/0.4.1/snap.svg-min.js"></script>
+   <script src="./js/gaugesV.js"></script>
+   <script src="./js/corona-ui-data.js"></script>
+   <script src="./js/corona-calc.js"></script>
+   <script src="./js/regression.js"></script>
+   <script src="./js/corona-uiV.js"></script>
 </body>
 </html>
