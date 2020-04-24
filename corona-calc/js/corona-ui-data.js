@@ -80,17 +80,17 @@ function fillSummary(state_name,fr) {
    createSvg('summary');
 
    if (fr['14_day'].zero_day_met > 0) {
-      $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in');
+      $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
    }
    else {
-      $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in'); 
+      $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','bad'); 
    }
 
    if (fr['7_day'].zero_day_met > 0) {
-      $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in');
+      $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in','good');
    }
    else {
-      $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in');
+      $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','bad');
    }  
      
  
