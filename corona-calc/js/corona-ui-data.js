@@ -1,11 +1,40 @@
-function goodBadOrUgly(days) {
-   if(days<30) {
-      return "good_t";
-   } else if(days < 60) {
-      return "bad_t";
-   } else {
-      return "ugly_t";
+function goodBadOrUgly(days,outcome) {
+      // use green colors
+      if(days<30) {
+         return "good_t";
+      } else if(days < 60) {
+         return "bad_t";
+      } else {
+         return "ugly_t";
+      }
+}  
+
+
+
+function goodBadOrUglyMike(days,outcome) {
+   if (outcome == 'zeroday') {
+      alert(outcome)
+      return("good_t")
+      // use green colors
+      if(days<30) {
+         return "good_t";
+      } else if(days < 60) {
+         return "good_t";
+      } else {
+         return "good_t";
+      }
    }
+   else {
+      // use red colors
+      if(days<30) {
+         return "good_t";
+      } else if(days < 60) {
+         return "bad_t";
+      } else {
+         return "ugly_t";
+      }
+   }
+
 }
 
 function goodBadOrUglyMike(type) {
@@ -32,20 +61,42 @@ function fillSummary(state_name,fr) {
 
 
    // Create main text
-   var main_summary_text = state_name ;
+   var  main_summary_text = "<span class='t_good'>" + state_name 
 
-   // Just an example with zero_day
+   // BOTH 14/7 RESULT IN ZERO DAY
    if (fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) {  
 
-      main_summary_text += " could have zero cases in <span class='"+goodBadOrUgly(fr['14_day'].zero_day_met)+"'>" + fr['14_day'].zero_day_met + "</span> days";
+      drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
+      main_summary_text += " could have zero cases in " + Math.min.apply(null,drange).toString() 
+      //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
+      main_summary_text += " to " + Math.max.apply(null,drange).toString() + " days.</span>";
 
       if( fr['7_day'].zero_day_met>fr['14_day'].zero_day_met) {
-         main_summary_text += "<br/>but based on the last 7 days trend, it may take up to <span class='"+goodBadOrUgly(fr['7_day'].zero_day_met)+"'>" + fr['7_day'].zero_day_met + "</span> days.";
+         // add note here (optional) if the 7 day trend is worse than the 14 day trend.
+         //main_summary_text += "<br/>but based on the last 7 days trend, it may take up to <span class='"+goodBadOrUglyMike(fr['7_day'].zero_day_met)+"'>" + fr['7_day'].zero_day_met + "</span> days.";
       } else {
          // WARNING: Here no need to display the 7 days trend (?) - I can take care of it.
          main_summary_text += ".";
       }
    }
+   // BOTH 14/7 RESULT IN HERD DAY
+   if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
+
+      drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
+      alert("GAY")
+      main_summary_text += " could have zero cases in <span class='t_good'>" + Math.min.apply(null,drange).toString() + "</span> ";
+      //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
+      main_summary_text += " to <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange), 'zeroday')+"'>" + Math.max.apply(null,drange).toString() + "</span> days.";
+
+      if( fr['7_day'].zero_day_met>fr['14_day'].zero_day_met) {
+         // add note here (optional) if the 7 day trend is worse than the 14 day trend.
+         //main_summary_text += "<br/>but based on the last 7 days trend, it may take up to <span class='"+goodBadOrUglyMike(fr['7_day'].zero_day_met)+"'>" + fr['7_day'].zero_day_met + "</span> days.";
+      } else {
+         // WARNING: Here no need to display the 7 days trend (?) - I can take care of it.
+         main_summary_text += ".";
+      }
+   }
+
  
    $('#sum_main').html(main_summary_text);
     

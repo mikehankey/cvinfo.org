@@ -62,6 +62,14 @@
                <div class="pie_chart" id="new_cases_pie_7"></div> 
                <div class="pie_chart" id="new_cases_pie_exp"></div>
             </div>
+             <div class="recalc_form">
+               Predicted outcome calculated with current trends and the following variables and values.<br>
+               Mortality Rate <input type=text id=calc_mortality value='2.2'>% (percentage of confirmed cases that end in death)<br>
+               Un-Tracked Factor <input type=text id=phantom value='4'> (multiplier for total cases, for each confirmed case there are X un-tracked cases)<br>
+               <input type="submit" value="Re-Calculate Predicted Outcome">
+             </div>
+
+
          </div>
 
          <div id="graphs">
