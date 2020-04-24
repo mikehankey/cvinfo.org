@@ -24,6 +24,46 @@ function linearRegression(x,y){
 }
 
 function forecast_html(pred, type, state_name) {
+
+   var $gaugesCont = $('#'+type.replace(/\s/g, '')+"_cont"); 
+   var $forteen_days = $gaugesCont.find('.14days');
+   var $seven_days = $gaugesCont.find('.7days');
+   var $three_days = $gaugesCont.find('.3days');
+   var $new =  $gaugesCont.find('.new'); 
+    
+
+   if (pred[0] == 9999) {
+      $forteen_days.attr('data-ratio',1);
+   } else {
+      $forteen_days.attr('data-ratio',pred[0]/100);
+   }
+   
+   if (pred[1] == 9999) {
+      $seven_days.attr('data-ratio',1);
+   } else {
+      $seven_days.attr('data-ratio',pred[1]/100);
+   }
+
+   if (pred[2] == 9999) {
+      $three_days.attr('data-ratio',1);
+   } else {
+      $three_days.attr('data-ratio',pred[2]/100);
+   }
+
+   if (pred[3] == 9999) {
+      $new.attr('data-ratio',1); 
+   }  else if (pred[3] <= 0) {
+      $new.attr('data-ratio',0); 
+   }
+   else {
+      $new.attr('data-ratio',pred[3]/100);
+   }
+   
+   setTimeout(function(){ 
+      start_gauges($gaugesCont);
+  },2500);
+
+
    out = ""
    if (pred[0] == 9999) {
       out += "<li class='bad'>Based on the " + type + " 14 day trajectory, " + state_name + " will not reach a zero day. </li>"
@@ -57,23 +97,25 @@ function forecast_html(pred, type, state_name) {
 }
 
 function doSomethingWithJsonData(json_data ) {
-   out = ""
-   state_name = json_data['summary_info'].state_name
-   state_pop = json_data['summary_info'].state_population * 1000000
-   ss = json_data['state_stats']
+   var out = "";
+   var state_name = json_data['summary_info'].state_name;
+   var state_pop = json_data['summary_info'].state_population * 1000000;
+   var ss = json_data['state_stats'];
 
-   var date_vals = []
-   var zero_day_vals = []
-   var total_cases_vals = []
-   var new_cases_vals = []
-   var new_deaths_vals = []
-   var case_growth_vals = []
-   var death_growth_vals = []
-   var decay_vals = []
-   var mortality_vals = []
+   var date_vals = [];
+   var zero_day_vals = [];
+   var total_cases_vals = [];
+   var new_cases_vals = [];
+   var new_deaths_vals = [];
+   var case_growth_vals = [];
+   var death_growth_vals = [];
+   var decay_vals = [];
+   var mortality_vals = [];
 
-   zd = 0
-   last_growth = 0
+   var zd = 0;
+   var last_growth = 0;
+
+   // Prepare all data
    ss.forEach(function (arrayItem) {
       date_vals.push(arrayItem.date);
       zero_day_vals.push(zd);
@@ -90,24 +132,25 @@ function doSomethingWithJsonData(json_data ) {
       last_growth = arrayItem.cg_last 
    });
 
-   title = state_name.toUpperCase() + " NEW CASES " + last_date
-   fit_days = 14
    nc_org = new_cases_vals.slice();
    nc_org2 = new_cases_vals.slice();
    zdv = zero_day_vals.slice();
+
+   // Draw graphs & Gauges for New Cases
+   title = state_name.toUpperCase() + " NEW CASES " + last_date;
+   fit_days = 14;
+   pred = makeGraph(zero_day_vals, nc_org,title, "zero day", "new cases", "new_cases_div", fit_days, 60);
+   out = forecast_html(pred, "new case ", state_name);
+   out = "";
+   document.getElementById("new_cases_forecast").innerHTML= out;
+ 
+
+
    zdv2 = zero_day_vals.slice();
    zdv3 = zero_day_vals.slice();
    zdv4 = zero_day_vals.slice();
    zdv5 = zero_day_vals.slice();
    zdv6 = zero_day_vals.slice();
-   pred = makeGraph(zero_day_vals, nc_org,title, "zero day", "new cases", "new_cases_div", fit_days, 60)
-   out = forecast_html(pred, "new case ", state_name, )
-   out = ""
-
-
-
-   document.getElementById("new_cases_forecast").innerHTML= out
-
    title = state_name.toUpperCase() + " GROWTH " + last_date
    pred = makeGraph(zdv, case_growth_vals,title, "zero day", "growth", "growth_div", fit_days, 60)
    out = forecast_html(pred, "growth", state_name, )
@@ -142,49 +185,17 @@ function doSomethingWithJsonData(json_data ) {
    current_zero_day = nc_org2.length
 
    // This is the MAIN summary at the top of the page.
-
-   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day ) 
-   fr_html = "Predicted outcome based on new case trajectories and curve<br>"
-   if (fr['14_day'].zero_day_met > 0) {
-      fr_html += "<span class='good'><b>14-Day Trajectory</b>: zero day will occur " + fr['14_day'].zero_day_met.toString() + " days after the first reported case.</span><br>"
-   }
-   else {
-      fr_html += "<span class='bad'><b>14-Day Trajectory</b>: herd immunity will occur " + fr['14_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
-   }
-   if (fr['7_day'].zero_day_met > 0) {
-      fr_html += "<span class='good'><b>7-Day Trajectory</b>: zero day will occur " + fr['7_day'].zero_day_met.toString() + " days after the first reported case.<br></span>"
-   }
-   else {
-      fr_html += "<span class='bad'><b>7-Day Trajectory</b>: herd immunity will occur " + fr['7_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
-   }
-   if (fr['3_day'].zero_day_met > 0) {
-      fr_html += "<span class='good'><b>3-Day Trajectory</b>: zero day will occur " + fr['3_day'].zero_day_met.toString() + " days after the first reported case.</span><br>"
-   }
-   else {
-      fr_html += "<span class='bad'><b>3-Day Trajectory</b>: herd immunity will occur " + fr['3_day'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
-   }
-   if (fr['exp'].zero_day_met > 0) {
-      fr_html += "<span class='good'><b>Curve</b>: zero day will occur " + fr['exp'].zero_day_met.toString() + " days after the first reported case.</span><br>"
-   }
-   else {
-      if (fr['exp'].herd_immunity_met > 0) {
-      fr_html += "<span class='bad'><b>Curve</b>: herd immunity will occur " + fr['exp'].herd_immunity_met.toString() + " days after the first reported case.</span><br>"
-      }
-      else {
-      fr_html += "<span class='bad'><b>The curve has not peaked.</span><br>"
-
-      }
-   }
-   fr_html += ""
+   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day) 
+   // See corona-ui-data.js
+   fillSummary(state_name,fr);
+ 
 
    pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
-   pie_lb = ['Confirmed Cases ' + parseInt(fr['14_day'].total_cases).toString(), 'Infected ' + parseInt(fr['14_day'].total_infected).toString(), 'Not Infected ' + parseInt(fr['14_day'].total_not_infected).toString(), 'Deaths ' + parseInt(fr['14_day'].total_dead).toString()]
+   pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
    title = "Predicted Outcome (14-day trajectory)"
    dv = "new_cases_pie_14"
    plot_pie(pie_data,pie_lb,title,dv) 
-   
-
-   document.getElementById("forecast_div").innerHTML= fr_html
+    
    
 
 }

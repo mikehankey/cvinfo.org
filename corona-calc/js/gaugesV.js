@@ -11,7 +11,7 @@ function svg_circle_arc_path(x, y, radius, start_angle, end_angle) {
    return "M " + start_xy[0] + " " + start_xy[1] + " A " + radius + " " + radius + " 0 0 0 " + end_xy[0] + " " + end_xy[1];
 };
 
-function animate_arc(ratio, svg, perc, $elt) {
+function animate_arc(ratio, svg, perc) {
    var arc, center, radius, startx, starty, value;
    arc = svg.path('');
    center = 500;
@@ -20,18 +20,30 @@ function animate_arc(ratio, svg, perc, $elt) {
    starty = 450; 
    return Snap.animate(0, ratio, (function(val) {
       var path;
-      arc.remove();
-      path = svg_circle_arc_path(500, 500, 450, -90, val * 180.0 - 90);
-      arc = svg.path(path);
-      arc.attr({ class: 'data-arc'});
-      value = Math.round(val * 100);
-      if(value>=100) { 
-         perc.text('?');
-      } else if(value==0) {
-         perc.text('Passed'); 
+      if(val<=1) {
+         arc.remove();
+         path = svg_circle_arc_path(500, 500, 450, -90, val * 180.0 - 90);
+         arc = svg.path(path);
+         arc.attr({ class: 'data-arc'});
+         value = Math.round(val * 100);
+         if(value>=100) { 
+            perc.text(Math.round(ratio * 100) + ' days'); 
+            ratio = 1; 
+            return false;
+         } else if(value==0) {
+            perc.text('Passed'); 
+         } else {
+            perc.text(Math.round(val * 100) + ' days'); 
+         }
       } else {
-         perc.text(Math.round(val * 100) + ' days'); 
+         arc.remove();
+         path = svg_circle_arc_path(500, 500, 450, -90, 180.0 - 90);
+         arc = svg.path(path);
+         arc.attr({ class: 'data-arc'});
+         value = Math.round(val * 100);
+         perc.text(Math.round(ratio * 100) + ' days'); 
       }
+     
    }), Math.round(1000 * ratio), mina.easeinout, function() { /* Nothing */} );
 };
 
@@ -39,19 +51,16 @@ function start_gauges($cont) {
    var $all = $cont.find('.metric');
    $all.each(function() {
       var ratio, svg, perc;
-   
       ratio = $(this).attr('data-ratio'); 
       svg   = Snap($(this).find('svg')[0]);
       perc  = $(this).find('text.percentage');  
       if(ratio<=0.3) {
-         $(this).addClass('good');
+         $(this).removeClass('good bad ugly').addClass('good');
       } else if(ratio<=0.6) {
-         $(this).addClass('bad');
+         $(this).removeClass('good bad ugly').addClass('bad');
       } else {
-         $(this).addClass('ugly'); 
-      }
-
-      animate_arc(ratio, svg, perc, $(this));
-   
+         $(this).removeClass('good bad ugly').addClass('ugly'); 
+      } 
+      animate_arc(ratio, svg, perc); 
    });
 }
