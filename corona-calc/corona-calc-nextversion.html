@@ -12,195 +12,41 @@
 
    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="./css/coronafiles.css" rel="stylesheet">
+
+   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+   <link rel="manifest" href="./site.webmanifest">
+   <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+   <meta name="msapplication-TileColor" content="#da532c">
+   <meta name="theme-color" content="#ffffff">
 
    <meta property="og:title" content="Corona Calculator - COVID-19 Forecasting Tool"/>
    <meta property="og:type" content="article"/>
    <meta property="og:url" content="http://cvinfo.org/"/>
    <meta property="og:site_name" content="COVID-19 Statistics"/>
    <meta property="og:description" content="Simple math based forecasting tool for helping to predict when corona virus will end."/>
-   
-   <style>
-
-      body {
-         margin:0;
-         font-family: 'Lato', sans-serif;  
-         color:#676a6c;
-         background-color:#f0f0f0;
-      }
-
-      body.wait {
-         cursor: wait;
-      }
-
-      .box {
-         box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-         background-color: #fff;
-         background-clip: border-box;
-         border: 1px solid rgba(0,0,0,.125);
-         border-radius: .25rem;
-         margin-block-start: 2rem;
-      }
-
-      /* Layout */
-      #header {
-         text-align: center;
-      }
-      .good_d {
-         color: green;
-      }
-      .bad_d {
-         padding:.5rem;
-         margin:1rem auto;
-         background-color:#c00;
-         color:#fff;
-         border-radius: 5px;
-         max-width: 80%;
-         font-weight: bold;
-      }
-
-      .good_t {
-         color:green;
-      }
-      .bad_t {
-         color:orange;
-      }
-      .ugly_t {
-         color:#c30202;
-      }
-      
-
-      #main-content {
-         text-align: center;
-         max-width: 1100px;
-         margin: 0 auto;
-      }
-      
-      #results {
-         margin: 2rem 1rem;
-      }
-
-      #sum_main {
-         max-width: 900px;
-         margin: 0 auto;
-         color: #000;
-         padding: 2rem 1rem;
-         font-weight: bold;
-         font-size: 1.5rem;
-      }
-
-      /* Typo */ 
-      h1 {
-         margin-bottom:.5em;
-      }
-
-      h2 {
-         margin-top: 0;
-      }
-      
-      .trend {
-         
-      }
-
-      #summary h3 {
-         margin-bottom: 0;
-      }
-
-      #summary h4 {
-         margin-top: .3rem;
-      }
-
-      /* Form */
-      select {
-         display: inline-block;
-         width: 100%;
-         max-width: 20rem;
-         height: calc(1.5em + .75rem + 2px);
-         padding: .375rem 1.75rem .375rem .75rem;
-         font-size: 1rem;
-         font-weight: 400;
-         line-height: 1.5;
-         color: #495057;
-         vertical-align: middle;
-         background: #fff url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjUiIHZpZXdCb3g9IjAgMCA0IDUiPjxwYXRoIGZpbGw9IiUyMzM0M2E0MCIgZD0iTTIgMEwwIDJoNHptMCA1TDAgM2g0eiIvPjwvc3ZnPg==") no-repeat right .75rem center/8px 10px;
-         border: 1px solid #ced4da;
-         border-radius: .25rem;
-         -webkit-appearance: none;
-         -moz-appearance: none;
-         appearance: none;
-         transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-         word-wrap: normal;
-      }
-
-      #loader img {
-         max-width: 100px;
-         display: block;
-         margin: 0 auto;
-      }
-
-      /* Gauges */
-      .gauge_cont {
-         max-width: 900px;
-         margin: 0 auto;
-      }
-
-      .metric {
-         display: inline-block;
-         width: 24%;
-      }
-
-      .metric svg {
-        margin: .5em 1rem;
-      }
-
-      .metric path {
-         stroke-width: 75;
-         stroke: #ecf0f1;
-         fill: none;
-      }
-
-      .metric .title {
-         font-size: 3.8em;
-      }  
-
-      .metric.good path.data-arc {
-         stroke: green;
-      }
-      
-      .metric.good text {
-         fill: green;
-      }
-
-      .metric.bad path.data-arc {
-         stroke: orange;
-      }
-      
-      .metric.bad text {
-         fill: orange;
-      }
-
-      .metric.ugly path.data-arc {
-         stroke: #c30202;
-      }
-      
-      .metric.ugly text {
-         fill: #c30202;
-      }
-      
-      /* Pie Charts */
-      .pie_chart {
-         float: left;
-         width: 50%;
-      }
  
-   </style>
 </head>
 <body class="wait">
+
+   <header class="header clearfix">
+      <a href="" class="logo"><img src="./favicon-32x32.png"/> <span>CoronaFiles</span></a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul class="menu">
+         <li><a href="./corona-calc-nextversion.html">Forecast</a></li>
+         <li><a href="./about.html">About</a></li> 
+      </ul>
+   </header>
+
    <div id="header">
       <h1>Corona Calculator</h1>
       <h2>COVID-19 Forecasting Tool</h2>
    </div>
    <div id="main-content">
-      <div id="state_select"></div>
+      <div id="state_select"><img src="./img/loader.svg"/></div>
  
       <div id="results">
          <div id="loader" style="display:none"><img src="./img/loader.svg"/></div>
