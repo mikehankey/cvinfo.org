@@ -386,4 +386,8 @@ select {
    .box {
     margin-top: .5rem;
    }
+
+   h1 img {
+      display:none;
+   }
 }
