@@ -340,4 +340,5 @@ select {
 /* Pie Charts */
 .pie_chart {
    width: 50%;
+   float: left;
 }
