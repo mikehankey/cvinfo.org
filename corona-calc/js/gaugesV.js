@@ -1,3 +1,10 @@
+$.fn.extend({ 
+   update_gauge:function(ratio,text) {
+      $(this).attr('data-ratio',ratio);
+      $(this).find('.title').text(text);
+   }
+})
+
 function polar_to_cartesian(cx, cy, radius, angle) {
    var radians;
    radians = (angle - 90) * Math.PI / 180.0;
