@@ -144,8 +144,6 @@ function doSomethingWithJsonData(json_data ) {
    out = "";
    document.getElementById("new_cases_forecast").innerHTML= out;
  
-   alert("zdv")
-   alert(zdv.length)
 
    zdv2 = zero_day_vals.slice();
    zdv3 = zero_day_vals.slice();
@@ -158,12 +156,8 @@ function doSomethingWithJsonData(json_data ) {
    out = forecast_html(pred, "growth", state_name, )
    out = ""
    document.getElementById("growth_forecast").innerHTML= out
-   alert("zdv2")
-   alert(zdv.length)
 
    title = state_name.toUpperCase() + " NEW DEATHS " + last_date
-   alert(zdv2.length)
-   alert(new_deaths_vals.length)
    out2 = makeGraph(zdv2, new_deaths_vals,title, "zero day", "new deaths", "new_deaths_div", fit_days, 60)
    //document.getElementById("results_panel").innerHTML= out
 
