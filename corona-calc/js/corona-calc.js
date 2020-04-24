@@ -192,9 +192,16 @@ function doSomethingWithJsonData(json_data ) {
 
    pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
    pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
-   title = "Predicted Outcome (14-day trajectory)"
+   title = "Predicted Outcome (14-day trend)"
    dv = "new_cases_pie_14"
    plot_pie(pie_data,pie_lb,title,dv) 
+
+   pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
+   pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
+   title = "Predicted Outcome (7-day trend)"
+   dv = "new_cases_pie_7"
+   plot_pie(pie_data,pie_lb,title,dv) 
+
     
    
 
