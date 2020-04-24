@@ -21,12 +21,13 @@ function svg_circle_arc_path(x, y, radius, start_angle, end_angle) {
 };
 
 function animate_arc(ratio, svg, perc) {
-   var arc, center, radius, startx, starty, value;
+   var arc, center, radius, startx, starty, value, init_ratio;
    arc = svg.path('');
    center = 500;
    radius = 450;
    startx = 0;
    starty = 450; 
+   init_ratio = ratio;
    return Snap.animate(0, ratio, (function(val) {
       var path;
       if(val<1) {
@@ -49,12 +50,11 @@ function animate_arc(ratio, svg, perc) {
          path = svg_circle_arc_path(500, 500, 450, -90, 180.0 - 90);
          arc = svg.path(path);
          arc.attr({ class: 'data-arc'});
-         perc.text(Math.round(ratio * 100) + ' days'); 
-         console.log(ratio * 100 + "!!!!")
+         perc.text(Math.round(init_ratio * 100) + ' days');  
       }
      
-   }), Math.round(1000 * ratio), mina.easeinout, function() { /* Nothing */} );
-};
+   }), Math.round(1000 * ratio), mina.easeinout, function() { perc.text(Math.round(init_ratio * 100) + ' days'); } );
+}; 
 
 function start_gauges($cont) {
    var $all = $cont.find('.metric');
