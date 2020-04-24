@@ -61,11 +61,11 @@ function fillSummary(state_name,fr) {
 
 
    // Create main text
-   var  main_summary_text = "<span class='t_good'>" + state_name 
+   var  main_summary_text = "<span class='good_t'>" + state_name 
 
    // BOTH 14/7 RESULT IN ZERO DAY
    if (fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) {  
-
+      alert("HERE")
       drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
       main_summary_text += " could have zero cases in " + Math.min.apply(null,drange).toString() 
       //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
