@@ -54,13 +54,6 @@ function fillSummary(state_name,fr) {
       //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
       main_summary_text += " to " + Math.max.apply(null,drange).toString() + " days.</span>";
 
-      if( fr['7_day'].zero_day_met>fr['14_day'].zero_day_met) {
-         // add note here (optional) if the 7 day trend is worse than the 14 day trend.
-         //main_summary_text += "<br/>but based on the last 7 days trend, it may take up to <span class='"+goodBadOrUglyMike(fr['7_day'].zero_day_met)+"'>" + fr['7_day'].zero_day_met + "</span> days.";
-      } else {
-         // WARNING: Here no need to display the 7 days trend (?) - I can take care of it.
-         main_summary_text += ".";
-      }
    }
    // BOTH 14/7 RESULT IN HERD DAY
    else if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
