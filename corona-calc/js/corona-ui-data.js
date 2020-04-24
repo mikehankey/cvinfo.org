@@ -49,7 +49,6 @@ function fillSummary(state_name,fr) {
 
    // BOTH 14/7 RESULT IN ZERO DAY
    if (fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) {  
-      alert("HERE")
       drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
       main_summary_text += " could have zero cases in " + Math.min.apply(null,drange).toString() 
       //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";

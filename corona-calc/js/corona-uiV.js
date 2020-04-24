@@ -63,6 +63,7 @@ function hide_loader(show_graphs) {
 }
 
 function createSvg(which) {
+   /*
    // Clean all the gauges
    if(which != 'summary') {
       // ,.3days
@@ -76,7 +77,7 @@ function createSvg(which) {
       //$('.3days .title').text('based on 3 days trend');
       $('.new .title').text('based on curve');
    }
-
+   */
    // For the Summary 
    if(which == 'summary' || which == 'all') { 
       //,#forecast .new

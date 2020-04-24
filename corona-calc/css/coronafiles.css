@@ -26,7 +26,7 @@ body.wait {
    background-clip: border-box;
    border: 1px solid rgba(0,0,0,.125);
    border-radius: .25rem;
-   margin-block-start: 2rem;
+   margin-top: 2rem;
 }
 
 a, a:visited {
@@ -216,6 +216,7 @@ a, a:visited {
 #main-content.tonly {
    text-align: left;
    color: #111;
+    margin: 0 .5rem;
 }
 
 #results {
@@ -251,6 +252,19 @@ h2 {
 #summary h4 {
    margin-top: .3rem;
 }
+
+/* Pies */
+.pies {
+   margin: 2rem 1rem;
+   border-top: 1px solid #ccc;
+}
+ 
+.pie_chart {
+   width: 50%;
+   float: left;
+}
+
+
 
 /* Form */
 
@@ -337,7 +351,26 @@ select {
    fill: #c30202;
 }
 
-/* Pie Charts */
-.pie_chart {
-   width: 50%;
+
+
+@media (max-width: 48em) {
+   #results {
+      margin: .5rem .2rem;
+   }
+
+   #sum_main {
+      padding: 1rem .5rem; 
+   }
+
+   .metric, .pie_chart {
+      display: block;
+      width: 100%;
+      max-width: 250px;
+      margin:.5rem auto;
+      float:none;
+   }
+
+   .box {
+    margin-top: .5rem;
+   }
 }
