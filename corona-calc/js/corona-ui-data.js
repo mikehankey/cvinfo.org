@@ -45,10 +45,10 @@ function fillSummary(state_name,fr) {
 
 
    // Create main text
-   var  main_summary_text = "<span class='good_t'>" + state_name 
 
    // BOTH 14/7 RESULT IN ZERO DAY
    if (fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) {  
+      var  main_summary_text = "<span class='good_t'>" + state_name 
       drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
       main_summary_text += " could have zero cases in " + Math.min.apply(null,drange).toString() 
       //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
@@ -63,21 +63,38 @@ function fillSummary(state_name,fr) {
       }
    }
    // BOTH 14/7 RESULT IN HERD DAY
-   if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
+   else if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
 
-      drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
-      alert("GAY")
-      main_summary_text += " could have zero cases in <span class='t_good'>" + Math.min.apply(null,drange).toString() + "</span> ";
-      //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
-      main_summary_text += " to <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange), 'zeroday')+"'>" + Math.max.apply(null,drange).toString() + "</span> days.";
-
-      if( fr['7_day'].zero_day_met>fr['14_day'].zero_day_met) {
-         // add note here (optional) if the 7 day trend is worse than the 14 day trend.
-         //main_summary_text += "<br/>but based on the last 7 days trend, it may take up to <span class='"+goodBadOrUglyMike(fr['7_day'].zero_day_met)+"'>" + fr['7_day'].zero_day_met + "</span> days.";
-      } else {
-         // WARNING: Here no need to display the 7 days trend (?) - I can take care of it.
-         main_summary_text += ".";
+      var  main_summary_text = "<span class='ugly_t'>" + state_name 
+      drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met]
+      main_summary_text += " could reach herd immunity in " + Math.min.apply(null,drange).toString() 
+      main_summary_text += " to " + Math.max.apply(null,drange).toString() + " days. </span> ";
+   }
+   // 14/7 RESULT IN HERD DAY AND ZERO
+   else {
+      if  (fr['14_day'].zero_day_met > 0 ) {
+         var  main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
+         main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met.toString() 
+         main_summary_text += " days .</span> " 
       }
+      else {
+         var  main_summary_text = "<span class='ugly_t'>Based on the 14-day trend, " + state_name 
+         main_summary_text += " could reach herd immunity in " + fr['14_day'].herd_immunity_met.toString() 
+         main_summary_text += " days .</span> " 
+
+      }
+      if  (fr['7_day'].zero_day_met > 0 ) {
+         main_summary_text += "<br><span class='good_t'>Based on the 7-day trend, " + state_name
+         main_summary_text += " could have zero cases in " + fr['7_day'].zero_day_met.toString()
+         main_summary_text += " days .</span> " 
+      }
+      else {
+         main_summary_text += "<br><span class='ugly_t'>Based on the 7-day trend, " + state_name
+         main_summary_text += " could reach herd immunity in " + fr['7_day'].herd_immunity_met.toString()
+         main_summary_text += " days .</span> "
+
+      }
+
    }
 
  
