@@ -1,1365 +1,1333 @@
 function linearRegression(x,y){
-        var lr = {};
-        var n = y.length;
-        var sum_x = 0;
-        var sum_y = 0;
-        var sum_xy = 0;
-        var sum_xx = 0;
-        var sum_yy = 0;
+   var lr = {};
+   var n = y.length;
+   var sum_x = 0;
+   var sum_y = 0;
+   var sum_xy = 0;
+   var sum_xx = 0;
+   var sum_yy = 0;
 
-        for (var i = 0; i < y.length; i++) {
+   for (var i = 0; i < y.length; i++) {
 
-            sum_x += x[i];
-            sum_y += y[i];
-            sum_xy += (x[i]*y[i]);
-            sum_xx += (x[i]*x[i]);
-            sum_yy += (y[i]*y[i]);
-        } 
+       sum_x += x[i];
+       sum_y += y[i];
+       sum_xy += (x[i]*y[i]);
+       sum_xx += (x[i]*x[i]);
+       sum_yy += (y[i]*y[i]);
+   } 
 
-        lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
-        lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
-        lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
+   lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n*sum_xx - sum_x * sum_x);
+   lr['intercept'] = (sum_y - lr.slope * sum_x)/n;
+   lr['r2'] = Math.pow((n*sum_xy - sum_x*sum_y)/Math.sqrt((n*sum_xx-sum_x*sum_x)*(n*sum_yy-sum_y*sum_y)),2);
 
-        return lr;
+   return lr;
 }
 
 function forecast_html(pred, type, state_name) {
 
-   var $gaugesCont = $('#'+type.replace(/\s/g, '')+"_cont"); 
-   var $forteen_days = $gaugesCont.find('.14days');
-   var $seven_days = $gaugesCont.find('.7days');
-   var $three_days = $gaugesCont.find('.3days');
-   var $new =  $gaugesCont.find('.new'); 
-    
-
-   if (pred[0] == 9999) {
-      $forteen_days.attr('data-ratio',1);
-   } else {
-      $forteen_days.attr('data-ratio',pred[0]/100);
-   }
-   
-   if (pred[1] == 9999) {
-      $seven_days.attr('data-ratio',1);
-   } else {
-      $seven_days.attr('data-ratio',pred[1]/100);
-   }
-
-   if (pred[2] == 9999) {
-      $three_days.attr('data-ratio',1);
-   } else {
-      $three_days.attr('data-ratio',pred[2]/100);
-   }
-
-   if (pred[3] == 9999) {
-      $new.attr('data-ratio',1); 
-   }  else if (pred[3] <= 0) {
-      $new.attr('data-ratio',0); 
-   }
-   else {
-      $new.attr('data-ratio',pred[3]/100);
-   }
-   
-   setTimeout(function(){ 
-      start_gauges($gaugesCont);
-  },2500);
+var $gaugesCont = $('#'+type.replace(/\s/g, '')+"_cont"); 
+var $forteen_days = $gaugesCont.find('.14days');
+var $seven_days = $gaugesCont.find('.7days');
+var $three_days = $gaugesCont.find('.3days');
+var $new =  $gaugesCont.find('.new'); 
 
 
-   out = ""
-   if (pred[0] == 9999) {
-      out += "<li class='bad'>Based on the " + type + " 14 day trajectory, " + state_name + " will not reach a zero day. </li>"
-   }
-   else {
-      out += "<li class='good'>Based on the " + type + " 14 day trajectory, " + state_name + " will reach the zero day in " + pred[0].toString() + " more days.</li>"
-   }
-   if (pred[1] == 9999) {
-      out += "<li class='bad'>Based on the " + type + " 7 day trajectory, " + state_name + " will not reach a zero day. "
-   }
-   else {
-      out += "<li class='good'>Based on the " + type + " 7 day trajectory, " + state_name + " will reach the zero day in " + pred[1].toString() + " more days."
-   }
-   if (pred[2] == 9999) {
-      out += "<li class='bad'>Based on the " + type + " 3 day trajectory, " + state_name + " will not reach a zero day. "
-   }
-   else {
-      out += "<li class='good'>Based on the " + type + " 3 day trajectory, " + state_name + " will reach the zero day in " + pred[2].toString() + " more days."
-   }
-   if (pred[3] == 9999) {
-      out += "<li class='bad'>Based on the " + type + " curve, " + state_name + " will not reach a zero day in the next 60 days. "
-   }
-   else if (pred[3] <= 0) {
-      out += "<li class='good'>Based on the " + type + " curve, the zero day for " + state_name + " has already passed. "
-   }
-   else {
-      out += "<li class='good'>Based on the " + type + " curve, " +  state_name + " will reach the zero day in " + pred[3].toString() + " more days."
-   }
-   out += "</ul>"
-   return(out)
+if (pred[0] == 9999) {
+ $forteen_days.attr('data-ratio',1);
+} else {
+ $forteen_days.attr('data-ratio',pred[0]/100);
+}
+
+if (pred[1] == 9999) {
+ $seven_days.attr('data-ratio',1);
+} else {
+ $seven_days.attr('data-ratio',pred[1]/100);
+}
+
+if (pred[2] == 9999) {
+ $three_days.attr('data-ratio',1);
+} else {
+ $three_days.attr('data-ratio',pred[2]/100);
+}
+
+if (pred[3] == 9999) {
+ $new.attr('data-ratio',1); 
+}  else if (pred[3] <= 0) {
+ $new.attr('data-ratio',0); 
+}
+else {
+ $new.attr('data-ratio',pred[3]/100);
+}
+
+setTimeout(function(){ 
+ start_gauges($gaugesCont);
+},2500);
+
+
+out = ""
+if (pred[0] == 9999) {
+ out += "<li class='bad'>Based on the " + type + " 14 day trajectory, " + state_name + " will not reach a zero day. </li>"
+}
+else {
+ out += "<li class='good'>Based on the " + type + " 14 day trajectory, " + state_name + " will reach the zero day in " + pred[0].toString() + " more days.</li>"
+}
+if (pred[1] == 9999) {
+ out += "<li class='bad'>Based on the " + type + " 7 day trajectory, " + state_name + " will not reach a zero day. "
+}
+else {
+ out += "<li class='good'>Based on the " + type + " 7 day trajectory, " + state_name + " will reach the zero day in " + pred[1].toString() + " more days."
+}
+if (pred[2] == 9999) {
+ out += "<li class='bad'>Based on the " + type + " 3 day trajectory, " + state_name + " will not reach a zero day. "
+}
+else {
+ out += "<li class='good'>Based on the " + type + " 3 day trajectory, " + state_name + " will reach the zero day in " + pred[2].toString() + " more days."
+}
+if (pred[3] == 9999) {
+ out += "<li class='bad'>Based on the " + type + " curve, " + state_name + " will not reach a zero day in the next 60 days. "
+}
+else if (pred[3] <= 0) {
+ out += "<li class='good'>Based on the " + type + " curve, the zero day for " + state_name + " has already passed. "
+}
+else {
+ out += "<li class='good'>Based on the " + type + " curve, " +  state_name + " will reach the zero day in " + pred[3].toString() + " more days."
+}
+out += "</ul>"
+return(out)
 }
 
 
 
 
 function displayData(json_data ,state,county) {
-   // make hidden divs visible
-   // hack because i could not figure out how to hide / show the new divs I added. 
-   document.getElementById('results').style.visibility = 'visible' 
-   document.getElementById('recalc_form').style.visibility = 'visible'
-   document.getElementById('summary').style.visibility = 'visible'
-   document.getElementById('sum_peak').style.visibility= 'visible'
-   document.getElementById('metric 7days').style.visibility = 'visible'
-   document.getElementById('metric 14days').style.visibility = 'visible'
-   ctype = "state"
 
-   var out = "";
-   if (state != "USA") {
-      var state_name = json_data['summary_info'].state_name;
-      var state_code = json_data['summary_info'].state_code;
-      var county_pop =  json_data['county_pop']
-   }
-   else {
-      var state_name = "United States of America"
-      var state_code = "USA"
-   }
-  
-   if (typeof(county) === 'undefined') {
-      var county_list = {}
-      p = json_data['county_stats'] 
-      for (var key in p) {
-         if (p.hasOwnProperty(key)) {
-            tc = p[key]['county_stats']
-            ccc = tc[tc.length-1].cases
-            county_list[key] = ccc
-            //county_pop[key]
-         }
-      }
-      
-      countySelect(county_list, state_code) 
-      county = "ALL"
-   }
-   if (state_code != 'USA') {
-      var state_name = json_data['summary_info'].state_name;
-      var mortality = json_data['summary_info'].mortality / 100;
-      var cg_med = json_data['summary_info'].cg_med;
-      var cg_med_decay = json_data['summary_info'].cg_med_decay;
-   }
-   else {
-      mortality = .2
-   }
+// make hidden divs visible
+// hack because i could not figure out how to hide / show the new divs I added. 
+document.getElementById('results').style.visibility = 'visible' 
+document.getElementById('recalc_form').style.visibility = 'visible'
+document.getElementById('summary').style.visibility = 'visible'
+document.getElementById('sum_peak').style.visibility= 'visible'
+document.getElementById('metric 7days').style.visibility = 'visible'
+document.getElementById('metric 14days').style.visibility = 'visible'
+ctype = "state"
 
-   if (typeof(county) == "undefined" || county == "ALL") {
-      if (state != "USA") {
-         var state_pop = json_data['summary_info'].state_population * 1000000;
-         var ss = json_data['state_stats'];
-         full_state_name = state_name
-      }
-      else { 
-         
-         state_population = 328200000 
-         full_state_name = state_name
-         var usd = json_data
-         ss = []
-         for (var key in usd) {
-          
-            if (usd.hasOwnProperty(key)) {
-               ss.push([usd[key]])
-            }
-         }
-
-      }
-   } 
-   else { 
-      state_pop = json_data['county_pop'][county]
-      var ss = json_data['county_stats'][county]['county_stats'];
-      full_state_name = county + " County, " + state_name
-      //state_name = full_state_name
-      ctype = "county"
-   }
-   var date_vals = [];
-   var zero_day_vals = [];
-   var total_cases_vals = [];
-   var new_cases_vals = [];
-   var new_deaths_vals = [];
-   var case_growth_vals = [];
-   var death_growth_vals = [];
-   var decay_vals = [];
-   var test_vals = [];
-   var mortality_vals = [];
-
-   var zd = 0;
-   var last_growth = 0;
-
-   // Prepare all data
-   var last_tests = 0
-
-
-   ss.forEach(function (arrayItem) {
-      if (typeof(arrayItem.date) != "undefined") {
-         date_vals.push(arrayItem.date);
-         this_date = arrayItem.date
-         test_pd = arrayItem.tests - last_tests
-         test_vals.push(test_pd)
-         last_tests = arrayItem.tests
-      }
-      else {
-         // county record here
-         date_vals.push(arrayItem.day.replace(/-/g,""));
-         this_date = arrayItem.day.replace(/-/g,"") 
-      }
-      zero_day_vals.push(zd);
-      total_cases_vals.push(arrayItem.cases);
-      new_cases_vals.push(arrayItem.new_cases);
-      new_deaths_vals.push(arrayItem.new_deaths);
-      if (typeof(arrayItem.cg_last) != "undefined") {
-         case_growth_vals.push(arrayItem.cg_last);
-         death_growth_vals.push(arrayItem.dg_last);
-         decay = arrayItem.cg_last - last_growth
-         last_growth = arrayItem.cg_last 
-      } else {
-         case_growth_vals.push(arrayItem.case_growth);
-         death_growth_vals.push(arrayItem.death_growth);
-         decay = arrayItem.case_growth - last_growth
-         last_growth = arrayItem.case_growth
-      }
-      mortality_vals.push(arrayItem.mortality);
-      zd = zd + 1
-      last_date = this_date 
-      decay_vals.push(decay);
-     
-   });
-
-   // make some JS dates
-   js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)
-   // important dates are
-   // first case date for area being examined
-   // national lock down date 
-   // reopen protests dates
-   // other important / interesting dates
-   // these dates will be marked with a line on the graph
-   // so we can see the impact of events on data
-
-   nc_org = new_cases_vals.slice();
-   nc_org2 = new_cases_vals.slice();
-   zdv = zero_day_vals.slice();
-
-   // Draw graphs & Gauges for New Cases
-   title = full_state_name.toUpperCase() + " NEW CASES " + last_date;
-   fit_days = 14;
-   pred = makeGraph(zero_day_vals, nc_org,title, "days since first case", "New Cases", "new_cases_div", fit_days, 60);
-   out = forecast_html(pred, "new case ", state_name);
-   out = "";
-   document.getElementById("new_cases_forecast").innerHTML= out;
+var out = "";
+var state_name = json_data['summary_info'].state_name;
+var state_code = json_data['summary_info'].state_code; 
+if (typeof(county) === 'undefined') {
+ var county_list = {}
+ p = json_data['county_stats'] 
+ for (var key in p) {
+    if (p.hasOwnProperty(key)) {
+       tc = p[key]['county_stats']
+       ccc = tc[tc.length-1].cases
+       county_list[key] = ccc
+       //county_pop[key]
+    }
+ }
  
+ countySelect(county_list, state_code) 
+ county = "ALL"
+}
+var state_name = json_data['summary_info'].state_name;
+var mortality = json_data['summary_info'].mortality / 100;
+var cg_med = json_data['summary_info'].cg_med;
+var cg_med_decay = json_data['summary_info'].cg_med_decay;
 
-   zdv2 = zero_day_vals.slice();
-   zdv3 = zero_day_vals.slice();
-   zdv4 = zero_day_vals.slice();
-   zdv5 = zero_day_vals.slice();
-   zdv6 = zero_day_vals.slice();
-   title = full_state_name.toUpperCase() + " GROWTH " + last_date
+if (typeof(county) == "undefined" || county == "ALL") {
+ var state_pop = json_data['summary_info'].state_population * 1000000;
+ var ss = json_data['state_stats'];
+ full_state_name = state_name
+} 
+else { 
+ state_pop = json_data['county_pop'][county]
+ var ss = json_data['county_stats'][county]['county_stats'];
+ full_state_name = county + " County, " + state_name
+ //state_name = full_state_name
+ ctype = "county"
+}
 
-   pred = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
-   out = forecast_html(pred, "growth", state_name, )
-   out = ""
-   document.getElementById("growth_forecast").innerHTML= out
+var date_vals = [];
+var zero_day_vals = [];
+var total_cases_vals = [];
+var new_cases_vals = [];
+var new_deaths_vals = [];
+var case_growth_vals = [];
+var death_growth_vals = [];
+var decay_vals = [];
+var test_vals = [];
+var mortality_vals = [];
 
-   title = full_state_name.toUpperCase() + " NEW DEATHS " + last_date
-   out2 = makeGraph(zdv2, new_deaths_vals,title, "days since first case", "New Deaths", "new_deaths_div", fit_days, 60)
-   //document.getElementById("results_panel").innerHTML= out
+var zd = 0;
+var last_growth = 0;
 
-   title = full_state_name.toUpperCase() + " DEATH GROWTH " + last_date
-   out2 = makeGraph(zdv3, death_growth_vals,title, "days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
+// Prepare all data
+var last_tests = 0
+ss.forEach(function (arrayItem) {
+ if (typeof(arrayItem.date) != "undefined") {
+    date_vals.push(arrayItem.date);
+    this_date = arrayItem.date
+    test_pd = arrayItem.tests - last_tests
+    test_vals.push(test_pd)
+    last_tests = arrayItem.tests
+ }
+ else {
+    // county record here
+    date_vals.push(arrayItem.day.replace(/-/g,""));
+    this_date = arrayItem.day.replace(/-/g,"") 
+ }
+ zero_day_vals.push(zd);
+ total_cases_vals.push(arrayItem.cases);
+ new_cases_vals.push(arrayItem.new_cases);
+ new_deaths_vals.push(arrayItem.new_deaths);
+ if (typeof(arrayItem.cg_last) != "undefined") {
+    case_growth_vals.push(arrayItem.cg_last);
+    death_growth_vals.push(arrayItem.dg_last);
+    decay = arrayItem.cg_last - last_growth
+    last_growth = arrayItem.cg_last 
+ } else {
+    case_growth_vals.push(arrayItem.case_growth);
+    death_growth_vals.push(arrayItem.death_growth);
+    decay = arrayItem.case_growth - last_growth
+    last_growth = arrayItem.case_growth
+ }
+ mortality_vals.push(arrayItem.mortality);
+ zd = zd + 1
+ last_date = this_date 
+ decay_vals.push(decay);
 
-   title = full_state_name.toUpperCase() + " GROWTH DECAY " + last_date
+});
 
-   // case decay
-   fitsObj = getFits(zdv4, decay_vals)
-   out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "growth decay", title, "decay_div", "line")
+// make some JS dates
+js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)
+// important dates are
+// first case date for area being examined
+// national lock down date 
+// reopen protests dates
+// other important / interesting dates
+// these dates will be marked with a line on the graph
+// so we can see the impact of events on data
 
-   // tests
-   if (ctype == 'state') {
-      title = full_state_name.toUpperCase() + " TESTS PER DAY" + last_date
-      out2 = makeGraph(zdv2, test_vals ,title, "days since first case", "tests per day", "test_div", fit_days, 60)
-   }
+nc_org = new_cases_vals.slice();
+nc_org2 = new_cases_vals.slice();
+zdv = zero_day_vals.slice();
 
-   // mortality div
-   fitsObj = getFits(zdv5, mortality_vals)
-   title = full_state_name.toUpperCase() + " MORTALITY " + last_date
-
-   out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "mortality percentage", title, "mortality_div", "line")
-
-    var total_cases = new_cases_vals.reduce(function(a, b){
-        return a + b;
-    }, 0);
-
-   phantom = parseFloat(document.getElementById("calc_phantom").value )
-   herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
-   current_zero_day = nc_org2.length
-
-   // This is the MAIN summary at the top of the page.
-   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) 
-   document.getElementById("calc_mortality").value = mortality.toFixed(3)
-   document.getElementById("f_xs").value = zdv6
-   document.getElementById("f_ys").value = nc_org2 
-   document.getElementById("f_total_cases").value = total_cases
-   document.getElementById("f_state_pop").value = state_pop 
-   document.getElementById("f_current_zero_day").value = current_zero_day 
-   document.getElementById("f_state_name").value = state_name
-   
-   document.getElementById("f_county").value = county
-
-
-   // See corona-ui-data.js
-   fillSummary(full_state_name,fr);
-
-
- 
-   
-
-   // plot full forecast
-   xlab = "zero day" 
-   ylab = "impacted per day" 
-   title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
-   div_id = "forecast_bar_14" 
-  // (fr['14_day'].xs,fr['14_day'].ys,[],[],[],[], xlab,ylab,title,div_id,"bar") 
-   yd2 = [] 
-   yd3 = [] 
-   yd4 = [] 
-   exp_yd = [] 
-   extra_data = {
-      "yd2": fr['14_day'].dys,
-      "yd3": fr['14_day'].iys,
-      "yd4":  [],
-      "exp_yd": []
-   }
-   extra_labels = {
-      "yd": "Confirmed Cases",
-      "yd2": "Deaths",
-      "yd3": "Infected",
-      "yd4":  "",
-      "exp_yd": "" 
-   }
-   //plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar") 
-
-   extra_data = {
-      "yd2": fr['7_day'].dys,
-      "yd3": fr['7_day'].iys,
-      "yd4":  [],
-      "exp_yd": []
-   }
-   extra_labels = {
-      "yd": "Confirmed Cases",
-      "yd2": "Deaths",
-      "yd3": "Infected",
-      "yd4":  "",
-      "exp_yd": ""
-   }
-   div_id = "forecast_bar_7" 
-   title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
-   //plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
+// Draw graphs & Gauges for New Cases
+title = full_state_name.toUpperCase() + " NEW CASES " + last_date;
+fit_days = 14;
+pred = makeGraph(zero_day_vals, nc_org,title, "days since first case", "New Cases", "new_cases_div", fit_days, 60);
+out = forecast_html(pred, "new case ", state_name);
+out = "";
+document.getElementById("new_cases_forecast").innerHTML= out;
 
 
-   
+zdv2 = zero_day_vals.slice();
+zdv3 = zero_day_vals.slice();
+zdv4 = zero_day_vals.slice();
+zdv5 = zero_day_vals.slice();
+zdv6 = zero_day_vals.slice();
+title = full_state_name.toUpperCase() + " GROWTH " + last_date
+
+pred = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
+out = forecast_html(pred, "growth", state_name, )
+out = ""
+document.getElementById("growth_forecast").innerHTML= out
+
+title = full_state_name.toUpperCase() + " NEW DEATHS " + last_date
+out2 = makeGraph(zdv2, new_deaths_vals,title, "days since first case", "New Deaths", "new_deaths_div", fit_days, 60)
+//document.getElementById("results_panel").innerHTML= out
+
+title = full_state_name.toUpperCase() + " DEATH GROWTH " + last_date
+out2 = makeGraph(zdv3, death_growth_vals,title, "days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
+
+title = full_state_name.toUpperCase() + " GROWTH DECAY " + last_date
+
+// case decay
+fitsObj = getFits(zdv4, decay_vals)
+out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "growth decay", title, "decay_div", "line")
+
+// tests
+if (ctype == 'state') {
+ title = full_state_name.toUpperCase() + " TESTS PER DAY" + last_date
+ out2 = makeGraph(zdv2, test_vals ,title, "days since first case", "tests per day", "test_div", fit_days, 60)
+}
+
+// mortality div
+fitsObj = getFits(zdv5, mortality_vals)
+title = full_state_name.toUpperCase() + " MORTALITY " + last_date
+
+out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "mortality percentage", title, "mortality_div", "line")
+
+var total_cases = new_cases_vals.reduce(function(a, b){
+   return a + b;
+}, 0);
+
+phantom = parseFloat(document.getElementById("calc_phantom").value )
+herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
+current_zero_day = nc_org2.length
+
+// This is the MAIN summary at the top of the page.
+fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) 
+document.getElementById("calc_mortality").value = mortality.toFixed(3)
+document.getElementById("f_xs").value = zdv6
+document.getElementById("f_ys").value = nc_org2 
+document.getElementById("f_total_cases").value = total_cases
+document.getElementById("f_state_pop").value = state_pop 
+document.getElementById("f_current_zero_day").value = current_zero_day 
+document.getElementById("f_state_name").value = state_name
+
+document.getElementById("f_county").value = county
+
+
+// See corona-ui-data.js
+fillSummary(full_state_name,fr);
+
+
+
+
+
+// plot full forecast
+xlab = "zero day" 
+ylab = "impacted per day" 
+title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
+div_id = "forecast_bar_14" 
+// (fr['14_day'].xs,fr['14_day'].ys,[],[],[],[], xlab,ylab,title,div_id,"bar") 
+yd2 = [] 
+yd3 = [] 
+yd4 = [] 
+exp_yd = [] 
+extra_data = {
+ "yd2": fr['14_day'].dys,
+ "yd3": fr['14_day'].iys,
+ "yd4":  [],
+ "exp_yd": []
+}
+extra_labels = {
+ "yd": "Confirmed Cases",
+ "yd2": "Deaths",
+ "yd3": "Infected",
+ "yd4":  "",
+ "exp_yd": "" 
+}
+//plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar") 
+
+extra_data = {
+ "yd2": fr['7_day'].dys,
+ "yd3": fr['7_day'].iys,
+ "yd4":  [],
+ "exp_yd": []
+}
+extra_labels = {
+ "yd": "Confirmed Cases",
+ "yd2": "Deaths",
+ "yd3": "Infected",
+ "yd4":  "",
+ "exp_yd": ""
+}
+div_id = "forecast_bar_7" 
+title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
+//plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
+
+
+
 
 }
 
 
 
 function getFits(xs,ys) {
-   nxs = []
-   ys2  = []
-   ys3  = []
-   ys4  = []
-   exp_ys  = []
-   for (var i = 0; i <= xs.length; i++) {
-      nxs.push(xs[i])
-   }
+nxs = []
+ys2  = []
+ys3  = []
+ys4  = []
+exp_ys  = []
+for (var i = 0; i <= xs.length; i++) {
+ nxs.push(xs[i])
+}
 
-   // curve fit
+// curve fit
 
-   var rdata = []
-   for (var i  = 0; i <= xs.length -1; i++) {
-      var point = [xs[i], ys[i]]
-      rdata.push(point)
-      var last_x = xs[i]
-   }
-  
-   var linReg = regression('polynomial', rdata);
-   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
-   for (var i = 0; i<= 60; i++) {
-      tx = last_x + i
-      point = [tx, ys[i]]
-      rdata.push(point)
+var rdata = []
+for (var i  = 0; i <= xs.length -1; i++) {
+ var point = [xs[i], ys[i]]
+ rdata.push(point)
+ var last_x = xs[i]
+}
 
-   }
+var linReg = regression('polynomial', rdata);
+var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+for (var i = 0; i<= 60; i++) {
+ tx = last_x + i
+ point = [tx, ys[i]]
+ rdata.push(point)
 
-   var exp = extraPoints(rdata,linReg)
+}
 
-   var exp_ys = []
-   for (var i  = 0; i <= exp.length -1; i++) {
-      ey = exp[i].y
-      exp_ys.push(ey)
-   }
+var exp = extraPoints(rdata,linReg)
 
-   // 14 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - 14, 1))
-   lr_ys = ys.slice(Math.max(ys.length - 14, 1))
-   lx_14 = linearRegression(lr_xs,lr_ys)
-   // 7 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 7, 1))
-   lx_7 = linearRegression(lr_xs,lr_ys)
+var exp_ys = []
+for (var i  = 0; i <= exp.length -1; i++) {
+ ey = exp[i].y
+ exp_ys.push(ey)
+}
 
-   lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 3, 1))
-   lx_3 = linearRegression(lr_xs,lr_ys)
+// 14 DAY FIT
+lr_xs = xs.slice(Math.max(xs.length - 14, 1))
+lr_ys = ys.slice(Math.max(ys.length - 14, 1))
+lx_14 = linearRegression(lr_xs,lr_ys)
+// 7 DAY FIT
+lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
+lr_ys = ys.slice(Math.max(ys.length - 7, 1))
+lx_7 = linearRegression(lr_xs,lr_ys)
 
-
-   for (var i  = 0; i <= xs.length -1; i++) {
-      X = xs[i]
-      Y = ys[i]
-      if (xs.length - 14 < i + 1) {
-         PY14 = lx_14['slope'] * X + lx_14['intercept']
-      }
-      else {
-         PY14 = 0
-      }
-      if (xs.length - 7 < i + 1) {
-         PY7 = lx_7['slope'] * X + lx_7['intercept']
-      }
-      else {
-         PY7 = 0
-      }
-      if (xs.length - 3 < i + 1) {
-         PY3 = lx_3['slope'] * X + lx_3['intercept']
-      }
-      else {
-         PY3 = 0
-      }
-      if (PY14 < 0) {
-         PY14 = 0
-      }
-      if (PY7 < 0) {
-         PY7 = 0
-      }
-      if (PY3 < 0) {
-         PY3 = 0
-      }
-      ys2.push(PY14)
-      ys3.push(PY7)
-      ys4.push(PY3)
-      //out += PY.toString() + "<BR>";
-   }
-
-   // add 60 day projections
-   last_x = X
-   last_zd14_day = 9999
-   last_zd7_day = 9999
-   last_zd3_day = 9999
-   last_exp_day = 9999
-
-   proj_days = 60
-   exp_pos = 0
-   for (var i = 0; i <= proj_days; i++) {
-      TX = last_x + i
-      PY14 = lx_14['slope'] * TX + lx_14['intercept']
-      PY7 = lx_7['slope'] * TX + lx_7['intercept']
-      PY3 = lx_3['slope'] * TX + lx_3['intercept']
-      xs.push(TX)
-      ys.push(0)
-      ys2.push(PY14)
-      ys3.push(PY7)
-      ys4.push(PY3)
-      if (last_zd14_day == 9999 && PY14 <= 0) {
-         last_zd14_day = i
-      }
-      if (last_zd7_day == 9999 && PY7 <= 0) {
-         last_zd7_day = i
-      }
-      if (last_zd3_day == 9999 && PY3 <= 0) {
-         last_zd3_day = i
-      }
-      if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
-         last_exp_day = i
-      }
-      if (exp_ys[i+last_x] > 0) {
-         exp_pos = 1
-      }
-
-   }
+lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
+lr_ys = ys.slice(Math.max(ys.length - 3, 1))
+lx_3 = linearRegression(lr_xs,lr_ys)
 
 
+for (var i  = 0; i <= xs.length -1; i++) {
+ X = xs[i]
+ Y = ys[i]
+ if (xs.length - 14 < i + 1) {
+    PY14 = lx_14['slope'] * X + lx_14['intercept']
+ }
+ else {
+    PY14 = 0
+ }
+ if (xs.length - 7 < i + 1) {
+    PY7 = lx_7['slope'] * X + lx_7['intercept']
+ }
+ else {
+    PY7 = 0
+ }
+ if (xs.length - 3 < i + 1) {
+    PY3 = lx_3['slope'] * X + lx_3['intercept']
+ }
+ else {
+    PY3 = 0
+ }
+ if (PY14 < 0) {
+    PY14 = 0
+ }
+ if (PY7 < 0) {
+    PY7 = 0
+ }
+ if (PY3 < 0) {
+    PY3 = 0
+ }
+ ys2.push(PY14)
+ ys3.push(PY7)
+ ys4.push(PY3)
+ //out += PY.toString() + "<BR>";
+}
 
+// add 60 day projections
+last_x = X
+last_zd14_day = 9999
+last_zd7_day = 9999
+last_zd3_day = 9999
+last_exp_day = 9999
 
+proj_days = 60
+exp_pos = 0
+for (var i = 0; i <= proj_days; i++) {
+ TX = last_x + i
+ PY14 = lx_14['slope'] * TX + lx_14['intercept']
+ PY7 = lx_7['slope'] * TX + lx_7['intercept']
+ PY3 = lx_3['slope'] * TX + lx_3['intercept']
+ xs.push(TX)
+ ys.push(0)
+ ys2.push(PY14)
+ ys3.push(PY7)
+ ys4.push(PY3)
+ if (last_zd14_day == 9999 && PY14 <= 0) {
+    last_zd14_day = i
+ }
+ if (last_zd7_day == 9999 && PY7 <= 0) {
+    last_zd7_day = i
+ }
+ if (last_zd3_day == 9999 && PY3 <= 0) {
+    last_zd3_day = i
+ }
+ if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+    last_exp_day = i
+ }
+ if (exp_ys[i+last_x] > 0) {
+    exp_pos = 1
+ }
 
-   robj = {
-      "nxs" : nxs,
-      "ys2" : ys2,
-      "ys3" : ys3,
-      "ys4" : ys4,
-      "exp_ys" : exp_ys
-   }
+}
 
 
 
 
-   return(robj)
+
+robj = {
+ "nxs" : nxs,
+ "ys2" : ys2,
+ "ys3" : ys3,
+ "ys4" : ys4,
+ "exp_ys" : exp_ys
+}
+
+
+
+
+return(robj)
 }
 
 
 function extraPoints(data,polyReg) {
-    name = "polynomial"
-    var extrapolatedPts = [];
-    for(var i = 0; i < data.length; i++){
-        var val = data[i][0];
-        switch(name){
-        case "polynomial":
-            extrapolatedPts.push({x: val, y: polyReg.equation[2] * Math.pow(val,2) + polyReg.equation[1] * val + polyReg.equation[0]});
-            break;
-        case "exponential":
-            extrapolatedPts.push({x: val, y: expoReg.equation[0] * Math.exp(val * expoReg.equation[1])}); //or use numbers.js per https://gist.github.com/zikes/4279121, var regression = numbers.statistic.exponentialRegression(pts);
-            break;
-        case "power":
-            extrapolatedPts.push({x: val, y: powReg.equation[0] * Math.pow(val,powReg.equation[1])});
-            break;
-        case "logarithmic":
-            extrapolatedPts.push({x: val, y: logReg.equation[0] + logReg.equation[1] * Math.log(val)});
-            break;
-        case "linear":
-        default:
-            extrapolatedPts.push({x: val, y: linReg.equation[0] * val + linReg.equation[1]});
-        }
-    }
-    return extrapolatedPts;
+name = "polynomial"
+var extrapolatedPts = [];
+for(var i = 0; i < data.length; i++){
+   var val = data[i][0];
+   switch(name){
+   case "polynomial":
+       extrapolatedPts.push({x: val, y: polyReg.equation[2] * Math.pow(val,2) + polyReg.equation[1] * val + polyReg.equation[0]});
+       break;
+   case "exponential":
+       extrapolatedPts.push({x: val, y: expoReg.equation[0] * Math.exp(val * expoReg.equation[1])}); //or use numbers.js per https://gist.github.com/zikes/4279121, var regression = numbers.statistic.exponentialRegression(pts);
+       break;
+   case "power":
+       extrapolatedPts.push({x: val, y: powReg.equation[0] * Math.pow(val,powReg.equation[1])});
+       break;
+   case "logarithmic":
+       extrapolatedPts.push({x: val, y: logReg.equation[0] + logReg.equation[1] * Math.log(val)});
+       break;
+   case "linear":
+   default:
+       extrapolatedPts.push({x: val, y: linReg.equation[0] * val + linReg.equation[1]});
+   }
+}
+return extrapolatedPts;
 }
 
 function plot_pie(xd,lb,title,dv) {
 
-   // Add Title as DOM element
-   $('#'+dv).parent().prepend('<h3>'+title+'</h3>');
+// Add Title as DOM element
+$('#'+dv).parent().prepend('<h3>'+title+'</h3>');
 
-  
 
-   // cases, infected, not infected deaths
-   var data = [{
-      labels: lb,
-      values: xd,
-      type: 'pie',
-      textinfo: "label+percent",
-      textposition: "inside",
-      automargin: true,
-      marker: {
-         colors: [
-            '#ff5252',
-            '#e5ac9d',
-            '#97e486',
-            '#cc0000'
-         ]
-      }
-   }];
-   var layout = { 
-      legend: {"orientation": "h"} ,
-      margin: {"t": 0, "b": 0, "l": 0, "r": 0},
-      showlegend: false
-   }
-   Plotly.newPlot(dv, data,layout,{responsive: true})
+
+// cases, infected, not infected deaths
+var data = [{
+ labels: lb,
+ values: xd,
+ type: 'pie',
+ textinfo: "label+percent",
+ textposition: "inside",
+ automargin: true,
+ marker: {
+    colors: [
+       '#ff5252',
+       '#e5ac9d',
+       '#97e486',
+       '#cc0000'
+    ]
+ }
+}];
+var layout = { 
+ legend: {"orientation": "h"} ,
+ margin: {"t": 0, "b": 0, "l": 0, "r": 0},
+ showlegend: false
+}
+Plotly.newPlot(dv, data,layout,{responsive: true})
 }
 
 function recalculate() {
-   f_xs_str = document.getElementById("f_xs").value 
-   f_ys_str = document.getElementById("f_ys").value 
-   f_xs_ar = f_xs_str.split(",") 
-   f_ys_ar = f_ys_str.split(",") 
-   f_xs = []
-   f_ys = []
-   for (i =0; i< f_xs_ar.length; i++) {
-      f_xs.push(parseFloat(f_xs_ar[i]))
-      f_ys.push(parseFloat(f_ys_ar[i]))
-   }
-   herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
-  
-   f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
-   f_mortality = parseFloat(document.getElementById("calc_mortality").value)
-   f_phantom = parseFloat(document.getElementById("calc_phantom").value )
-   f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
-   f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
-   state_name = document.getElementById("f_state_name").value
-   county = document.getElementById("f_county").value
-   // This is the MAIN summary at the top of the page.
-   fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
-   
-   
-   
-   // See corona-ui-data.js
-   fillSummary(state_name,fr);
+f_xs_str = document.getElementById("f_xs").value 
+f_ys_str = document.getElementById("f_ys").value 
+f_xs_ar = f_xs_str.split(",") 
+f_ys_ar = f_ys_str.split(",") 
+f_xs = []
+f_ys = []
+for (i =0; i< f_xs_ar.length; i++) {
+ f_xs.push(parseFloat(f_xs_ar[i]))
+ f_ys.push(parseFloat(f_ys_ar[i]))
+}
+herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
 
-   /*
-   pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
-   pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
-   title = "14-Day Trend"
-   dv = "new_cases_pie_14"
-   plot_pie(pie_data,pie_lb,title,dv)
+f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
+f_mortality = parseFloat(document.getElementById("calc_mortality").value)
+f_phantom = parseFloat(document.getElementById("calc_phantom").value )
+f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
+f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
+state_name = document.getElementById("f_state_name").value
+county = document.getElementById("f_county").value
+// This is the MAIN summary at the top of the page.
+fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
 
-   pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
-   pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
-   title = "7-Day Trend"
-   dv = "new_cases_pie_7"
-   plot_pie(pie_data,pie_lb,title,dv)
-   */
 
-   extra_data = {
-      "yd2": fr['14_day'].dys,
-      "yd3": fr['14_day'].iys,
-      "yd4":  [],
-      "exp_yd": []
-   }
-   extra_labels = {
-      "yd": "Confirmed Cases",
-      "yd2": "Deaths",
-      "yd3": "Infected",
-      "yd4":  "",
-      "exp_yd": ""
-   }
-   title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
-   div_id = "forecast_bar_14"
-   //plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
 
-   extra_data = {
-      "yd2": fr['7_day'].dys,
-      "yd3": fr['7_day'].iys,
-      "yd4":  [],
-      "exp_yd": []
-   }
-   extra_labels = {
-      "yd": "Confirmed Cases",
-      "yd2": "Deaths",
-      "yd3": "Infected",
-      "yd4":  "",
-      "exp_yd": ""
-   }
-   title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
-   div_id = "forecast_bar_7"
-   //plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
+// See corona-ui-data.js
+fillSummary(state_name,fr);
+
+/*
+pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
+pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
+title = "14-Day Trend"
+dv = "new_cases_pie_14"
+plot_pie(pie_data,pie_lb,title,dv)
+
+pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
+pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
+title = "7-Day Trend"
+dv = "new_cases_pie_7"
+plot_pie(pie_data,pie_lb,title,dv)
+*/
+
+extra_data = {
+ "yd2": fr['14_day'].dys,
+ "yd3": fr['14_day'].iys,
+ "yd4":  [],
+ "exp_yd": []
+}
+extra_labels = {
+ "yd": "Confirmed Cases",
+ "yd2": "Deaths",
+ "yd3": "Infected",
+ "yd4":  "",
+ "exp_yd": ""
+}
+title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
+div_id = "forecast_bar_14"
+//plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
+
+extra_data = {
+ "yd2": fr['7_day'].dys,
+ "yd3": fr['7_day'].iys,
+ "yd4":  [],
+ "exp_yd": []
+}
+extra_labels = {
+ "yd": "Confirmed Cases",
+ "yd2": "Deaths",
+ "yd3": "Infected",
+ "yd4":  "",
+ "exp_yd": ""
+}
+title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
+div_id = "forecast_bar_7"
+//plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
 
 
 
 }
 
 function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh ) {
-   // this function projects the data forward to find end zero days or herd immunity and outcome values.
-   ys = fys
-   total_cases_org = total_cases
-   // 14 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - 14 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 14, 1))
-   lx_14 = linearRegression(lr_xs,lr_ys)
+// this function projects the data forward to find end zero days or herd immunity and outcome values.
+ys = fys
+total_cases_org = total_cases
+// 14 DAY FIT
+lr_xs = xs.slice(Math.max(xs.length - 14 , 1))
+lr_ys = ys.slice(Math.max(ys.length - 14, 1))
+lx_14 = linearRegression(lr_xs,lr_ys)
 
-   // 7 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 7, 1))
-   lx_7 = linearRegression(lr_xs,lr_ys)
+// 7 DAY FIT
+lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
+lr_ys = ys.slice(Math.max(ys.length - 7, 1))
+lx_7 = linearRegression(lr_xs,lr_ys)
 
-   // 3 DAY FIT
-   lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
-   lr_ys = ys.slice(Math.max(ys.length - 3, 1))
-   lx_3 = linearRegression(lr_xs,lr_ys)
+// 3 DAY FIT
+lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
+lr_ys = ys.slice(Math.max(ys.length - 3, 1))
+lx_3 = linearRegression(lr_xs,lr_ys)
 
-   // poly fit
-   forecast_result = {
-      "14_day" : {},
-      "7_day" : {},
-      "3_day" : {},
-      "exp" : {}
-   }
+// poly fit
+forecast_result = {
+ "14_day" : {},
+ "7_day" : {},
+ "3_day" : {},
+ "exp" : {}
+}
 
-   var rdata = []
-   for (var i  = 0; i <= xs.length -1; i++) {
-      var point = [xs[i], ys[i]]
-      rdata.push(point)
-      var last_x = xs[i]
-      last_x = i
-   }
-   var linReg = regression('polynomial', rdata);
-   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
-   for (var i = 0; i<= 1200; i++) {
-      tx = last_x + i
-      point = [tx, 0]
-      rdata.push(point)
+var rdata = []
+for (var i  = 0; i <= xs.length -1; i++) {
+ var point = [xs[i], ys[i]]
+ rdata.push(point)
+ var last_x = xs[i]
+ last_x = i
+}
+var linReg = regression('polynomial', rdata);
+var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+for (var i = 0; i<= 1200; i++) {
+ tx = last_x + i
+ point = [tx, 0]
+ rdata.push(point)
 
-   }
-  
-   var exp = extraPoints(rdata,linReg)
+}
 
-
-
-   var exp_ys = []
-   last_ey = 0
-   curve_total_cases = total_cases_org
-   curve_start_day = xs.length
-   curve_end = 0
-   forecast_result['exp']['herd_immunity_met'] = 0
-
-   for (var i  = 0; i <= exp.length -1; i++) {
-      ey = exp[i].y
-      if (i > 0 && last_ey < ey) {
-         //console.log(i, "curve moving up", ey)
-      }
-      else {
-         if (ey < 0 && curve_end == 0 && i > 5) {
-            curve_end = i
-            //console.log(i, "curve ended.", )
-         }
-      if (ey > 0) {
-         curve_total_cases += ey      
-      }
-        
-      }
-      forecast_result['exp']['total_cases'] = curve_total_cases 
-      forecast_result['exp']['total_dead'] = curve_total_cases * mortality
-      forecast_result['exp']['death_percent'] =  ((curve_total_cases * mortality)/ state_pop) * 100
-      forecast_result['exp']['total_infected'] = curve_total_cases * phantom
-      forecast_result['exp']['infected_percent'] = ((curve_total_cases * phantom) / state_pop) * 100
-      if (forecast_result['exp']['death_percent'] + forecast_result['exp']['infected_percent'] >= 80 && final_status14 == 0) {
-         forecast_result['exp']['herd_immunity_met'] = i - current_zero_day
-      }
+var exp = extraPoints(rdata,linReg)
 
 
-      
-      exp_ys.push(ey)
-      last_ey = ey
-   }
 
-   forecast_result['exp']['zero_day_met'] = curve_end - current_zero_day
-   forecast_result['exp']['total_cases'] = curve_total_cases
+var exp_ys = []
+last_ey = 0
+curve_total_cases = total_cases_org
+curve_start_day = xs.length
+curve_end = 0
+forecast_result['exp']['herd_immunity_met'] = 0
 
-   forecast_result['exp']['total_not_infected'] = state_pop - forecast_result['exp']['total_infected'] - forecast_result['exp']['total_dead']
-   forecast_result['exp']['niperc'] = (forecast_result['exp']['total_not_infected'] / state_pop) * 100
-
-  
-
-   fxs_14 = []
-   fxs_7 = []
-   fxs_3 = []
-   fxs_exp = []
-
-   fys_14 = []
-   fys_7 = []
-   fys_3 = []
-   fys_exp = []
-
-   // run out 14 day traj
-   final_status = 0 
-   zero_day_met = 0
-   herd_met = 0
-   i = 0
-   var total_cases_14 = total_cases
-   var total_cases_7 = total_cases
-   var total_cases_3 = total_cases
-   var total_cases_exp = total_cases
-
-
-   forecast_result['14_day']['zero_day_met'] = 0
-   forecast_result['7_day']['zero_day_met'] = 0
-   forecast_result['3_day']['zero_day_met'] = 0
-
-   // run forecast for 14 day traj
-   final_status14 = 0
-   final_status7 = 0
-   final_status3 = 0
-   forecast_result['14_day']['herd_immunity_met'] = 0
-   forecast_result['7_day']['herd_immunity_met'] = 0
-   forecast_result['3_day']['herd_immunity_met'] = 0
-   forecast_result['14_day']['xs'] = []
-   forecast_result['7_day']['xs'] = []
-   forecast_result['3_day']['xs'] = []
-   forecast_result['14_day']['ys'] = []
-   forecast_result['7_day']['ys'] = []
-   forecast_result['3_day']['ys'] = []
-   // death ys
-   forecast_result['14_day']['dys'] = []
-   forecast_result['7_day']['dys'] = []
-   forecast_result['3_day']['dys'] = []
-   // not infected ys 
-   forecast_result['14_day']['niys'] = []
-   forecast_result['7_day']['niys'] = []
-   forecast_result['3_day']['niys'] = []
-   // infected
-   forecast_result['14_day']['iys'] = []
-   forecast_result['7_day']['iys'] = []
-   forecast_result['3_day']['iys'] = []
-
-   while(final_status14 == 0 || final_status7 == 0 || final_status3 == 0) {
-      TX = current_zero_day + i
-      PY14 = lx_14['slope'] * TX + lx_14['intercept']
-      PY7 = lx_7['slope'] * TX + lx_7['intercept']
-      PY3 = lx_3['slope'] * TX + lx_3['intercept']
-      if (PY14 < 0) {
-         PY14 = 0
-      }
-      if (PY7 < 0) {
-         PY7 = 0
-      }
-      if (PY3 < 0) {
-         PY3 = 0
-      }
+for (var i  = 0; i <= exp.length -1; i++) {
+ ey = exp[i].y
+ if (i > 0 && last_ey < ey) {
+    //console.log(i, "curve moving up", ey)
+ }
+ else {
+    if (ey < 0 && curve_end == 0 && i > 5) {
+       curve_end = i
+       //console.log(i, "curve ended.", )
+    }
+ if (ey > 0) {
+    curve_total_cases += ey      
+ }
+   
+ }
+ forecast_result['exp']['total_cases'] = curve_total_cases 
+ forecast_result['exp']['total_dead'] = curve_total_cases * mortality
+ forecast_result['exp']['death_percent'] =  ((curve_total_cases * mortality)/ state_pop) * 100
+ forecast_result['exp']['total_infected'] = curve_total_cases * phantom
+ forecast_result['exp']['infected_percent'] = ((curve_total_cases * phantom) / state_pop) * 100
+ if (forecast_result['exp']['death_percent'] + forecast_result['exp']['infected_percent'] >= 80 && final_status14 == 0) {
+    forecast_result['exp']['herd_immunity_met'] = i - current_zero_day
+ }
 
 
-      if (PY14 > 0 && final_status14 == 0) {
-         total_cases_14 += PY14
-      }
-      if (PY7 > 0) {
-         total_cases_7 += PY7
-      }
-      if (PY3 > 0) {
-         total_cases_3 += PY3
-      }
-
-      if (PY14 <= 0 && forecast_result['14_day']['zero_day_met'] == 0) {
-         forecast_result['14_day']['zero_day_met'] = TX - current_zero_day
-         final_status14 = 1
-      }
-      if (PY7 <= 0 && forecast_result['7_day']['zero_day_met'] == 0) {
-         forecast_result['7_day']['zero_day_met'] = TX - current_zero_day
-         final_status7 = 1
-      }
-      if (PY3 <= 0 && forecast_result['3_day']['zero_day_met'] == 0) {
-         forecast_result['3_day']['zero_day_met'] = TX - current_zero_day
-         final_status3 = 1
-      }
-      if (final_status14 != 1) {
-         forecast_result['14_day']['total_cases'] = parseInt(total_cases_14 )
-         forecast_result['14_day']['total_dead'] = parseInt(total_cases_14 * mortality )
-         forecast_result['14_day']['death_percent'] =  ((total_cases_14 * mortality)/ state_pop) * 100
-         forecast_result['14_day']['total_infected'] = (total_cases_14 * phantom ) + total_cases_14
-         forecast_result['14_day']['infected_percent'] = ((forecast_result['14_day']['total_infected']) / state_pop) * 100
-
-         forecast_result['14_day']['dys'].push(PY14 * mortality)
-         forecast_result['14_day']['niys'].push(forecast_result['14_day']['total_not_infected'])
-         forecast_result['14_day']['iys'].push(phantom * PY14 )
-         forecast_result['14_day']['xs'].push(TX)
-         forecast_result['14_day']['ys'].push(PY14)
-      }
-
-      if (final_status7 != 1) {
-         forecast_result['7_day']['total_cases'] = parseInt(total_cases_7)
-         forecast_result['7_day']['total_dead'] = parseInt(total_cases_7 * mortality)
-         forecast_result['7_day']['death_percent'] =  ((total_cases_7 * mortality)/ state_pop) * 100
-         forecast_result['7_day']['total_infected'] = (total_cases_7 * phantom) + total_cases_7
-         forecast_result['7_day']['infected_percent'] = ((forecast_result['14_day']['total_infected']) / state_pop) * 100
-         forecast_result['7_day']['dys'].push(PY7 * mortality)
-         forecast_result['7_day']['niys'].push(forecast_result['7_day']['total_not_infected'])
-         forecast_result['7_day']['iys'].push(phantom * PY7 )
-         forecast_result['7_day']['xs'].push(TX)
-         forecast_result['7_day']['ys'].push(PY7)
-      }
-
-      if (final_status3 != 1) {
-      forecast_result['3_day']['total_cases'] = parseInt(total_cases_3)
-      forecast_result['3_day']['dys'].push(total_cases_14 * mortality)
-      forecast_result['3_day']['total_dead'] = parseInt(total_cases_3 * mortality)
-      forecast_result['3_day']['death_percent'] =  ((total_cases_3 * mortality)/ state_pop) * 100
-      forecast_result['3_day']['total_infected'] = parseInt(total_cases_3 * phantom) + parseInt(total_cases_3)
-      forecast_result['3_day']['infected_percent'] = ((total_cases_3 * phantom) / state_pop) * 100
-      forecast_result['3_day']['xs'].push(TX)
-      forecast_result['3_day']['ys'].push(PY3)
-      }
  
-      impacted_14t = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) 
-      impacted_7t = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected'])
-      impacted_3t = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) 
+ exp_ys.push(ey)
+ last_ey = ey
+}
 
-      impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
-      impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop
-      impacted_3 = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) / state_pop
-      //console.log(state_pop, forecast_result['14_day']['total_cases'], forecast_result['14_day']['total_dead'], forecast_result['14_day']['total_infected'], impacted_14t, impacted_14)
-      //if (forecast_result['14_day']['death_percent'] + forecast_result['14_day']['infected_percent'] >= 80 && final_status14 == 0) {
-      if (impacted_14 > herd_thresh && final_status14 == 0) {
-         final_status14 = 1
-         forecast_result['14_day']['herd_immunity_met'] = TX - current_zero_day
-      }
+forecast_result['exp']['zero_day_met'] = curve_end - current_zero_day
+forecast_result['exp']['total_cases'] = curve_total_cases
 
-      if (impacted_7 >= herd_thresh && final_status7 == 0) {
-         final_status7 = 1
-         forecast_result['7_day']['herd_immunity_met'] = TX - current_zero_day
-      }
-
-      if (impacted_3 >= herd_thresh && final_status3 == 0) {
-         final_status3 = 1
-         forecast_result['3_day']['herd_immunity_met'] = TX - current_zero_day
-      }
-
-      i = i + 1
-      if (i > 5000) {
-         final_status7 = 1
-         final_status14 = 1
-         final_status3 = 1
-      }
-
-   }
-   impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
-   impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop
-   impacted_3 = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) / state_pop
-
-   forecast_result['14_day']['total_not_infected'] = state_pop - impacted_14t
-   forecast_result['14_day']['niperc'] = (impacted_14/state_pop) * 100
-   forecast_result['7_day']['total_not_infected'] = state_pop - impacted_7t 
-   forecast_result['7_day']['niperc'] = (impacted_7 / state_pop) * 100
-   forecast_result['3_day']['total_not_infected'] = state_pop - impacted_3t
-   forecast_result['3_day']['niperc'] = (impacted_3 / state_pop) * 100
+forecast_result['exp']['total_not_infected'] = state_pop - forecast_result['exp']['total_infected'] - forecast_result['exp']['total_dead']
+forecast_result['exp']['niperc'] = (forecast_result['exp']['total_not_infected'] / state_pop) * 100
 
 
 
-   return(forecast_result)
+fxs_14 = []
+fxs_7 = []
+fxs_3 = []
+fxs_exp = []
+
+fys_14 = []
+fys_7 = []
+fys_3 = []
+fys_exp = []
+
+// run out 14 day traj
+final_status = 0 
+zero_day_met = 0
+herd_met = 0
+i = 0
+var total_cases_14 = total_cases
+var total_cases_7 = total_cases
+var total_cases_3 = total_cases
+var total_cases_exp = total_cases
+
+
+forecast_result['14_day']['zero_day_met'] = 0
+forecast_result['7_day']['zero_day_met'] = 0
+forecast_result['3_day']['zero_day_met'] = 0
+
+// run forecast for 14 day traj
+final_status14 = 0
+final_status7 = 0
+final_status3 = 0
+forecast_result['14_day']['herd_immunity_met'] = 0
+forecast_result['7_day']['herd_immunity_met'] = 0
+forecast_result['3_day']['herd_immunity_met'] = 0
+forecast_result['14_day']['xs'] = []
+forecast_result['7_day']['xs'] = []
+forecast_result['3_day']['xs'] = []
+forecast_result['14_day']['ys'] = []
+forecast_result['7_day']['ys'] = []
+forecast_result['3_day']['ys'] = []
+// death ys
+forecast_result['14_day']['dys'] = []
+forecast_result['7_day']['dys'] = []
+forecast_result['3_day']['dys'] = []
+// not infected ys 
+forecast_result['14_day']['niys'] = []
+forecast_result['7_day']['niys'] = []
+forecast_result['3_day']['niys'] = []
+// infected
+forecast_result['14_day']['iys'] = []
+forecast_result['7_day']['iys'] = []
+forecast_result['3_day']['iys'] = []
+
+while(final_status14 == 0 || final_status7 == 0 || final_status3 == 0) {
+ TX = current_zero_day + i
+ PY14 = lx_14['slope'] * TX + lx_14['intercept']
+ PY7 = lx_7['slope'] * TX + lx_7['intercept']
+ PY3 = lx_3['slope'] * TX + lx_3['intercept']
+ if (PY14 < 0) {
+    PY14 = 0
+ }
+ if (PY7 < 0) {
+    PY7 = 0
+ }
+ if (PY3 < 0) {
+    PY3 = 0
+ }
+
+
+ if (PY14 > 0 && final_status14 == 0) {
+    total_cases_14 += PY14
+ }
+ if (PY7 > 0) {
+    total_cases_7 += PY7
+ }
+ if (PY3 > 0) {
+    total_cases_3 += PY3
+ }
+
+ if (PY14 <= 0 && forecast_result['14_day']['zero_day_met'] == 0) {
+    forecast_result['14_day']['zero_day_met'] = TX - current_zero_day
+    final_status14 = 1
+ }
+ if (PY7 <= 0 && forecast_result['7_day']['zero_day_met'] == 0) {
+    forecast_result['7_day']['zero_day_met'] = TX - current_zero_day
+    final_status7 = 1
+ }
+ if (PY3 <= 0 && forecast_result['3_day']['zero_day_met'] == 0) {
+    forecast_result['3_day']['zero_day_met'] = TX - current_zero_day
+    final_status3 = 1
+ }
+ if (final_status14 != 1) {
+    forecast_result['14_day']['total_cases'] = parseInt(total_cases_14 )
+    forecast_result['14_day']['total_dead'] = parseInt(total_cases_14 * mortality )
+    forecast_result['14_day']['death_percent'] =  ((total_cases_14 * mortality)/ state_pop) * 100
+    forecast_result['14_day']['total_infected'] = (total_cases_14 * phantom ) + total_cases_14
+    forecast_result['14_day']['infected_percent'] = ((forecast_result['14_day']['total_infected']) / state_pop) * 100
+
+    forecast_result['14_day']['dys'].push(PY14 * mortality)
+    forecast_result['14_day']['niys'].push(forecast_result['14_day']['total_not_infected'])
+    forecast_result['14_day']['iys'].push(phantom * PY14 )
+    forecast_result['14_day']['xs'].push(TX)
+    forecast_result['14_day']['ys'].push(PY14)
+ }
+
+ if (final_status7 != 1) {
+    forecast_result['7_day']['total_cases'] = parseInt(total_cases_7)
+    forecast_result['7_day']['total_dead'] = parseInt(total_cases_7 * mortality)
+    forecast_result['7_day']['death_percent'] =  ((total_cases_7 * mortality)/ state_pop) * 100
+    forecast_result['7_day']['total_infected'] = (total_cases_7 * phantom) + total_cases_7
+    forecast_result['7_day']['infected_percent'] = ((forecast_result['14_day']['total_infected']) / state_pop) * 100
+    forecast_result['7_day']['dys'].push(PY7 * mortality)
+    forecast_result['7_day']['niys'].push(forecast_result['7_day']['total_not_infected'])
+    forecast_result['7_day']['iys'].push(phantom * PY7 )
+    forecast_result['7_day']['xs'].push(TX)
+    forecast_result['7_day']['ys'].push(PY7)
+ }
+
+ if (final_status3 != 1) {
+ forecast_result['3_day']['total_cases'] = parseInt(total_cases_3)
+ forecast_result['3_day']['dys'].push(total_cases_14 * mortality)
+ forecast_result['3_day']['total_dead'] = parseInt(total_cases_3 * mortality)
+ forecast_result['3_day']['death_percent'] =  ((total_cases_3 * mortality)/ state_pop) * 100
+ forecast_result['3_day']['total_infected'] = parseInt(total_cases_3 * phantom) + parseInt(total_cases_3)
+ forecast_result['3_day']['infected_percent'] = ((total_cases_3 * phantom) / state_pop) * 100
+ forecast_result['3_day']['xs'].push(TX)
+ forecast_result['3_day']['ys'].push(PY3)
+ }
+
+ impacted_14t = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) 
+ impacted_7t = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected'])
+ impacted_3t = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) 
+
+ impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
+ impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop
+ impacted_3 = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) / state_pop
+ //console.log(state_pop, forecast_result['14_day']['total_cases'], forecast_result['14_day']['total_dead'], forecast_result['14_day']['total_infected'], impacted_14t, impacted_14)
+ //if (forecast_result['14_day']['death_percent'] + forecast_result['14_day']['infected_percent'] >= 80 && final_status14 == 0) {
+ if (impacted_14 > herd_thresh && final_status14 == 0) {
+    final_status14 = 1
+    forecast_result['14_day']['herd_immunity_met'] = TX - current_zero_day
+ }
+
+ if (impacted_7 >= herd_thresh && final_status7 == 0) {
+    final_status7 = 1
+    forecast_result['7_day']['herd_immunity_met'] = TX - current_zero_day
+ }
+
+ if (impacted_3 >= herd_thresh && final_status3 == 0) {
+    final_status3 = 1
+    forecast_result['3_day']['herd_immunity_met'] = TX - current_zero_day
+ }
+
+ i = i + 1
+ if (i > 5000) {
+    final_status7 = 1
+    final_status14 = 1
+    final_status3 = 1
+ }
+
+}
+impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
+impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop
+impacted_3 = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) / state_pop
+
+forecast_result['14_day']['total_not_infected'] = state_pop - impacted_14t
+forecast_result['14_day']['niperc'] = (impacted_14/state_pop) * 100
+forecast_result['7_day']['total_not_infected'] = state_pop - impacted_7t 
+forecast_result['7_day']['niperc'] = (impacted_7 / state_pop) * 100
+forecast_result['3_day']['total_not_infected'] = state_pop - impacted_3t
+forecast_result['3_day']['niperc'] = (impacted_3 / state_pop) * 100
+
+
+
+return(forecast_result)
 
 }
 
 function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
-   var local_xs = xs_in.slice(0)
-   var local_ys = ys_in.slice(0)
-   var out = ""
-   // Make fit lines
-   // 14 days
-   var local_ys2 = []
-   // 7 days
-   var local_ys3 = []
-   // 3 days
-   var local_ys4 = []
+var local_xs = xs_in.slice(0)
+var local_ys = ys_in.slice(0)
+var out = ""
+// Make fit lines
+// 14 days
+var local_ys2 = []
+// 7 days
+var local_ys3 = []
+// 3 days
+var local_ys4 = []
 
-   // curve fit
+// curve fit
 
-   var rdata = []
-   for (var i  = 0; i <= local_xs.length -1; i++) {
-      var point = [local_xs[i], local_ys[i]]
-      rdata.push(point)
-      var last_x = local_xs[i]
-   }
-   
-   var linReg = regression('polynomial', rdata);
-   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
-   var tx = 0
-   for (var i = 0; i<= 60; i++) {
-      tx = last_x + i
-      point = [tx, local_ys[i]]
-      rdata.push(point)
+var rdata = []
+for (var i  = 0; i <= local_xs.length -1; i++) {
+ var point = [local_xs[i], local_ys[i]]
+ rdata.push(point)
+ var last_x = local_xs[i]
+}
 
-   }
-   
-   var exp = extraPoints(rdata,linReg)
+var linReg = regression('polynomial', rdata);
+var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+var tx = 0
+for (var i = 0; i<= 60; i++) {
+ tx = last_x + i
+ point = [tx, local_ys[i]]
+ rdata.push(point)
 
-   var local_exp_ys = []
-   var ey = 0
-   for (var i  = 0; i <= exp.length -1; i++) {
-      ey = exp[i].y
-      local_exp_ys.push(ey)
-   } 
+}
 
-   // 14 DAY FIT
-   var lr_xs = local_xs.slice(Math.max(local_xs.length - fit_days, 1))
-   var lr_ys = local_ys.slice(Math.max(local_ys.length - fit_days, 1))
-   var lx_14 = linearRegression(lr_xs,lr_ys)
+var exp = extraPoints(rdata,linReg)
 
-   // 7 DAY FIT
-   var lr_xs = local_xs.slice(Math.max(local_xs.length - 7 , 1))
-   var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
-   var lx_7 = linearRegression(lr_xs,lr_ys)
+var local_exp_ys = []
+var ey = 0
+for (var i  = 0; i <= exp.length -1; i++) {
+ ey = exp[i].y
+ local_exp_ys.push(ey)
+} 
 
-   var lr_xs = local_xs.slice(Math.max(local_xs.length - 3 , 1))
-   var lr_ys = local_ys.slice(Math.max(local_ys.length - 3, 1))
-   var lx_3 = linearRegression(lr_xs,lr_ys)
+// 14 DAY FIT
+var lr_xs = local_xs.slice(Math.max(local_xs.length - fit_days, 1))
+var lr_ys = local_ys.slice(Math.max(local_ys.length - fit_days, 1))
+var lx_14 = linearRegression(lr_xs,lr_ys)
 
+// 7 DAY FIT
+var lr_xs = local_xs.slice(Math.max(local_xs.length - 7 , 1))
+var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
+var lx_7 = linearRegression(lr_xs,lr_ys)
 
-   for (var i  = 0; i <= local_xs.length -1; i++) {
-      var X = local_xs[i]
-      var Y = local_ys[i]
-      if (local_xs.length - 14 < i + 1) {
-         var PY14 = lx_14['slope'] * X + lx_14['intercept'] 
-      }
-      else {
-         var PY14 = 0
-      }
-      if (local_xs.length - 7 < i + 1) {
-         var PY7 = lx_7['slope'] * X + lx_7['intercept'] 
-      }
-      else {
-         var PY7 = 0
-      }
-      if (local_xs.length - 3 < i + 1) {
-         var PY3 = lx_3['slope'] * X + lx_3['intercept'] 
-      }
-      else {
-         var PY3 = 0
-      }
-      if (PY14 < 0) {
-         var PY14 = 0
-      }
-      if (PY7 < 0) {
-         var PY7 = 0
-      }
-      if (PY3 < 0) {
-         var PY3 = 0
-      }
-      local_ys2.push(PY14)
-      local_ys3.push(PY7)
-      local_ys4.push(PY3)
-      //out += PY.toString() + "<BR>";
-   }
-
-   last_x = X
-   last_zd14_day = 9999
-   last_zd7_day = 9999
-   last_zd3_day = 9999
-   last_exp_day = 9999
-
-   exp_pos = 0
-   for (var i = 0; i <= proj_days; i++) {
-      TX = last_x + i   
-      PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
-      PY7 = lx_7['slope'] * TX + lx_7['intercept'] 
-      PY3 = lx_3['slope'] * TX + lx_3['intercept'] 
-      local_xs.push(TX)
-      local_ys.push(0)
-      local_ys2.push(PY14)
-      local_ys3.push(PY7)
-      local_ys4.push(PY3)
-      if (last_zd14_day == 9999 && PY14 <= 0) {
-         last_zd14_day = i
-      }
-      if (last_zd7_day == 9999 && PY7 <= 0) {
-         last_zd7_day = i
-      }
-      if (last_zd3_day == 9999 && PY3 <= 0) {
-         last_zd3_day = i
-      }
-      if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
-         last_exp_day = i
-      }
-      if (local_exp_ys[i+last_x] > 0) {
-         exp_pos = 1
-      }
-      
-   } 
-   if (last_exp_day == 9999) {
-      if (local_exp_ys.slice(-1)[0] <= 0) {
-         last_exp_day = 0
-      }
-      
-   }
-
-   //last_zd14_val = ys2.slice(-1)[0] 
-   //last_zd7_val = ys3.slice(-1)[0] 
-   //last_zd3_val = ys4.slice(-1)[0] 
+var lr_xs = local_xs.slice(Math.max(local_xs.length - 3 , 1))
+var lr_ys = local_ys.slice(Math.max(local_ys.length - 3, 1))
+var lx_3 = linearRegression(lr_xs,lr_ys)
 
 
-   out = [last_zd14_day, last_zd7_day, last_zd3_day, last_exp_day]
+for (var i  = 0; i <= local_xs.length -1; i++) {
+ var X = local_xs[i]
+ var Y = local_ys[i]
+ if (local_xs.length - 14 < i + 1) {
+    var PY14 = lx_14['slope'] * X + lx_14['intercept'] 
+ }
+ else {
+    var PY14 = 0
+ }
+ if (local_xs.length - 7 < i + 1) {
+    var PY7 = lx_7['slope'] * X + lx_7['intercept'] 
+ }
+ else {
+    var PY7 = 0
+ }
+ if (local_xs.length - 3 < i + 1) {
+    var PY3 = lx_3['slope'] * X + lx_3['intercept'] 
+ }
+ else {
+    var PY3 = 0
+ }
+ if (PY14 < 0) {
+    var PY14 = 0
+ }
+ if (PY7 < 0) {
+    var PY7 = 0
+ }
+ if (PY3 < 0) {
+    var PY3 = 0
+ }
+ local_ys2.push(PY14)
+ local_ys3.push(PY7)
+ local_ys4.push(PY3)
+ //out += PY.toString() + "<BR>";
+}
 
-   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
+last_x = X
+last_zd14_day = 9999
+last_zd7_day = 9999
+last_zd3_day = 9999
+last_exp_day = 9999
 
-   return(out)
+exp_pos = 0
+for (var i = 0; i <= proj_days; i++) {
+ TX = last_x + i   
+ PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
+ PY7 = lx_7['slope'] * TX + lx_7['intercept'] 
+ PY3 = lx_3['slope'] * TX + lx_3['intercept'] 
+ local_xs.push(TX)
+ local_ys.push(0)
+ local_ys2.push(PY14)
+ local_ys3.push(PY7)
+ local_ys4.push(PY3)
+ if (last_zd14_day == 9999 && PY14 <= 0) {
+    last_zd14_day = i
+ }
+ if (last_zd7_day == 9999 && PY7 <= 0) {
+    last_zd7_day = i
+ }
+ if (last_zd3_day == 9999 && PY3 <= 0) {
+    last_zd3_day = i
+ }
+ if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+    last_exp_day = i
+ }
+ if (local_exp_ys[i+last_x] > 0) {
+    exp_pos = 1
+ }
+ 
+} 
+if (last_exp_day == 9999) {
+ if (local_exp_ys.slice(-1)[0] <= 0) {
+    last_exp_day = 0
+ }
+ 
+}
+
+//last_zd14_val = ys2.slice(-1)[0] 
+//last_zd7_val = ys3.slice(-1)[0] 
+//last_zd3_val = ys4.slice(-1)[0] 
+
+
+out = [last_zd14_day, last_zd7_day, last_zd3_day, last_exp_day]
+
+plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
+
+return(out)
 
 }
 
 function load_data() {
-   var state = $('#state_selector').val();
-   var county = $('#county_selector').val();  
-   var url = "../json/" + state + ".json";
-    
-   getJSONData(url,state,county);
+var state = $('#state_selector').val();
+var county = $('#county_selector').val();  
+var url = "../json/" + state + ".json";
+
+getJSONData(url,state,county);
 
 }
 
 function change_state() {
-   //var state = $('#state_selector').val();
-   document.getElementById("county_select").innerHTML= ""
-   load_data()
-
-
+//var state = $('#state_selector').val();
+document.getElementById("county_select").innerHTML= "";
+load_data();
 }
 
- 
 
 function getJSONData(url,state,county) {
-   show_loader();	
-   $.ajax({
-      type: "get",
-      url:  url,
-      dataType: "json",
- 
-      success: function (result, status, xhr) {
-         displayData(result,state,county);
-         // Create action on county select
-         $('#county_selector').unbind('change').change(function() {load_data()}); 
-         hide_loader();	
-      },
-      error: function (xhr, status, error) {
-        alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-        hide_loader();	
-      }
-   });
+show_loader();	
+$.ajax({
+ type: "get",
+ url:  url,
+ dataType: "json",
+
+ success: function (result, status, xhr) {
+    displayData(result,state,county);
+    // Create action on county select
+    $('#county_selector').unbind('change').change(function() {load_data()}); 
+    hide_loader();	
+ },
+ error: function (xhr, status, error) {
+   alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+   hide_loader();	
+ }
+});
 }
 
 
 //function plot_data_bars(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type) {
-   var trace1 = {
-      x: xd,
-      y: yd,
-      name: extra_l.yd,
-      type: type
-   }
-   var trace2 = {
-      x: xd,
-      y: extra_data.yd2,
-      name: yl,
-      name: extra_l.yd2,
-      type: type
-   }
-   var trace3 = {
-      x: xd,
-      y: extra_data.yd3,
-      name: yl,
-      name: extra_l.yd3,
-      type: type
-   }
-   var trace4 = {
-      x: xd,
-      y: extra_data.yd4,
-      name: yl,
-      name: "3-Day Trend",
-      type: type
-   }
-   var trace5 = {
-      x: xd,
-      y: extra_data.exp_yd,
-      name: yl,
-      name: "Curve",
-      type: type
-   }
-   var data = [trace1 , trace2, trace3,trace4,trace5]
-   var layout = {
-      barmode: 'stack',
-      title : t,
-      yaxis : {
-         title: {
-            text: yl
-         },
-         autorange: true,
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
-      },
-      xaxis : {
-         title: {
-            text: xl
-         },
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
+var trace1 = {
+ x: xd,
+ y: yd,
+ name: extra_l.yd,
+ type: type
+}
+var trace2 = {
+ x: xd,
+ y: extra_data.yd2,
+ name: yl,
+ name: extra_l.yd2,
+ type: type
+}
+var trace3 = {
+ x: xd,
+ y: extra_data.yd3,
+ name: yl,
+ name: extra_l.yd3,
+ type: type
+}
+var trace4 = {
+ x: xd,
+ y: extra_data.yd4,
+ name: yl,
+ name: "3-Day Trend",
+ type: type
+}
+var trace5 = {
+ x: xd,
+ y: extra_data.exp_yd,
+ name: yl,
+ name: "Curve",
+ type: type
+}
+var data = [trace1 , trace2, trace3,trace4,trace5]
+var layout = {
+ barmode: 'stack',
+ title : t,
+ yaxis : {
+    title: {
+       text: yl
+    },
+    autorange: true,
+    autotick: true,
+    ticks: 'outside',
+    tick0: 0,
+    dtick: 0.25,
+    ticklen: 8,
+    tickwidth: 4,
+    tickcolor: '#000'
+ },
+ xaxis : {
+    title: {
+       text: xl
+    },
+    autotick: true,
+    ticks: 'outside',
+    tick0: 0,
+    dtick: 0.25,
+    ticklen: 8,
+    tickwidth: 4,
+    tickcolor: '#000'
 
-      }
-   }
+ }
+}
 
-   Plotly.newPlot(dv, data, layout, {responsive: true});
+Plotly.newPlot(dv, data, layout, {responsive: true});
 
 
 }
 
 function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
-   ymax = Math.max.apply(Math, yd) * 1.2
-   var trace1 = {
-      x: xd,
-      y: yd,
-      name: yl,
-      type: type
-   }
-   var trace2 = {
-      x: xd,
-      y: yd2,
-      name: yl,
-      name: "14-Day Trend",
-      type: type  
-   }
-   var trace3 = {
-      x: xd,
-      y: yd3,
-      name: yl,
-      name: "7-Day Trend",
-      type: type  
-   }
-   var trace4 = {
-      x: xd,
-      y: yd4,
-      name: yl,
-      name: "3-Day Trend",
-      type: type  
-   }
-   var trace5 = {
-      x: xd,
-      y: exp_yd,
-      name: yl,
-      name: "Curve",
-      type: type  
-   }
-   var data = [trace1 , trace2, trace3,trace4,trace5]
-   var layout = {
-      title : t,
+ymax = Math.max.apply(Math, yd) * 1.2
+var trace1 = {
+ x: xd,
+ y: yd,
+ name: yl,
+ type: type
+}
+var trace2 = {
+ x: xd,
+ y: yd2,
+ name: yl,
+ name: "14-Day Trend",
+ type: type  
+}
+var trace3 = {
+ x: xd,
+ y: yd3,
+ name: yl,
+ name: "7-Day Trend",
+ type: type  
+}
+var trace4 = {
+ x: xd,
+ y: yd4,
+ name: yl,
+ name: "3-Day Trend",
+ type: type  
+}
+var trace5 = {
+ x: xd,
+ y: exp_yd,
+ name: yl,
+ name: "Curve",
+ type: type  
+}
+var data = [trace1 , trace2, trace3,trace4,trace5]
+var layout = {
+ title : t,
 
-      range: [0,ymax],
-      autorange: false,
-      showlegend: true,
-      legend: {
-         orientation: "h",
-         x: .15,
-         y: 1,
-      },
-      yaxis : {
-         title: {
-            text: yl
-         },
-         autorange: true,
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000',
-      },
-      xaxis : {
-         title: {
-            text: xl
-         },
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
+ range: [0,ymax],
+ autorange: false,
+ showlegend: true,
+ legend: {
+    orientation: "h",
+    x: .15,
+    y: 1,
+ },
+ yaxis : {
+    title: {
+       text: yl
+    },
+    autorange: true,
+    autotick: true,
+    ticks: 'outside',
+    tick0: 0,
+    dtick: 0.25,
+    ticklen: 8,
+    tickwidth: 4,
+    tickcolor: '#000',
+ },
+ xaxis : {
+    title: {
+       text: xl
+    },
+    autotick: true,
+    ticks: 'outside',
+    tick0: 0,
+    dtick: 0.25,
+    ticklen: 8,
+    tickwidth: 4,
+    tickcolor: '#000'
 
-      }
-   }
+ }
+}
 
-   Plotly.newPlot(dv, data, layout, {responsive: true});
+Plotly.newPlot(dv, data, layout, {responsive: true});
 
 }
 
 function convert_zero_day_to_date(xs,dates) {
-   jsdates = []
-   for (i = 0; i <= xs.length -1 ; i++) {
-      yy = dates[i].substring(0,4)
-      mm = dates[i].substring(4,6)
-      dd = dates[i].substring(6,8)
-      dt = yy + "-" + mm + "-" + dd
-      var jsdate = new Date(dt) 
-      jsdates.push(jsdate)
-   } 
+jsdates = []
+for (i = 0; i <= xs.length -1 ; i++) {
+ yy = dates[i].substring(0,4)
+ mm = dates[i].substring(4,6)
+ dd = dates[i].substring(6,8)
+ dt = yy + "-" + mm + "-" + dd
+ var jsdate = new Date(dt) 
+ jsdates.push(jsdate)
+} 
 
-   return(jsdates)
+return(jsdates)
 }
 
 function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
-   if (dv == 'new_cases_div') {
-      ymax = Math.max.apply(Math, yd) * 2
-   } else {
-      ymax = Math.max.apply(Math, yd) * 1.5
-   }
-   for (var i = 0; i <= xd.length-1; i++) {
-      if (yd[i] > 0) {
-         cur_day = xd[i]
-      }
-   }
-   var trace1 = {
-      x: xd,
-      y: yd,
-      name: yl,
-      type: type
-   }
-   var trace2 = {
-      x: xd,
-      y: yd2,
-      name: "14-Day Trend",
-      type: "line" 
-   }
-   var trace3 = {
-      x: xd,
-      y: yd3,
-      name: "7-Day Trend",
-      type: "line" 
-   }
-   var trace4 = {
-      x: xd,
-      y: yd4,
-      name: "3-Day Trend",
-      type: "line" 
-   }
-   var trace5 = {
-      x: xd,
-      y: exp_y,
-      name: "Curve",
-      type: "line" 
-   }
-   var data = [trace1, trace2, trace3,trace4,trace5]
-   var config = {responsive: true}
+if (dv == 'new_cases_div') {
+ ymax = Math.max.apply(Math, yd) * 2
+} else {
+ ymax = Math.max.apply(Math, yd) * 1.5
+}
+for (var i = 0; i <= xd.length-1; i++) {
+ if (yd[i] > 0) {
+    cur_day = xd[i]
+ }
+}
+var trace1 = {
+ x: xd,
+ y: yd,
+ name: yl,
+ type: type
+}
+var trace2 = {
+ x: xd,
+ y: yd2,
+ name: "14-Day Trend",
+ type: "line" 
+}
+var trace3 = {
+ x: xd,
+ y: yd3,
+ name: "7-Day Trend",
+ type: "line" 
+}
+var trace4 = {
+ x: xd,
+ y: yd4,
+ name: "3-Day Trend",
+ type: "line" 
+}
+var trace5 = {
+ x: xd,
+ y: exp_y,
+ name: "Curve",
+ type: "line" 
+}
+var data = [trace1, trace2, trace3,trace4,trace5]
+var config = {responsive: true}
 
 
-   var layout = {
+var layout = {
 
-      showlegend: true,
-      legend: {
-         orientation: "h",
-         x: .15,
-         y: 1.1,
-      },
+ showlegend: true,
+ legend: {
+    orientation: "h",
+    x: .15,
+    y: 1.1,
+ },
 
-      shapes : [{ 
-         type: 'line',
-         x0: cur_day,
-         y0: 0,
-         x1: cur_day,
-         yref: 'paper',
-         y1: 1,
-         line: {
-            color: 'grey',
-            width: 1.5,
-            dash: 'dot'
-         }
-      }],
-      title : t,
-      yaxis : {
-         title: {
-            text: yl
-         },
-         range: [0,ymax],
-         autorange: false,
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
-      }, 
-      xaxis : {
-         title: {
-            text: xl
-         },
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
+ shapes : [{ 
+    type: 'line',
+    x0: cur_day,
+    y0: 0,
+    x1: cur_day,
+    yref: 'paper',
+    y1: 1,
+    line: {
+       color: 'grey',
+       width: 1.5,
+       dash: 'dot'
+    }
+ }],
+ title : t,
+ yaxis : {
+    title: {
+       text: yl
+    },
+    range: [0,ymax],
+    autorange: false,
+    autotick: true,
+    ticks: 'outside',
+    tick0: 0,
+    dtick: 0.25,
+    ticklen: 8,
+    tickwidth: 4,
+    tickcolor: '#000'
+ }, 
+ xaxis : {
+    title: {
+       text: xl
+    },
+    autotick: true,
+    ticks: 'outside',
+    tick0: 0,
+    dtick: 0.25,
+    ticklen: 8,
+    tickwidth: 4,
+    tickcolor: '#000'
 
-      } 
-   }
-   Plotly.newPlot(dv, data, layout, {responsive: true});
+ } 
+}
+Plotly.newPlot(dv, data, layout, {responsive: true});
 }
 

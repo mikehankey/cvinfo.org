@@ -5,13 +5,13 @@ function usFormat(n) {
 
 function show_loader() {
    $('body').addClass('wait');
-   $('.box').css('visibility','hidden'); 
+   $('.box, .metric, #summary, .bad_d').css('visibility','hidden'); 
    $('.outcome tbody').html('');
 }
 
 function hide_loader(show_graphs) {
   if(typeof show_graphs == "undefined" ) show_graphs=true;
-  if(show_graphs) $('.box').css('visibility','visible');
+  if(show_graphs) $('.box, .metric, #summary,  .bad_d').css('visibility','visible');
   $('body').removeClass('wait');
 }
 
@@ -28,7 +28,10 @@ function countySelect(p, state) {
       return b[1] - a[1];
    }); 
    for (i = 0; i <= sorted.length-1; i++) { 
-      sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + ")</option>\n"
+      // Don't display "Unknown anymore"
+      if($.trim(sorted[i][0])!="Unknow"){
+         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + ")</option>\n";
+      }
    }
 
    sel += "<input type=hidden id='state' value='" + state + "'></select>"

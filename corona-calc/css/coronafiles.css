@@ -263,9 +263,8 @@ h2 {
 
 /* Pies */
 #outcome {
-   
    margin: 2rem auto;
-   max-width: 800px;
+   max-width: 900px;
    border-top: 1px solid #ccc; 
 }
 
@@ -422,6 +421,8 @@ table tbody td.ar.bad {
    background-image:url(../img/down.png);
 }
 
+
+
 table thead tr th, table tbody td {
    border-right: 1px solid #222;  
 }
@@ -431,6 +432,17 @@ table thead tr th:first-child {
 table thead tr {
    border-bottom: 1px solid #222;
 }
+table thead tr.nb {
+   border:none;
+}
+
+.brd {
+   border-bottom: 1px solid #222;
+   border-left: 1px solid #222;
+   border-right: 1px solid #222;
+   font-style: italic;
+}
+
  table tbody tr th {
    border-right: 1px solid #222;
 }
