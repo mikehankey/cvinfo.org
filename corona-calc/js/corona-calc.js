@@ -1032,8 +1032,7 @@ function load_data() {
    var state = $('#state_selector').val();
    var county = $('#county_selector').val();  
    var url = "../json/" + state + ".json";
-   
-   console.log(url);
+    
    getJSONData(url,state,county);
 
 }
@@ -1053,8 +1052,10 @@ function getJSONData(url,state,county) {
       dataType: "json",
  
       success: function (result, status, xhr) {
-          displayData(result,state,county);
-          hide_loader();	
+         displayData(result,state,county);
+         // Create action on county select
+         $('#county_selector').unbind('change').change(function() {load_data()}); 
+         hide_loader();	
       },
       error: function (xhr, status, error) {
         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)

@@ -29,6 +29,46 @@ function goodBadOrUglyMike(type) {
    }
 }
 
+function goodOrBadRow(val1,val2) {
+   if(val1<val2) {
+      return "ar good";
+   } else if( val1>val2) {
+      return "ar bad";
+   } else {
+      return "";
+   }
+}
+ 
+
+
+function fillPredictedOutcome(fr) {
+   var tbody = "";
+   // Build Predicted Outcome Table 
+   if(fr['14_day'].total_dead<fr['7_day'].total_dead)   {
+      _class = "row_good";
+   } else {
+      _class = "row_bad";
+   }  
+   tbody += '<tr><th>Deaths</th>\
+                <td>' + "?" + '</td>\
+                <td>' + usFormat(parseInt(fr['14_day'].total_dead)) + '</td>\
+                <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_dead)+'">' + usFormat(parseInt(fr['7_day'].total_dead)) + '</td></tr>';
+   tbody += '<tr><th>Confirmed Cases</th>\
+                <td>' + "?" + '</td>\
+                <td>' + usFormat(parseInt(fr['14_day'].total_infected)) + '</td>\
+                <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_dead)+'">' + usFormat(parseInt(fr['7_day'].total_infected)) + '</td></tr>';  
+   tbody += '<tr><th>Non-Tracked Infected</th>\
+                <td>' + "?" + '</td>\
+                <td>' + "?" + '</td>\
+                <td>'+ "?" + '</td></tr>';     
+   tbody += '<tr><th>Tests</th>\
+               <td>' + "?" + '</td>\
+               <td>' + "?" + '</td>\
+               <td>'+ "?" + '</td></tr>';        
+      
+   $('#new_trends tbody').html(tbody);
+}
+
 function fillSummary(state_name,fr) {
  
    var $gaugesCont = $('#forecast'); 
@@ -58,8 +98,7 @@ function fillSummary(state_name,fr) {
          main_summary_text += " could have zero cases in " + Math.min.apply(null,drange).toString() 
          //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
          main_summary_text += " to " + Math.max.apply(null,drange).toString() + " days.</span>";
-   }
-
+      }
    }
    // BOTH 14/7 RESULT IN HERD DAY
    else if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
@@ -90,17 +129,14 @@ function fillSummary(state_name,fr) {
          main_summary_text += "<br><span class='ugly_t'> "  
          main_summary_text += " it could reach herd immunity in " + fr['7_day'].herd_immunity_met.toString()
          main_summary_text += " days .</span> "
-
       }
-
    }
-
  
    $('#sum_main').html(main_summary_text);
     
    // Recreate the Gauges
    $('#sum_peak').html('')
-   createSvg('summary');
+   createSvg();
 
    if (fr['14_day'].zero_day_met > 0) {
       $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
@@ -130,7 +166,9 @@ function fillSummary(state_name,fr) {
    }  
 
    $('#sum_peak').html(fr_html);
-   
+    
+   fillPredictedOutcome(fr);
+
    // Animate Gauges
    setTimeout(function(){ 
       start_gauges($gaugesCont);

@@ -1,61 +1,12 @@
 function usFormat(n) {
   return String(n).replace(/(.)(?=(\d{3})+$)/g,'$1,');
 }
-
-function makeStateSelectNOTHERE(states) {
-   var sel = "<select id=\"state_selector\" onchange='load_data()'>"
-   sel += "<option value=''>Select a State</option>";
-   for (var i = 0; i < states.length; i++) {
-      if (states[i].state_code != 'VI') {
-         sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
-      }
-   }
-   sel += "</select>";
-   document.getElementById("state_select").innerHTML= sel;
-}
-
  
-function load_dataNOTHERE() { 
-   var url = "../json/" + $('#state_selector').val() + ".json";
-   getJSONData(url, 1);
-}
-
-function getJSONDataNOTHERE(url, cb_func) {
-   show_loader();
-   
-   $.ajax({
-      type: "get",
-      url:  url,
-      dataType: "json",
- 
-      success: function (result, status, xhr) {
-          if (cb_func == 1) {
- 
-            doSomethingWithJsonData(result );
-            hide_loader(true);
-          }
-          if (cb_func == 2) {
-             makeStateSelect(result );
-             hide_loader(false);
-          }
-          
-      },
-      error: function (xhr, status, error) {
-        alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText);
-        hide_loader();
-      }
-   });
-}
-
 
 function show_loader() {
    $('body').addClass('wait');
-   $('.box').css('visibility','hidden');
-    
-   //$('.percentage').text('0 days');
-   //$('.data-arc').remove();
-   //$('#loader').css('display','block');
-   //$('#graphs,.gauge_cont').css('visibility','hidden');
+   $('.box').css('visibility','hidden'); 
+   $('.outcome tbody').html('');
 }
 
 function hide_loader(show_graphs) {
@@ -64,24 +15,28 @@ function hide_loader(show_graphs) {
   $('body').removeClass('wait');
 }
 
-function createSvg(which) {
-   /*
-   // Clean all the gauges
-   if(which != 'summary') {
-      // ,.3days
-      $('.14days,.7days,.new').html('\
-      <svg viewBox="0 0 1000 500">\
-         <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
-         <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="280" font-size="140" font-weight="bold"></text>\
-         <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="450" font-size="90" font-weight="normal">Zero Cases</text>\
-      </svg>'); 
-      $('.7days .title').text('based on 7 days trend');
-      //$('.3days .title').text('based on 3 days trend');
-      $('.new .title').text('based on curve');
+
+function countySelect(p, state) {
+   var sel = "<select id='county_selector'><option value='ALL'>All Counties</option>"
+   var sortable = [];
+   for (var key in p) {
+      if (p.hasOwnProperty(key)) {
+         sortable.push([key, p[key]]) 
+      }
+   } 
+   sorted = sortable.sort(function(a,b) {
+      return b[1] - a[1];
+   }); 
+   for (i = 0; i <= sorted.length-1; i++) { 
+      sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + ")</option>\n"
    }
-   */
-   // For the Summary 
-   if(which == 'summary' || which == 'all') { 
+
+   sel += "<input type=hidden id='state' value='" + state + "'></select>"
+   document.getElementById("county_select").innerHTML= sel
+}
+
+function createSvg() {
+   // For the Summary  
       //,#forecast .new
       $('#forecast .14days,#forecast .7days').html('\
          <svg viewBox="0 0 1000 500">\
@@ -90,16 +45,21 @@ function createSvg(which) {
             <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="395" font-size="145" font-weight="bold"></text>\
             </svg><div class="trend">14 days trend</div>');
       $("#forecast .7days .trend").text("7 days trend");
-      
-   } 
+    
 }
 
 
 
 $(function() {
    // Create SVG
-   createSvg('all');
+   createSvg(); 
 
-   // Function called when the page is fully loaded
-   getJSONData("../json/states.json", 2);
+   // Once the page is loaded we enable the state select
+   $('#state_selector').removeAttr('disabled');
+   $('body').removeClass('wait');
+
+   // Create action on state select 
+   $('#state_selector').change(function() {change_state();});
+
+
 })

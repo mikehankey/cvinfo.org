@@ -225,7 +225,6 @@ a, a:visited {
 #main-content.tonly {
    text-align: left;
    color: #111;
-    margin: 0 .5rem;
 }
 
 #results {
@@ -263,7 +262,7 @@ h2 {
 }
 
 /* Pies */
-.pies {
+#outcome {
    margin: 2rem 1rem;
    border-top: 1px solid #ccc;
 }
@@ -299,6 +298,11 @@ select {
    appearance: none;
    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
    word-wrap: normal;
+   margin-bottom: .2rem;
+}
+
+body.wait select {
+   cursor: wait;
 }
 
 #loader img {
@@ -356,13 +360,87 @@ select {
    fill: #c30202;
 }
 
-   .pie_chart {
-      display: block;
-      width: 42%;
-      margin:.1rem auto;
-      float:left;
-   }
+.pie_chart {
+   display: block;
+   width: 50%;
+   margin: .1rem auto;
+   float: left;
+}
 
+
+.bar_chart {
+   max-height: 350px;
+   max-width: 550px;
+   margin:0 auto;
+}
+
+/* Table */
+.table-holder {
+   overflow-x: auto;
+   margin-bottom: 1.5rem;
+   overflow-y: hidden;
+}
+
+table {
+   width: 100%;
+   max-width: 800px;
+   margin: 0 auto;
+   box-sizing: content-box;
+   border-collapse: collapse;
+   border-spacing: 0;
+}
+table th, td {
+   padding:.4em;
+   height: 20px;
+}
+table thead tr th, table tbody tr th {   
+   vertical-align: middle;
+   text-align: left; 
+}
+table thead tr th, table tbody td {
+   text-align: right;
+}
+table tbody td.ar {
+   padding-left: 35px;
+   background-position: 10px 50%;
+   background-repeat: no-repeat;
+}
+table tbody td.ar.good {
+   background-image:url(../img/up.png);
+}
+table tbody td.ar.bad {
+   background-image:url(../img/down.png);
+}
+
+table thead tr th, table tbody td {
+   border-right: 1px solid #222;  
+}
+table thead tr th:first-child {
+   border-right: 1px solid #222;  
+}
+table thead tr {
+   border-bottom: 1px solid #222;
+}
+ table tbody tr th {
+   border-right: 1px solid #222;
+}
+table tbody tr {
+   border-bottom: 1px solid #ccc;
+} 
+table tbody tr {
+   text-align: left;
+}
+
+table tbody tr:last-child td, table tbody tr:last-child th {
+   border-bottom: 1px solid #222;
+}
+
+.row_good {
+   background: #c8e5c3;
+}
+.row_bad {
+   background: #ff4e51;
+}
 
 @media (max-width: 48em) {
    #results {
@@ -391,5 +469,9 @@ select {
 
    h1 img {
       display:none;
+   }
+
+   #main-content.tonly { 
+      margin:0 .5rem;
    }
 }
