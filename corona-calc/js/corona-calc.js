@@ -282,6 +282,11 @@ document.getElementById("f_county").value = county
 // See corona-ui-data.js
 sum_info['total_infected'] = sum_info['cases'] * phantom
 sum_info['not_infected'] = state_pop - ((sum_info['cases'] * phantom)  + sum_info['cases'] + sum_info['deaths'])
+document.getElementById("f_total_infected").value = sum_info['total_infected'] 
+document.getElementById("f_not_infected").value = sum_info['not_infected'] 
+document.getElementById("f_cases").value = sum_info['cases'] 
+document.getElementById("f_deaths").value = sum_info['deaths'] 
+
 fillSummary(full_state_name,fr,sum_info);
 
  
@@ -528,10 +533,15 @@ f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").va
 state_name = document.getElementById("f_state_name").value
 county = document.getElementById("f_county").value
 
+sum_info = {} 
+sum_info['cases'] = document.getElementById("f_cases").value
+sum_info['deaths'] = document.getElementById("f_deaths").value
+sum_info['total_infected'] = document.getElementById("f_total_infected").value
+sum_info['not_infected'] = document.getElementById("f_not_infected").value
+
 // This is the MAIN summary at the top of the page.
 fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
 
-sum_info = json_data['summary_info']
 
 // See corona-ui-data.js
 fillSummary(state_name,fr,sum_info);
