@@ -143,7 +143,12 @@ if (typeof(county) == "undefined" || county == "ALL") {
 else { 
  state_pop = json_data['county_pop'][county]
  var ss = json_data['county_stats'][county]['county_stats'];
- full_state_name = county + " County, " + state_name
+ if (county.toLowerCase().indexOf("city") === -1) {
+    full_state_name = county + " County, " + state_name
+ }
+ else {
+    full_state_name = county + ", " + state_name
+ }
  //state_name = full_state_name
  ctype = "county"
 }
