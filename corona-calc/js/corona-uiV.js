@@ -58,8 +58,7 @@ function createSvg() {
 
 
 $(function() {
-   // Create SVG
-   createSvg(); 
+  
 
    // Once the page is loaded we enable the state select
    $('#state_selector').removeAttr('disabled');
@@ -70,5 +69,8 @@ $(function() {
 
    // Creation action on recalculate button
    $('#recalculate').click(function() {recalculate(); }) 
+
+   // Scroll Top even with hidden elements
+   window.scrollTo(0,0);
 
 })
