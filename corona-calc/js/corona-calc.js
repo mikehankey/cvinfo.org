@@ -97,6 +97,9 @@ function forecast_html(pred, type, state_name) {
 }
 
 function countySelect(p, state) {
+   if (state == "USA") {
+      return
+   }
    sel = "Limit report for specific county<form><select id='county_selector' onchange='load_data()'><option value='ALL'>All Counties</option>"
    var sortable = [];
    for (var key in p) {
@@ -134,9 +137,16 @@ function doSomethingWithJsonData(json_data ,state,county) {
    ctype = "state"
 
    var out = "";
-   var state_name = json_data['summary_info'].state_name;
-   var state_code = json_data['summary_info'].state_code;
-   var county_pop =  json_data['county_pop']
+   if (state != "USA") {
+      var state_name = json_data['summary_info'].state_name;
+      var state_code = json_data['summary_info'].state_code;
+      var county_pop =  json_data['county_pop']
+   }
+   else {
+      var state_name = "United States of America"
+      var state_code = "USA"
+   }
+  
    if (typeof(county) === 'undefined') {
       var county_list = {}
       p = json_data['county_stats'] 
@@ -152,15 +162,36 @@ function doSomethingWithJsonData(json_data ,state,county) {
       countySelect(county_list, state_code) 
       county = "ALL"
    }
-   var state_name = json_data['summary_info'].state_name;
-   var mortality = json_data['summary_info'].mortality / 100;
-   var cg_med = json_data['summary_info'].cg_med;
-   var cg_med_decay = json_data['summary_info'].cg_med_decay;
+   if (state_code != 'USA') {
+      var state_name = json_data['summary_info'].state_name;
+      var mortality = json_data['summary_info'].mortality / 100;
+      var cg_med = json_data['summary_info'].cg_med;
+      var cg_med_decay = json_data['summary_info'].cg_med_decay;
+   }
+   else {
+      mortality = .2
+   }
 
    if (typeof(county) == "undefined" || county == "ALL") {
-      var state_pop = json_data['summary_info'].state_population * 1000000;
-      var ss = json_data['state_stats'];
-      full_state_name = state_name
+      if (state != "USA") {
+         var state_pop = json_data['summary_info'].state_population * 1000000;
+         var ss = json_data['state_stats'];
+         full_state_name = state_name
+      }
+      else { 
+         
+         state_population = 328200000 
+         full_state_name = state_name
+         var usd = json_data
+         ss = []
+         for (var key in usd) {
+          
+            if (usd.hasOwnProperty(key)) {
+               ss.push([usd[key]])
+            }
+         }
+
+      }
    } 
    else {
       var c_pop = json_data['summary_info'].county_pop ;
@@ -170,7 +201,6 @@ function doSomethingWithJsonData(json_data ,state,county) {
       //state_name = full_state_name
       ctype = "county"
    }
-
    var date_vals = [];
    var zero_day_vals = [];
    var total_cases_vals = [];
@@ -187,6 +217,8 @@ function doSomethingWithJsonData(json_data ,state,county) {
 
    // Prepare all data
    var last_tests = 0
+
+
    ss.forEach(function (arrayItem) {
       if (typeof(arrayItem.date) != "undefined") {
          date_vals.push(arrayItem.date);
@@ -1068,7 +1100,7 @@ function change_state() {
 }
 
 function makeStateSelect(states) {
-   sel = "<form><select id=\"state_selector\" onchange='change_state()' ><option value='AL'>SELECT STATE</option>"
+   sel = "<form><select id=\"state_selector\" onchange='change_state()' ><option value='AL'>SELECT STATE</option><option value='USA'>ALL STATES</option>"
    for (var i = 0; i < states.length; i++) {
       if (states[i].state_code != 'VI') {
          sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
