@@ -213,7 +213,7 @@ nc_org2 = new_cases_vals.slice();
 zdv = zero_day_vals.slice();
 
 // Draw graphs & Gauges for New Cases
-title = full_state_name.toUpperCase() + " NEW CASES " + last_date;
+title = full_state_name.toUpperCase() + " NEW CASES " + dateFormat(last_date);
 fit_days = 14;
 pred = makeGraph(zero_day_vals, nc_org,title, "days since first case", "New Cases", "new_cases_div", fit_days, 60);
 out = forecast_html(pred, "new case ", state_name);
@@ -226,21 +226,21 @@ zdv3 = zero_day_vals.slice();
 zdv4 = zero_day_vals.slice();
 zdv5 = zero_day_vals.slice();
 zdv6 = zero_day_vals.slice();
-title = full_state_name.toUpperCase() + " GROWTH " + last_date
+title = full_state_name.toUpperCase() + " GROWTH " + dateFormat(last_date);
 
 pred = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
 out = forecast_html(pred, "growth", state_name, )
 out = ""
 document.getElementById("growth_forecast").innerHTML= out
 
-title = full_state_name.toUpperCase() + " NEW DEATHS " + last_date
+title = full_state_name.toUpperCase() + " NEW DEATHS " + dateFormat(last_date);
 out2 = makeGraph(zdv2, new_deaths_vals,title, "days since first case", "New Deaths", "new_deaths_div", fit_days, 60)
 //document.getElementById("results_panel").innerHTML= out
 
-title = full_state_name.toUpperCase() + " DEATH GROWTH " + last_date
+title = full_state_name.toUpperCase() + " DEATH GROWTH " + dateFormat(last_date);
 out2 = makeGraph(zdv3, death_growth_vals,title, "days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
 
-title = full_state_name.toUpperCase() + " GROWTH DECAY " + last_date
+title = full_state_name.toUpperCase() + " GROWTH DECAY " + dateFormat(last_date);
 
 // case decay
 fitsObj = getFits(zdv4, decay_vals)
@@ -248,13 +248,13 @@ out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4,
 
 // tests
 if (ctype == 'state') {
- title = full_state_name.toUpperCase() + " TESTS PER DAY" + last_date
+ title = full_state_name.toUpperCase() + " TESTS PER DAY" + dateFormat(last_date);
  out2 = makeGraph(zdv2, test_vals ,title, "days since first case", "tests per day", "test_div", fit_days, 60)
 }
 
 // mortality div
 fitsObj = getFits(zdv5, mortality_vals)
-title = full_state_name.toUpperCase() + " MORTALITY " + last_date
+title = full_state_name.toUpperCase() + " MORTALITY " + dateFormat(last_date);
 
 out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "mortality percentage", title, "mortality_div", "line")
 
@@ -275,17 +275,13 @@ document.getElementById("f_total_cases").value = total_cases
 document.getElementById("f_state_pop").value = state_pop 
 document.getElementById("f_current_zero_day").value = current_zero_day 
 document.getElementById("f_state_name").value = state_name
-
 document.getElementById("f_county").value = county
 
 
 // See corona-ui-data.js
 fillSummary(full_state_name,fr);
 
-
-
-
-
+ 
 // plot full forecast
 xlab = "zero day" 
 ylab = "impacted per day" 

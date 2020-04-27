@@ -249,7 +249,10 @@ h2 {
    margin-top: 0;
 }
 
-.trend {
+p.to {
+   font-size: 1.05rem;
+    color: #5f5f5f;
+    font-weight: bold;
    
 }
 
@@ -288,6 +291,10 @@ h2 {
 #recalc_form { 
    max-width: 900px;
    margin: 0 auto;
+   padding: .5rem;
+   border: 1px solid #ccc;
+   background: #f0f0f0;
+   margin-bottom: 2rem;
 }
 
 .form-group {
@@ -338,10 +345,10 @@ input {
 }
 
 button{
-   margin:.5rem 0 2.5rem;
+   margin: .5rem 0 1.5rem;
    display: inline-block;
    font-weight: 400;
-   color: #676a7f;
+   color: #ffffff;
    text-align: center;
    vertical-align: middle;
    cursor: pointer;
@@ -349,7 +356,7 @@ button{
    -moz-user-select: none;
    -ms-user-select: none;
    user-select: none;
-   background-color: #f0f0f0;
+   background-color: #797979;
    border: 1px solid #ccc;
    padding: .375rem .75rem;
    font-size: 1rem;
