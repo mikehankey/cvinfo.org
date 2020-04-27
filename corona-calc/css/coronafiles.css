@@ -458,7 +458,7 @@ body.wait select {
 
 .inout {
    width: 320px;
-   height: 390px;
+   height: 320px;
    margin:0 auto;
    overflow: hidden;
 }
@@ -467,6 +467,7 @@ body.wait select {
    list-style: none;
    margin:0;
    text-align: left;
+   font-size: .9rem;
 }
 
 .leg ul li {
@@ -476,9 +477,10 @@ body.wait select {
 
 .leg ul li span {
    display: inline-block;
-   width: 1rem;
-   height:1rem;
+   width: .8rem;
+   height: .8rem;
    margin-right: 1rem;
+   vertical-align: baseline;
 }
 /* Table */
 .table-holder {
