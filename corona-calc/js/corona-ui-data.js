@@ -40,6 +40,52 @@ function goodOrBadRow(val1,val2) {
 }
  
 
+function plot_pie(xd,lb,title,dv) {
+
+   // Add Title as DOM element
+   if($('#'+dv).parent().find('h3').length==0) {
+      $('#'+dv).parent().prepend('<h3>'+title+'</h3>');
+   }
+ 
+
+   var colors =  [
+      '#ff5252',
+      '#e5ac9d',
+      '#97e486',
+      '#cc0000'
+   ];
+   
+   // cases, infected, not infected deaths
+   var data = [{
+      labels: lb,
+      values: xd,
+      type: 'pie',
+      textinfo: "label+percent",
+      textposition: "inside",
+      automargin: true,
+      marker: {
+         colors: colors
+      }
+   }];
+
+   var layout = { 
+      margin: {"t": 0, "b": 20, "l": 0, "r": 0},
+      showlegend: false
+   }
+   Plotly.newPlot(dv, data,layout,{responsive: true})
+
+   // Create Legend
+   var lg="<ul>";
+   $.each(lb,function(i,v) {
+      lg+= "<li><span style='background-color:"+colors[i]+"'></span> " + lb[i] + " " + usFormat(parseInt(xd[i])) + "</li>";
+   });
+   lg+="</ul>";
+   
+   $('#'+dv).closest('.pie_chart').find('.leg').html(lg);
+
+}
+
+
 
 function fillPredictedOutcome(fr,sum_info) {
    var tbody = "";
@@ -166,7 +212,14 @@ function fillSummary(state_name,fr,sum_info) {
 
    $('#sum_peak').html(fr_html);
     
-   fillPredictedOutcome(fr,sum_info);
+   
+   pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
+   pie_lb = ['Confirmed Cases', 'Infected', 'Not Infected', 'Deaths'];
+   plot_pie(pie_data,pie_lb,"14-Day Trend","new_cases_pie_14")
+
+   pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
+   plot_pie(pie_data,pie_lb,"7-Day Trend","new_cases_pie_7")
+    
 
    // Animate Gauges
    setTimeout(function(){ 
