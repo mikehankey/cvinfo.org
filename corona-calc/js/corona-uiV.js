@@ -2,23 +2,25 @@ function usFormat(n) {
   return String(n).replace(/(.)(?=(\d{3})+$)/g,'$1,');
 }
 
-function makeStateSelect(states) {
+function makeStateSelectNOTHERE(states) {
    var sel = "<select id=\"state_selector\" onchange='load_data()'>"
    sel += "<option value=''>Select a State</option>";
    for (var i = 0; i < states.length; i++) {
-      sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
+      if (states[i].state_code != 'VI') {
+         sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
+      }
    }
    sel += "</select>";
    document.getElementById("state_select").innerHTML= sel;
 }
 
  
-function load_data() { 
+function load_dataNOTHERE() { 
    var url = "../json/" + $('#state_selector').val() + ".json";
    getJSONData(url, 1);
 }
 
-function getJSONData(url, cb_func) {
+function getJSONDataNOTHERE(url, cb_func) {
    show_loader();
    
    $.ajax({

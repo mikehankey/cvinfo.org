@@ -268,10 +268,6 @@ h2 {
    border-top: 1px solid #ccc;
 }
  
-.pie_chart {
-   width: 50%;
-   float: left;
-}
 
 
 
@@ -360,6 +356,12 @@ select {
    fill: #c30202;
 }
 
+   .pie_chart {
+      display: block;
+      width: 42%;
+      margin:.1rem auto;
+      float:left;
+   }
 
 
 @media (max-width: 48em) {

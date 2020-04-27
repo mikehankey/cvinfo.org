@@ -46,13 +46,30 @@
       <h2>COVID-19 Forecasting Tool</h2>
    </div>
    <div id="main-content" class="tonly">
-       <h3>Method</h3>
-       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+       <h3>Who made this tool and why?</h3>
+       <p>My name is Mike Hankey and I made this tool. For the last 20+ years, I have written data tracking and analytics software. My most noteable work has been the meteor and fireball tracking programs used by the <a href="http://www.amsmeteors.org">American Meteor Society</a> and <a href="http://www.imo.net/">International Meteor Organization</a>. For the past ten years, I have been actively involved with astronomy and STEM focused public outreach. </p>
+       <p>When the corona virus started, like so many, I found myself obsessed with the numbers and I wanted to understand what was going on, how we were doing and when it might end. I had a hard time analyzing data presented on most of the popular sites and felt sad, scared and overwhelmed when I checked the daily numbers -- they just kept going up and up. It was also hard to get a sense of the true reality from news media, as these days all are slanted one way or another. Seeking opinions from online friends was not much help either as widely different opinions formed and disinformation raged. </p>
+<p>For these reasons, I decided to make my own corona virus stats tool, with a few specific requirements: 
+<ul>
+<li>I wanted more insight than just cases and deaths could provide. I wanted to see cases and deaths per million, growth rates, growth decay and mortality rates on a day by day basis. 
+<li>I wanted all of the data and analyitics fields on a state and county level 
+<li>I wanted to be able to compare states and counties with each other to see how they compared or ranked with each other
+<li>I wanted to create my own reports and projections on a state and county level, mainly so I could see how my home state and county were doing. 
+<li>I wanted to be able to trend the various data items and project the data forward for a forecast
+</ul>
+With the help of my long time co-developer friend Vincent Perlerin, we set out to make a tool that imported the data, crunched the numbers and saved them to files that would easily enable our reporting needs. From there we created maps, graphs and animations and worked on various ways of presenting the data. After a few weeks, I had an idea about forecasting and the corona calculator was born.
+
 
        <h3>Data</h3>
-       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>The world wide data tracking efforts surrounding corona virus numbers are extensive and reach to localities across the globe. In the United States, each county's health department (there are over 20,000), report their numbers to the state, which then reports the numbers to the CDC. John's Hopkins University has been leading the aggregation of this data from the US and all of the world's countries. Hopkins updates and publishes this data through a git hub project which fuels most of the reporting sites on the web right now. 
 
-       <p>ed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+A few other corona tracking projects have popped up that further enhance the raw data and make it available. 
+The <a href="https://covidtracking.com/">Covid Tracking Project</a> and the New York Times <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data Project</a> have developed systems to aggregate the Hopkins data and other sources into indexed data sets that are openly available. We use all of these data sources to create our corona virus data files and this is what is presented in the calculator, graphs and maps. 
+<p>
+Data sources are updated daily. State data should be up to date to one day before the current date. County data is delayed an extra day, and should be current to two-days from the current date. 
+<p>
+Once we have the data downloaded, we merge in state and county populations and then calculate several enhanced data fields including: cases and deaths per million, the case mortality rate (deaths / 'reported' cases), the growth rate from previous day, the growth decay (change to growth from previous day) and rolling averages for growth and decay.  
+
 
    </div>
    <div id="footer">
