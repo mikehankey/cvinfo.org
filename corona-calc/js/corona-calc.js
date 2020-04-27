@@ -96,39 +96,14 @@ function forecast_html(pred, type, state_name) {
    return(out)
 }
 
-function countySelect(p, state) {
-   if (state == "USA") {
-      return
-   }
-   sel = "Limit report for specific county<form><select id='county_selector' onchange='load_data()'><option value='ALL'>All Counties</option>"
-   var sortable = [];
-   for (var key in p) {
-      if (p.hasOwnProperty(key)) {
-         sortable.push([key, p[key]])
-         console.log(key + " -> " + p[key]);
-      }
-   } 
-   sorted = sortable.sort(function(a,b) {
-      return b[1] - a[1];
-   }); 
-   for (i = 0; i <= sorted.length-1; i++) {
-      //sel += "<option value=' + sorted[i][0] + '>" + sorted[i][0] + " (" + sorted[i][1] + ")</option>\n"
-      //sel += "<option>" + sorted[i][0] + "</option>\n"
-      sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + sorted[i][1] + ")</option>\n"
-
-   }
-
-   sel += "<input type=hidden id='state' value='" + state + "'></select></form>"
-   document.getElementById("county_select").innerHTML= sel
-}
 
 
-function doSomethingWithJsonData(json_data ,state,county) {
 
+function displayData(json_data ,state,county) {
+   alert(state)
    // make hidden divs visible
    // hack because i could not figure out how to hide / show the new divs I added. 
-   document.getElementById('results').style.visibility = 'visible'
-   document.getElementById('pies').style.visibility = 'visible'
+   document.getElementById('results').style.visibility = 'visible' 
    document.getElementById('recalc_form').style.visibility = 'visible'
    document.getElementById('summary').style.visibility = 'visible'
    document.getElementById('sum_peak').style.visibility= 'visible'
@@ -193,8 +168,7 @@ function doSomethingWithJsonData(json_data ,state,county) {
 
       }
    } 
-   else {
-      var c_pop = json_data['summary_info'].county_pop ;
+   else { 
       state_pop = json_data['county_pop'][county]
       var ss = json_data['county_stats'][county]['county_stats'];
       full_state_name = county + " County, " + state_name
@@ -339,17 +313,8 @@ function doSomethingWithJsonData(json_data ,state,county) {
    fillSummary(full_state_name,fr);
 
 
-   pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
-   pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
-   title = "14-DAY TREND"
-   dv = "new_cases_pie_14"
-   plot_pie(pie_data,pie_lb,title,dv) 
-
-   pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
-   pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
-   title = "7-DAY TREND"
-   dv = "new_cases_pie_7"
-   plot_pie(pie_data,pie_lb,title,dv) 
+ 
+   
 
    // plot full forecast
    xlab = "zero day" 
@@ -569,23 +534,33 @@ function extraPoints(data,polyReg) {
 }
 
 function plot_pie(xd,lb,title,dv) {
+
+   // Add Title as DOM element
+   $('#'+dv).parent().prepend('<h3>'+title+'</h3>');
+
+  
+
    // cases, infected, not infected deaths
    var data = [{
       labels: lb,
       values: xd,
       type: 'pie',
+      textinfo: "label+percent",
+      textposition: "inside",
+      automargin: true,
       marker: {
          colors: [
             '#ff5252',
             '#e5ac9d',
-            '#9caf9f',
-            '#c62f2d'
+            '#97e486',
+            '#cc0000'
          ]
       }
    }];
-   var layout = {
-      title: title,
-      legend: {"orientation": "h"} 
+   var layout = { 
+      legend: {"orientation": "h"} ,
+      margin: {"t": 0, "b": 0, "l": 0, "r": 0},
+      showlegend: false
    }
    Plotly.newPlot(dv, data,layout,{responsive: true})
 }
@@ -612,21 +587,25 @@ function recalculate() {
    county = document.getElementById("f_county").value
    // This is the MAIN summary at the top of the page.
    fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
+   
+   
+   
    // See corona-ui-data.js
    fillSummary(state_name,fr);
 
-
+   /*
    pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
    pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
-   title = "14-DAY TREND"
+   title = "14-Day Trend"
    dv = "new_cases_pie_14"
    plot_pie(pie_data,pie_lb,title,dv)
 
    pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
    pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
-   title = "7-DAY TREND"
+   title = "7-Day Trend"
    dv = "new_cases_pie_7"
    plot_pie(pie_data,pie_lb,title,dv)
+   */
 
    extra_data = {
       "yd2": fr['14_day'].dys,
@@ -723,12 +702,12 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    for (var i  = 0; i <= exp.length -1; i++) {
       ey = exp[i].y
       if (i > 0 && last_ey < ey) {
-         console.log(i, "curve moving up", ey)
+         //console.log(i, "curve moving up", ey)
       }
       else {
          if (ey < 0 && curve_end == 0 && i > 5) {
             curve_end = i
-            console.log(i, "curve ended.", )
+            //console.log(i, "curve ended.", )
          }
       if (ey > 0) {
          curve_total_cases += ey      
@@ -892,7 +871,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
       impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop
       impacted_3 = (forecast_result['3_day']['total_cases'] + forecast_result['3_day']['total_dead'] + forecast_result['3_day']['total_infected']) / state_pop
-      console.log(state_pop, forecast_result['14_day']['total_cases'], forecast_result['14_day']['total_dead'], forecast_result['14_day']['total_infected'], impacted_14t, impacted_14)
+      //console.log(state_pop, forecast_result['14_day']['total_cases'], forecast_result['14_day']['total_dead'], forecast_result['14_day']['total_infected'], impacted_14t, impacted_14)
       //if (forecast_result['14_day']['death_percent'] + forecast_result['14_day']['infected_percent'] >= 80 && final_status14 == 0) {
       if (impacted_14 > herd_thresh && final_status14 == 0) {
          final_status14 = 1
@@ -1080,14 +1059,11 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
 }
 
 function load_data() {
-
    var state = $('#state_selector').val();
-   var county = $('#county_selector').val();
-   console.log(state, county)
-   var state_name = $('#state_selector option:selected').text();
-   var url = "../json/" + state + ".json"
-
-   getJSONData(url, 1, state,county)
+   var county = $('#county_selector').val();  
+   var url = "../json/" + state + ".json";
+    
+   getJSONData(url,state,county);
 
 }
 
@@ -1099,18 +1075,9 @@ function change_state() {
 
 }
 
-function makeStateSelect(states) {
-   sel = "<form><select id=\"state_selector\" onchange='change_state()' ><option value='AL'>SELECT STATE</option><option value='USA'>ALL STATES</option>"
-   for (var i = 0; i < states.length; i++) {
-      if (states[i].state_code != 'VI') {
-         sel += "<option value='" + states[i].state_code + "'>" + states[i].state_name + "</option>"
-      }
-   }
-   sel += "</select>  </form>"
-   document.getElementById("state_select").innerHTML= sel
-}
+ 
 
-function getJSONData(url, cb_func, state,county) {
+function getJSONData(url,state,county) {
    show_loader();	
    $.ajax({
       type: "get",
@@ -1118,15 +1085,10 @@ function getJSONData(url, cb_func, state,county) {
       dataType: "json",
  
       success: function (result, status, xhr) {
-          if (cb_func == 1) {
-             doSomethingWithJsonData(result,state,county );
-          }
-
-
-          if (cb_func == 2) {
-             makeStateSelect(result );
-          }
-          hide_loader();	
+         displayData(result,state,county);
+         // Create action on county select
+         $('#county_selector').unbind('change').change(function() {load_data()}); 
+         hide_loader();	
       },
       error: function (xhr, status, error) {
         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
