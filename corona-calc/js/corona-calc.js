@@ -114,6 +114,7 @@ ctype = "state"
 var out = "";
 var state_name = json_data['summary_info'].state_name;
 var state_code = json_data['summary_info'].state_code; 
+var sum_info = json_data['summary_info'];
 if (typeof(county) === 'undefined') {
  var county_list = {}
  p = json_data['county_stats'] 
@@ -279,7 +280,9 @@ document.getElementById("f_county").value = county
 
 
 // See corona-ui-data.js
-fillSummary(full_state_name,fr);
+sum_info['total_infected'] = sum_info['cases'] * phantom
+sum_info['not_infected'] = state_pop - ((sum_info['cases'] * phantom)  + sum_info['cases'] + sum_info['deaths'])
+fillSummary(full_state_name,fr,sum_info);
 
  
 // plot full forecast
@@ -554,10 +557,10 @@ county = document.getElementById("f_county").value
 // This is the MAIN summary at the top of the page.
 fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
 
-
+sum_info = json_data['summary_info']
 
 // See corona-ui-data.js
-fillSummary(state_name,fr);
+fillSummary(state_name,fr,sum_info);
 
 /*
 pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]

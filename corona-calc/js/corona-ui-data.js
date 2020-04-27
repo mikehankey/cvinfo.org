@@ -41,7 +41,7 @@ function goodOrBadRow(val1,val2) {
  
 
 
-function fillPredictedOutcome(fr) {
+function fillPredictedOutcome(fr,sum_info) {
    var tbody = "";
    // Build Predicted Outcome Table 
    if(fr['14_day'].total_dead<fr['7_day'].total_dead)   {
@@ -50,27 +50,26 @@ function fillPredictedOutcome(fr) {
       _class = "row_bad";
    }  
    tbody += '<tr><th>Deaths</th>\
-                <td>' + "?" + '</td>\
+                <td>' + sum_info.deaths + '</td>\
                 <td>' + usFormat(parseInt(fr['14_day'].total_dead)) + '</td>\
                 <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_dead)+'">' + usFormat(parseInt(fr['7_day'].total_dead)) + '</td></tr>';
    tbody += '<tr><th>Confirmed Cases</th>\
-                <td>' + "?" + '</td>\
-                <td>' + usFormat(parseInt(fr['14_day'].total_infected)) + '</td>\
-                <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_dead)+'">' + usFormat(parseInt(fr['7_day'].total_infected)) + '</td></tr>';  
+                <td>' + sum_info.cases  + '</td>\
+                <td>' + usFormat(parseInt(fr['14_day'].total_cases)) + '</td>\
+                <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_cases)+'">' + usFormat(parseInt(fr['7_day'].total_cases)) + '</td></tr>';  
    tbody += '<tr><th>Non-Tracked Infected</th>\
-                <td>' + "?" + '</td>\
-                <td>' + "?" + '</td>\
-                <td>'+ "?" + '</td></tr>';     
-   tbody += '<tr><th>Tests</th>\
-               <td>' + "?" + '</td>\
-               <td>' + "?" + '</td>\
-               <td>'+ "?" + '</td></tr>';        
+                <td>' + usFormat(parseInt(sum_info.total_infected)) + '</td>\
+                <td>' +  usFormat(parseInt(fr['14_day'].total_infected)) + '</td>\
+                <td>'+ usFormat(parseInt(fr['7_day'].total_infected)) + '</td></tr>';     
+   tbody += '<tr><th>Not Infected</th>\
+               <td>' + usFormat(parseInt(sum_info.not_infected)) + '</td>\
+               <td>' + usFormat(parseInt(fr['14_day'].total_not_infected))  + '</td>\
+               <td>'+ usFormat(parseInt(fr['7_day'].total_not_infected)) + '</td></tr>';        
       
    $('#new_trends tbody').html(tbody);
 }
 
-function fillSummary(state_name,fr) {
- 
+function fillSummary(state_name,fr,sum_info) {
    var $gaugesCont = $('#forecast'); 
    var $forteen_days = $gaugesCont.find('.14days');
    var $seven_days = $gaugesCont.find('.7days');
@@ -167,7 +166,7 @@ function fillSummary(state_name,fr) {
 
    $('#sum_peak').html(fr_html);
     
-   fillPredictedOutcome(fr);
+   fillPredictedOutcome(fr,sum_info);
 
    // Animate Gauges
    setTimeout(function(){ 
