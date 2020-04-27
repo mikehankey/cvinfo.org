@@ -287,7 +287,6 @@ document.getElementById("f_county").value = county
 
 
 // See corona-ui-data.js
-alert(last_cases)
 sum_info['cases'] = last_cases 
 sum_info['deaths'] = last_deaths
 sum_info['total_infected'] = last_cases * phantom
