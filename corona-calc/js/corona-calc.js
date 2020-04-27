@@ -100,7 +100,6 @@ function forecast_html(pred, type, state_name) {
 
 
 function displayData(json_data ,state,county) {
-   alert(state)
    // make hidden divs visible
    // hack because i could not figure out how to hide / show the new divs I added. 
    document.getElementById('results').style.visibility = 'visible' 
