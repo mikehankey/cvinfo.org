@@ -499,37 +499,10 @@ for(var i = 0; i < data.length; i++){
 return extrapolatedPts;
 }
 
-function plot_pie(xd,lb,title,dv) {
-
-// Add Title as DOM element
-$('#'+dv).parent().prepend('<h3>'+title+'</h3>');
 
 
 
-// cases, infected, not infected deaths
-var data = [{
- labels: lb,
- values: xd,
- type: 'pie',
- textinfo: "label+percent",
- textposition: "inside",
- automargin: true,
- marker: {
-    colors: [
-       '#ff5252',
-       '#e5ac9d',
-       '#97e486',
-       '#cc0000'
-    ]
- }
-}];
-var layout = { 
- legend: {"orientation": "h"} ,
- margin: {"t": 0, "b": 0, "l": 0, "r": 0},
- showlegend: false
-}
-Plotly.newPlot(dv, data,layout,{responsive: true})
-}
+
 
 function recalculate() {
 f_xs_str = document.getElementById("f_xs").value 
@@ -551,27 +524,14 @@ f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
 f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
 state_name = document.getElementById("f_state_name").value
 county = document.getElementById("f_county").value
+
 // This is the MAIN summary at the top of the page.
 fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
-
-
-
+ 
 // See corona-ui-data.js
-fillSummary(state_name,fr);
+fillSummary(state_name,fr); 
 
-/*
-pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
-pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
-title = "14-Day Trend"
-dv = "new_cases_pie_14"
-plot_pie(pie_data,pie_lb,title,dv)
-
-pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
-pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
-title = "7-Day Trend"
-dv = "new_cases_pie_7"
-plot_pie(pie_data,pie_lb,title,dv)
-*/
+ 
 
 extra_data = {
  "yd2": fr['14_day'].dys,

@@ -42,7 +42,7 @@
    </header>
 
    <div id="header">
-      <h1><img src="./img/us_flag.png" width="50"/> US Corona Calculator</h1>
+      <h1>US Corona Calculator</h1>
       <h2>COVID-19 Forecasting Tool</h2>
    </div>
    <div id="main-content">
@@ -57,34 +57,9 @@
             <div id="metric 14days" class="metric 14days" style="visibility:hidden"></div>
             <div id="metric 7days" class="metric 7days" style="visibility:hidden"></div> 
             <div id="sum_peak" style="visibility:hidden"></div>
-            <div id="outcome" >
-               <div class="inout">
-                  <h3>Predicted Outcome</h3>
-                  <div class="clearfix">
-                     <div id="new_trends">
-                        <div class="table-holder">
-                           <table>
-                              <thead>
-                                <tr>
-                                       <th>&nbsp;</th>
-                                       <th>Current</th>
-                                       <th>14-day Trend</th>
-                                       <th>7-day Trend</th>
-                                 </tr>
-                              </thead>
-                              <tbody>
-                              </tbody>
-                              <tfoot>
-                                    <tr class="nb">
-                                          <td colspan="2">&nbsp;</td>
-                                          <td class="brd" colspan="2">Projection for of the pandemic</td>
-                                    </tr>
-                              </tfoot>
-                           </table>
-                        </div>
-                     </div>
-                  </div>  
-               </div>  
+            <div id="outcome" class="clearfix" >
+               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_7" style="height:350px"></div></div><div class="leg"></div></div>
+               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_14" style="height:350px"></div></div><div class="leg"></div></div>
             </div>
  
 
