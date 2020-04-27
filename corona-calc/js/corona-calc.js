@@ -131,7 +131,7 @@ function doSomethingWithJsonData(json_data ,state,county) {
    document.getElementById('sum_peak').style.visibility= 'visible'
    document.getElementById('metric 7days').style.visibility = 'visible'
    document.getElementById('metric 14days').style.visibility = 'visible'
-
+   ctype = "state"
 
    var out = "";
    var state_name = json_data['summary_info'].state_name;
@@ -168,6 +168,7 @@ function doSomethingWithJsonData(json_data ,state,county) {
       var ss = json_data['county_stats'][county]['county_stats'];
       full_state_name = county + " County, " + state_name
       //state_name = full_state_name
+      ctype = "county"
    }
 
    var date_vals = [];
@@ -178,18 +179,24 @@ function doSomethingWithJsonData(json_data ,state,county) {
    var case_growth_vals = [];
    var death_growth_vals = [];
    var decay_vals = [];
+   var test_vals = [];
    var mortality_vals = [];
 
    var zd = 0;
    var last_growth = 0;
 
    // Prepare all data
+   var last_tests = 0
    ss.forEach(function (arrayItem) {
       if (typeof(arrayItem.date) != "undefined") {
          date_vals.push(arrayItem.date);
          this_date = arrayItem.date
+         test_pd = arrayItem.tests - last_tests
+         test_vals.push(test_pd)
+         last_tests = arrayItem.tests
       }
       else {
+         // county record here
          date_vals.push(arrayItem.day.replace(/-/g,""));
          this_date = arrayItem.day.replace(/-/g,"") 
       }
@@ -262,6 +269,12 @@ function doSomethingWithJsonData(json_data ,state,county) {
    // case decay
    fitsObj = getFits(zdv4, decay_vals)
    out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "growth decay", title, "decay_div", "line")
+
+   // tests
+   if (ctype == 'state') {
+      title = full_state_name.toUpperCase() + " TESTS PER DAY" + last_date
+      out2 = makeGraph(zdv2, test_vals ,title, "days since first case", "tests per day", "test_div", fit_days, 60)
+   }
 
    // mortality div
    fitsObj = getFits(zdv5, mortality_vals)
