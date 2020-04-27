@@ -96,11 +96,11 @@ function fillPredictedOutcome(fr,sum_info) {
       _class = "row_bad";
    }  
    tbody += '<tr><th>Deaths</th>\
-                <td>' + sum_info.deaths + '</td>\
+                <td>' + usFormat(parseInt(sum_info.deaths)) + '</td>\
                 <td>' + usFormat(parseInt(fr['14_day'].total_dead)) + '</td>\
                 <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_dead)+'">' + usFormat(parseInt(fr['7_day'].total_dead)) + '</td></tr>';
    tbody += '<tr><th>Confirmed Cases</th>\
-                <td>' + sum_info.cases  + '</td>\
+                <td>' + usFormat(parseInt(sum_info.cases))  + '</td>\
                 <td>' + usFormat(parseInt(fr['14_day'].total_cases)) + '</td>\
                 <td  class="'+goodOrBadRow(fr['14_day'].total_dead,fr['7_day'].total_cases)+'">' + usFormat(parseInt(fr['7_day'].total_cases)) + '</td></tr>';  
    tbody += '<tr><th>Non-Tracked Infected</th>\
@@ -212,7 +212,7 @@ function fillSummary(state_name,fr,sum_info) {
 
    $('#sum_peak').html(fr_html);
     
-   
+   // Pies
    pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
    pie_lb = ['Confirmed Cases', 'Infected', 'Not Infected', 'Deaths'];
    plot_pie(pie_data,pie_lb,"14-Day Trend","new_cases_pie_14")
@@ -220,6 +220,8 @@ function fillSummary(state_name,fr,sum_info) {
    pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
    plot_pie(pie_data,pie_lb,"7-Day Trend","new_cases_pie_7")
     
+   // Table
+   fillPredictedOutcome(fr,sum_info);
 
    // Animate Gauges
    setTimeout(function(){ 

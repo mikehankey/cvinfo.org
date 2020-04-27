@@ -463,6 +463,13 @@ body.wait select {
    overflow: hidden;
 }
 
+.inout_ty {
+   max-width: 950px;
+   height: auto;
+   overflow: auto;
+   margin: 2rem auto 0;
+} 
+
 .leg ul {
    list-style: none;
    margin:0;
