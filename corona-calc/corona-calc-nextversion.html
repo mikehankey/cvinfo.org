@@ -88,19 +88,28 @@
             </div>
  
 
-            <div id="recalc_form" style="visibility:hidden; display: none">
-               <form>
-                  Predicted outcome calculated with current data trends and the following values.<br>
-               <center>
-               <table border=0>
-               <tr><td align=right>
-               Herd Immunity Threshold</td><td><input return true;" type=text id=herd_thresh size=5 value=.6></td><td align=left>(decimal percentage of population needed for herd immunity)</td></tr>
-               <tr><td align=right>
-               Confirmed Case Mortality Rate </td><td><input return true;" type=text id=calc_mortality size=5></td><td align=left>(decimal percentage of confirmed cases that end in death)</td></tr>
-               <tr><td>Non-Tracked Factor</td><td><input type=text id=calc_phantom value='4' size=5></td><td>(for each confirmed case there are X non-tracked cases)</td></tr>
-               <tr><td colspan=3 align=center><input onclick="javascript:recalculate(); return true;" type="button" value="Re-Calculate Predicted Outcome"></td></tr>
-               </table> 
-               </center>
+            <div id="recalc_form" >
+               <p><strong>Predicted outcome calculated with current data trends and the following values.</strong></p>
+               <div class="form-group clearfix">
+                     <label for="herd_thresh">Herd Immunity Threshold
+                       <span>(decimal percentage of population needed for herd immunity)</span>
+                     </label>
+                     <div class="form-input">
+                       <input type="number"  id="herd_thresh" value=".6"/>
+                     </div>
+               </div>
+               <div class="form-group clearfix">
+                     <label for="calc_mortality">Confirmed Case Mortality Rate<span>(decimal percentage of confirmed cases that end in death)</span></label>
+                     <div class="form-input">
+                       <input type="number"  id="calc_mortality" value=".6"/>
+                     </div>
+               </div>
+               <div class="form-group clearfix">
+                     <label for="calc_phantom">Non-Tracked Factor<span>(for each confirmed case there are X non-tracked cases)</span></label>
+                     <div class="form-input">
+                       <input type="number"  id="calc_phantom" value="4"/>
+                     </div>
+               </div>
                <input type="hidden" id="f_xs">
                <input type="hidden" id="f_ys">
                <input type="hidden" id="f_total_cases">
@@ -109,10 +118,8 @@
                <input type="hidden" id="f_state_name">
                <input type="hidden" id="f_state_code">
                <input type="hidden" id="f_county">
-               </form>
-             </div>
-
-
+               <button id="recalculate">Re-Calculate Predicted Outcome</button>
+            </div>
          </div>
 
          <div id="graphs">

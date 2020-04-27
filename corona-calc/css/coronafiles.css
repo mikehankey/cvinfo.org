@@ -285,7 +285,81 @@ h2 {
    margin: 0 auto;
 }
 
-select {
+#recalc_form { 
+   max-width: 900px;
+   margin: 0 auto;
+}
+
+.form-group {
+   margin-bottom: 1rem;
+   margin-left: 8rem;
+}
+
+.form-group label {
+   float: left;
+   margin-right: 1rem; 
+   width: 25rem;
+   text-align: right;
+   vertical-align: middle;
+   height: calc(1.5em + .75rem + 2px);
+   padding-top: .5em;
+   font-weight: bold;
+}
+
+.form-group label span {
+   font-weight: normal;
+   font-size: .85rem;
+   display: block;
+   line-height: 1.85;
+}
+
+.form-group .form-input {
+   float: left;
+   padding-top: .5rem;
+}
+ 
+input {
+   width: 7rem;
+   max-width: 20rem;
+   height: calc(1.5em + .75rem + 2px);
+   padding: .375rem 0.35rem .375rem .75rem;
+   font-size: 1rem;
+   font-weight: 400;
+   line-height: 1.5;
+   color: #495057;
+   border: 1px solid #ced4da;
+   border-radius: .25rem;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+   word-wrap: normal;
+   margin-bottom: .2rem;
+}
+
+button{
+   margin:.5rem 0 2.5rem;
+   display: inline-block;
+   font-weight: 400;
+   color: #676a7f;
+   text-align: center;
+   vertical-align: middle;
+   cursor: pointer;
+   -webkit-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+   background-color: #f0f0f0;
+   border: 1px solid #ccc;
+   padding: .375rem .75rem;
+   font-size: 1rem;
+   line-height: 1.5;
+   border-radius: .25rem;
+   transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+   font-weight: bold;
+}
+
+  select {
    display: inline-block;
    width: 100%;
    max-width: 20rem;
