@@ -263,8 +263,15 @@ h2 {
 
 /* Pies */
 #outcome {
-   margin: 2rem 1rem;
-   border-top: 1px solid #ccc;
+   
+   margin: 2rem auto;
+   max-width: 800px;
+   border-top: 1px solid #ccc; 
+}
+
+#inout {
+   padding:1.5em .5em;
+   
 }
  
 
@@ -407,6 +414,9 @@ table tbody td.ar {
 }
 table tbody td.ar.good {
    background-image:url(../img/up.png);
+   color:#c00;
+   font-weight: bold;
+   
 }
 table tbody td.ar.bad {
    background-image:url(../img/down.png);
