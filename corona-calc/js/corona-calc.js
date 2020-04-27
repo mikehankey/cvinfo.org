@@ -170,37 +170,39 @@ var last_growth = 0;
 // Prepare all data
 var last_tests = 0
 ss.forEach(function (arrayItem) {
- if (typeof(arrayItem.date) != "undefined") {
-    date_vals.push(arrayItem.date);
-    this_date = arrayItem.date
-    test_pd = arrayItem.tests - last_tests
-    test_vals.push(test_pd)
-    last_tests = arrayItem.tests
- }
- else {
-    // county record here
-    date_vals.push(arrayItem.day.replace(/-/g,""));
-    this_date = arrayItem.day.replace(/-/g,"") 
- }
- zero_day_vals.push(zd);
- total_cases_vals.push(arrayItem.cases);
- new_cases_vals.push(arrayItem.new_cases);
- new_deaths_vals.push(arrayItem.new_deaths);
- if (typeof(arrayItem.cg_last) != "undefined") {
-    case_growth_vals.push(arrayItem.cg_last);
-    death_growth_vals.push(arrayItem.dg_last);
-    decay = arrayItem.cg_last - last_growth
-    last_growth = arrayItem.cg_last 
- } else {
-    case_growth_vals.push(arrayItem.case_growth);
-    death_growth_vals.push(arrayItem.death_growth);
-    decay = arrayItem.case_growth - last_growth
-    last_growth = arrayItem.case_growth
- }
- mortality_vals.push(arrayItem.mortality);
- zd = zd + 1
- last_date = this_date 
- decay_vals.push(decay);
+    if (typeof(arrayItem.date) != "undefined") {
+       date_vals.push(arrayItem.date);
+       this_date = arrayItem.date
+       test_pd = arrayItem.tests - last_tests
+       test_vals.push(test_pd)
+       last_tests = arrayItem.tests
+    }
+    else {
+       // county record here
+       date_vals.push(arrayItem.day.replace(/-/g,""));
+       this_date = arrayItem.day.replace(/-/g,"") 
+    }
+    zero_day_vals.push(zd);
+    total_cases_vals.push(arrayItem.cases);
+    last_cases = arrayItem.cases
+    last_deaths = arrayItem.deaths
+    new_cases_vals.push(arrayItem.new_cases);
+    new_deaths_vals.push(arrayItem.new_deaths);
+    if (typeof(arrayItem.cg_last) != "undefined") {
+       case_growth_vals.push(arrayItem.cg_last);
+       death_growth_vals.push(arrayItem.dg_last);
+       decay = arrayItem.cg_last - last_growth
+       last_growth = arrayItem.cg_last 
+    } else {
+       case_growth_vals.push(arrayItem.case_growth);
+       death_growth_vals.push(arrayItem.death_growth);
+       decay = arrayItem.case_growth - last_growth
+       last_growth = arrayItem.case_growth
+    }
+    mortality_vals.push(arrayItem.mortality);
+    zd = zd + 1
+    last_date = this_date 
+    decay_vals.push(decay);
 
 });
 
@@ -285,12 +287,15 @@ document.getElementById("f_county").value = county
 
 
 // See corona-ui-data.js
-sum_info['total_infected'] = sum_info['cases'] * phantom
-sum_info['not_infected'] = state_pop - ((sum_info['cases'] * phantom)  + sum_info['cases'] + sum_info['deaths'])
+alert(last_cases)
+sum_info['cases'] = last_cases 
+sum_info['deaths'] = last_deaths
+sum_info['total_infected'] = last_cases * phantom
+sum_info['not_infected'] = state_pop - ((last_cases * phantom)  + last_cases + last_deaths)
 document.getElementById("f_total_infected").value = sum_info['total_infected'] 
 document.getElementById("f_not_infected").value = sum_info['not_infected'] 
-document.getElementById("f_cases").value = sum_info['cases'] 
-document.getElementById("f_deaths").value = sum_info['deaths'] 
+document.getElementById("f_cases").value = last_cases 
+document.getElementById("f_deaths").value = last_deaths
 
 fillSummary(full_state_name,fr,sum_info);
 
@@ -545,6 +550,7 @@ sum_info['total_infected'] = document.getElementById("f_total_infected").value
 sum_info['not_infected'] = document.getElementById("f_not_infected").value
 
 // This is the MAIN summary at the top of the page.
+
 fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
 
 
