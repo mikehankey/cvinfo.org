@@ -51,7 +51,7 @@ function plot_pie(xd,lb,title,dv) {
    }
   
    var colors =  [
-      '#ddd',
+      '#eaeaea',
       '#e5ac9d',      
       '#d35e60',
       '#cc0000'
@@ -62,7 +62,7 @@ function plot_pie(xd,lb,title,dv) {
       labels: lb,
       values: xd,
       type: 'pie',
-      textinfo: "label+percent",
+      textinfo: "percent", // label+
       textposition: "inside",
       automargin: true,
       marker: {
@@ -74,9 +74,8 @@ function plot_pie(xd,lb,title,dv) {
       margin: {"t": 0, "b": 20, "l": 0, "r": 0},
       showlegend: false
    };
-   Plotly.newPlot(dv, data,layout,{responsive: true})
- 
-
+   Plotly.newPlot(dv, data,layout,{responsive: true, displayModeBar: false});
+   
    // Create Legend
    var lg="<ul>";
    $.each(lb,function(i,v) {

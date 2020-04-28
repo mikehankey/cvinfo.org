@@ -11,12 +11,14 @@ function show_loader() {
    $('body').addClass('wait');
    $('.box, .metric, #summary, .bad_d').css('visibility','hidden'); 
    $('.outcome tbody').html('');
+   $('#loader').css('display','block');
 }
 
 function hide_loader(show_graphs) {
   if(typeof show_graphs == "undefined" ) show_graphs=true;
   if(show_graphs) $('.box, .metric, #summary,  .bad_d').css('visibility','visible');
   $('body').removeClass('wait');
+  $('#loader').css('display','none');
 }
 
 

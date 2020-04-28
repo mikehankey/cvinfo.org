@@ -292,11 +292,10 @@ p.to {
 
 #recalc_form { 
    max-width: 900px;
-   margin: 0 auto;
+   margin: 2rem auto;
    padding: .5rem;
    border: 1px solid #ccc;
    background: #f0f0f0;
-   margin-bottom: 2rem;
 }
 
 .form-group {
@@ -395,7 +394,7 @@ body.wait select {
 }
 
 #loader img {
-   max-width: 100px;
+   max-width: 80px;
    display: block;
    margin: 0 auto;
 }
@@ -533,7 +532,7 @@ table tbody td.ar.bad {
 }
   
 table thead tr {
-   border-bottom: 1px solid #222;
+   border-bottom: 1px solid #a2a2a2;
 }
 table thead tr.nb, table thead tr.nb td {
    border:none;
@@ -541,10 +540,11 @@ table thead tr.nb, table thead tr.nb td {
 
 .brd { 
    font-style: italic;
+   text-align: right;
 }
 
  table tbody tr th {
-   border-right: 1px solid #222;
+   border-right: 1px solid #a2a2a2;
 }
 table tbody tr {
    border-bottom: 1px solid #ccc;
@@ -554,7 +554,7 @@ table tbody tr {
 }
 
 table tbody tr:last-child td, table tbody tr:last-child th {
-   border-bottom: 1px solid #222;
+   border-bottom: 1px solid #a2a2a2;
 }
 
 .row_good {
