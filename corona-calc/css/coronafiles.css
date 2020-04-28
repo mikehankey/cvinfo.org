@@ -393,8 +393,12 @@ body.wait select {
    cursor: wait;
 }
 
+#loader  {
+   margin: 2rem auto;
+}
+
 #loader img {
-   max-width: 80px;
+   max-width: 120px;
    display: block;
    margin: 0 auto;
 }

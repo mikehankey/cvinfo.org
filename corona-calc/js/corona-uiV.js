@@ -19,6 +19,7 @@ function hide_loader(show_graphs) {
   if(show_graphs) $('.box, .metric, #summary,  .bad_d').css('visibility','visible');
   $('body').removeClass('wait');
   $('#loader').css('display','none');
+  $('#state_select').css('display','block');
 }
 
 
@@ -71,5 +72,8 @@ $(function() {
 
    // Scroll Top even with hidden elements
    window.scrollTo(0,0);
+
+   // ... 
+   hide_loader(false);
 
 })
