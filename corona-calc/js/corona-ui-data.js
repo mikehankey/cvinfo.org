@@ -279,16 +279,9 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
    };
 
    var data = [trace1,trace2,trace3,trace5]; // , trace4
-   var layout = {
-      title :  t,
+   var layout = { 
       range: [0,ymax],
-      autorange: false,
-      showlegend: true,
-      legend: {
-         orientation: "h",
-         x: .15,
-         y: 1,
-      },
+      autorange: false, 
       yaxis : {
          title: {
             text: yl
@@ -299,21 +292,24 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
          tick0: 0,
          dtick: 0.25,
          ticklen: 8,
-         tickwidth: 4,
+         tickwidth: 1,
          tickcolor: '#000',
       },
-      xaxis : {
-            title: {
-               text: xl
-            },
-            autotick: true,
-            ticks: 'outside',
-            tick0: 0,
-            dtick: 0.25,
-            ticklen: 8,
-            tickwidth: 4,
-            tickcolor: '#000'
-         }
+      xaxis : { 
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 1,
+         tickcolor: '#000'
+      },
+      title :  t,
+      margin: {"t": 80, "b": 80, "l": 80, "r": 80},
+      showlegend: true,
+      legend: {
+         orientation: "h" 
+      }
    }
 
    Plotly.newPlot(dv, data, layout, {responsive: true});
@@ -324,12 +320,16 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 
 // Create real graphs
 function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
-    var ymax;
+   
+ 
+   var ymax = Math.max.apply(Math, yd) + Math.max.apply(Math, yd)/8;
+   /*
    if (dv == 'new_cases_div') {
       ymax = Math.max.apply(Math, yd) * 2
    } else {
       ymax = Math.max.apply(Math, yd) * 1.5
    }
+   */
 
    for (var i = 0; i <= xd.length-1; i++) {
       if (yd[i] > 0) {
@@ -376,7 +376,6 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
 
    var data = [trace1, trace2, trace3,trace5]; //
    var layout = {
-     
       shapes : [{ 
          type: 'line',
          x0: cur_day,
