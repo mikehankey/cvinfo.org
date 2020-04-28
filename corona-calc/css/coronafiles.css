@@ -472,9 +472,11 @@ body.wait select {
 
 .leg ul {
    list-style: none;
-   margin:0;
+   margin: 0;
    text-align: left;
-   font-size: .9rem;
+   font-size: .8rem;
+   padding: 0;
+   margin-left: 8rem;
 }
 
 .leg ul li {
@@ -529,26 +531,15 @@ table tbody td.ar.good {
 table tbody td.ar.bad {
    background-image:url(../img/down.png);
 }
-
-
-
-table thead tr th, table tbody td {
-   border-right: 1px solid #222;  
-}
-table thead tr th:first-child {
-   border-right: 1px solid #222;  
-}
+  
 table thead tr {
    border-bottom: 1px solid #222;
 }
-table thead tr.nb {
+table thead tr.nb, table thead tr.nb td {
    border:none;
 }
 
-.brd {
-   border-bottom: 1px solid #222;
-   border-left: 1px solid #222;
-   border-right: 1px solid #222;
+.brd { 
    font-style: italic;
 }
 
@@ -573,13 +564,26 @@ table tbody tr:last-child td, table tbody tr:last-child th {
    background: #ff4e51;
 }
 
+.trend {
+   font-weight: bold;
+}
+
 @media (max-width: 48em) {
+   body {
+      background-position: -250px -150px;
+   }
+
+   h1 {
+      margin-bottom: 0.2rem;
+   }
+
    #results {
       margin: .5rem .2rem;
    }
 
    #sum_main {
-      padding: 1rem .5rem; 
+      padding: 1rem .5rem;  
+      font-size: 1.2rem;
    }
 
    .metric, .pie_chart {
@@ -619,16 +623,88 @@ table tbody tr:last-child td, table tbody tr:last-child th {
       margin: 0;
       width: 100%;
    }
-   
-   #sum_main {
-      font-size:1.3rem;
+
+   table {
+      margin: 0 .5rem;
    }
 
    table th, td {
       padding: .2em;
+      font-size: .85rem;
    }
+ 
+	table, thead, tbody, th, td, tr { 
+      display: block; 
+      width: auto;
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	table tbody tr th {
+      border-bottom:1px solid #666;
+      border-right:none medium;
+   }
+	
+	td { 
+      border: none;
+      border-bottom: 1px solid #f3efef;
+      position: relative;
+      padding-left: 50%;
+      text-align: left !important;
+      padding-bottom: .2rem;
+  } 
+
+  table tbody tr  {
+     margin-bottom:1rem;
+     border-bottom: none medium;
+
+  }
+   
+   table tbody tr:last-child td, table tbody tr:last-child th {
+      border-bottom:1px solid #f3efef ;
+   }
+
+   table thead tr:last-child td, table thead tr:last-child th {
+      border-bottom: 1px solid #666;
+
+   }
+
+   table tbody tr:last-child th {
+      border-bottom: 1px solid #666;
+   }
+
+	td:before { 
+      position: absolute;
+      top: .1rem;
+      left: .2rem;
+      width: 45%;
+      white-space: nowrap;
+   }
+   
+   tfoot {
+      display: none;
+   }
+	
+	/*
+	Label the data
+	*/
+	td:nth-of-type(1):before { content: "Current"; }
+	td:nth-of-type(2):before { content: "14-Day Trend"; }
+	td:nth-of-type(3):before { content: "7-Day Trend"; } 
 
    #recalc_form {
       margin:0 .5rem;
    }
+
+   leg ul { 
+      margin-left: 2rem;
+  }
+
 }
+
+

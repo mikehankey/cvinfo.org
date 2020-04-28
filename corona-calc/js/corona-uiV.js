@@ -49,8 +49,8 @@ function createSvg() {
          <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
          <text class="title" text-anchor="middle" alignment-baseline="middle" x="500" y="240" font-size="90" font-weight="normal"></text>\
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="395" font-size="145" font-weight="bold"></text>\
-         </svg><div class="trend">14 days trend</div>');
-   $("#forecast .7days .trend").text("7 days trend");
+         </svg><div class="trend">14-Day trend</div>');
+   $("#forecast .7days .trend").text("7-Day trend");
     
 } 
 

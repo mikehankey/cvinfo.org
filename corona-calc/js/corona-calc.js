@@ -553,19 +553,7 @@ fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_curren
 // See corona-ui-data.js
 fillSummary(state_name,fr,sum_info);
 
-/*
-pie_data = [fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_not_infected, fr['14_day'].total_dead]
-pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['14_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['14_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['14_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['14_day'].total_dead))]
-title = "14-Day Trend"
-dv = "new_cases_pie_14"
-plot_pie(pie_data,pie_lb,title,dv)
-
-pie_data = [fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_not_infected, fr['7_day'].total_dead]
-pie_lb = ['Confirmed Cases ' + usFormat(parseInt(fr['7_day'].total_cases)), 'Infected ' + usFormat(parseInt(fr['7_day'].total_infected)), 'Not Infected ' + usFormat(parseInt(fr['7_day'].total_not_infected)), 'Deaths ' + usFormat(parseInt(fr['7_day'].total_dead))]
-title = "7-Day Trend"
-dv = "new_cases_pie_7"
-plot_pie(pie_data,pie_lb,title,dv)
-*/
+ 
 
 extra_data = {
  "yd2": fr['14_day'].dys,
@@ -1025,18 +1013,17 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
 }
 
 function load_data() {
-var state = $('#state_selector').val();
-var county = $('#county_selector').val();  
-var url = "../json/" + state + ".json";
-
-getJSONData(url,state,county);
-
+   var state = $('#state_selector').val();
+   var county = $('#county_selector').val();  
+   var url = "../json/" + state + ".json";
+   if($.trim(state)!=='') {
+       getJSONData(url,state,county);
+   }
 }
 
-function change_state() {
-//var state = $('#state_selector').val();
-document.getElementById("county_select").innerHTML= "";
-load_data();
+function change_state() { 
+   $("#county_select").html("");
+   load_data();
 }
 
 
