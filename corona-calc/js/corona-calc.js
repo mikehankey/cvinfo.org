@@ -224,7 +224,7 @@ fit_days = 14;
 
 // Draw graphs & Gauges for New Cases
 // New Cases
-title = "<b>" + full_state_name  + " New Cases</b><br>at " + dateFormat(last_date) + " in days since first case";
+title = "<b>" + full_state_name  + " New Cases</b><br><small>at " + dateFormat(last_date) + " in days since first case</small>";
 pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60);
   
 

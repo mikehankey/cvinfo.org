@@ -1,7 +1,6 @@
 function usFormat(n) {
   return String(n).replace(/(.)(?=(\d{3})+$)/g,'$1,');
-}
- 
+} 
 
 function dateFormat(s) {
    return s.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3');
@@ -58,7 +57,7 @@ function createSvg() {
 } 
 
 $(function() {
-  
+   var cururl, params, selState, selCounty, possibleStates=[];
 
    // Once the page is loaded we enable the state select
    $('#state_selector').removeAttr('disabled');
@@ -70,10 +69,35 @@ $(function() {
    // Creation action on recalculate button
    $('#recalculate').click(function() {recalculate(); }) 
 
-   // Scroll Top even with hidden elements
-   window.scrollTo(0,0);
-
    // ... 
    hide_loader(false);
+
+   // Do we have parameters we can work with 
+   // We want 
+   // coronafiles.us/?MD+Baltimore
+   // or 
+   // coronafiles.us/?MD
+   cururl = window.location.href;
+   if(cururl.indexOf('?')>0) {
+      selState = cururl.substring(cururl.indexOf('?')+1, cururl.length);
+      if(selState.indexOf('+')>0) {
+         selCounty = selState.substring(selState.indexOf('+')+1, selState.length);
+         selState = selState.substring(0,selState.indexOf('+'));
+      } 
+
+      // Get all the possible state value
+      $('#state_selector option').each(function(i,v){
+         possibleStates.push(v.value);
+      })
+      
+      if(possibleStates.indexOf(selState)>0) {
+         // Select State
+         $('#state_selector').val(selState).trigger('change');
+      }
+ 
+   } 
+
+   // Scroll Top even with hidden elements
+   window.scrollTo(0,0);
 
 })

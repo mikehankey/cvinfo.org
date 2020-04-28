@@ -215,11 +215,11 @@ function fillSummary(state_name,fr,sum_info) {
    $('#sum_peak').html(fr_html);
     
    // Pies
-   pie_data = [fr['14_day'].total_not_infected, fr['14_day'].total_cases, fr['14_day'].total_infected, fr['14_day'].total_dead];
-   pie_lb = [ 'Not Infected', 'Confirmed Cases', 'Infected', 'Deaths'];
+   pie_data = [fr['14_day'].total_not_infected, fr['14_day'].total_infected, fr['14_day'].total_cases, fr['14_day'].total_dead];
+   pie_lb = [ 'Not Infected', 'Infected', 'Confirmed Cases', 'Deaths'];
    plot_pie(pie_data,pie_lb,"14-Day Trend","new_cases_pie_14");
 
-   pie_data = [fr['7_day'].total_not_infected, fr['7_day'].total_cases, fr['7_day'].total_infected, fr['7_day'].total_dead];
+   pie_data = [fr['7_day'].total_not_infected, fr['7_day'].total_infected, fr['7_day'].total_cases, fr['7_day'].total_dead]; 
    plot_pie(pie_data,pie_lb,"7-Day Trend","new_cases_pie_7")
     
    // Table
