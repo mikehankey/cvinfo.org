@@ -278,7 +278,9 @@ function displayData(json_data ,state,county) {
    document.getElementById("f_state_pop").value = state_pop 
    document.getElementById("f_current_zero_day").value = current_zero_day 
    document.getElementById("f_state_name").value = state_name
-   document.getElementById("f_county").value = county
+   document.getElementById("f_county").value = county;
+
+   $('#f_mortality').val(json_data['summary_info'].mortality );
 
 
    // See corona-ui-data.js

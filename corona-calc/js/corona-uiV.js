@@ -23,6 +23,12 @@ function hide_loader(show_graphs) {
   $('#state_select').css('display','block');
 }
 
+function reset() {
+   $('#herd_thresh').val(.6);
+   $('#calc_phantom').val(4);
+   $('#calc_mortality').val($('#f_mortality').val()/100);
+}
+
 
 function countySelect(p, state) {
    var sel = "<select id='county_selector'><option value='ALL'>All Counties</option>"
@@ -76,6 +82,9 @@ $(function() {
 
    // Creation action on recalculate button
    $('#recalculate').click(function() {recalculate(); }) 
+
+   // Creation action on reset button
+   $('#reset').click(function() {reset(); }) 
 
    // ... 
    hide_loader(false);

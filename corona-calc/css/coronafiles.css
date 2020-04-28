@@ -367,6 +367,12 @@ button{
    font-weight: bold;
 }
 
+   button.btn {
+      font-weight: normal;
+      background: #ccc;
+      color: #666;
+   }
+
   select {
    display: inline-block;
    width: 100%;
@@ -581,7 +587,7 @@ table tbody tr:last-child td, table tbody tr:last-child th {
 
 .modebar {
    display:none!important;
-   
+
 }
 
 @media (max-width: 48em) {
@@ -714,7 +720,7 @@ table tbody tr:last-child td, table tbody tr:last-child th {
 	td:nth-of-type(3):before { content: "7-Day Trend"; } 
 
    #recalc_form {
-      margin:0 .5rem;
+      margin:0 .5rem .5rem;
    }
 
    .leg ul { 
@@ -722,9 +728,13 @@ table tbody tr:last-child td, table tbody tr:last-child th {
   }
 
   .form-group label span {
-   text-align: center;
-   line-height: 1.6;
-   font-size: .75rem;
+      text-align: center;
+      line-height: 1.6;
+      font-size: .75rem;
+   }
+
+   #recalc_form button {
+      margin-bottom: .5rem;
    }
 
 
