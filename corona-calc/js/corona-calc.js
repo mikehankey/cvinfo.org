@@ -101,245 +101,196 @@ return(out)
 
 function displayData(json_data ,state,county) {
 
-// make hidden divs visible
-// hack because i could not figure out how to hide / show the new divs I added. 
-document.getElementById('results').style.visibility = 'visible' 
-document.getElementById('recalc_form').style.visibility = 'visible'
-document.getElementById('summary').style.visibility = 'visible'
-document.getElementById('sum_peak').style.visibility= 'visible'
-document.getElementById('metric 7days').style.visibility = 'visible'
-document.getElementById('metric 14days').style.visibility = 'visible'
-ctype = "state"
+   // make hidden divs visible
+   // hack because i could not figure out how to hide / show the new divs I added.  
+   ctype = "state"
 
-var out = "";
-var state_name = json_data['summary_info'].state_name;
-var state_code = json_data['summary_info'].state_code; 
-var sum_info = json_data['summary_info'];
-if (typeof(county) === 'undefined') {
- var county_list = {}
- p = json_data['county_stats'] 
- for (var key in p) {
-    if (p.hasOwnProperty(key)) {
-       tc = p[key]['county_stats']
-       ccc = tc[tc.length-1].cases
-       county_list[key] = ccc
-       //county_pop[key]
-    }
- }
+   var out = "";
+   var state_name = json_data['summary_info'].state_name;
+   var state_code = json_data['summary_info'].state_code; 
+   var sum_info = json_data['summary_info'];
+
+   if (typeof(county) === 'undefined') {
+   
+      var county_list = {}
+      p = json_data['county_stats'] 
+      for (var key in p) {
+         if (p.hasOwnProperty(key)) {
+            tc = p[key]['county_stats']
+            ccc = tc[tc.length-1].cases
+            county_list[key] = ccc
+            //county_pop[key]
+         }
+      }
  
- countySelect(county_list, state_code) 
- county = "ALL"
-}
-var state_name = json_data['summary_info'].state_name;
-var mortality = json_data['summary_info'].mortality / 100;
-var cg_med = json_data['summary_info'].cg_med;
-var cg_med_decay = json_data['summary_info'].cg_med_decay;
+      countySelect(county_list, state_code) 
+      county = "ALL"
+   }
+   var state_name = json_data['summary_info'].state_name;
+   var mortality = json_data['summary_info'].mortality / 100;
+   var cg_med = json_data['summary_info'].cg_med;
+   var cg_med_decay = json_data['summary_info'].cg_med_decay;
 
-if (typeof(county) == "undefined" || county == "ALL") {
- var state_pop = json_data['summary_info'].state_population * 1000000;
- var ss = json_data['state_stats'];
- full_state_name = state_name
-} 
-else { 
- state_pop = json_data['county_pop'][county]
- var ss = json_data['county_stats'][county]['county_stats'];
- if (county.toLowerCase().indexOf("city") === -1) {
-    full_state_name = county + " County, " + state_name
- }
- else {
-    full_state_name = county + ", " + state_name
- }
- //state_name = full_state_name
- ctype = "county"
-}
+   if (typeof(county) == "undefined" || county == "ALL") {
+   var state_pop = json_data['summary_info'].state_population * 1000000;
+   var ss = json_data['state_stats'];
+   full_state_name = state_name
+   } 
+   else { 
+   state_pop = json_data['county_pop'][county]
+   var ss = json_data['county_stats'][county]['county_stats'];
+   if (county.toLowerCase().indexOf("city") === -1) {
+      full_state_name = county + " County, " + state_name
+   }
+   else {
+      full_state_name = county + ", " + state_name
+   }
+   //state_name = full_state_name
+   ctype = "county"
+   }
 
-var date_vals = [];
-var zero_day_vals = [];
-var total_cases_vals = [];
-var new_cases_vals = [];
-var new_deaths_vals = [];
-var case_growth_vals = [];
-var death_growth_vals = [];
-var decay_vals = [];
-var test_vals = [];
-var mortality_vals = [];
+   var date_vals = [];
+   var zero_day_vals = [];
+   var total_cases_vals = [];
+   var new_cases_vals = [];
+   var new_deaths_vals = [];
+   var case_growth_vals = [];
+   var death_growth_vals = [];
+   var decay_vals = [];
+   var test_vals = [];
+   var mortality_vals = [];
 
-var zd = 0;
-var last_growth = 0;
+   var zd = 0;
+   var last_growth = 0;
 
-// Prepare all data
-var last_tests = 0
-ss.forEach(function (arrayItem) {
-    if (typeof(arrayItem.date) != "undefined") {
-       date_vals.push(arrayItem.date);
-       this_date = arrayItem.date
-       test_pd = arrayItem.tests - last_tests
-       test_vals.push(test_pd)
-       last_tests = arrayItem.tests
-    }
-    else {
-       // county record here
-       date_vals.push(arrayItem.day.replace(/-/g,""));
-       this_date = arrayItem.day.replace(/-/g,"") 
-    }
-    zero_day_vals.push(zd);
-    total_cases_vals.push(arrayItem.cases);
-    last_cases = arrayItem.cases
-    last_deaths = arrayItem.deaths
-    new_cases_vals.push(arrayItem.new_cases);
-    new_deaths_vals.push(arrayItem.new_deaths);
-    if (typeof(arrayItem.cg_last) != "undefined") {
-       case_growth_vals.push(arrayItem.cg_last);
-       death_growth_vals.push(arrayItem.dg_last);
-       decay = arrayItem.cg_last - last_growth
-       last_growth = arrayItem.cg_last 
-    } else {
-       case_growth_vals.push(arrayItem.case_growth);
-       death_growth_vals.push(arrayItem.death_growth);
-       decay = arrayItem.case_growth - last_growth
-       last_growth = arrayItem.case_growth
-    }
-    mortality_vals.push(arrayItem.mortality);
-    zd = zd + 1
-    last_date = this_date 
-    decay_vals.push(decay);
+   // Prepare all data
+   var last_tests = 0
+   ss.forEach(function (arrayItem) {
+      if (typeof(arrayItem.date) != "undefined") {
+         date_vals.push(arrayItem.date);
+         this_date = arrayItem.date
+         test_pd = arrayItem.tests - last_tests
+         test_vals.push(test_pd)
+         last_tests = arrayItem.tests
+      }
+      else {
+         // county record here
+         date_vals.push(arrayItem.day.replace(/-/g,""));
+         this_date = arrayItem.day.replace(/-/g,"") 
+      }
+      zero_day_vals.push(zd);
+      total_cases_vals.push(arrayItem.cases);
+      last_cases = arrayItem.cases
+      last_deaths = arrayItem.deaths
+      new_cases_vals.push(arrayItem.new_cases);
+      new_deaths_vals.push(arrayItem.new_deaths);
+      if (typeof(arrayItem.cg_last) != "undefined") {
+         case_growth_vals.push(arrayItem.cg_last);
+         death_growth_vals.push(arrayItem.dg_last);
+         decay = arrayItem.cg_last - last_growth
+         last_growth = arrayItem.cg_last 
+      } else {
+         case_growth_vals.push(arrayItem.case_growth);
+         death_growth_vals.push(arrayItem.death_growth);
+         decay = arrayItem.case_growth - last_growth
+         last_growth = arrayItem.case_growth
+      }
+      mortality_vals.push(arrayItem.mortality);
+      zd = zd + 1
+      last_date = this_date 
+      decay_vals.push(decay);
 
-});
+   });
 
-// make some JS dates
-js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)
-// important dates are
-// first case date for area being examined
-// national lock down date 
-// reopen protests dates
-// other important / interesting dates
-// these dates will be marked with a line on the graph
-// so we can see the impact of events on data
+   // make some JS dates
+   js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)
+   // important dates are
+   // first case date for area being examined
+   // national lock down date 
+   // reopen protests dates
+   // other important / interesting dates
+   // these dates will be marked with a line on the graph
+   // so we can see the impact of events on data
 
-nc_org = new_cases_vals.slice();
-nc_org2 = new_cases_vals.slice();
-zdv = zero_day_vals.slice();
+   nc_org = new_cases_vals.slice();
+   nc_org2 = new_cases_vals.slice();
+   zdv = zero_day_vals.slice();
 
-fit_days = 14;
+   fit_days = 14;
 
-// Draw graphs & Gauges for New Cases
-// New Cases
-title = "<b>" + full_state_name  + " New Cases</b><br><small>at " + dateFormat(last_date) + " in days since first case</small>";
-pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60);
-  
+   // Draw graphs & Gauges for New Cases
+   // New Cases
+   title = "<b>" + full_state_name  + " New Cases</b><br>at " + dateFormat(last_date) + " in days since first case";
+   pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60);
+   
 
-zdv2 = zero_day_vals.slice();
-zdv3 = zero_day_vals.slice();
-zdv4 = zero_day_vals.slice();
-zdv5 = zero_day_vals.slice();
-zdv6 = zero_day_vals.slice();
+   zdv2 = zero_day_vals.slice();
+   zdv3 = zero_day_vals.slice();
+   zdv4 = zero_day_vals.slice();
+   zdv5 = zero_day_vals.slice();
+   zdv6 = zero_day_vals.slice();
 
-// Growth
-title = "<b>" + full_state_name  + " - Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
-out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
-  
+   // Growth
+   title = "<b>" + full_state_name  + " - Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
+   out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
+   
 
-// New Deaths
-title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
-pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60);
+   // New Deaths
+   title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
+   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60);
 
-// Death Growth
-title = "<b>" + full_state_name  + " - Death Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
-out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
+   // Death Growth
+   title = "<b>" + full_state_name  + " - Death Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
+   out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
 
-// Growth Decay
-title = "<b>" + full_state_name  + " - Growth Decay</b><br>at " + dateFormat(last_date) + " in days since first case";
-fitsObj = getFits(zdv4, decay_vals)
-out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "growth decay", title, "decay_div", "line")
+   // Growth Decay
+   title = "<b>" + full_state_name  + " - Growth Decay</b><br>at " + dateFormat(last_date) + " in days since first case";
+   fitsObj = getFits(zdv4, decay_vals)
+   out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "growth decay", title, "decay_div", "line")
 
-// Tests
-if (ctype == 'state') {
- title = "<b>" + full_state_name  + " - Tests per day</b>";
- out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60)
-}
+   // Tests
+   if (ctype == 'state') {
+   title = "<b>" + full_state_name  + " - Tests per day</b>";
+   out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60)
+   }
 
-// mortality div
-fitsObj = getFits(zdv5, mortality_vals)
-title = "<b>" + full_state_name  + " - Mortality</b><br>at " + dateFormat(last_date) + " in days since first case"; 
-out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "mortality percentage", title, "mortality_div", "line")
+   // mortality div
+   fitsObj = getFits(zdv5, mortality_vals)
+   title = "<b>" + full_state_name  + " - Mortality</b><br>at " + dateFormat(last_date) + " in days since first case"; 
+   out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "mortality percentage", title, "mortality_div", "line")
 
-var total_cases = new_cases_vals.reduce(function(a, b){
-   return a + b;
-}, 0);
+   var total_cases = new_cases_vals.reduce(function(a, b){
+      return a + b;
+   }, 0);
 
-phantom = parseFloat(document.getElementById("calc_phantom").value )
-herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
-current_zero_day = nc_org2.length
+   phantom = parseFloat(document.getElementById("calc_phantom").value )
+   herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
+   current_zero_day = nc_org2.length
 
-// This is the MAIN summary at the top of the page.
-fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) 
-document.getElementById("calc_mortality").value = mortality.toFixed(3)
-document.getElementById("f_xs").value = zdv6
-document.getElementById("f_ys").value = nc_org2 
-document.getElementById("f_total_cases").value = total_cases
-document.getElementById("f_state_pop").value = state_pop 
-document.getElementById("f_current_zero_day").value = current_zero_day 
-document.getElementById("f_state_name").value = state_name
-document.getElementById("f_county").value = county
+   // This is the MAIN summary at the top of the page.
+   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) 
+   document.getElementById("calc_mortality").value = mortality.toFixed(3)
+   document.getElementById("f_xs").value = zdv6
+   document.getElementById("f_ys").value = nc_org2 
+   document.getElementById("f_total_cases").value = total_cases
+   document.getElementById("f_state_pop").value = state_pop 
+   document.getElementById("f_current_zero_day").value = current_zero_day 
+   document.getElementById("f_state_name").value = state_name
+   document.getElementById("f_county").value = county
 
 
-// See corona-ui-data.js
-sum_info['cases'] = last_cases 
-sum_info['deaths'] = last_deaths
-sum_info['total_infected'] = last_cases * phantom
-sum_info['not_infected'] = state_pop - ((last_cases * phantom)  + last_cases + last_deaths)
-document.getElementById("f_total_infected").value = sum_info['total_infected'] 
-document.getElementById("f_not_infected").value = sum_info['not_infected'] 
-document.getElementById("f_cases").value = last_cases 
-document.getElementById("f_deaths").value = last_deaths
+   // See corona-ui-data.js
+   sum_info['cases'] = last_cases 
+   sum_info['deaths'] = last_deaths
+   sum_info['total_infected'] = last_cases * phantom
+   sum_info['not_infected'] = state_pop - ((last_cases * phantom)  + last_cases + last_deaths)
+   document.getElementById("f_total_infected").value = sum_info['total_infected'] 
+   document.getElementById("f_not_infected").value = sum_info['not_infected'] 
+   document.getElementById("f_cases").value = last_cases 
+   document.getElementById("f_deaths").value = last_deaths
 
-fillSummary(full_state_name,fr,sum_info);
-
+   fillSummary(full_state_name,fr,sum_info);
  
-// plot full forecast
-xlab = "zero day" 
-ylab = "impacted per day" 
-title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
-div_id = "forecast_bar_14" 
-// (fr['14_day'].xs,fr['14_day'].ys,[],[],[],[], xlab,ylab,title,div_id,"bar") 
-yd2 = [] 
-yd3 = [] 
-yd4 = [] 
-exp_yd = [] 
-extra_data = {
- "yd2": fr['14_day'].dys,
- "yd3": fr['14_day'].iys,
- "yd4":  [],
- "exp_yd": []
-}
-extra_labels = {
- "yd": "Confirmed Cases",
- "yd2": "Deaths",
- "yd3": "Infected",
- "yd4":  "",
- "exp_yd": "" 
-}
-//plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar") 
-
-extra_data = {
- "yd2": fr['7_day'].dys,
- "yd3": fr['7_day'].iys,
- "yd4":  [],
- "exp_yd": []
-}
-extra_labels = {
- "yd": "Confirmed Cases",
- "yd2": "Deaths",
- "yd3": "Infected",
- "yd4":  "",
- "exp_yd": ""
-}
-div_id = "forecast_bar_7" 
-title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
-//plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
-
-
-
 
 }
 
@@ -1002,15 +953,13 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
    //last_zd14_val = ys2.slice(-1)[0] 
    //last_zd7_val = ys3.slice(-1)[0] 
    //last_zd3_val = ys4.slice(-1)[0] 
-
-
    out = [last_zd14_day, last_zd7_day, last_exp_day] // , last_zd3_day
- 
    plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
 
    return(out)
 
 }
+
 
 function load_data() {
    var state = $('#state_selector').val();
@@ -1028,29 +977,67 @@ function change_state() {
 
 
 function getJSONData(url,state,county) {
-show_loader();	
-$.ajax({
- type: "get",
- url:  url,
- dataType: "json",
+   show_loader();	
+   $.ajax({
+      type: "get",
+      url:  url,
+      dataType: "json",
 
- success: function (result, status, xhr) {
-    displayData(result,state,county);
-    // Create action on county select
-    $('#county_selector').unbind('change').change(function() {load_data()}); 
-    hide_loader();	
- },
- error: function (xhr, status, error) {
-   alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-   hide_loader();	
- }
-});
+      success: function (result, status, xhr) {
+         
+         displayData(result,state,county);
+         // Create action on county select
+         $('#county_selector').unbind('change').change(function() {load_data()}); 
+
+
+         if(init_select_county!='') {
+            var possibleCounties = [];
+            var possibleCountiesIndex = [];
+
+            // Does init_select_county is in county_selector
+            $('#county_selector option').each(function(i,v){
+               possibleCounties.push(v.value);
+               possibleCounties.push(v.value.replace(/\s/g, ''));
+               possibleCounties.push(v.value.replace("'","").replace(/\s/g, ''));
+               possibleCounties.push(v.value.replace("'",""));
+               possibleCounties.push(v.value.replace(".",""));
+               possibleCounties.push(v.value.replace(".","").replace("'",""));
+               possibleCounties.push(v.value.replace(".","").replace("'","").replace(/\s/g, ''));
+               possibleCountiesIndex.push(i);
+               possibleCountiesIndex.push(i);
+               possibleCountiesIndex.push(i);
+               possibleCountiesIndex.push(i);
+               possibleCountiesIndex.push(i); 
+               possibleCountiesIndex.push(i);
+               possibleCountiesIndex.push(i);
+            })
+
+          
+            var toTest = possibleCounties.indexOf(init_select_county);
+            if(toTest>0) { 
+               // Select State
+               var $opt = $('#county_selector option').get(possibleCountiesIndex[toTest]);
+               $('#county_selector').val($($opt).attr('value')).trigger('change');
+              
+            }
+
+            possibleCounties = null;
+            init_select_county = "";
+         }
+ 
+
+         hide_loader();	
+      },
+      error: function (xhr, status, error) {
+         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+         hide_loader();	
+      }
+   });
 }
 
 
 function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type) {
-   alert("PLOT DATA BARS")
-   var trace1 = {
+    var trace1 = {
       x: xd,
       y: yd,
       name: extra_l.yd,

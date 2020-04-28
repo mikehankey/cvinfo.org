@@ -705,9 +705,17 @@ table tbody tr:last-child td, table tbody tr:last-child th {
       margin:0 .5rem;
    }
 
-   leg ul { 
+   .leg ul { 
       margin-left: 2rem;
   }
+
+  .form-group label span {
+   text-align: center;
+   line-height: 1.6;
+   font-size: .75rem;
+   }
+
+
 
 }
 

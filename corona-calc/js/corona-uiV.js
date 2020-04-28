@@ -1,3 +1,5 @@
+var init_select_county;
+
 function usFormat(n) {
   return String(n).replace(/(.)(?=(\d{3})+$)/g,'$1,');
 } 
@@ -25,6 +27,8 @@ function hide_loader(show_graphs) {
 function countySelect(p, state) {
    var sel = "<select id='county_selector'><option value='ALL'>All Counties</option>"
    var sortable = [];
+   var all_counties = [];
+
    for (var key in p) {
       if (p.hasOwnProperty(key)) {
          sortable.push([key, p[key]]) 
@@ -35,13 +39,17 @@ function countySelect(p, state) {
    }); 
    for (i = 0; i <= sorted.length-1; i++) { 
       // Don't display "Unknown anymore"
-      if($.trim(sorted[i][0])!="Unknow"){
+      if($.trim(sorted[i][0])!="Unknown"){
          sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + ")</option>\n";
+         all_counties.push(sorted[i][0]);
       }
    }
 
    sel += "<input type=hidden id='state' value='" + state + "'></select>"
-   document.getElementById("county_select").innerHTML= sel
+   $('#county_select').html(sel);
+
+
+
 }
 
 function createSvg() {
@@ -57,7 +65,7 @@ function createSvg() {
 } 
 
 $(function() {
-   var cururl, params, selState, selCounty, possibleStates=[];
+   var cururl, params, selState, possibleStates=[];
 
    // Once the page is loaded we enable the state select
    $('#state_selector').removeAttr('disabled');
@@ -81,7 +89,7 @@ $(function() {
    if(cururl.indexOf('?')>0) {
       selState = cururl.substring(cururl.indexOf('?')+1, cururl.length);
       if(selState.indexOf('+')>0) {
-         selCounty = selState.substring(selState.indexOf('+')+1, selState.length);
+         init_select_county = selState.substring(selState.indexOf('+')+1, selState.length);
          selState = selState.substring(0,selState.indexOf('+'));
       } 
 
@@ -94,6 +102,9 @@ $(function() {
          // Select State
          $('#state_selector').val(selState).trigger('change');
       }
+
+      possibleStates = null;
+       
  
    } 
 
