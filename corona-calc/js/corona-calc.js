@@ -220,51 +220,46 @@ nc_org = new_cases_vals.slice();
 nc_org2 = new_cases_vals.slice();
 zdv = zero_day_vals.slice();
 
-// Draw graphs & Gauges for New Cases
-title = full_state_name.toUpperCase() + " NEW CASES " + dateFormat(last_date);
 fit_days = 14;
-pred = makeGraph(zero_day_vals, nc_org,title, "days since first case", "New Cases", "new_cases_div", fit_days, 60);
-out = forecast_html(pred, "new case ", state_name);
-out = "";
-document.getElementById("new_cases_forecast").innerHTML= out;
 
+// Draw graphs & Gauges for New Cases
+// Growth
+title = "<b>" + full_state_name  + " New Cases</b><br>at " + dateFormat(last_date) + " in days since first case";
+pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60);
+  
 
 zdv2 = zero_day_vals.slice();
 zdv3 = zero_day_vals.slice();
 zdv4 = zero_day_vals.slice();
 zdv5 = zero_day_vals.slice();
 zdv6 = zero_day_vals.slice();
-title = full_state_name.toUpperCase() + " GROWTH " + dateFormat(last_date);
 
-pred = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
-out = forecast_html(pred, "growth", state_name, )
-out = ""
-document.getElementById("growth_forecast").innerHTML= out
+// New Deaths
+title = "<b>" + full_state_name  + " New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
+pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60);
 
-title = full_state_name.toUpperCase() + " NEW DEATHS " + dateFormat(last_date);
-out2 = makeGraph(zdv2, new_deaths_vals,title, "days since first case", "New Deaths", "new_deaths_div", fit_days, 60)
-//document.getElementById("results_panel").innerHTML= out
+ 
 
 title = full_state_name.toUpperCase() + " DEATH GROWTH " + dateFormat(last_date);
-out2 = makeGraph(zdv3, death_growth_vals,title, "days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
+out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
 
 title = full_state_name.toUpperCase() + " GROWTH DECAY " + dateFormat(last_date);
 
 // case decay
 fitsObj = getFits(zdv4, decay_vals)
-out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "growth decay", title, "decay_div", "line")
+out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "growth decay", title, "decay_div", "line")
 
 // tests
 if (ctype == 'state') {
  title = full_state_name.toUpperCase() + " TESTS PER DAY" + dateFormat(last_date);
- out2 = makeGraph(zdv2, test_vals ,title, "days since first case", "tests per day", "test_div", fit_days, 60)
+ out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "tests per day", "test_div", fit_days, 60)
 }
 
 // mortality div
 fitsObj = getFits(zdv5, mortality_vals)
 title = full_state_name.toUpperCase() + " MORTALITY " + dateFormat(last_date);
 
-out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "days since first case", "mortality percentage", title, "mortality_div", "line")
+out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "mortality percentage", title, "mortality_div", "line")
 
 var total_cases = new_cases_vals.reduce(function(a, b){
    return a + b;
@@ -877,147 +872,153 @@ return(forecast_result)
 }
 
 function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
-var local_xs = xs_in.slice(0)
-var local_ys = ys_in.slice(0)
-var out = ""
-// Make fit lines
-// 14 days
-var local_ys2 = []
-// 7 days
-var local_ys3 = []
-// 3 days
-var local_ys4 = []
+   var local_xs = xs_in.slice(0)
+   var local_ys = ys_in.slice(0)
+   var out = ""
+   // Make fit lines
+   // 14 days
+   var local_ys2 = []
+   // 7 days
+   var local_ys3 = []
+   // 3 days
+   var local_ys4 = []
 
-// curve fit
+   // curve fit
 
-var rdata = []
-for (var i  = 0; i <= local_xs.length -1; i++) {
- var point = [local_xs[i], local_ys[i]]
- rdata.push(point)
- var last_x = local_xs[i]
-}
+   var rdata = []
+   for (var i  = 0; i <= local_xs.length -1; i++) {
+      var point = [local_xs[i], local_ys[i]]
+      rdata.push(point)
+      var last_x = local_xs[i]
+   }
 
-var linReg = regression('polynomial', rdata);
-var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
-var tx = 0
-for (var i = 0; i<= 60; i++) {
- tx = last_x + i
- point = [tx, local_ys[i]]
- rdata.push(point)
+   var linReg = regression('polynomial', rdata);
+   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
+   var tx = 0
+   for (var i = 0; i<= 60; i++) {
+      tx = last_x + i
+      point = [tx, local_ys[i]]
+      rdata.push(point)
+   }
 
-}
+   var exp = extraPoints(rdata,linReg)
 
-var exp = extraPoints(rdata,linReg)
+   var local_exp_ys = []
+   var ey = 0
+   for (var i  = 0; i <= exp.length -1; i++) {
+   ey = exp[i].y
+   local_exp_ys.push(ey)
+   } 
 
-var local_exp_ys = []
-var ey = 0
-for (var i  = 0; i <= exp.length -1; i++) {
- ey = exp[i].y
- local_exp_ys.push(ey)
-} 
+   // 14 DAY FIT
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - fit_days, 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - fit_days, 1))
+   var lx_14 = linearRegression(lr_xs,lr_ys)
 
-// 14 DAY FIT
-var lr_xs = local_xs.slice(Math.max(local_xs.length - fit_days, 1))
-var lr_ys = local_ys.slice(Math.max(local_ys.length - fit_days, 1))
-var lx_14 = linearRegression(lr_xs,lr_ys)
+   // 7 DAY FIT
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - 7 , 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
+   var lx_7 = linearRegression(lr_xs,lr_ys)
 
-// 7 DAY FIT
-var lr_xs = local_xs.slice(Math.max(local_xs.length - 7 , 1))
-var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
-var lx_7 = linearRegression(lr_xs,lr_ys)
+   /*
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - 3 , 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - 3, 1))
+   var lx_3 = linearRegression(lr_xs,lr_ys)
+   */
 
-var lr_xs = local_xs.slice(Math.max(local_xs.length - 3 , 1))
-var lr_ys = local_ys.slice(Math.max(local_ys.length - 3, 1))
-var lx_3 = linearRegression(lr_xs,lr_ys)
+   for (var i  = 0; i <= local_xs.length -1; i++) {
+   var X = local_xs[i]
+   var Y = local_ys[i]
+   if (local_xs.length - 14 < i + 1) {
+      var PY14 = lx_14['slope'] * X + lx_14['intercept'] 
+   }
+   else {
+      var PY14 = 0
+   }
+   if (local_xs.length - 7 < i + 1) {
+      var PY7 = lx_7['slope'] * X + lx_7['intercept'] 
+   }
+   else {
+      var PY7 = 0
+   }
+   /*
+   if (local_xs.length - 3 < i + 1) {
+      var PY3 = lx_3['slope'] * X + lx_3['intercept'] 
+   }
+   else {
+      var PY3 = 0
+   }
+   */
+   if (PY14 < 0) {
+      var PY14 = 0
+   }
+   if (PY7 < 0) {
+      var PY7 = 0
+   }
+   /*
+   if (PY3 < 0) {
+      var PY3 = 0
+   }
+   */
+   local_ys2.push(PY14)
+   local_ys3.push(PY7)
+   //local_ys4.push(PY3)
+   //out += PY.toString() + "<BR>";
+   }
+
+   last_x = X
+   last_zd14_day = 9999
+   last_zd7_day = 9999
+   last_zd3_day = 9999
+   last_exp_day = 9999
+
+   exp_pos = 0
+   for (var i = 0; i <= proj_days; i++) {
+   TX = last_x + i   
+   PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
+   PY7 = lx_7['slope'] * TX + lx_7['intercept'] 
+   //PY3 = lx_3['slope'] * TX + lx_3['intercept'] 
+   local_xs.push(TX)
+   local_ys.push(0)
+   local_ys2.push(PY14)
+   local_ys3.push(PY7)
+   //local_ys4.push(PY3)
+   if (last_zd14_day == 9999 && PY14 <= 0) {
+      last_zd14_day = i
+   }
+   if (last_zd7_day == 9999 && PY7 <= 0) {
+      last_zd7_day = i
+   }
+   /*
+   if (last_zd3_day == 9999 && PY3 <= 0) {
+      last_zd3_day = i
+   }
+   */
+   if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+      last_exp_day = i
+   }
+   if (local_exp_ys[i+last_x] > 0) {
+      exp_pos = 1
+   }
+   
+   } 
+   if (last_exp_day == 9999) {
+   if (local_exp_ys.slice(-1)[0] <= 0) {
+      last_exp_day = 0
+   }
+   
+   }
+
+   //last_zd14_val = ys2.slice(-1)[0] 
+   //last_zd7_val = ys3.slice(-1)[0] 
+   //last_zd3_val = ys4.slice(-1)[0] 
 
 
-for (var i  = 0; i <= local_xs.length -1; i++) {
- var X = local_xs[i]
- var Y = local_ys[i]
- if (local_xs.length - 14 < i + 1) {
-    var PY14 = lx_14['slope'] * X + lx_14['intercept'] 
- }
- else {
-    var PY14 = 0
- }
- if (local_xs.length - 7 < i + 1) {
-    var PY7 = lx_7['slope'] * X + lx_7['intercept'] 
- }
- else {
-    var PY7 = 0
- }
- if (local_xs.length - 3 < i + 1) {
-    var PY3 = lx_3['slope'] * X + lx_3['intercept'] 
- }
- else {
-    var PY3 = 0
- }
- if (PY14 < 0) {
-    var PY14 = 0
- }
- if (PY7 < 0) {
-    var PY7 = 0
- }
- if (PY3 < 0) {
-    var PY3 = 0
- }
- local_ys2.push(PY14)
- local_ys3.push(PY7)
- local_ys4.push(PY3)
- //out += PY.toString() + "<BR>";
-}
-
-last_x = X
-last_zd14_day = 9999
-last_zd7_day = 9999
-last_zd3_day = 9999
-last_exp_day = 9999
-
-exp_pos = 0
-for (var i = 0; i <= proj_days; i++) {
- TX = last_x + i   
- PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
- PY7 = lx_7['slope'] * TX + lx_7['intercept'] 
- PY3 = lx_3['slope'] * TX + lx_3['intercept'] 
- local_xs.push(TX)
- local_ys.push(0)
- local_ys2.push(PY14)
- local_ys3.push(PY7)
- local_ys4.push(PY3)
- if (last_zd14_day == 9999 && PY14 <= 0) {
-    last_zd14_day = i
- }
- if (last_zd7_day == 9999 && PY7 <= 0) {
-    last_zd7_day = i
- }
- if (last_zd3_day == 9999 && PY3 <= 0) {
-    last_zd3_day = i
- }
- if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
-    last_exp_day = i
- }
- if (local_exp_ys[i+last_x] > 0) {
-    exp_pos = 1
- }
+   out = [last_zd14_day, last_zd7_day, last_exp_day] // , last_zd3_day
  
-} 
-if (last_exp_day == 9999) {
- if (local_exp_ys.slice(-1)[0] <= 0) {
-    last_exp_day = 0
- }
- 
-}
+   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
 
-//last_zd14_val = ys2.slice(-1)[0] 
-//last_zd7_val = ys3.slice(-1)[0] 
-//last_zd3_val = ys4.slice(-1)[0] 
-
-
-out = [last_zd14_day, last_zd7_day, last_zd3_day, last_exp_day]
-
-plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
-
-return(out)
+   return(out)
 
 }
 
@@ -1058,269 +1059,83 @@ $.ajax({
 }
 
 
-//function plot_data_bars(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type) {
-var trace1 = {
- x: xd,
- y: yd,
- name: extra_l.yd,
- type: type
-}
-var trace2 = {
- x: xd,
- y: extra_data.yd2,
- name: yl,
- name: extra_l.yd2,
- type: type
-}
-var trace3 = {
- x: xd,
- y: extra_data.yd3,
- name: yl,
- name: extra_l.yd3,
- type: type
-}
-var trace4 = {
- x: xd,
- y: extra_data.yd4,
- name: yl,
- name: "3-Day Trend",
- type: type
-}
-var trace5 = {
- x: xd,
- y: extra_data.exp_yd,
- name: yl,
- name: "Curve",
- type: type
-}
-var data = [trace1 , trace2, trace3,trace4,trace5]
-var layout = {
- barmode: 'stack',
- title : t,
- yaxis : {
-    title: {
-       text: yl
-    },
-    autorange: true,
-    autotick: true,
-    ticks: 'outside',
-    tick0: 0,
-    dtick: 0.25,
-    ticklen: 8,
-    tickwidth: 4,
-    tickcolor: '#000'
- },
- xaxis : {
-    title: {
-       text: xl
-    },
-    autotick: true,
-    ticks: 'outside',
-    tick0: 0,
-    dtick: 0.25,
-    ticklen: 8,
-    tickwidth: 4,
-    tickcolor: '#000'
+   alert("PLOT DATA BARS")
+   var trace1 = {
+      x: xd,
+      y: yd,
+      name: extra_l.yd,
+      type: type
+   };
 
- }
-}
+   var trace2 = {
+      x: xd,
+      y: extra_data.yd2,
+      name: yl,
+      name: extra_l.yd2,
+      type: type
+   };
 
-Plotly.newPlot(dv, data, layout, {responsive: true});
+   var trace3 = {
+      x: xd,
+      y: extra_data.yd3,
+      name: yl,
+      name: extra_l.yd3,
+      type: type
+   };
 
+   var trace4 = {
+      x: xd,
+      y: extra_data.yd4,
+      name: yl,
+      name: "3-Day Trend",
+      type: type
+   };
 
-}
+   var trace5 = {
+      x: xd,
+      y: extra_data.exp_yd,
+      name: yl,
+      name: "Curve",
+      type: type
+   };
 
-function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
-ymax = Math.max.apply(Math, yd) * 1.2
-var trace1 = {
- x: xd,
- y: yd,
- name: yl,
- type: type
-}
-var trace2 = {
- x: xd,
- y: yd2,
- name: yl,
- name: "14-Day Trend",
- type: type  
-}
-var trace3 = {
- x: xd,
- y: yd3,
- name: yl,
- name: "7-Day Trend",
- type: type  
-}
-var trace4 = {
- x: xd,
- y: yd4,
- name: yl,
- name: "3-Day Trend",
- type: type  
-}
-var trace5 = {
- x: xd,
- y: exp_yd,
- name: yl,
- name: "Curve",
- type: type  
-}
-var data = [trace1 , trace2, trace3,trace4,trace5]
-var layout = {
- title : t,
+   var data = [trace1 , trace2, trace3,trace4,trace5];
 
- range: [0,ymax],
- autorange: false,
- showlegend: true,
- legend: {
-    orientation: "h",
-    x: .15,
-    y: 1,
- },
- yaxis : {
-    title: {
-       text: yl
-    },
-    autorange: true,
-    autotick: true,
-    ticks: 'outside',
-    tick0: 0,
-    dtick: 0.25,
-    ticklen: 8,
-    tickwidth: 4,
-    tickcolor: '#000',
- },
- xaxis : {
-    title: {
-       text: xl
-    },
-    autotick: true,
-    ticks: 'outside',
-    tick0: 0,
-    dtick: 0.25,
-    ticklen: 8,
-    tickwidth: 4,
-    tickcolor: '#000'
+   var layout = {
+      barmode: 'stack',
+      title : t,
+      yaxis : {
+         title: {
+            text: yl
+         },
+         autorange: true,
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000'
+      },
+      xaxis : {
+         title: {
+            text: xl
+         },
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000'
+      }
+   }
 
- }
-}
+   Plotly.newPlot(dv, data, layout, {responsive: true});
 
-Plotly.newPlot(dv, data, layout, {responsive: true});
 
 }
 
-function convert_zero_day_to_date(xs,dates) {
-jsdates = []
-for (i = 0; i <= xs.length -1 ; i++) {
- yy = dates[i].substring(0,4)
- mm = dates[i].substring(4,6)
- dd = dates[i].substring(6,8)
- dt = yy + "-" + mm + "-" + dd
- var jsdate = new Date(dt) 
- jsdates.push(jsdate)
-} 
 
-return(jsdates)
-}
-
-function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
-if (dv == 'new_cases_div') {
- ymax = Math.max.apply(Math, yd) * 2
-} else {
- ymax = Math.max.apply(Math, yd) * 1.5
-}
-for (var i = 0; i <= xd.length-1; i++) {
- if (yd[i] > 0) {
-    cur_day = xd[i]
- }
-}
-var trace1 = {
- x: xd,
- y: yd,
- name: yl,
- type: type
-}
-var trace2 = {
- x: xd,
- y: yd2,
- name: "14-Day Trend",
- type: "line" 
-}
-var trace3 = {
- x: xd,
- y: yd3,
- name: "7-Day Trend",
- type: "line" 
-}
-var trace4 = {
- x: xd,
- y: yd4,
- name: "3-Day Trend",
- type: "line" 
-}
-var trace5 = {
- x: xd,
- y: exp_y,
- name: "Curve",
- type: "line" 
-}
-var data = [trace1, trace2, trace3,trace4,trace5]
-var config = {responsive: true}
-
-
-var layout = {
-
- showlegend: true,
- legend: {
-    orientation: "h",
-    x: .15,
-    y: 1.1,
- },
-
- shapes : [{ 
-    type: 'line',
-    x0: cur_day,
-    y0: 0,
-    x1: cur_day,
-    yref: 'paper',
-    y1: 1,
-    line: {
-       color: 'grey',
-       width: 1.5,
-       dash: 'dot'
-    }
- }],
- title : t,
- yaxis : {
-    title: {
-       text: yl
-    },
-    range: [0,ymax],
-    autorange: false,
-    autotick: true,
-    ticks: 'outside',
-    tick0: 0,
-    dtick: 0.25,
-    ticklen: 8,
-    tickwidth: 4,
-    tickcolor: '#000'
- }, 
- xaxis : {
-    title: {
-       text: xl
-    },
-    autotick: true,
-    ticks: 'outside',
-    tick0: 0,
-    dtick: 0.25,
-    ticklen: 8,
-    tickwidth: 4,
-    tickcolor: '#000'
-
- } 
-}
-Plotly.newPlot(dv, data, layout, {responsive: true});
-}
 

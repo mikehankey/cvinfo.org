@@ -74,7 +74,7 @@ function plot_pie(xd,lb,title,dv) {
    var layout = { 
       margin: {"t": 0, "b": 20, "l": 0, "r": 0},
       showlegend: false
-   }
+   };
    Plotly.newPlot(dv, data,layout,{responsive: true})
 
    // Create Legend
@@ -231,3 +231,194 @@ function fillSummary(state_name,fr,sum_info) {
       start_gauges($gaugesCont);
    },850);
 }
+
+
+// Create Line Graphs (?)
+function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
+   var ymax = Math.max.apply(Math, yd) * 1.2;
+
+   var trace1 = {
+      x: xd,
+      y: yd,
+      name: yl,
+      type: type
+   };
+
+   var trace2 = {
+      x: xd,
+      y: yd2,
+      name: yl,
+      name: "14-Day Trend",
+      type: type  
+   };
+
+   var trace3 = {
+      x: xd,
+      y: yd3,
+      name: yl,
+      name: "7-Day Trend",
+      type: type  
+   };
+
+   /*
+   var trace4 = {
+      x: xd,
+      y: yd4,
+      name: yl,
+      name: "3-Day Trend",
+      type: type  
+   };
+   */
+
+   var trace5 = {
+      x: xd,
+      y: exp_yd,
+      name: yl,
+      name: "Curve",
+      type: type  
+   };
+
+   var data = [trace1,trace2,trace3,trace5]; // , trace4
+   var layout = {
+      title :  t,
+      range: [0,ymax],
+      autorange: false,
+      showlegend: true,
+      legend: {
+         orientation: "h",
+         x: .15,
+         y: 1,
+      },
+      yaxis : {
+         title: {
+            text: yl
+         },
+         autorange: true,
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 4,
+         tickcolor: '#000',
+      },
+      xaxis : {
+            title: {
+               text: xl
+            },
+            autotick: true,
+            ticks: 'outside',
+            tick0: 0,
+            dtick: 0.25,
+            ticklen: 8,
+            tickwidth: 4,
+            tickcolor: '#000'
+         }
+   }
+
+   Plotly.newPlot(dv, data, layout, {responsive: true});
+
+}
+
+
+
+// Create real graphs
+function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
+    var ymax;
+   if (dv == 'new_cases_div') {
+      ymax = Math.max.apply(Math, yd) * 2
+   } else {
+      ymax = Math.max.apply(Math, yd) * 1.5
+   }
+
+   for (var i = 0; i <= xd.length-1; i++) {
+      if (yd[i] > 0) {
+         cur_day = xd[i]
+      }
+   }
+
+   var trace1 = {
+      x: xd,
+      y: yd,
+      name: yl,
+      type: type
+   };
+
+   var trace2 = {
+      x: xd,
+      y: yd2,
+      name: "14-Day Trend",
+      type: "line" 
+   };
+
+   var trace3 = {
+      x: xd,
+      y: yd3,
+      name: "7-Day Trend",
+      type: "line" 
+   };
+   
+   /*
+   var trace4 = {
+      x: xd,
+      y: yd4,
+      name: "3-Day Trend",
+      type: "line" 
+   };
+   */
+
+   var trace5 = {
+      x: xd,
+      y: exp_y,
+      name: "Curve",
+      type: "line" 
+   };
+
+   var data = [trace1, trace2, trace3,trace5]; //
+   var layout = {
+     
+      shapes : [{ 
+         type: 'line',
+         x0: cur_day,
+         y0: 0,
+         x1: cur_day,
+         yref: 'paper',
+         y1: 1,
+         line: {
+            color: 'grey',
+            width: 1.5,
+            dash: 'dot'
+         }
+      }],
+      yaxis : {
+         title: {
+            text: yl
+         },
+         range: [0,ymax],
+         autorange: false,
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 1,
+         tickcolor: '#000'
+      }, 
+      xaxis : { 
+         autotick: true,
+         ticks: 'outside',
+         tick0: 0,
+         dtick: 0.25,
+         ticklen: 8,
+         tickwidth: 1,
+         tickcolor: '#000'
+      },
+      title :  t,
+      margin: {"t": 80, "b": 80, "l": 80, "r": 80},
+      showlegend: true,
+      legend: {
+         orientation: "h" 
+      },
+   };
+   Plotly.newPlot(dv, data, layout, {responsive: true});
+} 
