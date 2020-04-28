@@ -412,7 +412,7 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
          tickcolor: '#000'
       },
       title :  t,
-      margin: {"t": 80, "b": 80, "l": 80, "r": 80},
+      margin: {"t": 80, "b": 80, "l": 80, "r": 50},
       showlegend: true,
       legend: {
          orientation: "h" 

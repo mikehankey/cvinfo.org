@@ -126,6 +126,8 @@ function displayData(json_data ,state,county) {
       countySelect(county_list, state_code) 
       county = "ALL"
    }
+ 
+
    var state_name = json_data['summary_info'].state_name;
    var mortality = json_data['summary_info'].mortality / 100;
    var cg_med = json_data['summary_info'].cg_med;
@@ -140,10 +142,10 @@ function displayData(json_data ,state,county) {
    state_pop = json_data['county_pop'][county]
    var ss = json_data['county_stats'][county]['county_stats'];
    if (county.toLowerCase().indexOf("city") === -1) {
-      full_state_name = county + " County, " + state_name
+      full_state_name = county + " County, " + state_code
    }
    else {
-      full_state_name = county + ", " + state_name
+      full_state_name = county + ", " + state_code
    }
    //state_name = full_state_name
    ctype = "county"
@@ -1108,7 +1110,7 @@ function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type) {
       }
    }
 
-   Plotly.newPlot(dv, data, layout, {responsive: true});
+   Plotly.newPlot(dv, data, layout, {responsive: true, displayModeBar: false});
 
 
 }
