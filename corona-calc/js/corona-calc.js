@@ -129,7 +129,15 @@ function displayData(json_data ,state,county) {
  
 
    var state_name = json_data['summary_info'].state_name;
-   var mortality = json_data['summary_info'].mortality / 100;
+   
+   // Use the value in the FORM instead
+   //var mortality = json_data['summary_info'].mortality / 100;
+
+   var mortality = parseFloat($('#calc_mortality').val()/100); //json_data['summary_info'].mortality / 100;
+   if(mortality==0) {
+      mortality =json_data['summary_info'].mortality / 100;
+   }
+
    var cg_med = json_data['summary_info'].cg_med;
    var cg_med_decay = json_data['summary_info'].cg_med_decay;
 
@@ -266,12 +274,12 @@ function displayData(json_data ,state,county) {
    }, 0);
 
    phantom = parseFloat(document.getElementById("calc_phantom").value )
-   herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
+   herd_thresh = parseFloat(document.getElementById("herd_thresh").value/100 )
    current_zero_day = nc_org2.length
 
    // This is the MAIN summary at the top of the page.
    fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) 
-   document.getElementById("calc_mortality").value = mortality.toFixed(3)
+   document.getElementById("calc_mortality").value = (mortality*100).toFixed(2)
    document.getElementById("f_xs").value = zdv6
    document.getElementById("f_ys").value = nc_org2 
    document.getElementById("f_total_cases").value = total_cases
@@ -280,8 +288,10 @@ function displayData(json_data ,state,county) {
    document.getElementById("f_state_name").value = state_name
    document.getElementById("f_county").value = county;
 
-   $('#f_mortality').val(json_data['summary_info'].mortality );
+   $('#f_mortality').val(mortality); //json_data['summary_info'].mortality );
 
+   //console.log("MORTALITY ", mortality);
+   //console.log("JSON MORT ", json_data['summary_info'].mortality);
 
    // See corona-ui-data.js
    sum_info['cases'] = last_cases 
@@ -485,10 +495,10 @@ function recalculate() {
    f_xs.push(parseFloat(f_xs_ar[i]))
    f_ys.push(parseFloat(f_ys_ar[i]))
    }
-   herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
+   herd_thresh = parseFloat(document.getElementById("herd_thresh").value/100 )
 
    f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
-   f_mortality = parseFloat(document.getElementById("calc_mortality").value)
+   f_mortality = parseFloat(document.getElementById("calc_mortality").value/100)
    f_phantom = parseFloat(document.getElementById("calc_phantom").value )
    f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
    f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
