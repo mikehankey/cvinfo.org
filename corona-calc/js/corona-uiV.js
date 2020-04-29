@@ -87,7 +87,7 @@ $(function() {
 
    // Creation action on recalculate button
    $('#recalculate').click(function() { 
-      $(this).attr('data-htmlx',$(this).html()).html('Recomputing...');
+      $(this).attr('data-htmlx',$(this).html()).html('Computing...');
       $('body').addClass('wait');
       load_data(false); 
    
