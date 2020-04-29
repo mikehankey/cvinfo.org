@@ -99,21 +99,21 @@ function fillPredictedOutcome(fr,sum_info) {
    }  
 
    tbody += '<tr><th>Deaths</th>\
-                <td>' + usFormat(parseInt(sum_info.deaths)) + ' (' +   (parseInt(sum_info.deaths)*100/total).toFixed(2) + '%)</td>\
-                <td>' + usFormat(parseInt(fr['14_day'].total_dead)) + ' (' +   (parseInt(fr['14_day'].total_dead)*100/total).toFixed(2) + '%)</td>\
-                <td >' + usFormat(parseInt(fr['7_day'].total_dead)) + ' (' +   (parseInt(fr['7_day'].total_dead)*100/total).toFixed(2) + '%)</td></tr>';
+                <td>' + usFormat(parseInt(sum_info.deaths)) + '</td><td>' +   (parseInt(sum_info.deaths)*100/total).toFixed(2) + '%</td>\
+                <td>' + usFormat(parseInt(fr['14_day'].total_dead)) + '</td><td>' +    (parseInt(fr['14_day'].total_dead)*100/total).toFixed(2) + '%</td>\
+                <td >' + usFormat(parseInt(fr['7_day'].total_dead)) + '</td><td>' +   (parseInt(fr['7_day'].total_dead)*100/total).toFixed(2) + '%</td></tr>';
    tbody += '<tr><th>Confirmed Cases</th>\
-                <td>' + usFormat(parseInt(sum_info.cases))  + ' (' +   (parseInt(sum_info.cases)*100/total).toFixed(2) + '%)</td>\
-                <td>' + usFormat(parseInt(fr['14_day'].total_cases)) + ' (' +   (parseInt(fr['14_day'].total_cases)*100/total).toFixed(2) + '%)</td>\
-                <td>' + usFormat(parseInt(fr['7_day'].total_cases)) + ' (' +   (parseInt(fr['7_day'].total_cases)*100/total).toFixed(2) + '%)</td></tr>';  
+                <td>' + usFormat(parseInt(sum_info.cases))  + '</td><td>' +    (parseInt(sum_info.cases)*100/total).toFixed(2) + '%</td>\
+                <td>' + usFormat(parseInt(fr['14_day'].total_cases)) + '</td><td>' +    (parseInt(fr['14_day'].total_cases)*100/total).toFixed(2) + '%</td>\
+                <td>' + usFormat(parseInt(fr['7_day'].total_cases)) + '</td><td>' +   (parseInt(fr['7_day'].total_cases)*100/total).toFixed(2) + '%</td></tr>';  
    tbody += '<tr><th>Non-Tracked Infected</th>\
-               <td>' + usFormat(parseInt(sum_info.total_infected))  + ' (' +   (parseInt(sum_info.total_infected)*100/total).toFixed(2) + '%)</td>\
-               <td>' + usFormat(parseInt(fr['14_day'].total_infected)) + ' (' +   (parseInt(fr['14_day'].total_infected)*100/total).toFixed(2) + '%)</td>\
-               <td>' + usFormat(parseInt(fr['7_day'].total_infected)) + ' (' +   (parseInt(fr['7_day'].total_infected)*100/total).toFixed(2) + '%)</td></tr>';  
+               <td>' + usFormat(parseInt(sum_info.total_infected))  + '</td><td>' +    (parseInt(sum_info.total_infected)*100/total).toFixed(2) + '%</td>\
+               <td>' + usFormat(parseInt(fr['14_day'].total_infected)) + '</td><td>' +    (parseInt(fr['14_day'].total_infected)*100/total).toFixed(2) + '%</td>\
+               <td>' + usFormat(parseInt(fr['7_day'].total_infected)) + '</td><td>' +    (parseInt(fr['7_day'].total_infected)*100/total).toFixed(2) + '%</td></tr>';  
    tbody += '<tr><th>Not Infected</th>\
-               <td>' + usFormat(parseInt(sum_info.not_infected))  + ' (' +   (parseInt(sum_info.not_infected)*100/total).toFixed(2) + '%)</td>\
-               <td>' + usFormat(parseInt(fr['14_day'].total_not_infected)) + ' (' +   (parseInt(fr['14_day'].total_not_infected)*100/total).toFixed(2) + '%)</td>\
-               <td>' + usFormat(parseInt(fr['7_day'].total_not_infected)) + ' (' +   (parseInt(fr['7_day'].total_not_infected)*100/total).toFixed(2) + '%)</td></tr>';  
+               <td>' + usFormat(parseInt(sum_info.not_infected)) + '</td><td>' +    (parseInt(sum_info.not_infected)*100/total).toFixed(2) + '%</td>\
+               <td>' + usFormat(parseInt(fr['14_day'].total_not_infected)) + '</td><td>' +   (parseInt(fr['14_day'].total_not_infected)*100/total).toFixed(2) + '%</td>\
+               <td>' + usFormat(parseInt(fr['7_day'].total_not_infected)) + '</td><td>' +   (parseInt(fr['7_day'].total_not_infected)*100/total).toFixed(2) + '%</td></tr>';  
                
  
    $('#new_trends tbody').html(tbody);
