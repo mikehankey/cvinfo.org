@@ -115,13 +115,12 @@ function fillPredictedOutcome(fr,sum_info) {
                <td>' + usFormat(parseInt(fr['14_day'].total_not_infected)) + ' (' +   (parseInt(fr['14_day'].total_not_infected)*100/total).toFixed(2) + '%)</td>\
                <td>' + usFormat(parseInt(fr['7_day'].total_not_infected)) + ' (' +   (parseInt(fr['7_day'].total_not_infected)*100/total).toFixed(2) + '%)</td></tr>';  
                
-
  
-      
    $('#new_trends tbody').html(tbody);
 }
 
 function fillSummary(state_name,fr,sum_info) {
+   
    var $gaugesCont = $('#forecast'); 
    var $forteen_days = $gaugesCont.find('.14days');
    var $seven_days = $gaugesCont.find('.7days');

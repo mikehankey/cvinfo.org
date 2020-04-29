@@ -81,7 +81,12 @@ $(function() {
    $('#state_selector').change(function() {change_state();});
 
    // Creation action on recalculate button
-   $('#recalculate').click(function() {recalculate(); }) 
+   $('#recalculate').click(function() { 
+      $(this).attr('data-htmlx',$(this).html()).html('Recomputing...');
+      $('body').addClass('wait');
+      load_data(false); 
+   
+   }) 
 
    // Creation action on reset button
    $('#reset').click(function() {reset(); }) 

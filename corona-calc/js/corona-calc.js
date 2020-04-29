@@ -474,75 +474,73 @@ return extrapolatedPts;
 
 
 function recalculate() {
-f_xs_str = document.getElementById("f_xs").value 
-f_ys_str = document.getElementById("f_ys").value 
-f_xs_ar = f_xs_str.split(",") 
-f_ys_ar = f_ys_str.split(",") 
-f_xs = []
-f_ys = []
-for (i =0; i< f_xs_ar.length; i++) {
- f_xs.push(parseFloat(f_xs_ar[i]))
- f_ys.push(parseFloat(f_ys_ar[i]))
-}
-herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
 
-f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
-f_mortality = parseFloat(document.getElementById("calc_mortality").value)
-f_phantom = parseFloat(document.getElementById("calc_phantom").value )
-f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
-f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
-state_name = document.getElementById("f_state_name").value
-county = document.getElementById("f_county").value
+   f_xs_str = document.getElementById("f_xs").value 
+   f_ys_str = document.getElementById("f_ys").value 
+   f_xs_ar = f_xs_str.split(",") 
+   f_ys_ar = f_ys_str.split(",") 
+   f_xs = []
+   f_ys = []
+   for (i =0; i< f_xs_ar.length; i++) {
+   f_xs.push(parseFloat(f_xs_ar[i]))
+   f_ys.push(parseFloat(f_ys_ar[i]))
+   }
+   herd_thresh = parseFloat(document.getElementById("herd_thresh").value )
 
-sum_info = {} 
-sum_info['cases'] = document.getElementById("f_cases").value
-sum_info['deaths'] = document.getElementById("f_deaths").value
-sum_info['total_infected'] = document.getElementById("f_total_infected").value
-sum_info['not_infected'] = document.getElementById("f_not_infected").value
+   f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
+   f_mortality = parseFloat(document.getElementById("calc_mortality").value)
+   f_phantom = parseFloat(document.getElementById("calc_phantom").value )
+   f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
+   f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
+   state_name = document.getElementById("f_state_name").value
+   county = document.getElementById("f_county").value
 
-// This is the MAIN summary at the top of the page.
+   sum_info = {} 
+   sum_info['cases'] = document.getElementById("f_cases").value
+   sum_info['deaths'] = document.getElementById("f_deaths").value
+   sum_info['total_infected'] = document.getElementById("f_total_infected").value
+   sum_info['not_infected'] = document.getElementById("f_not_infected").value
 
-fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
+   // This is the MAIN summary at the top of the page.
 
-
-// See corona-ui-data.js
-fillSummary(state_name,fr,sum_info);
-
+   fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
  
+   // See corona-ui-data.js
+   fillSummary(state_name,fr,sum_info);
+ 
+   extra_data = {
+   "yd2": fr['14_day'].dys,
+   "yd3": fr['14_day'].iys,
+   "yd4":  [],
+   "exp_yd": []
+   }
+   extra_labels = {
+   "yd": "Confirmed Cases",
+   "yd2": "Deaths",
+   "yd3": "Infected",
+   "yd4":  "",
+   "exp_yd": ""
+   }
+   title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
+   div_id = "forecast_bar_14"
+   //plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
 
-extra_data = {
- "yd2": fr['14_day'].dys,
- "yd3": fr['14_day'].iys,
- "yd4":  [],
- "exp_yd": []
-}
-extra_labels = {
- "yd": "Confirmed Cases",
- "yd2": "Deaths",
- "yd3": "Infected",
- "yd4":  "",
- "exp_yd": ""
-}
-title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
-div_id = "forecast_bar_14"
-//plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
-
-extra_data = {
- "yd2": fr['7_day'].dys,
- "yd3": fr['7_day'].iys,
- "yd4":  [],
- "exp_yd": []
-}
-extra_labels = {
- "yd": "Confirmed Cases",
- "yd2": "Deaths",
- "yd3": "Infected",
- "yd4":  "",
- "exp_yd": ""
-}
-title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
-div_id = "forecast_bar_7"
-//plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
+   extra_data = {
+   "yd2": fr['7_day'].dys,
+   "yd3": fr['7_day'].iys,
+   "yd4":  [],
+   "exp_yd": []
+   }
+   extra_labels = {
+   "yd": "Confirmed Cases",
+   "yd2": "Deaths",
+   "yd3": "Infected",
+   "yd4":  "",
+   "exp_yd": ""
+   }
+   title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
+   div_id = "forecast_bar_7"
+   //plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
 
 
 
@@ -965,12 +963,12 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
 }
 
 
-function load_data() {
+function load_data(reload) {
    var state = $('#state_selector').val();
    var county = $('#county_selector').val();  
    var url = "../json/" + state + ".json";
    if($.trim(state)!=='') {
-       getJSONData(url,state,county);
+       getJSONData(url,state,county,reload);
    }
 }
 
@@ -980,8 +978,10 @@ function change_state() {
 }
 
 
-function getJSONData(url,state,county) {
-   show_loader();	
+function getJSONData(url,state,county,reload) {
+   if(typeof reload == 'undefined') {
+      show_loader();	
+   }
    $.ajax({
       type: "get",
       url:  url,
@@ -992,8 +992,7 @@ function getJSONData(url,state,county) {
          displayData(result,state,county);
          // Create action on county select
          $('#county_selector').unbind('change').change(function() {load_data()}); 
-
-
+ 
          if(init_select_county!='') {
             var possibleCounties = [];
             var possibleCountiesIndex = [];
@@ -1028,9 +1027,15 @@ function getJSONData(url,state,county) {
             possibleCounties = null;
             init_select_county = "";
          }
- 
+          
 
-         hide_loader();	
+         if(typeof reload  == 'undefined') {
+            hide_loader();	 
+         } else { 
+            $('#recalculate').html($('#recalculate').attr('data-htmlx'));
+            $('#recalculate').removeAttr('data-htmlx');
+            $('body').removeClass('wait');
+         }
       },
       error: function (xhr, status, error) {
          alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
