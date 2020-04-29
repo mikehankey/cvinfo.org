@@ -138,25 +138,25 @@ function displayData(json_data ,state,county) {
       mortality =json_data['summary_info'].mortality / 100;
    }
 
+
    var cg_med = json_data['summary_info'].cg_med;
    var cg_med_decay = json_data['summary_info'].cg_med_decay;
 
    if (typeof(county) == "undefined" || county == "ALL") {
-   var state_pop = json_data['summary_info'].state_population * 1000000;
-   var ss = json_data['state_stats'];
-   full_state_name = state_name
-   } 
-   else { 
-   state_pop = json_data['county_pop'][county]
-   var ss = json_data['county_stats'][county]['county_stats'];
-   if (county.toLowerCase().indexOf("city") === -1) {
-      full_state_name = county + " County, " + state_code
-   }
-   else {
-      full_state_name = county + ", " + state_code
-   }
-   //state_name = full_state_name
-   ctype = "county"
+      var state_pop = json_data['summary_info'].state_population * 1000000;
+      var ss = json_data['state_stats'];
+      full_state_name = state_name
+   }  else { 
+      state_pop = json_data['county_pop'][county]
+      var ss = json_data['county_stats'][county]['county_stats'];
+      if (county.toLowerCase().indexOf("city") === -1) {
+         full_state_name = county + " County, " + state_code
+      }
+      else {
+         full_state_name = county + ", " + state_code
+      }
+      //state_name = full_state_name
+      ctype = "county"
    }
 
    var date_vals = [];
@@ -174,7 +174,10 @@ function displayData(json_data ,state,county) {
    var last_growth = 0;
 
    // Prepare all data
-   var last_tests = 0
+   var last_tests = 0;
+   
+   var last_county_mortality = 0;
+
    ss.forEach(function (arrayItem) {
       if (typeof(arrayItem.date) != "undefined") {
          date_vals.push(arrayItem.date);
@@ -194,6 +197,7 @@ function displayData(json_data ,state,county) {
       last_deaths = arrayItem.deaths
       new_cases_vals.push(arrayItem.new_cases);
       new_deaths_vals.push(arrayItem.new_deaths);
+
       if (typeof(arrayItem.cg_last) != "undefined") {
          case_growth_vals.push(arrayItem.cg_last);
          death_growth_vals.push(arrayItem.dg_last);
@@ -205,12 +209,17 @@ function displayData(json_data ,state,county) {
          decay = arrayItem.case_growth - last_growth
          last_growth = arrayItem.case_growth
       }
+
       mortality_vals.push(arrayItem.mortality);
       zd = zd + 1
       last_date = this_date 
       decay_vals.push(decay);
-
+      last_county_mortality = arrayItem.mortality;
    });
+
+
+   //console.log("LAST COUNTY MORTALITY ", last_county_mortality);
+   mortality = last_county_mortality/100;
 
    // make some JS dates
    js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)

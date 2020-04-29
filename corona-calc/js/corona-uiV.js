@@ -26,7 +26,7 @@ function hide_loader(show_graphs) {
 function reset() {
    $('#herd_thresh').val(60);
    $('#calc_phantom').val(4);
-   $('#calc_mortality').val($('#f_mortality').val());
+   $('#calc_mortality').val(($('#f_mortality').val()*100).fixed(2));
    $('#reset').click(function() {
       reset();
        $('#recalculate').trigger('click');

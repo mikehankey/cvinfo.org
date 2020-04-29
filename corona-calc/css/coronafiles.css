@@ -332,8 +332,7 @@ p.to {
 }
  
 input, .group span {
-   width: 7rem;
-   max-width: 20rem;
+   width: 8rem; 
    height: calc(1.5em + .75rem + 2px);
    padding: .375rem 0.35rem .375rem .75rem;
    font-size: 1rem;
@@ -367,7 +366,7 @@ input, .group span {
 
 .group input {
    border-radius: .25rem 0 0 .25rem;
-   max-width: 4.5rem;
+   max-width: 5.5rem;
 }
  
 .group span {
