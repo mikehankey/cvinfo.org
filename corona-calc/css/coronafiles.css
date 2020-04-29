@@ -331,7 +331,7 @@ p.to {
    padding-top: .5rem;
 }
  
-input {
+input, .group span {
    width: 7rem;
    max-width: 20rem;
    height: calc(1.5em + .75rem + 2px);
@@ -348,6 +348,32 @@ input {
    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
    word-wrap: normal;
    margin-bottom: .2rem;
+}
+
+.group {
+   display: -ms-flexbox;
+   display: flex;
+   -ms-flex-align: center;
+   align-items: center;
+   margin-bottom: 0;
+   font-size: 1rem;
+   font-weight: 400;
+   line-height: 1.5;
+   color: #495057;
+   text-align: center;
+   white-space: nowrap;
+   border-radius: .25rem;
+}
+
+.group input {
+   border-radius: .25rem 0 0 .25rem;
+   max-width: 4.5rem;
+}
+ 
+.group span {
+   border-radius: 0 .25rem .25rem 0;
+   border-left: none medium;
+   max-width: 2.5rem;
 }
 
 button{
