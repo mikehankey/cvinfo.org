@@ -425,6 +425,11 @@ button{
    margin-bottom: .2rem;
 }
 
+.notice {
+   display: block;
+   margin: .5rem auto 1rem;
+}
+
 body.wait select {
    cursor: wait;
 }
