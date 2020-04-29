@@ -75,17 +75,17 @@
                            <thead>
                               <tr>
                                     <th>&nbsp;</th>
-                                    <th>Current</th>
-                                    <th>14-day Trend</th>
-                                    <th>7-day Trend</th>
+                                    <th colspan="2">Current</th>
+                                    <th colspan="2">14-day Trend</th>
+                                    <th colspan="2">7-day Trend</th>
                               </tr>
                            </thead>
                            <tbody>
                            </tbody>
                            <tfoot>
                                  <tr class="nb">
-                                       <td colspan="2">&nbsp;</td>
-                                       <td class="brd" colspan="2">Projection for the end of the pandemic</td>
+                                       <td colspan="3">&nbsp;</td>
+                                       <td class="brd" colspan="5">Projection for the end of the pandemic</td>
                                  </tr>
                            </tfoot>
                         </table> 
@@ -96,20 +96,28 @@
                <p class="to">Predicted outcome calculated with current data trends and the following values.</p>
                <div class="form-group clearfix">
                      <label for="herd_thresh">Herd Immunity Threshold
-                       <span>(decimal percentage of population needed for herd immunity)</span>
+                       <span>Percentage of population needed for herd immunity.</span>
                      </label>
                      <div class="form-input">
-                       <input type="number"  id="herd_thresh" value=".6"/>
+                        <div class="group">
+                              <input type="number"  id="herd_thresh" value="60"/>
+                              <span class="input-group-text">%</span>
+                        </div>
                      </div>
                </div>
                <div class="form-group clearfix">
-                     <label for="calc_mortality">Confirmed Case Mortality Rate<span>(decimal percentage of confirmed cases that end in death)</span></label>
+                     <label for="calc_mortality">Confirmed Case Mortality Rate
+                     <span>Percentage of confirmed cases that end in death.</span></label>
                      <div class="form-input">
-                       <input type="number"  id="calc_mortality" value=".6"/>
+                        <div class="group">
+                           <input type="number" id="calc_mortality" />
+                           <span class="input-group-text">%</span>
+                        </div>
                      </div>
                </div>
                <div class="form-group clearfix">
-                     <label for="calc_phantom">Non-Tracked Factor<span>(for each confirmed case there are X non-tracked cases)</span></label>
+                     <label for="calc_phantom">Non-Tracked Factor
+                     <span>For each confirmed case there are X non-tracked cases.</span></label>
                      <div class="form-input">
                        <input type="number"  id="calc_phantom" value="4"/>
                      </div>
