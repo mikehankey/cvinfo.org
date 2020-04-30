@@ -133,10 +133,6 @@ function displayData(json_data ,state,county) {
    // Use the value in the FORM instead
    //var mortality = json_data['summary_info'].mortality / 100;
 
-   var mortality = parseFloat($('#calc_mortality').val()/100); //json_data['summary_info'].mortality / 100;
-   if(mortality==0) {
-      mortality =json_data['summary_info'].mortality / 100;
-   }
 
 
    var cg_med = json_data['summary_info'].cg_med;
@@ -217,10 +213,19 @@ function displayData(json_data ,state,county) {
       last_county_mortality = arrayItem.mortality;
    });
 
+   
+   // We take the last county mortality into account note that for the state, it's the same
+    var mortality = last_county_mortality/100;
+   $("#init_mortality").val(mortality); 
 
-   //console.log("LAST COUNTY MORTALITY ", last_county_mortality);
-   mortality = last_county_mortality/100;
-
+   // If the user entered another value, we take it into account instead
+   if($('#calc_mortality').val() !== "" && parseFloat($('#calc_mortality').val())!==0) { 
+      mortality = parseFloat($('#calc_mortality').val()/100);  
+   }
+   
+   $('#calc_mortality').val((mortality*100).toFixed(2));
+   
+   
    // make some JS dates
    js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)
    // important dates are
@@ -316,6 +321,41 @@ function displayData(json_data ,state,county) {
    document.getElementById("f_cases").value = last_cases 
    document.getElementById("f_deaths").value = last_deaths
 
+
+   // We are near the end so we're missing data
+   if(typeof fr['7_day'].total_dead  == "undefined" ) {
+      fr['7_day'].total_dead  = sum_info.deaths;
+   }
+
+   if(typeof fr['14_day'].total_dead  == "undefined" ) {
+      fr['14_day'].total_dead  = fr['7_day'].total_dead;
+   }
+   
+   if(typeof fr['7_day'].total_cases  == "undefined" ) {
+      fr['7_day'].total_cases  = sum_info.cases;
+   }
+
+   if(typeof fr['14_day'].total_cases  == "undefined" ) {
+      fr['14_day'].total_cases  = fr['7_day'].total_cases;
+   }
+
+   if(typeof fr['7_day'].total_infected  == "undefined" ) {
+      fr['7_day'].total_infected  =  herd_thresh * fr['7_day'].total_cases;
+   }
+
+   if(typeof fr['14_day'].total_infected  == "undefined" ) {
+      fr['14_day'].total_infected  =  herd_thresh * fr['14_day'].total_cases;
+   }
+
+   if(typeof fr['7_day'].not_infected  == "undefined" ) {
+      fr['7_day'].not_infected  = state_pop - fr['7_day'].total_infected - fr['7_day'].total_cases - fr['7_day'].total_dead;
+   }
+
+   if(typeof fr['14_day'].not_infected  == "undefined" ) {
+      fr['14_day'].not_infected  =  state_pop - fr['14_day'].total_infected - fr['14_day'].total_cases - fr['14_day'].total_dead;
+   }
+ 
+ 
    fillSummary(full_state_name,fr,sum_info);
  
 
@@ -733,6 +773,7 @@ function load_data(reload) {
 
 function change_state() { 
    $("#county_select").html("");
+   $('#calc_mortality').val(""); 
    load_data();
 }
 

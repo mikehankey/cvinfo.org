@@ -84,20 +84,11 @@ function plot_pie(xd,lb,title,dv) {
    lg+="</ul>";
    
    $('#'+dv).closest('.pie_chart').find('.leg').html(lg);
-
-}
-
-
+} 
 
 function fillPredictedOutcome(fr,sum_info) {
    var tbody = "", total = parseInt($("#f_state_pop").val());
-   // Build Predicted Outcome Table 
-   if(fr['14_day'].total_dead<fr['7_day'].total_dead)   {
-      _class = "row_good";
-   } else {
-      _class = "row_bad";
-   }   
-
+  
    tbody += '<tr><th>Deaths</th>\
                 <td>' + usFormat(parseInt(sum_info.deaths)) + '</td><td>' +   (parseInt(sum_info.deaths)*100/total).toFixed(2) + '%</td>\
                 <td>' + usFormat(parseInt(fr['14_day'].total_dead)) + '</td><td>' +    (parseInt(fr['14_day'].total_dead)*100/total).toFixed(2) + '%</td>\
@@ -134,41 +125,7 @@ function fillSummary(state_name,fr,sum_info) {
    var end_reached = false;
 
    fr_html = "";
-
-   // We reached the end?
-   if(  (typeof fr['14_day'].total_infected == "undefined" ||
-      typeof fr['14_day'].total_cases == "undefined" ||
-      typeof fr['14_day'].total_cases == "undefined") &&
-      (
-      typeof fr['7_day'].total_infected == "undefined" ||  
-      typeof fr['7_day'].total_cases == "undefined" ||
-      typeof fr['7_day'].total_dead == "undefined"
-      ) ) {
-
-      // It means the curve has peaked
-      fr['exp'].herd_immunity_met = 1;  
-      fr['exp'].zero_day_met = 1;
-      end_reached = true;
-   }
-
-   if(typeof fr['14_day'].total_infected == "undefined" ||
-      typeof fr['14_day'].total_cases == "undefined" ||
-      typeof fr['14_day'].total_cases == "undefined" ) {
-         fr['14_day'].total_infected = 0;
-         fr['14_day'].total_cases = 0;  
-         fr['14_day'].total_dead = 0;  } 
-
-   if(typeof fr['7_day'].total_infected == "undefined" ||   
-      typeof fr['7_day'].total_cases == "undefined" ||
-      typeof fr['7_day'].total_dead == "undefined"  ) {
-         fr['7_day'].total_infected = 0;
-         fr['7_day'].total_cases = 0;
-         fr['7_day'].total_dead = 0;  }
-    
-  
-
-
-
+ 
    // Create main text
 
    // BOTH 14/7 RESULT IN ZERO DAY
@@ -180,8 +137,7 @@ function fillSummary(state_name,fr,sum_info) {
             main_summary_text += " could conquered the virus or is very close to doing so.";
          } else {
             main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met  + " days.";
-         }
-         
+         } 
 
       } else {
          var  main_summary_text = "Based on current data trends<br><span class='good_t'>" + state_name 
@@ -243,25 +199,22 @@ function fillSummary(state_name,fr,sum_info) {
     
    // Recreate the Gauges
    $('#sum_peak').html('')
-
-   if(!end_reached) {
-      createSvg();
-
-      if (fr['14_day'].zero_day_met > 0) {
-         $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
-      }
-      else {
-         $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','ugly'); 
-      }
-
-      if (fr['7_day'].zero_day_met > 0) {
-         $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in','good');
-      }
-      else {
-         $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','ugly');
-      }  
-   }
+   createSvg();
      
+   if (fr['14_day'].zero_day_met > 0) {
+      $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
+   }
+   else {
+      $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','ugly'); 
+   }
+
+   if (fr['7_day'].zero_day_met > 0) {
+      $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in','good');
+   }
+   else {
+      $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','ugly');
+   }  
+  
  
    if (fr['exp'].zero_day_met > 0) {
       //$new.attr('data-ratio',fr['exp'].zero_day_met/100);

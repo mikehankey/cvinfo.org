@@ -24,12 +24,13 @@ function hide_loader(show_graphs) {
 }
 
 function reset() {
+   var init_mort = parseFloat($('#init_mortality').val())*100;
    $('#herd_thresh').val(60);
    $('#calc_phantom').val(4);
-   $('#calc_mortality').val(($('#init_mortality').val()*100).fixed(2));
+   $('#calc_mortality').val(init_mort.toFixed(2));
    $('#reset').click(function() {
       reset();
-       $('#recalculate').trigger('click');
+      $('#recalculate').trigger('click');
    })
 
 }
