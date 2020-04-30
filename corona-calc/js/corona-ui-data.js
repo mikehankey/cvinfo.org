@@ -114,33 +114,24 @@ function fillSummary(state_name,fr,sum_info) {
    
    var $gaugesCont = $('#forecast'); 
    var $forteen_days = $gaugesCont.find('.14days');
-   var $seven_days = $gaugesCont.find('.7days');
-   //var $three_days = $gaugesCont.find('.3days');
-   var $new =  $gaugesCont.find('.new'); 
- 
-   var fr_html = "<h3>Current forecast and predicted outcome for " + state_name + " </h3>based on 7 and 14-day NEW CASE trends ";
-   var fr_html = "<div id='sum_main'><div>";
-   document.getElementById("summary").innerHTML= fr_html;
+   var $seven_days = $gaugesCont.find('.7days');  
+   var main_summary_text = "";
+   var fr_html = ""; // for curve peak
   
-   var end_reached = false;
-
-   fr_html = "";
- 
-   // Create main text
-
    // BOTH 14/7 RESULT IN ZERO DAY
-   if ((fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) || end_reached) {  
+   if ((fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0)  ) {  
 
       if (fr['14_day'].zero_day_met == fr['7_day'].zero_day_met) {
-         var  main_summary_text = "Based on current data trends,<br> <span class='good_t'>" + state_name;
-         if(fr['14_day'].zero_day_met ==0) {
+         main_summary_text = "Based on current data trends,<br> <span class='good_t'>" + state_name;
+         
+        if(fr['14_day'].zero_day_met ==0) {
             main_summary_text += " could conquered the virus or is very close to doing so.";
          } else {
             main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met  + " days.";
          } 
 
       } else {
-         var  main_summary_text = "Based on current data trends<br><span class='good_t'>" + state_name 
+         main_summary_text = "Based on current data trends<br><span class='good_t'>" + state_name 
          drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
 
          min = Math.min.apply(null,drange);
@@ -156,7 +147,8 @@ function fillSummary(state_name,fr,sum_info) {
    }
    // BOTH 14/7 RESULT IN HERD DAY
    else if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
-      var  main_summary_text = "<small>Based on current data trends, </small><br><span class='ugly_t'>" + state_name 
+
+      main_summary_text = "<small>Based on current data trends, </small><br><span class='ugly_t'>" + state_name 
       drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met];
 
       min = Math.min.apply(null,drange);
@@ -173,16 +165,17 @@ function fillSummary(state_name,fr,sum_info) {
    // 14/7 RESULT IN HERD DAY AND ZERO
    else {
       if  (fr['14_day'].zero_day_met > 0 ) {
-         var  main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
+         main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
          main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met 
          main_summary_text += "  days, </span> <br> but based on the 7-day trend,  " 
       }
       else {
-         var  main_summary_text = "<span class='ugly_t'>Based on the 14-day trend, " + state_name 
+         main_summary_text = "<span class='ugly_t'>Based on the 14-day trend, " + state_name 
          main_summary_text += " could reach herd immunity in " + fr['14_day'].herd_immunity_met 
          main_summary_text += " days, </span> <br> but based on the 7-day trend, " 
 
       }
+
       if  (fr['7_day'].zero_day_met > 0 ) {
          main_summary_text += "<br><span class='good_t'> " 
          main_summary_text += " it could have zero cases in " + fr['7_day'].zero_day_met
@@ -194,8 +187,8 @@ function fillSummary(state_name,fr,sum_info) {
          main_summary_text += " days .</span> "
       }
    }
- 
-   $('#sum_main').html(main_summary_text);
+   
+   $('#summary').html('<div id="sum_main">'+main_summary_text+'</div>'); 
     
    // Recreate the Gauges
    $('#sum_peak').html('')
@@ -217,12 +210,10 @@ function fillSummary(state_name,fr,sum_info) {
   
  
    if (fr['exp'].zero_day_met > 0) {
-      //$new.attr('data-ratio',fr['exp'].zero_day_met/100);
-      fr_html = "";
+      fr_html = ""; // Keep it to hide the curve message
    }  else {
       if (fr['exp'].herd_immunity_met > 0) {
-         //$new.attr('data-ratio',fr['exp'].herd_immunity_met/100);
-         fr_html = "";
+         fr_html = ""; // Keep it to hide the curve message
       } else {
          fr_html += "<div class='bad_d'>The curve has not peaked.</div>"
       }
