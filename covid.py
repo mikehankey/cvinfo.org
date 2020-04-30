@@ -83,8 +83,7 @@ DEFAULT_OPTION = 2 # Index in the arrays above
 # WARNING ONLY THE "DEFAULT_OPTION" is INCLUDED IN THE HTML PAGE
 # THE OTHER SVG ANIMS WILL BE LOADED ON DEMAND VIA  AJAX CALL 
   
-
-STATE_DAY_URL = "http://covidtracking.com/api/states/daily.csv"
+STATE_DAY_URL = "http://covidtracking.com/api/v1/states/daily.csv"
 def abline_old(slope, intercept, s7=None, i7=None, xs=[],ys=[],st="",title=""):
 
 
