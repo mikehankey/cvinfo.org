@@ -26,7 +26,7 @@ function hide_loader(show_graphs) {
 function reset() {
    $('#herd_thresh').val(60);
    $('#calc_phantom').val(4);
-   $('#calc_mortality').val(($('#f_mortality').val()*100).fixed(2));
+   $('#calc_mortality').val(($('#init_mortality').val()*100).fixed(2));
    $('#reset').click(function() {
       reset();
        $('#recalculate').trigger('click');
@@ -90,7 +90,6 @@ $(function() {
       $(this).attr('data-htmlx',$(this).html()).html('Computing...');
       $('body').addClass('wait');
       load_data(false); 
-   
    }) 
 
    // Creation action on reset button
@@ -123,6 +122,9 @@ $(function() {
       if(possibleStates.indexOf(selState)>0) {
          // Select State
          $('#state_selector').val(selState).trigger('change');
+
+         // Update Soc Sharing with Full State Name
+         updateDocumentUrl($("#state_selector option[value='"+selState+"']").text());
       }
 
       possibleStates = null;

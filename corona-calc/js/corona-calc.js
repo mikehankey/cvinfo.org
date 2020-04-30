@@ -289,8 +289,8 @@ function displayData(json_data ,state,county) {
    // This is the MAIN summary at the top of the page.
    fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh);
 
-   console.log("DISPLAY DATA FORECAST");
-   console.log(fr);
+   //console.log("DISPLAY DATA FORECAST");
+   //console.log(fr);
 
    document.getElementById("calc_mortality").value = (mortality*100).toFixed(2)
    document.getElementById("f_xs").value = zdv6
@@ -725,7 +725,9 @@ function load_data(reload) {
    var county = $('#county_selector').val();  
    var url = "../json/" + state + ".json";
    if($.trim(state)!=='') {
-       getJSONData(url,state,county,reload);
+      // Update Soc Sharing with Full State Name
+      updateDocumentUrl($("#state_selector option[value='"+state+"']").text());
+      getJSONData(url,state,county,reload);
    }
 }
 
@@ -775,10 +777,10 @@ function getJSONData(url,state,county,reload) {
           
             var toTest = possibleCounties.indexOf(init_select_county);
             if(toTest>0) { 
-               // Select State
+               // Select County
                var $opt = $('#county_selector option').get(possibleCountiesIndex[toTest]);
                $('#county_selector').val($($opt).attr('value')).trigger('change');
-              
+
             }
 
             possibleCounties = null;

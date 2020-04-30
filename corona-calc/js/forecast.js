@@ -172,7 +172,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       impacted_14 = (forecast_result['14_day']['total_cases'] + forecast_result['14_day']['total_dead'] + forecast_result['14_day']['total_infected']) / state_pop
       impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop
       
-          console.log(state_pop, forecast_result['14_day']['total_cases'], forecast_result['14_day']['total_dead'], forecast_result['14_day']['total_infected'], impacted_14t, impacted_14);
+      //console.log(state_pop, forecast_result['14_day']['total_cases'], forecast_result['14_day']['total_dead'], forecast_result['14_day']['total_infected'], impacted_14t, impacted_14);
       
       if (impacted_14 > herd_thresh && final_status14 == 0) {
          final_status14 = 1

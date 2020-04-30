@@ -175,8 +175,13 @@ function fillSummary(state_name,fr,sum_info) {
    if ((fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) || end_reached) {  
 
       if (fr['14_day'].zero_day_met == fr['7_day'].zero_day_met) {
-         var  main_summary_text = "Based on current data trends,<br> <span class='good_t'>" + state_name 
-         main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met.toString()  + " days."
+         var  main_summary_text = "Based on current data trends,<br> <span class='good_t'>" + state_name;
+         if(fr['14_day'].zero_day_met ==0) {
+            main_summary_text += " could conquered the virus or is very close to doing so.";
+         } else {
+            main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met  + " days.";
+         }
+         
 
       } else {
          var  main_summary_text = "Based on current data trends<br><span class='good_t'>" + state_name 
@@ -213,23 +218,23 @@ function fillSummary(state_name,fr,sum_info) {
    else {
       if  (fr['14_day'].zero_day_met > 0 ) {
          var  main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
-         main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met.toString() 
+         main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met 
          main_summary_text += "  days, </span> <br> but based on the 7-day trend,  " 
       }
       else {
          var  main_summary_text = "<span class='ugly_t'>Based on the 14-day trend, " + state_name 
-         main_summary_text += " could reach herd immunity in " + fr['14_day'].herd_immunity_met.toString() 
+         main_summary_text += " could reach herd immunity in " + fr['14_day'].herd_immunity_met 
          main_summary_text += " days, </span> <br> but based on the 7-day trend, " 
 
       }
       if  (fr['7_day'].zero_day_met > 0 ) {
          main_summary_text += "<br><span class='good_t'> " 
-         main_summary_text += " it could have zero cases in " + fr['7_day'].zero_day_met.toString()
+         main_summary_text += " it could have zero cases in " + fr['7_day'].zero_day_met
          main_summary_text += " days .</span> " 
       }
       else {
          main_summary_text += "<br><span class='ugly_t'> "  
-         main_summary_text += " it could reach herd immunity in " + fr['7_day'].herd_immunity_met.toString()
+         main_summary_text += " it could reach herd immunity in " + fr['7_day'].herd_immunity_met
          main_summary_text += " days .</span> "
       }
    }
@@ -271,7 +276,7 @@ function fillSummary(state_name,fr,sum_info) {
    }  
 
    $('#sum_peak').html(fr_html);
-    
+   
    // Pies
    pie_data = [fr['14_day'].total_not_infected, fr['14_day'].total_infected, fr['14_day'].total_cases, fr['14_day'].total_dead];
    pie_lb = [ 'Not Infected', 'Infected', 'Confirmed Cases', 'Deaths'];
