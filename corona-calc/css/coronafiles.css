@@ -218,10 +218,13 @@ a, a:visited {
 #disclaimer {
    text-align: left;
    line-height: 1.5;
+   margin:0 auto;
+   padding:.5rem;
 }
 
 #footer {
    margin-top: 2rem;
+   margin-bottom: 1rem;
    border-top:1px solid #c1c1c1;
    padding:1rem .5rem;
    line-height: 1.4
@@ -623,6 +626,27 @@ table tbody tr:last-child td, table tbody tr:last-child th {
 .modebar {
    display:none!important;
 
+}
+
+
+/* Soc */
+#soc {
+   text-align: center;
+   margin:0 .5rem;
+}
+
+ul.share-buttons {
+   list-style: none;
+   padding: 0;
+}
+ul.share-buttons li {
+   display: inline;
+   cursor: pointer;
+   margin-left: .3rem;
+   margin-right: .3rem;
+}
+ul.share-buttons img {
+   width: 35px;
 }
 
 @media (max-width: 48em) {

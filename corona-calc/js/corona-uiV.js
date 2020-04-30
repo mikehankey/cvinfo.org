@@ -107,10 +107,13 @@ $(function() {
    cururl = decodeURIComponent(window.location.href);
    if(cururl.indexOf('?')>0) {
       selState = cururl.substring(cururl.indexOf('?')+1, cururl.length);
+
       if(selState.indexOf('+')>0) {
          init_select_county = selState.substring(selState.indexOf('+')+1, selState.length);
-         selState = selState.substring(0,selState.indexOf('+'));
-      } 
+         selState = selState.substring(0,selState.indexOf('+')).toUpperCase();
+      } else {
+         selState = selState.toUpperCase();
+      }
 
       // Get all the possible state value
       $('#state_selector option').each(function(i,v){

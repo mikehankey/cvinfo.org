@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head> 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
-<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
+   <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
 
    <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="msapplication-TileColor" content="#f0f0f0">
+   <meta name="theme-color" content="#f0f0f0">
+ 
+   <meta property="fb:app_id" content="542306269804125"/>
+   <meta property="og:title" content="CoronaFiles.us - COVID-19 Forecasting and Stats Visualizer for your State and county"/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:url" content="https://coronafiles.us/"/>
+   <meta property="og:site_name" content="CoronaFiles.us"/>
+   <meta property="og:description" content="COVID-19 Forecasting and Stats Visualizer"/>
+   <meta property="og:locale" content="en_US"/>
+   <meta property="og:image" content="https://coronafiles.us/img/coronafile_fb.jpg"/>
+   <meta property="og:image:width" content="1200"/>
+   <meta property="og:image:height" content="630"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - When could Corona Virus End?"/>
 
-	<title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>   
-
-	<meta name="author" content="Mike Hankey">
+   <meta name="author" content="Mike Hankey">
 	<meta name="description" content="When could Corona Virus end? COVID-19 Forecasting and Stats Visualizer.">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="keywords" content="corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
 
+	<title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>   
+ 
    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
    <link href="./css/coronafiles.css" rel="stylesheet">
@@ -22,21 +37,7 @@
    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
    <link rel="manifest" href="./site.webmanifest">
    <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
-   <meta name="msapplication-TileColor" content="#da532c">
-   <meta name="theme-color" content="#da532c">
-
-   
-   <meta property="fb:app_id" content="542306269804125"/>
-   <meta property="og:title" content="CoronaFiles.us - COVID-19 Forecasting and Stats Visualizer for your State and county"/>
-   <meta property="og:type" content="website"/>
-   <meta property="og:url" content="https://coronafiles.us/"/>
-   <meta property="og:site_name" content="CoronaFiles"/>
-   <meta property="og:description" content="COVID-19 Forecasting and Stats Visualizer"/>
-   <meta property="og:image" content="https://coronafiles.us/img/coronafile_fb.jpg"/>
-   <meta property="og:image:width" content="1200"/>
-   <meta property="og:image:height" content="630"/>
-   <meta property="og:image:alt" content="CoronaFiles.us - When could Corona Virus End"/>
-    
+ 
 </head>
 <body class="wait">
 
@@ -176,6 +177,16 @@
       </div>
    </div>
 
+   
+   <div id="soc">
+      <ul class="share-buttons">
+            <li class="social-share facebook"><img src="./img/Facebook.svg" alt="Share Page on Facebook" /></li>
+            <li class="social-share twitter"><img src="./img/Twitter.svg" alt="Share Page on Twitter" /></li>
+            <li class="social-share linkedin"><img src="./img/LinkedIn.svg" alt="Share Page on LinkedIn" /></li>
+            <li class="social-share reddit"><img src="./img/Reddit.svg" alt="Share Page on Reddit" /></li>
+     </ul>
+   </div>
+
    <div id="disclaimer"> 
          <strong>IMPORTANT NOTICE:</strong>
           This tool is a linear, straight line projection based on current data and trends as reported through 
@@ -193,14 +204,17 @@
    </div>
  
    <script src="./js/framework_plugs.js"></script>  
-   <script src="./js/coronafiles.js"></script> 
-   <!--
+   <!--<script src="./js/coronafiles.js"></script> 
+     -->
+   
+   <script src="./js/share.js"></script> 
    <script src="./js/gaugesV.js"></script> 
    <script src="./js/utils.js"></script>
    <script src="./js/corona-ui-data.js"></script>
+   <script src="./js/forecast.js"></script>  
    <script src="./js/corona-calc.js"></script>
    <script src="./js/regression.js"></script>
    <script src="./js/corona-uiV.js"></script>
-  -->
+
 </body>
 </html>

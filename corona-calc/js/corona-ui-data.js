@@ -145,17 +145,33 @@ function fillSummary(state_name,fr,sum_info) {
       } else {
          var  main_summary_text = "Based on current data trends<br><span class='good_t'>" + state_name 
          drange = [fr['14_day'].zero_day_met , fr['7_day'].zero_day_met ]
-         main_summary_text += " could have zero cases in " + Math.min.apply(null,drange).toString() 
-         //main_summary_text += " could have zero cases in <span class='"+goodBadOrUglyMike(Math.max.apply(null,drange),'zeroday')+"'>" + Math.min.apply(null,drange).toString() + "</span> ";
-         main_summary_text += " to " + Math.max.apply(null,drange).toString() + " days.</span>";
+
+         min = Math.min.apply(null,drange);
+         max = Math.max.apply(null,drange);
+
+         main_summary_text += " could have zero cases in " + min;
+         if( min != max) { 
+             main_summary_text += " to " + max + " days.</span>";
+         } else {
+            main_summary_text +=  " days.</span>";
+         }
       }
    }
    // BOTH 14/7 RESULT IN HERD DAY
    else if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
       var  main_summary_text = "<small>Based on current data trends, </small><br><span class='ugly_t'>" + state_name 
-      drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met]
-      main_summary_text += " could reach herd immunity in " + Math.min.apply(null,drange).toString() 
-      main_summary_text += " to " + Math.max.apply(null,drange).toString() + " days. </span> ";
+      drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met];
+
+      min = Math.min.apply(null,drange);
+      max = Math.max.apply(null,drange);
+
+      main_summary_text += " could reach herd immunity in " + min;
+      if( min != max) { 
+          main_summary_text += " to " + max + " days.</span>";
+      } else {
+         main_summary_text +=  " days.</span>";
+      }
+ 
    }
    // 14/7 RESULT IN HERD DAY AND ZERO
    else {
