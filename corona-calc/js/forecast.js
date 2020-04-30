@@ -70,6 +70,8 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       last_ey = ey
    }
 
+   forecast_result['exp']['current_zero_day'] = current_zero_day
+   forecast_result['exp']['curve_end'] = curve_end  
    forecast_result['exp']['zero_day_met'] = curve_end - current_zero_day
    forecast_result['exp']['total_cases'] = curve_total_cases
    forecast_result['exp']['total_not_infected'] = state_pop - forecast_result['exp']['total_infected'] - forecast_result['exp']['total_dead']
@@ -93,14 +95,14 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    var total_cases_7 = total_cases;
  
  
-   forecast_result['14_day']['zero_day_met'] = 0
-   forecast_result['7_day']['zero_day_met'] = 0 
+   forecast_result['14_day']['zero_day_met'] = 9999
+   forecast_result['7_day']['zero_day_met'] = 9999
 
    // run forecast for 14 day traj
    final_status14 = 0
    final_status7 = 0 
-   forecast_result['14_day']['herd_immunity_met'] = 0
-   forecast_result['7_day']['herd_immunity_met'] = 0 
+   forecast_result['14_day']['herd_immunity_met'] = 9999
+   forecast_result['7_day']['herd_immunity_met'] = 9999
    forecast_result['14_day']['xs'] = []
    forecast_result['7_day']['xs'] = [] 
    forecast_result['14_day']['ys'] = []
@@ -131,11 +133,12 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       if (PY14 > 0 && final_status14 == 0) {   total_cases_14 += PY14  }
       if (PY7 > 0) {  total_cases_7 += PY7  } 
 
-      if (PY14 <= 0 && forecast_result['14_day']['zero_day_met'] == 0) {
+      if (PY14 <= 0 && forecast_result['14_day']['zero_day_met'] == 9999) {
          forecast_result['14_day']['zero_day_met'] = TX - current_zero_day;
          final_status14 = 1;
       }
-      if (PY7 <= 0 && forecast_result['7_day']['zero_day_met'] == 0) {
+
+      if (PY7 <= 0 && forecast_result['7_day']['zero_day_met'] == 9999) {
          forecast_result['7_day']['zero_day_met'] = TX - current_zero_day;
          final_status7 = 1;
       } 
@@ -192,7 +195,27 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       }
 
    }
- 
+
+ //alert("herd14 " + forecast_result['14_day']['herd_immunity_met'].toString())
+ //alert("herd7 " + forecast_result['7_day']['herd_immunity_met'].toString() )
+ //alert("zero14:" + forecast_result['14_day']['zero_day_met'].toString())
+ //alert("zero7:" + forecast_result['7_day']['zero_day_met'].toString())
+
+ if (forecast_result['14_day']['herd_immunity_met'] == 9999) {
+    forecast_result['14_day']['outcome'] = "zero"
+ }
+ else {
+    forecast_result['14_day']['outcome'] = "herd"
+ }
+ if (forecast_result['7_day']['herd_immunity_met'] == 9999) {
+    forecast_result['7_day']['outcome'] = "zero"
+ } 
+ else {
+    forecast_result['7_day']['outcome'] = "herd"
+ }
+ //alert("outcome14:" + forecast_result['14_day']['outcome'].toString())
+ //alert("outcome7:" + forecast_result['7_day']['outcome'].toString())
+
 
    if(   typeof forecast_result['14_day']['total_cases']     == "undefined" ||
          typeof forecast_result['14_day']['total_dead']      == "undefined" ||
@@ -223,6 +246,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
     
    forecast_result['7_day']['total_not_infected'] = state_pop - impacted_7t 
    forecast_result['7_day']['niperc'] = (impacted_7 / state_pop) * 100 
+
  
    return(forecast_result);
 }

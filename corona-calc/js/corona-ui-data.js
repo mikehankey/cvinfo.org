@@ -118,14 +118,14 @@ function fillSummary(state_name,fr,sum_info) {
    var main_summary_text = "";
    var fr_html = ""; // for curve peak
   
-   // BOTH 14/7 RESULT IN ZERO DAY
-   if ((fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0)  ) {  
+   // BOTH 14/7 OUTCOME RESULTS IN ZERO DAY
+   if ((fr['14_day'].outcome == 'zero' && fr['7_day'].outcome == 'zero' )  ) {  
 
       if (fr['14_day'].zero_day_met == fr['7_day'].zero_day_met) {
          main_summary_text = "Based on current data trends,<br> <span class='good_t'>" + state_name;
          
         if(fr['14_day'].zero_day_met ==0) {
-            main_summary_text += " could conquered the virus or is very close to doing so.";
+            main_summary_text += " has reached zero cases per day or is very close to doing so.";
          } else {
             main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met  + " days.";
          } 
@@ -145,26 +145,52 @@ function fillSummary(state_name,fr,sum_info) {
          }
       }
    }
-   // BOTH 14/7 RESULT IN HERD DAY
-   else if (fr['14_day'].zero_day_met == 0 && fr['7_day'].zero_day_met == 0) {
+   // BOTH 14/7 RESULT IN HERD DAY OR WE HAVE HIT THE ZERO DAY!!!
 
-      main_summary_text = "<small>Based on current data trends, </small><br><span class='ugly_t'>" + state_name 
-      drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met];
+   else if (fr['14_day'].outcome == 'herd' && fr['7_day'].outcome == 'herd') {
+      // if the outcome for both is herd do this:
+      //if (typeof(fr['14_day']['herd_immunity_met']) != "undefined" && typeof(fr['7_day']['herd_immunity_met']) != "undefined" && fr['14_day']['herd_immunity_met'] == 0 && fr['7_day']['herd_immunity_met'] == 0 ) {
+      if (fr['14_day']['herd_immunity_met'] >= 0 && fr['7_day']['herd_immunity_met'] >= 0 ) {
+         // here we have herd immunity outcome for both trends
+         main_summary_text = "<small>Based on current data trends, </small><br><span class='ugly_t'>" + state_name 
+         drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met];
+         fr['14_day'].zero_success = 0
+         fr['7_day'].zero_success = 0
 
-      min = Math.min.apply(null,drange);
-      max = Math.max.apply(null,drange);
+         min = Math.min.apply(null,drange);
+         max = Math.max.apply(null,drange);
 
-      main_summary_text += " could reach herd immunity in " + min;
-      if( min != max) { 
-          main_summary_text += " to " + max + " days.</span>";
-      } else {
-         main_summary_text +=  " days.</span>";
+         main_summary_text += " could reach herd immunity in " + min;
+         if( min != max) { 
+            main_summary_text += " to " + max + " days.</span>";
+         } else {
+            main_summary_text +=  " days.</span>";
+         }
+      }
+      else {
+         // here we have met the zero day outcome for both trends
+         fr['14_day'].zero_success = 1
+         fr['7_day'].zero_success = 1
+         main_summary_text = "<small>Based on current data trends, </small><br><span class='good_t'>" + state_name
+         //drange = [fr['14_day'].herd_immunity_met, fr['7_day'].herd_immunity_met];
+
+         //min = Math.min.apply(null,drange);
+         //max = Math.max.apply(null,drange);
+
+         main_summary_text += " has reached the zero day, or will very soon.</span>" ;
+         //if( min != max) {
+         //   main_summary_text += " to " + max + " days.</span>";
+         //} else {
+         //   main_summary_text +=  " days.</span>";
+         //}
+ 
+
       }
  
    }
    // 14/7 RESULT IN HERD DAY AND ZERO
    else {
-      if  (fr['14_day'].zero_day_met > 0 ) {
+      if  (fr['14_day'].outcome == 'zero' ) {
          main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
          main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met 
          main_summary_text += "  days, </span> <br> but based on the 7-day trend,  " 
@@ -176,7 +202,7 @@ function fillSummary(state_name,fr,sum_info) {
 
       }
 
-      if  (fr['7_day'].zero_day_met > 0 ) {
+      if  (fr['7_day'].outcome == 'zero' ) {
          main_summary_text += "<br><span class='good_t'> " 
          main_summary_text += " it could have zero cases in " + fr['7_day'].zero_day_met
          main_summary_text += " days .</span> " 
@@ -193,26 +219,46 @@ function fillSummary(state_name,fr,sum_info) {
    // Recreate the Gauges
    $('#sum_peak').html('')
    createSvg();
+
      
-   if (fr['14_day'].zero_day_met > 0) {
+   if (fr['14_day'].outcome == 'zero') {
       $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
+      outcome = "zero"
    }
    else {
-      $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','ugly'); 
+
+      if (fr['14_day'].outcome == 'herd') {
+         $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','ugly'); 
+         outcome = "herd"
+      }
+      else {
+         $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero day in','good'); 
+         outcome = "zero"
+      }
    }
 
-   if (fr['7_day'].zero_day_met > 0) {
+   if (fr['7_day'].outcome == 'zero') {
       $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in','good');
+      outcome = "zero"
    }
    else {
-      $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','ugly');
+      if (fr['7_day'].outcome == 'herd') {
+         $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','ugly');
+         outcome = "herd"
+      }
+      else {
+         $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero day in','good');
+         outcome = "zero"
+      }
    }  
   
- 
-   if (fr['exp'].zero_day_met > 0) {
+   curve_flag = fr['exp'].curve_end - fr['exp'].current_zero_day 
+
+   if (curve_flag <= 0 && outcome == "zero") {
       fr_html = ""; // Keep it to hide the curve message
    }  else {
-      if (fr['exp'].herd_immunity_met > 0) {
+      
+      if (curve_flag < 60 && curve_flag > 0) {
          fr_html = ""; // Keep it to hide the curve message
       } else {
          fr_html += "<div class='bad_d'>The curve has not peaked.</div>"
