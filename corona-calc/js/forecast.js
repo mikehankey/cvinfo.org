@@ -1,4 +1,4 @@
-function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh ) {
+function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) {
    
    // this function projects the data forward to find end zero days or herd immunity and outcome values.
    var ys = fys;
@@ -198,7 +198,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
          typeof forecast_result['14_day']['total_dead']      == "undefined" ||
          typeof forecast_result['14_day']['total_infected']  == "undefined"  
    ) {
-      // We passed the date at 14 days (?)
+       // We passed the date at 14 days (?)
        impacted_14 = 0;
        impacted_14t = 0;
       
@@ -216,7 +216,6 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    } else {
       impacted_7 = (forecast_result['7_day']['total_cases'] + forecast_result['7_day']['total_dead'] + forecast_result['7_day']['total_infected']) / state_pop;
    }
-   
     
 
    forecast_result['14_day']['total_not_infected'] = state_pop - impacted_14t;  
@@ -224,9 +223,6 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
     
    forecast_result['7_day']['total_not_infected'] = state_pop - impacted_7t 
    forecast_result['7_day']['niperc'] = (impacted_7 / state_pop) * 100 
-
-    
-
-   return(forecast_result)
-
+ 
+   return(forecast_result);
 }

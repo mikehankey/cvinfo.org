@@ -51,7 +51,7 @@ function countySelect(p, state) {
    for (i = 0; i <= sorted.length-1; i++) { 
       // Don't display "Unknown anymore"
       if($.trim(sorted[i][0])!="Unknown"){
-         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + ")</option>\n";
+         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + " conf. cases)</option>\n";
          all_counties.push(sorted[i][0]);
       }
    }

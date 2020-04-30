@@ -287,7 +287,11 @@ function displayData(json_data ,state,county) {
    current_zero_day = nc_org2.length
 
    // This is the MAIN summary at the top of the page.
-   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) 
+   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh);
+
+   console.log("DISPLAY DATA FORECAST");
+   console.log(fr);
+
    document.getElementById("calc_mortality").value = (mortality*100).toFixed(2)
    document.getElementById("f_xs").value = zdv6
    document.getElementById("f_ys").value = nc_org2 

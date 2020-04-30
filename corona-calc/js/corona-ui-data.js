@@ -96,7 +96,7 @@ function fillPredictedOutcome(fr,sum_info) {
       _class = "row_good";
    } else {
       _class = "row_bad";
-   }  
+   }   
 
    tbody += '<tr><th>Deaths</th>\
                 <td>' + usFormat(parseInt(sum_info.deaths)) + '</td><td>' +   (parseInt(sum_info.deaths)*100/total).toFixed(2) + '%</td>\
@@ -128,16 +128,52 @@ function fillSummary(state_name,fr,sum_info) {
    var $new =  $gaugesCont.find('.new'); 
  
    var fr_html = "<h3>Current forecast and predicted outcome for " + state_name + " </h3>based on 7 and 14-day NEW CASE trends ";
-   var fr_html =   "<div id='sum_main'><div>";
+   var fr_html = "<div id='sum_main'><div>";
    document.getElementById("summary").innerHTML= fr_html;
   
+   var end_reached = false;
+
    fr_html = "";
+
+   // We reached the end?
+   if(  (typeof fr['14_day'].total_infected == "undefined" ||
+      typeof fr['14_day'].total_cases == "undefined" ||
+      typeof fr['14_day'].total_cases == "undefined") &&
+      (
+      typeof fr['7_day'].total_infected == "undefined" ||  
+      typeof fr['7_day'].total_cases == "undefined" ||
+      typeof fr['7_day'].total_dead == "undefined"
+      ) ) {
+
+      // It means the curve has peaked
+      fr['exp'].herd_immunity_met = 1;  
+      fr['exp'].zero_day_met = 1;
+      end_reached = true;
+   }
+
+   if(typeof fr['14_day'].total_infected == "undefined" ||
+      typeof fr['14_day'].total_cases == "undefined" ||
+      typeof fr['14_day'].total_cases == "undefined" ) {
+         fr['14_day'].total_infected = 0;
+         fr['14_day'].total_cases = 0;  
+         fr['14_day'].total_dead = 0;  } 
+
+   if(typeof fr['7_day'].total_infected == "undefined" ||   
+      typeof fr['7_day'].total_cases == "undefined" ||
+      typeof fr['7_day'].total_dead == "undefined"  ) {
+         fr['7_day'].total_infected = 0;
+         fr['7_day'].total_cases = 0;
+         fr['7_day'].total_dead = 0;  }
+    
+  
+
 
 
    // Create main text
 
    // BOTH 14/7 RESULT IN ZERO DAY
-   if (fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) {  
+   if ((fr['14_day'].zero_day_met > 0 && fr['7_day'].zero_day_met > 0) || end_reached) {  
+
       if (fr['14_day'].zero_day_met == fr['7_day'].zero_day_met) {
          var  main_summary_text = "Based on current data trends,<br> <span class='good_t'>" + state_name 
          main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met.toString()  + " days."
@@ -202,31 +238,34 @@ function fillSummary(state_name,fr,sum_info) {
     
    // Recreate the Gauges
    $('#sum_peak').html('')
-   createSvg();
 
-   if (fr['14_day'].zero_day_met > 0) {
-      $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
-   }
-   else {
-      $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','ugly'); 
-   }
+   if(!end_reached) {
+      createSvg();
 
-   if (fr['7_day'].zero_day_met > 0) {
-      $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in','good');
+      if (fr['14_day'].zero_day_met > 0) {
+         $forteen_days.update_gauge(fr['14_day'].zero_day_met/100,'Zero Cases in','good');
+      }
+      else {
+         $forteen_days.update_gauge(fr['14_day'].herd_immunity_met/100,'Herd Immunity in','ugly'); 
+      }
+
+      if (fr['7_day'].zero_day_met > 0) {
+         $seven_days.update_gauge(fr['7_day'].zero_day_met/100,'Zero Cases in','good');
+      }
+      else {
+         $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','ugly');
+      }  
    }
-   else {
-      $seven_days.update_gauge(fr['7_day'].herd_immunity_met/100,'Herd Immunity in','ugly');
-   }  
      
  
    if (fr['exp'].zero_day_met > 0) {
       //$new.attr('data-ratio',fr['exp'].zero_day_met/100);
-   }
-   else {
+      fr_html = "";
+   }  else {
       if (fr['exp'].herd_immunity_met > 0) {
          //$new.attr('data-ratio',fr['exp'].herd_immunity_met/100);
-      }
-      else {
+         fr_html = "";
+      } else {
          fr_html += "<div class='bad_d'>The curve has not peaked.</div>"
       }
    }  
