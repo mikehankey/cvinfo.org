@@ -128,7 +128,7 @@ function fillSummary(state_name,fr,sum_info) {
         if(fr['14_day'].zero_day_met ==0) {
             main_summary_text += " has reached zero cases per day or is very close to doing so.";
          } else {
-            main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met  + " days.";
+            main_summary_text += " could have zero cases in&nbsp;" + fr['14_day'].zero_day_met  + "&nbsp;days.";
          } 
 
       } else {
@@ -138,24 +138,24 @@ function fillSummary(state_name,fr,sum_info) {
          min = Math.min.apply(null,drange);
          max = Math.max.apply(null,drange);
 
-         main_summary_text += " could have zero cases in " + min;
+         main_summary_text += " could have zero cases in&nbsp;" + min;
          if( min != max) { 
-             main_summary_text += " to " + max + " days.</span>";
+             main_summary_text += "&nbsp;to&nbsp;" + max + "&nbsp;days.</span>";
          } else {
-            main_summary_text +=  " days.</span>";
+            main_summary_text +=  "&nbsp;days.</span>";
          }
       }
 
    // ADD CURVE SENTENCE
    curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
    if (curve_end_days < 0 && fr['exp'].curve_end > 0) {
-      main_summary_text += "<br><span class='good_t'>The curve reached the zero day mark " + curve_end_days.toString() + " days ago.</span>" 
+      main_summary_text += "<br><span class='good_t'>The curve reached the zero day mark " + Math.abs(curve_end_days) + "&nbsp;days ago.</span>" 
    }
       // ADD CURVE SENTENCE ONLY IF IT HAS PEAKED.
       if (fr['exp'].curve_end != 0) {
          curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
          if (curve_end_days > 0) {
-            main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>" 
+            main_summary_text += "<br><span class='good_t'>The curve is projected to end in&nbsp;" + Math.abs(curve_end_days) + "&nbsp;days.</span>" 
          }
       }
 
@@ -178,11 +178,11 @@ function fillSummary(state_name,fr,sum_info) {
          min = Math.min.apply(null,drange);
          max = Math.max.apply(null,drange);
 
-         main_summary_text += " could reach herd immunity in " + min;
+         main_summary_text += " could reach herd immunity in&nbsp;" + min;
          if( min != max) { 
-            main_summary_text += " to " + max + " days.</span>";
+            main_summary_text += "&nbsp;to&nbsp;" + max + "&nbsp;days.</span>";
          } else {
-            main_summary_text +=  " days.</span>";
+            main_summary_text +=  "&nbsp;days.</span>";
          }
       }
       else {
@@ -208,7 +208,7 @@ function fillSummary(state_name,fr,sum_info) {
       if (fr['exp'].curve_end != 0) {
          curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
          if (curve_end_days > 0) {
-            main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>" 
+            main_summary_text += "<br><span class='good_t'>The curve is projected to end in&nbsp;" + curve_end_days + "&nbsp;days.</span>" 
          }
       } 
       else {
@@ -220,34 +220,34 @@ function fillSummary(state_name,fr,sum_info) {
    else {
       if  (fr['14_day'].outcome == 'zero' ) {
          main_summary_text = "<span class='good_t'>Based on the 14-day trend, " + state_name 
-         main_summary_text += " could have zero cases in " + fr['14_day'].zero_day_met 
-         main_summary_text += "  days, </span> <br> but based on the 7-day trend,  " 
+         main_summary_text += " could have zero cases in&nbsp;" + fr['14_day'].zero_day_met 
+         main_summary_text += "&nbsp;days,</span><br>but based on the 7-day trend,  " 
       }
       else {
          main_summary_text = "<span class='ugly_t'>Based on the 14-day trend, " + state_name 
-         main_summary_text += " could reach herd immunity in " + fr['14_day'].herd_immunity_met 
-         main_summary_text += " days, </span> <br> but based on the 7-day trend, " 
+         main_summary_text += " could reach herd immunity in&nbsp;" + fr['14_day'].herd_immunity_met 
+         main_summary_text += "&nbsp;days,</span><br>but based on the 7-day trend, " 
 
       }
 
       if  (fr['7_day'].outcome == 'zero' ) {
          main_summary_text += "<br><span class='good_t'> " 
-         main_summary_text += " it could have zero cases in " + fr['7_day'].zero_day_met
-         main_summary_text += " days .</span> " 
+         main_summary_text += " it could have zero cases in&nbsp;" + fr['7_day'].zero_day_met
+         main_summary_text += "&nbsp;days.</span> " 
       }
       else {
          main_summary_text += "<br><span class='ugly_t'> "  
-         main_summary_text += " it could reach herd immunity in " + fr['7_day'].herd_immunity_met
-         main_summary_text += " days .</span> "
+         main_summary_text += " it could reach herd immunity in&nbsp;" + fr['7_day'].herd_immunity_met
+         main_summary_text += "&nbsp;days.</span> "
       }
       // ADD CURVE SENTENCE ONLY IF IT HAS PEAKED.
       if (fr['exp'].curve_end != 0) {
          curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
          if (curve_end_days > 0) {
-            main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>"
+            main_summary_text += "<br><span class='good_t'>The curve is projected to end in&nbsp;" + curve_end_days + "&nbsp;days.</span>"
          }
          else {
-            main_summary_text += "<br><span class='good_t'>The curve was projected to end " + curve_end_days.toString() + " days ago.</span>"
+            main_summary_text += "<br><span class='good_t'>The curve was projected to end&nbsp;" + curve_end_days + "&nbsp;days&nbsp;ago.</span>"
 
          }
       }
