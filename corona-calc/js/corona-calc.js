@@ -261,7 +261,7 @@ function displayData(json_data ,state,county) {
 
    // New Deaths
    title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
-   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60);
+   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60);
 
    // Death Growth
    title = "<b>" + full_state_name  + " - Death Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
@@ -270,7 +270,7 @@ function displayData(json_data ,state,county) {
    // Growth Decay
    title = "<b>" + full_state_name  + " - Growth Decay</b><br>at " + dateFormat(last_date) + " in days since first case";
    fitsObj = getFits(zdv4, decay_vals)
-   out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "growth decay", title, "decay_div", "line")
+   out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "Growth Decay", title, "decay_div", "line")
 
    // Tests
    if (ctype == 'state') {
@@ -281,7 +281,7 @@ function displayData(json_data ,state,county) {
    // mortality div
    fitsObj = getFits(zdv5, mortality_vals)
    title = "<b>" + full_state_name  + " - Mortality</b><br>at " + dateFormat(last_date) + " in days since first case"; 
-   out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "mortality percentage", title, "mortality_div", "line")
+   out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "Mortality Percentage", title, "mortality_div", "line")
 
    var total_cases = new_cases_vals.reduce(function(a, b){
       return a + b;

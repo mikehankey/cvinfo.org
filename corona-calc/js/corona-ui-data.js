@@ -118,6 +118,7 @@ function fillSummary(state_name,fr,sum_info) {
    var main_summary_text = "";
    var fr_html = ""; // for curve peak
   
+   // ADD CURVE SENTENCE
    // BOTH 14/7 OUTCOME RESULTS IN ZERO DAY
    if ((fr['14_day'].outcome == 'zero' && fr['7_day'].outcome == 'zero' )  ) {  
 
@@ -144,6 +145,23 @@ function fillSummary(state_name,fr,sum_info) {
             main_summary_text +=  " days.</span>";
          }
       }
+
+   // ADD CURVE SENTENCE
+   curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
+   if (curve_end_days < 0 && fr['exp'].curve_end > 0) {
+      main_summary_text += "<br><span class='good_t'>The curve reached the zero day mark " + curve_end_days.toString() + " days ago.</span>" 
+   }
+      // ADD CURVE SENTENCE ONLY IF IT HAS PEAKED.
+      if (fr['exp'].curve_end != 0) {
+         curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
+         if (curve_end_days > 0) {
+            main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>" 
+         }
+      }
+
+
+
+
    }
    // BOTH 14/7 RESULT IN HERD DAY OR WE HAVE HIT THE ZERO DAY!!!
 
@@ -186,6 +204,16 @@ function fillSummary(state_name,fr,sum_info) {
  
 
       }
+      // ADD CURVE SENTENCE ONLY IF IT HAS PEAKED.
+      if (fr['exp'].curve_end != 0) {
+         curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
+         if (curve_end_days > 0) {
+            main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>" 
+         }
+      } 
+      else {
+
+      }
  
    }
    // 14/7 RESULT IN HERD DAY AND ZERO
@@ -212,6 +240,14 @@ function fillSummary(state_name,fr,sum_info) {
          main_summary_text += " it could reach herd immunity in " + fr['7_day'].herd_immunity_met
          main_summary_text += " days .</span> "
       }
+      // ADD CURVE SENTENCE ONLY IF IT HAS PEAKED.
+      if (fr['exp'].curve_end != 0) {
+         curve_end_days = fr['exp'].curve_end - fr['exp'].current_zero_day
+         if (curve_end_days > 0) {
+            main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>"
+         }
+      }
+
    }
    
    $('#summary').html('<div id="sum_main">'+main_summary_text+'</div>'); 
@@ -253,16 +289,8 @@ function fillSummary(state_name,fr,sum_info) {
    }  
   
    curve_flag = fr['exp'].curve_end - fr['exp'].current_zero_day 
-
-   if (curve_flag <= 0 && outcome == "zero") {
-      fr_html = ""; // Keep it to hide the curve message
-   }  else {
-      
-      if (curve_flag < 60 && curve_flag > 0) {
-         fr_html = ""; // Keep it to hide the curve message
-      } else {
-         fr_html += "<div class='bad_d'>The curve has not peaked.</div>"
-      }
+   if (fr['exp'].curve_end == 0 ) {
+      fr_html += "<div class='bad_d'>The curve has not peaked.</div>"
    }  
 
    $('#sum_peak').html(fr_html);
