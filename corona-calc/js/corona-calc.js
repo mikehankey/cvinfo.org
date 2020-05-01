@@ -767,7 +767,12 @@ function load_data(reload) {
    var url = "../json/" + state + ".json";
    if($.trim(state)!=='') {
       // Update Soc Sharing with Full State Name
-      setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
+      if(county!=='' && typeof county !== "undefined") {
+         setShareLinks({state:county+", "+ state, state_code:""});
+      } else {
+         setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
+      }
+    
       getJSONData(url,state,county,reload);
    }
 }
@@ -822,9 +827,7 @@ function getJSONData(url,state,county,reload) {
                // Select County
                var $opt = $('#county_selector option').get(possibleCountiesIndex[toTest]);
                $('#county_selector').val($($opt).attr('value')).trigger('change');
-
             }
-
             possibleCounties = null;
             init_select_county = "";
          }
