@@ -52,18 +52,19 @@ function setShareLinks(data) {
    });
 
    $(".social-share.linkedin").unbind("click").on("click", function() {
-      // Remove ? from document.url
-      var t = document.URL;
+      var t = pageUrl;
+      // Remove ? from  
       if(t.indexOf('?')>0) {
          t = t.substring(0,t.indexOf('?'));
-      } 
-      console.log(t);
-       url = "https://www.linkedin.com/shareArticle?mini=true&url=" + t;
+      }  
+       url = "https://www.linkedin.com/shareArticle?mini=true&url=" +  decodeURIComponent(pageUrl);
        socialWindow(url);
    });
 
    $(".social-share.reddit").unbind("click").on("click", function() {
-      url = "http://www.reddit.com/submit?url=" + document.URL;
+      console.log("PAGE URL ", pageUrl);
+      console.log("TITLE", title);
+      url = "http://www.reddit.com/submit?url=" + pageUrl + "&title=" +  title;
       socialWindow(url);
   })
 } 
