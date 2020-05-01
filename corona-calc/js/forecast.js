@@ -56,23 +56,18 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    // also figure out if the curve has peaked or when it will peak if it can.
    for (var i  = 0; i <= exp.length -1; i++) {
       ey = exp[i].y
+      /*
       if (ey > last_ey) {
        console.log("UP", i,ey)
       }
       else {
        console.log("DOWN", i, ey)
       }
+      */
       if (i > 30 && ey < 0 && curve_end == 0) {
          curve_end = i
       }
-
-
-
-
-
-
-
-
+ 
 
       if (ey > 0) {
          curve_total_cases += ey      

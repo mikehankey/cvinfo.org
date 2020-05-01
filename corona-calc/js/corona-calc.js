@@ -770,7 +770,7 @@ function load_data(reload) {
    if($.trim(state)!=='') {
       // Update Soc Sharing with Full State Name
       if(county!=='' && typeof county !== "undefined") {
-         setShareLinks({state:county+", "+ state, state_code:""});
+         setShareLinks({state:county+", "+ state, state_code:state,county:county});
       } else {
          setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
       }
