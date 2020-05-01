@@ -1,5 +1,4 @@
 function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) {
-   
    // this function projects the data forward to find end zero days or herd immunity and outcome values.
    var ys = fys;
    var total_cases_org = total_cases;
@@ -16,17 +15,25 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       "7_day" : {}, 
       "exp" : {}
    };
+   forecast_result['exp']['herd_immunity_met'] = 0
 
 
    // No real idea what's going on here
+   // here we are preping the data for the curve forecast
+   // this has to be done with 3rd party fit functions and 
+   // the data has to be setup a specific way
+
+   // first we will setup the x axis data (days)
    var rdata = [];
    for (var i  = 0; i <= xs.length -1; i++) {
       var point = [xs[i], ys[i]];
       rdata.push(point);
       var last_x = xs[i];
+      // save the last day value as we need it to project forward
       last_x = i  ;
    }
 
+   // setup points structure needed by poly function and add 1200 future days to the end
    var linReg = regression('polynomial', rdata);
    for (var i = 0; i<= 1200; i++) {
       tx = last_x + i;
@@ -34,6 +41,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       rdata.push(point);
    }
 
+   // create poly data for the extra points we added to the points array, this will populate the unknown Y from the point/rdata array
    var exp = extraPoints(rdata,linReg);
    var exp_ys = [];
 
@@ -42,40 +50,65 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    curve_start_day = xs.length;
    curve_end = 0;
    forecast_result['exp']['herd_immunity_met'] = 0;
-
+   forecast_result['exp']['outcome'] = "zero"
+   final_status_exp = 0
+   // now loop over the forecast data and figure out the final projection 
+   // also figure out if the curve has peaked or when it will peak if it can.
    for (var i  = 0; i <= exp.length -1; i++) {
       ey = exp[i].y
-      if (i > 0 && last_ey < ey) {
-         //console.log(i, "curve moving up", ey)
-      } else {
-         if (ey < 0 && curve_end == 0 && i > 5) {
-            curve_end = i
-            //console.log(i, "curve ended.", )
-         }
-         if (ey > 0) {
-            curve_total_cases += ey      
-         }
+      if (ey > last_ey) {
+       console.log("UP", i,ey)
       }
- 
+      else {
+       console.log("DOWN", i, ey)
+      }
+      if (i > 30 && ey < 0 && curve_end == 0) {
+         curve_end = i
+      }
+
+
+
+
+
+
+
+
+
+      if (ey > 0) {
+         curve_total_cases += ey      
+      }
+
+
+      // populate forecast with poly results 
       forecast_result['exp']['total_cases'] = curve_total_cases 
       forecast_result['exp']['total_dead'] = curve_total_cases * mortality
       forecast_result['exp']['death_percent'] =  ((curve_total_cases * mortality)/ state_pop) * 100
       forecast_result['exp']['total_infected'] = curve_total_cases * phantom
       forecast_result['exp']['infected_percent'] = ((curve_total_cases * phantom) / state_pop) * 100
-      if (forecast_result['exp']['death_percent'] + forecast_result['exp']['infected_percent'] >= 80 && final_status14 == 0) {
+      if (forecast_result['exp']['death_percent'] + forecast_result['exp']['infected_percent'] >= 80 && final_status_exp == 0) {
          forecast_result['exp']['herd_immunity_met'] = i - current_zero_day
       }
  
+      impacted = (forecast_result['exp']['total_cases'] + forecast_result['exp']['total_dead'] + forecast_result['exp']['total_infected']) 
+      if (impacted > (herd_thresh * state_pop) && final_status_exp == 0) {
+         final_status_exp = 1
+         forecast_result['exp']['herd_immunity_met'] = TX - current_zero_day 
+         forecast_result['exp']['outcome'] = "herd"
+         
+      }
       exp_ys.push(ey)
       last_ey = ey
    }
 
+   // now we have ALL of the curve results in the forecast_result so we can make a gauge
+   // with it and add it to the table. This is much better than the 7-Day or 14-Day methods.
    forecast_result['exp']['current_zero_day'] = current_zero_day
    forecast_result['exp']['curve_end'] = curve_end  
    forecast_result['exp']['zero_day_met'] = curve_end - current_zero_day
    forecast_result['exp']['total_cases'] = curve_total_cases
    forecast_result['exp']['total_not_infected'] = state_pop - forecast_result['exp']['total_infected'] - forecast_result['exp']['total_dead']
    forecast_result['exp']['niperc'] = (forecast_result['exp']['total_not_infected'] / state_pop) * 100
+
  
 
    fxs_14 = []
@@ -196,10 +229,6 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
 
    }
 
- //alert("herd14 " + forecast_result['14_day']['herd_immunity_met'].toString())
- //alert("herd7 " + forecast_result['7_day']['herd_immunity_met'].toString() )
- //alert("zero14:" + forecast_result['14_day']['zero_day_met'].toString())
- //alert("zero7:" + forecast_result['7_day']['zero_day_met'].toString())
 
  if (forecast_result['14_day']['herd_immunity_met'] == 9999) {
     forecast_result['14_day']['outcome'] = "zero"
@@ -213,8 +242,6 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
  else {
     forecast_result['7_day']['outcome'] = "herd"
  }
- //alert("outcome14:" + forecast_result['14_day']['outcome'].toString())
- //alert("outcome7:" + forecast_result['7_day']['outcome'].toString())
 
 
    if(   typeof forecast_result['14_day']['total_cases']     == "undefined" ||

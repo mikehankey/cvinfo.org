@@ -479,7 +479,8 @@ def main_menu():
    print("6) Generate all counties page.")
    print("7) Rsync Site.")
    print("8) Make SVG Legends.")
-   print("9) Quit.")
+   print("9) Tests.")
+   print("10) Quit.")
 
    cmd = input("What function do you want to run: ")
    if cmd == "1":
@@ -506,6 +507,36 @@ def main_menu():
       publish_site()
    if cmd == "8":
       make_svg_legends()
+   if cmd == "9":
+      tests()
+
+def tests() :
+   state_names, state_codes = load_state_names()
+   for st in state_names: 
+      print("test report for " + st)
+      sd = load_json_file(JSON_PATH + "/" + st + ".json") 
+      xd = []
+      x_data = []
+      yv = []
+      yd = []
+      i = 0
+      for sr in sd['state_stats']:
+         xd.append(i)
+         x_data.append(i)
+         if sr['tests'] > 0:
+            yv.append(round(sr['cases'] / sr['tests'],2)*100)
+            yd.append(round(sr['cases'] / sr['tests'],2)*100)
+            print(sr['date'], sr['tests'], sr['cases'], round(sr['cases'] / sr['tests'],2))
+         else:   
+            yv.append(0)
+            yd.append(0)
+            print(sr['date'], sr['tests'], sr['cases'], 0)
+         i += 1
+ 
+      title = state_names[st] + " Tests - % Positive"
+      outfile = "plots/" + st + "-tests.png"
+      plot_line(xd, yd, title, "days since first case", "percent positive", outfile)
+
 
 def make_all_county_page(sort_field = None):
 
@@ -1670,6 +1701,19 @@ def make_status_seq_data(state, js_vals):
 
    return(slopes)
 
+def plot_line(x_vals, y_vals, title = "", x_lab="", y_lab="", outfile = ""):
+   fig = plt.figure()
+   axes = plt.gca()
+   plt.plot(x_vals , y_vals, '-', label=y_lab, color='blue')
+   lab = "test percent positive"
+   plt.title(title, fontsize=16)
+   plt.ylabel(y_lab)
+   plt.xlabel(x_lab)
+   if outfile != "":
+      plt.savefig(outfile)
+      print("Saved: ", outfile)
+   plt.show()
+
 def plot_vars(x_vals, x_data, y_vals, y_vals2 = None, title = "", date="", outfile = ""):
 
    fig = plt.figure()
@@ -1702,7 +1746,7 @@ def plot_vars(x_vals, x_data, y_vals, y_vals2 = None, title = "", date="", outfi
    if outfile != "":
       plt.savefig(outfile)
       print("Saved: ", outfile)
-   #plt.show()
+   plt.show()
 
    fig.clear()
 
