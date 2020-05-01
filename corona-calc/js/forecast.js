@@ -62,7 +62,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       else {
        console.log("DOWN", i, ey)
       }
-      if (i > 14 && ey < 0 && curve_end == 0) {
+      if (i > 30 && ey < 0 && curve_end == 0) {
          curve_end = i
       }
 

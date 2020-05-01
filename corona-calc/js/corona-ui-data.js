@@ -246,6 +246,10 @@ function fillSummary(state_name,fr,sum_info) {
          if (curve_end_days > 0) {
             main_summary_text += "<br><span class='good_t'>The curve is projected to end in " + curve_end_days.toString() + " days.</span>"
          }
+         else {
+            main_summary_text += "<br><span class='good_t'>The curve was projected to end " + curve_end_days.toString() + " days ago.</span>"
+
+         }
       }
 
    }
