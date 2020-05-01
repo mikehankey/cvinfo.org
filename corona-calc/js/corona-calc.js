@@ -767,7 +767,7 @@ function load_data(reload) {
    var url = "../json/" + state + ".json";
    if($.trim(state)!=='') {
       // Update Soc Sharing with Full State Name
-      updateDocumentUrl($("#state_selector option[value='"+state+"']").text());
+      setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
       getJSONData(url,state,county,reload);
    }
 }

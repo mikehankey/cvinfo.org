@@ -125,7 +125,8 @@ $(function() {
          $('#state_selector').val(selState).trigger('change');
 
          // Update Soc Sharing with Full State Name
-         updateDocumentUrl($("#state_selector option[value='"+selState+"']").text());
+         setShareLinks({state:$("#state_selector option[value='"+selState+"']").text(), state_code:selState});
+ 
       }
 
       possibleStates = null;
