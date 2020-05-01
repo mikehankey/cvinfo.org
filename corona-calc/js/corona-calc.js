@@ -244,7 +244,8 @@ function displayData(json_data ,state,county) {
 
    // Draw graphs & Gauges for New Cases
    // New Cases
-   title = "<b>" + full_state_name  + " New Cases</b><br>at " + dateFormat(last_date) + " in days since first case";
+   //  at " + dateFormat(last_date) + "
+   title = "<b>" + full_state_name  + " New Cases</b><br>per day since first case";
    pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60);
    
 
@@ -255,32 +256,32 @@ function displayData(json_data ,state,county) {
    zdv6 = zero_day_vals.slice();
 
    // Growth
-   title = "<b>" + full_state_name  + " - Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
+   title = "<b>" + full_state_name  + " - Growth</b><br> per day since first case";
    out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
    
 
    // New Deaths
-   title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
+   title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
    pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60);
 
    // Death Growth
-   title = "<b>" + full_state_name  + " - Death Growth</b><br>at " + dateFormat(last_date) + " in days since first case";
+   title = "<b>" + full_state_name  + " - Death Growth</b><br> per day since first case";
    out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
 
    // Growth Decay
-   title = "<b>" + full_state_name  + " - Growth Decay</b><br>at " + dateFormat(last_date) + " in days since first case";
+   title = "<b>" + full_state_name  + " - Growth Decay</b><br> per day since first case";
    fitsObj = getFits(zdv4, decay_vals)
    out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "growth decay", title, "decay_div", "line")
 
    // Tests
    if (ctype == 'state') {
-   title = "<b>" + full_state_name  + " - Tests per day</b>";
-   out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60)
+      title = "<b>" + full_state_name  + " - Tests per day</b>";
+      out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60)
    }
 
    // mortality div
    fitsObj = getFits(zdv5, mortality_vals)
-   title = "<b>" + full_state_name  + " - Mortality</b><br>at " + dateFormat(last_date) + " in days since first case"; 
+   title = "<b>" + full_state_name  + " - Mortality</b><br> per day since first case"; 
    out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "mortality percentage", title, "mortality_div", "line")
 
    var total_cases = new_cases_vals.reduce(function(a, b){

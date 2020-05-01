@@ -335,9 +335,11 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
       range: [0,ymax],
       autorange: false, 
       yaxis : {
+         /*
          title: {
             text: yl
          },
+         */
          autorange: true,
          autotick: true,
          ticks: 'outside',
@@ -442,9 +444,11 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
          }
       }],
       yaxis : {
+         /*
          title: {
             text: yl
          },
+         */
          range: [0,ymax],
          autorange: false,
          autotick: true,
