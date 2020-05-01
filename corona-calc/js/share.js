@@ -6,7 +6,7 @@ function socialWindow(url) {
 }
 
 function setShareLinks(data) {
-   var pageUrl, title, url;
+   var pageUrl, title, url, meta_desc;
   
    if(typeof data !== "undefined" && typeof data.url !== "undefined") {
       pageUrl = data.url;
@@ -14,9 +14,27 @@ function setShareLinks(data) {
       pageUrl = encodeURIComponent(document.URL);
    }
 
-   if(typeof data !== "undefined" && typeof data.state !== "undefined") {
+   if(typeof data !== "undefined" && typeof data.state !== "undefined" && typeof data.state_code !== "undefined") {
       // Update Meta (? - not sure it will work for FB as they cache the meta)
-      $("meta[property='og:description']").attr("content",$("meta[property='og:description']").attr("content")+ ' for ' + data.state);
+      // Remove the previous state if any
+      meta_desc =  $("meta[property='og:description']").attr("content");
+
+      if(meta_desc.indexOf("for")>0) {
+         meta_desc = meta_desc.substring(0, meta_desc.indexOf(" for "));
+      }
+ 
+      $("meta[property='og:description']").attr("content", meta_desc + ' for ' + data.state);
+      
+
+      // We update the page URL
+      if(decodeURIComponent(pageUrl).indexOf('?')>0) {
+         pageUrl = decodeURIComponent(pageUrl).substring(0,decodeURIComponent(pageUrl).indexOf('?')+1)+data.state_code;
+      } else {
+         pageUrl = decodeURIComponent(pageUrl) + "?" + data.state_code;
+      }
+
+      pageUrl = encodeURIComponent(pageUrl);
+      
    } 
    
    title = encodeURIComponent($("meta[property='og:description']").attr("content"));
@@ -34,27 +52,22 @@ function setShareLinks(data) {
    });
 
    $(".social-share.linkedin").unbind("click").on("click", function() {
-       url = "https://www.linkedin.com/shareArticle?mini=true&url=" + pageUrl;
+      var t = pageUrl;
+      // Remove ? from  
+      if(t.indexOf('?')>0) {
+         t = t.substring(0,t.indexOf('?'));
+      }  
+       url = "https://www.linkedin.com/shareArticle?mini=true&url=" +  decodeURIComponent(pageUrl);
        socialWindow(url);
    });
 
    $(".social-share.reddit").unbind("click").on("click", function() {
-      url = "http://www.reddit.com/submit?url=" + pageUrl + "&title=" + encodeURIComponent(document.title);
+      console.log("PAGE URL ", pageUrl);
+      console.log("TITLE", title);
+      url = "http://www.reddit.com/submit?url=" + pageUrl + "&title=" +  title;
       socialWindow(url);
   })
-}
-
-function updateDocumentUrl(state,county) {
-   var data = {};
-   if(typeof state!="undefined" && state != "") {
-      data.state = state;
-   }
-   if(typeof county!="undefined" && county != "") {
-      data.county = county;
-   }
-   setShareLinks(data);
-}
-
+} 
 
 $(function() {
    setShareLinks();
