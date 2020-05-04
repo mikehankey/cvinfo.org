@@ -3,7 +3,7 @@ function fillJsonData() {
    var html= "<ul class='adp'>";
 
    $.each(all_states, function(i,v) {
-      html += "<li><span>"+ v.st + " "  + "</span><a href='../json/"+v.a+".json"+"' target='_blank' title='COVID 19 Data for "+ v.st + " '>Json</a> - <a href='./?"+v.a+"' title='COVID 19 Predicted outcome for "+ v.st + " '>Predicted outcome</a></li>";
+      html += "<li><span>"+ v.st + " "  + "</span><a href='../json/"+v.a+".json"+"' target='_blank' title='COVID 19 Data for "+ v.st + " '>json</a> - <a href='./?"+v.a+"' title='COVID 19 Predicted outcome for "+ v.st + " '>Predicted outcome</a></li>";
    });
 
    $('#state_data').html(html+"</ul>");
@@ -34,7 +34,7 @@ function fillUSData() {
       cases_trace = {
          type: "scatter",
          mode: "lines",
-         name: 'COVID-19 Cases',
+         name: 'Cases',
          x: dates,
          y: cases,
          mode: 'lines+markers',
@@ -45,16 +45,18 @@ function fillUSData() {
       death_trace = {
          type: "scatter",
          mode: "lines",
-         name: 'COVID-19 Deaths',
+         name: 'Deaths',
          x: dates,
-         y: deaths,
-         mode: 'lines+markers',
-         type: 'scatter',
-         line: {color: '#c00'}
+         y: deaths, 
+         type: 'bar',
+         marker: {
+            color: '#c00'  
+          },
+         yaxis: 'y2'
       };
  
       Plotly.newPlot('us_graph', [cases_trace,death_trace], {responsive:true, title:'<b>US COVID-19 Deaths & Cases</b>',legend: { orientation: "h",  x: 0,
-      y: 1}});
+      y: 1},  yaxis2: {side:'right',overlaying: 'y',  titlefont: {color: '#c00'},  tickfont: {color: '#c00'},}});
 
       $('#tot_death').html(usFormat(deaths[deaths.length-1])).css('color','#7F7F7F');
       $('#tot_cases').html(usFormat(cases[cases.length-1])).css('color','#c00');
