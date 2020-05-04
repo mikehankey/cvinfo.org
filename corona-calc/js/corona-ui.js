@@ -75,7 +75,7 @@ $(function() {
    $('body').removeClass('wait');
 
    // Create action on state select 
-   $('#state_selector').change(function() {change_state();});
+   $('#state_selector').change(function() { change_state(); });
 
    // Creation action on recalculate button
    $('#recalculate').click(function() { 
