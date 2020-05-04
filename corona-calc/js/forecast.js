@@ -1,4 +1,4 @@
-function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) {
+function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,current_zero_day,herd_thresh,MIT,LA,county_perc) {
    // this function projects the data forward to find end zero days or herd immunity and outcome values.
    var ys = fys;
    var total_cases_org = total_cases;
@@ -16,6 +16,7 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       "exp" : {}
    };
    forecast_result['exp']['herd_immunity_met'] = 0
+   forecast_result['exp']['dys'] = []
 
 
    // No real idea what's going on here
@@ -46,11 +47,12 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    var exp_ys = [];
 
    last_ey = 0;
-   curve_total_cases = total_cases_org;
+   curve_total_cases = 0;
    curve_start_day = xs.length;
    curve_end = 0;
    forecast_result['exp']['herd_immunity_met'] = 0;
    forecast_result['exp']['outcome'] = "zero"
+   forecast_result['exp']['ys'] = []
    final_status_exp = 0
    // now loop over the forecast data and figure out the final projection 
    // also figure out if the curve has peaked or when it will peak if it can.
@@ -71,6 +73,8 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
 
       if (ey > 0) {
          curve_total_cases += ey      
+         forecast_result['exp']['ys'].push(ey)
+         forecast_result['exp']['dys'].push(ey * mortality)
       }
 
 
@@ -122,6 +126,10 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    var total_cases_14 = total_cases;
    var total_cases_7 = total_cases;
  
+   forecast_result['14_day']['total_cases_start'] = total_cases
+   forecast_result['7_day']['total_cases_start'] = total_cases
+   forecast_result['14_day']['total_deaths_start'] = total_deaths
+   forecast_result['7_day']['total_deaths_start'] = total_deaths
  
    forecast_result['14_day']['zero_day_met'] = 9999
    forecast_result['7_day']['zero_day_met'] = 9999
@@ -147,6 +155,33 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    // infected
    forecast_result['14_day']['iys'] = []
    forecast_result['7_day']['iys'] = [] 
+
+   // MIT MODEL OBJ 
+   forecast_result['MIT'] = {}
+   forecast_result['MIT']['xs'] = []
+   forecast_result['MIT']['ys'] = []
+   forecast_result['MIT']['yds'] = []
+   forecast_result['MIT']['niys'] = []
+   forecast_result['MIT']['iys'] = []
+   forecast_result['MIT']['total_cases'] = []
+   forecast_result['MIT']['total_dead'] = []
+   forecast_result['MIT']['death_percent'] = []
+   forecast_result['MIT']['total_infected'] = []
+   forecast_result['MIT']['infected_percent'] = []
+
+   // LA MODEL OBJ
+   forecast_result['LA'] = {}
+   forecast_result['LA']['xs'] = []
+   forecast_result['LA']['ys'] = []
+   forecast_result['LA']['yds'] = []
+   forecast_result['LA']['niys'] = []
+   forecast_result['LA']['iys'] = []
+   forecast_result['LA']['total_cases'] = []
+   forecast_result['LA']['total_dead'] = []
+   forecast_result['LA']['death_percent'] = []
+   forecast_result['LA']['total_infected'] = []
+   forecast_result['LA']['infected_percent'] = []
+
 
    while(final_status14 == 0 || final_status7 == 0 ) {
       
@@ -269,6 +304,35 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    forecast_result['7_day']['total_not_infected'] = state_pop - impacted_7t 
    forecast_result['7_day']['niperc'] = (impacted_7 / state_pop) * 100 
 
+
+   // LOAD IN THE MIT MODEL DATA
  
+   // preload zero into the array for past hist 
+   last_cases = 0
+   last_deaths = total_deaths
+   for (i = 0; i <= current_zero_day; i++) {
+      forecast_result['MIT']['xs'].push(i)
+      forecast_result['MIT']['ys'].push(0)
+   }
+   // load only future forecast mit data
+   
+   for (i = 0; i < MIT.Total_Detected.length; i++) {
+      if (i == 0) {
+         last_cases = MIT.Total_Detected[i]
+      }
+      new_cases = MIT.Total_Detected[i] - last_cases
+      new_deaths = MIT.Total_Detected_Deaths[i] - last_deaths
+      console.log( MIT.Total_Detected[i], MIT.Total_Detected_Deaths[i],new_cases, new_deaths)
+      new_cases = new_cases * county_perc
+      new_deaths = new_deaths * county_perc
+      forecast_result['MIT']['xs'].push(i+current_zero_day)
+      forecast_result['MIT']['ys'].push(new_cases)
+      forecast_result['MIT']['yds'].push(new_deaths)
+  
+      last_cases = MIT.Total_Detected[i];
+      last_deaths= MIT.Total_Detected_Deaths[i];
+
+   }
+   
    return(forecast_result);
 }

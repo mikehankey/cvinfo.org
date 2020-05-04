@@ -110,8 +110,56 @@ function fillPredictedOutcome(fr,sum_info) {
    $('#new_trends tbody').html(tbody);
 }
 
+
+function forecastTable(fr) {
+   exp_ys_sliced = fr['exp']['ys'].slice(fr['exp']['current_zero_day'], fr['exp']['ys'].length-1)
+   exp_dys_sliced = fr['exp']['dys'].slice(fr['exp']['current_zero_day'], fr['exp']['dys'].length-1)
+   drange = [fr['7_day']['ys'].length, fr['14_day']['ys'].length, exp_ys_sliced.length]
+   max = Math.max.apply(null,drange);
+   total_cases = fr['14_day']['total_cases_start']
+   total_deaths= fr['14_day']['total_deaths_start']
+   day14_new_cases = total_cases
+   day14_new_deaths = total_deaths
+   day7_new_cases = total_cases
+   day7_new_deaths = total_deaths
+   exp_new_cases = total_cases
+   exp_new_deaths = total_deaths
+   fhtml = "<table><tr><td>Forecast<br>Day</td><td>New Cases<br>14-Day Trend</td><td>New Cases<BR>7-Day Trend</td><td>Curve <br>New Cases</td></tr> "
+   for (i = 0; i <= max; i++) {
+      if (i < fr['14_day']['ys'].length) {
+         day14_new_cases += parseInt(fr['14_day'].ys[i])
+         day14_new_deaths += parseInt(fr['14_day'].dys[i])
+      }
+      else {
+         day14_new_cases = 0
+         day14_new_deaths= 0
+      }
+      if (i < fr['7_day']['ys'].length) {
+         day7_new_cases += parseInt(fr['7_day']['ys'][i])
+         day7_new_deaths += parseInt(fr['7_day'].dys[i])
+      }
+      else {
+         day7_new_cases = 0
+         day7_new_deaths = 0
+      }
+      if (i < exp_ys_sliced.length) {
+         exp_new_cases  += parseInt(exp_ys_sliced[i])
+         exp_new_deaths  += parseInt(exp_dys_sliced[i])
+      }
+      else {
+         exp_new_cases = 0
+         exp_new_deaths = 0
+      }
+      fhtml += "<tr><td>" + i + "</td><td>" + day14_new_cases + " / " + day14_new_deaths +  "</td><td>" + day7_new_cases + " / " + day7_new_deaths + "</td><td>" + exp_new_cases + " / " + exp_new_deaths + "</td></tr>"
+   }
+   fhtml += "</table>"
+   return(fhtml) 
+
+}
+
 function fillSummary(state_name,fr,sum_info) {
-   
+   //fhtml = forecastTable(fr)   
+   fhtml = ""
    var $gaugesCont = $('#forecast'); 
    var $forteen_days = $gaugesCont.find('.14days');
    var $seven_days = $gaugesCont.find('.7days');  
@@ -253,7 +301,7 @@ function fillSummary(state_name,fr,sum_info) {
       }
 
    }
-   
+   main_summary_text += fhtml 
    $('#summary').html('<div id="sum_main">'+main_summary_text+'</div>'); 
     
    // Recreate the Gauges
@@ -361,7 +409,6 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
       name: "Curve",
       type: type  
    };
-
    var data = [trace1,trace2,trace3,trace5]; // , trace4
    var layout = { 
       range: [0,ymax],
@@ -405,8 +452,8 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 
 
 // Create real graphs
-function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
-   
+function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
+ 
  
    var ymax = Math.max.apply(Math, yd) + Math.max.apply(Math, yd)/8;
    /*
@@ -460,7 +507,21 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
       type: "line" 
    };
 
-   var data = [trace1, trace2, trace3,trace5]; //
+   if (model_ys.length > 0) {
+      var mxs = xd.slice(0, model_ys.length)
+      var trace6 = {
+         x: xd,
+         y: model_ys,
+         name: "MIT Model",
+         type: "line" 
+      };
+      var data = [trace1, trace2, trace3,trace5,trace6]; //
+   }
+   else {
+      var data = [trace1, trace2, trace3,trace5]; //
+
+   }
+
    var layout = {
       shapes : [{ 
          type: 'line',
