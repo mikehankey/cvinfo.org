@@ -311,7 +311,9 @@ function displayData(json_data ,state,county) {
    document.getElementById("f_xs").value = zdv6
    document.getElementById("f_ys").value = nc_org2 
    document.getElementById("f_total_cases").value = total_cases
+   alert(total_deaths)
    document.getElementById("f_total_deaths").value = total_deaths
+
    document.getElementById("f_state_pop").value = state_pop 
    document.getElementById("f_current_zero_day").value = current_zero_day 
    document.getElementById("f_state_name").value = state_name

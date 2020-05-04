@@ -480,7 +480,8 @@ def main_menu():
    print("7) Rsync Site.")
    print("8) Make SVG Legends.")
    print("9) Tests.")
-   print("10) Quit.")
+   print("10) Parse Model Data.")
+   print("11) Quit.")
 
    cmd = input("What function do you want to run: ")
    if cmd == "1":
@@ -507,35 +508,137 @@ def main_menu():
       publish_site()
    if cmd == "8":
       make_svg_legends()
+   if cmd == "10":
+      load_models()
    if cmd == "9":
       tests()
 
+def cdc() :
+#model   forecast_date   target  target_week_end_date    location_name   point   quantile_0.025  quantile_0.975
+   cdc_file = "data/cdc-2020-04-13-model-data.txt"
+   fp = open(cdc_file, "r")
+   lc = 0
+   cdc_data = {}
+   for line in fp:
+      line = line.replace("\n", "")
+      if lc > 0:
+         data = line.split("\t")
+         model, forecast_date, target, target_date, state, mid, low, high = data 
+         model = model.replace("%", "")
+         model = model.replace(" ", "_")
+         print(state, model, target_date)
+         if state not in cdc_data:
+            cdc_data[state] = {}
+         if model not in cdc_data[state]:
+            cdc_data[state][model] = {}
+            cdc_data[state][model]['dates'] = []
+            cdc_data[state][model]['min_ys'] = []
+            cdc_data[state][model]['mid_ys'] = []
+            cdc_data[state][model]['max_ys'] = []
+         cdc_data[state][model]['dates'].append(target_date)
+         if low == "NA":
+            low = 0
+         if mid == "NA":
+            mid = 0
+         if high == "NA":
+            high = 0
+         cdc_data[state][model]['min_ys'].append(int(low))
+         cdc_data[state][model]['mid_ys'].append(int(mid))
+         cdc_data[state][model]['max_ys'].append(int(high))
+      lc += 1
+   save_json_file("cdc.json", cdc_data)
+
+   st = "Maryland"
+   fig = plt.figure()
+   for model in cdc_data[st]:
+
+      print("GRAPH:") 
+      print(cdc_data[st][model]['dates'])
+      print(cdc_data[st][model]['min_ys'])
+      print(cdc_data[st][model]['max_ys'])
+      if sum(cdc_data[st][model]['min_ys']) > 0:
+         plt.fill_between(cdc_data[st][model]['dates'], cdc_data[st][model]['min_ys'], cdc_data[st][model]['max_ys'], alpha=.1)
+      plt.plot(cdc_data[st][model]['dates'], cdc_data[st][model]['mid_ys'], '-', marker='o', label=model )
+   title = "CDC Death Projection for " + st
+
+   plt.title(title, fontsize=16)
+   #plt.ylabel(y_lab)
+   #plt.xlabel(x_lab)
+   plt.show()
+   
+
+
 def tests() :
+#   cdc()
+#   exit()
    state_names, state_codes = load_state_names()
    for st in state_names: 
+      if st == 'VI':
+         continue
       print("test report for " + st)
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
       xd = []
       x_data = []
-      yv = []
       yd = []
+      yd2 = []
+      pos_perc = []
       i = 0
       for sr in sd['state_stats']:
          xd.append(i)
          x_data.append(i)
-         if sr['tests'] > 0:
-            yv.append(round(sr['cases'] / sr['tests'],2)*100)
-            yd.append(round(sr['cases'] / sr['tests'],2)*100)
-            print(sr['date'], sr['tests'], sr['cases'], round(sr['cases'] / sr['tests'],2))
+         if sr['tests_new_pos'] > 0:
+            yd.append(sr['tests_new_pos'])
+            yd2.append(sr['tests_new_neg'])
+            total_tests = sr['tests_new_pos'] + sr['tests_new_neg']
+            if total_tests > 0:
+               pos_perc.append(round((1-(sr['tests_new_pos'] / total_tests)) * 100,2))
+               print("POS:", round((1-(sr['tests_new_pos'] / total_tests)) * 100,2))
+            else:
+               pos_perc.append(0)
+   
+            print(sr['date'], sr['tests_new_pos'], sr['tests_new_neg'])
+
          else:   
-            yv.append(0)
             yd.append(0)
-            print(sr['date'], sr['tests'], sr['cases'], 0)
+            yd2.append(0)
+            pos_perc.append(0)
          i += 1
  
-      title = state_names[st] + " Tests - % Positive"
+      title = state_names[st] + " Tests Totals by Day"
+      y_lab = "tests neg"
+      y_lab2 = "tests pos"
+      x_lab = "days since first case"
       outfile = "plots/" + st + "-tests.png"
-      plot_line(xd, yd, title, "days since first case", "percent positive", outfile)
+
+      fig, (ax1,ax2) = plt.subplots(2)
+      #fig,(ax1,ax2) = plt.subplots(1,2)
+      #axes = plt.gca()
+      #fig.suptitle('Tests and Percent Positive By Day For ' + st)
+      p1 = ax1.bar(xd, yd2, label=y_lab2, color='red')
+      p2 = ax1.bar(xd, yd, bottom=yd2, label=y_lab, color='blue')
+      ax1.set_title(title, fontsize=16)
+      ax1.set_ylabel("Tests")
+      #ax1.set_xlabel(x_lab)
+      ax1.legend((p2[0], p1[0]), (y_lab, y_lab2))
+
+
+      title = state_names[st] + " Positive % by Day"
+      y_lab = "% positive"
+      x_lab = "days since first case"
+      outfile = "plots/" + st + "-tests.png"
+
+      #fig = plt.figure()
+      #axes = plt.gca()
+      p3 = ax2.plot(xd, pos_perc, label=y_lab, color='red')
+      ax2.set_title(title, fontsize=16)
+      ax2.set_ylabel(y_lab)
+      ax2.set_xlabel(x_lab)
+      fig.tight_layout(pad=3.0)
+      outfile = "plots/" + st + "-tests.png"
+      fig.savefig(outfile)
+      #plt.show()
+
+
 
 
 def make_all_county_page(sort_field = None):
@@ -2599,7 +2702,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    state_stats = []
    for data in level2_data:
       stat_obj = {}
-      (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered) = data 
+      (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg) = data 
       if case_increase < 0:
          case_increase = 0
       if death_increase < 0:
@@ -2632,7 +2735,11 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          "hospital_now" : int(hospital_now),
          "icu_now" : int(icu_now),
          "vent_now" : int(vent_now),
-         "recovered" : int(recovered)
+         "recovered" : int(recovered),
+         "tests_total_pos" : int(tests_total_pos),
+         "tests_total_neg" : int(tests_total_neg),
+         "tests_new_pos" : int(tests_new_pos),
+         "tests_new_neg" : int(tests_new_neg)
          }
       else:
          all_usa_data[date]['cases'] += cases
@@ -2651,6 +2758,10 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          all_usa_data[date]['icu_now'] += int(icu_now)
          all_usa_data[date]['vent_now'] += int(vent_now)
          all_usa_data[date]['recovered'] += int(recovered)
+         all_usa_data[date]['tests_total_pos'] += int(tests_total_pos)
+         all_usa_data[date]['tests_total_neg'] += int(tests_total_neg)
+         all_usa_data[date]['tests_new_pos'] += int(tests_new_pos)
+         all_usa_data[date]['tests_new_neg'] += int(tests_new_neg)
 
       stat_obj = { 
          "state_code" : state_code,
@@ -2677,7 +2788,11 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          "hospital_now" : hospital_now,
          "icu_now" : icu_now,
          "vent_now" : vent_now,
-         "recovered" :int(recovered)
+         "recovered" :int(recovered),
+         "tests_total_pos" : int(tests_total_pos),
+         "tests_total_neg" : int(tests_total_neg),
+         "tests_new_pos" : int(tests_new_pos),
+         "tests_new_neg" : int(tests_new_neg)
       }
       state_stats.append(stat_obj)
    sorted_state_stats = state_stats.sort(key=sort_date,reverse=False)
@@ -2906,7 +3021,7 @@ def add_enhanced_growth_stats(state_code, l2s):
    first_death_day = None
    dc = 0
    for data in l2s:
-      (state_code,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_now,icu_now,vent_now,recovered) = data
+      (state_code,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg) = data
       pop = round(pop,2)
       if first_death_day is None and deaths > 0:
          first_death_day = dc
@@ -2926,7 +3041,7 @@ def add_enhanced_growth_stats(state_code, l2s):
          dg_avg = death_growth 
          dg_med = death_growth 
 
-      extra.append((state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,hospital_now,icu_now,vent_now,recovered) )
+      extra.append((state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg) )
       if cases > 0:
          case_grs.append(case_growth)
       if deaths > 0:
@@ -2942,7 +3057,7 @@ def add_enhanced_growth_stats(state_code, l2s):
    if first_death_day is None:
       first_death_day = 0
    for data in extra:
-      (state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,hospital_now,icu_now,vent_now,recovered) = data
+      (state_code,pop,date,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg) = data
     
       if cases > 0:
          cg_med_decay = round(cg_med - last_cg_med,2)
@@ -2954,7 +3069,7 @@ def add_enhanced_growth_stats(state_code, l2s):
       else:
          dg_med_decay = 0
       zero_day = dc - first_death_day
-      final.append((state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered) )
+      final.append((state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg)) 
       last_cg_med = cg_med 
       last_dg_med = dg_med
       dc += 1
@@ -2979,11 +3094,13 @@ def analyze_data_for_state(this_state,state_data,state_pop):
    case_growth = 0
    death_growth = 0
 
+   print("TEMP LAST:", temp[-1])
+   
 
    for data in temp:
       #date, cases, deaths, case_increase, death_increase,tests = data
       print("TEMP:", data)
-      (date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered) = data
+      (date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_neg,tests_new_pos) = data
       new_cases = cases - last_cases
       new_deaths = deaths - last_deaths
       #if this_state == "DE":
@@ -3015,7 +3132,7 @@ def analyze_data_for_state(this_state,state_data,state_pop):
          mortality = round(mortality,2)
       else:
          mortality = 0
-      level2_data.append((this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_now,icu_now,vent_now,recovered))
+      level2_data.append((this_state,pop,date,cases,deaths,new_cases,new_deaths,cpm,dpm,case_increase,death_increase,case_growth,death_growth,mortality,tests,tpm,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_neg,tests_new_pos))
       last_cpm = cpm
       last_dpm = dpm
       last_cases = cases
@@ -3023,6 +3140,111 @@ def analyze_data_for_state(this_state,state_data,state_pop):
    return(level2_data)
 
 
+def load_models():
+   fp = open("covid-19-data/MIT-model.csv")
+   state_names, state_codes = load_state_names()
+   model_data = {}
+   today = datetime.now()
+   js = load_json_file("json/MD.json")
+   last_row = js['state_stats'][-1]
+   last_date = last_row['date']
+   last_date = datetime.strptime(last_date, "%Y%m%d")
+   
+   #.strftime("%Y-%m-%d %H:%M:%S")))
+   model_data['MIT'] = {}
+   for line in fp:
+      line = line.replace("\n", "")
+      data = line.split(",")
+      state_name = data[2]
+      if data[1] == "US":
+         Continent,Country,Province,Day,Total_Detected,Active,Active_Hospitalized,Cumulative_Hospitalized,Total_Detected_Deaths,Active_Ventilated = data
+         if state_name not in state_codes:
+            print("Skip")
+            continue
+         else:
+            state_code = state_codes[state_name]
+         
+         if state_code not in model_data['MIT']:
+            model_data['MIT'][state_code] = {}
+            model_data['MIT'][state_code]['Day'] = []
+            model_data['MIT'][state_code]['Total_Detected'] = []
+            model_data['MIT'][state_code]['Active'] = []
+            model_data['MIT'][state_code]['Active_Hospitalized'] = []
+            model_data['MIT'][state_code]['Cumulative_Hospitalized'] = []
+            model_data['MIT'][state_code]['Total_Detected_Deaths'] = []
+            model_data['MIT'][state_code]['Active_Ventilated'] = []
+
+         model_date = datetime.strptime(Day, "%m/%d/%Y")
+
+         future = int((model_date - last_date).total_seconds())
+         if future > 1:
+            print(future, model_date)    
+            model_data['MIT'][state_code]['Day'].append(Day)
+            model_data['MIT'][state_code]['Total_Detected'].append(int(Total_Detected))
+            model_data['MIT'][state_code]['Active'].append(int(Active))
+            model_data['MIT'][state_code]['Active_Hospitalized'].append(int(Active_Hospitalized))
+            model_data['MIT'][state_code]['Cumulative_Hospitalized'].append(int(Cumulative_Hospitalized))
+            model_data['MIT'][state_code]['Total_Detected_Deaths'].append(int(Total_Detected_Deaths))
+            model_data['MIT'][state_code]['Active_Ventilated'].append(int(Active_Ventilated))
+         else:
+            print("ignore in past", future, model_date)
+
+   for state_code in state_names:
+      if state_code != "VI":
+         print(state_code)
+         sj = load_json_file("json/" + state_code + ".json")
+         sj['model_data'] = {}
+         sj['model_data']['MIT'] = model_data['MIT'][state_code]
+         save_json_file("json/" + state_code + ".json", sj)
+ 
+   save_json_file("json/MIT-model.json", model_data)
+
+   #los alamos model
+
+   model_data['LA'] = {}
+   fp = open("covid-19-data/LA-model.csv")
+   for line in fp:
+      line = line.replace("\n", "")
+      data = line.split(",")
+      if data[0] == 'dates':
+         continue
+      dates, simple_state, q_01, q_025, q_05, q_10, q_15, q_20, q_25, q_30, q_35, q_40, q_45, q_50, q_55, q_60, q_65, q_70, q_75, q_80, q_85, q_90, q_95, q_975, q_99, obs, state, truth_confirmed, fcst_date = data
+
+      if state not in state_codes:
+         print("Skip")
+         continue
+      else:
+         state_code = state_codes[state]
+      print("LA:", state_code)
+      if state_code not in model_data['LA']:
+         model_data['LA'][state_code] = {}
+         model_data['LA'][state_code]['Day'] = []
+         model_data['LA'][state_code]['Total_Detected'] = []
+         model_data['LA'][state_code]['Total_Detected_low'] = []
+         model_data['LA'][state_code]['Total_Detected_high'] = []
+         model_data['LA'][state_code]['Total_Detected_Deaths'] = []
+
+      model_date = datetime.strptime(dates, "%m/%d/%Y")
+
+      future = int((model_date - last_date).total_seconds())
+      if future > 1:
+         print(future, model_date)    
+         model_data['LA'][state_code]['Day'].append(Day)
+         model_data['LA'][state_code]['Total_Detected'].append(int(float(q_50)))
+         model_data['LA'][state_code]['Total_Detected_low'].append(int(float(q_01)))
+         model_data['LA'][state_code]['Total_Detected_high'].append(int(float(q_99)))
+      else:
+         print("ignore in past", future, model_date)
+  
+   for state_code in state_names:
+      if state_code != "VI":
+         print(state_code)
+         sj = load_json_file("json/" + state_code + ".json")
+         sj['model_data']['LA'] = model_data['LA'][state_code]
+         save_json_file("json/" + state_code + ".json", sj)
+ 
+   save_json_file("json/model-data.json", model_data)
+   
 
 def load_state_data(): 
    fp = open("data/killers.txt", "r")
@@ -3063,7 +3285,32 @@ def load_state_data():
          recovered = fields[11]
          tests = fields[17]
          death_increase = fields[20]
-         case_increase = fields[22]
+
+         tests_total_pos = fields[2]
+         tests_total_neg = fields[3]
+         tests_new_neg = fields[22]
+         tests_new_pos = fields[23]
+         tests_new_tot = fields[24]
+         if tests_total_pos == "":
+            tests_total_pos = 0
+         else: 
+            tests_total_pos = int(tests_total_pos)
+         if tests_total_neg == "":
+            tests_total_neg = 0
+         else: 
+            tests_total_neg = int(tests_total_neg)
+         if tests_new_neg == "":
+            tests_new_neg = 0
+         else: 
+            tests_new_neg = int(tests_new_neg)
+         if tests_new_pos == "":
+            tests_new_pos = 0
+         else: 
+            tests_new_pos = int(tests_new_pos)
+         if tests_new_tot == "":
+            tests_new_tot = 0
+         else: 
+            tests_new_tot = int(tests_new_tot)
 
          if cases == "":
             cases = 0
@@ -3083,12 +3330,6 @@ def load_state_data():
             tests = 0
          if death_increase == "":
             death_increase = 0
-         if case_increase == "":
-            case_increase = 0
-         if int(case_increase) < 0:
-            case_increase = 0
-         if int(death_increase) < 0:
-            death_increase = 0
 
          if state not in state_data:
             state_data[state] = []
@@ -3107,15 +3348,10 @@ def load_state_data():
             if "," in str(cases):
                cases = cases.replace(",", "")
             cases = int(cases)
-         if case_increase == "":
-            cases_increase = 0
-         else:
-            case_increase = int(case_increase)
-         if death_increase == "":
-            death_increase = 0
-         else:
-            death_increase = int(death_increase)
-         state_data[state].append([date,cases,deaths,case_increase,death_increase,tests,hospital_now,icu_now,vent_now,recovered])
+         state_data[state].append([date,cases,deaths,0,0,tests,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_neg,tests_new_pos])
+
+
+
       lc += 1
 
    #for st in state_data:
