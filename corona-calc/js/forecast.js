@@ -1,22 +1,5 @@
-<<<<<<< HEAD
 function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,current_zero_day,herd_thresh,MIT,LA,county_perc) {
    // this function projects the data forward to find end zero days or herd immunity and outcome values.
-=======
-/**
- * This function projects the data forward to find end zero days or herd immunity and outcome values.
- * @param {*} xs 
- * @param {*} fys 
- * @param {*} total_cases 
- * @param {*} mortality 
- * @param {*} phantom 
- * @param {*} state_pop 
- * @param {*} current_zero_day 
- * @param {*} herd_thresh 
- */
-
-function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) {
- 
->>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
    var ys = fys;
    var total_cases_org = total_cases;
    var lx_14 = linearRegression(xs.slice(Math.max(xs.length - 14 , 1)),ys.slice(Math.max(ys.length - 14, 1)));  // 14 DAY FIT  
@@ -26,18 +9,12 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
    var forecast_result = {
       "14_day" : {},
       "7_day" : {}, 
-<<<<<<< HEAD
       "exp" : {}
    };
    forecast_result['exp']['herd_immunity_met'] = 0
    forecast_result['exp']['dys'] = []
 
 
-=======
-      "exp" : {'herd_immunity_met':0}
-   }; 
- 
->>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
    // No real idea what's going on here
    // here we are preping the data for the curve forecast
    // this has to be done with 3rd party fit functions and 
@@ -82,16 +59,11 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
          curve_end = i;
       } 
       if (ey > 0) {
-<<<<<<< HEAD
          curve_total_cases += ey      
          forecast_result['exp']['ys'].push(ey)
          forecast_result['exp']['dys'].push(ey * mortality)
       }
 
-=======
-         curve_total_cases += ey;      
-      } 
->>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
 
       // populate forecast with poly results 
       forecast_result['exp']['total_cases'] = curve_total_cases; 
