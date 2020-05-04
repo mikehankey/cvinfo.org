@@ -445,14 +445,9 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 
 
 // Create real graphs
-<<<<<<< HEAD
 function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
  
  
-=======
-function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
-    
->>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
    var ymax = Math.max.apply(Math, yd) + Math.max.apply(Math, yd)/8;
     
    for (var i = 0; i <= xd.length-1; i++) {

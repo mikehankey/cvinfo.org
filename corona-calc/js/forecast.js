@@ -12,7 +12,6 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
  * @param {*} herd_thresh 
  */
 
-function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh) {
  
    var ys = fys;
    var total_cases_org = total_cases;
@@ -24,7 +23,6 @@ function forecast(xs,fys,total_cases,mortality,phantom,state_pop,current_zero_da
       "14_day" : {},
       "7_day" : {}, 
       "exp" : {}
-      "exp" : {'herd_immunity_met':0}
    };
    forecast_result['exp']['herd_immunity_met'] = 0
    forecast_result['exp']['dys'] = []
