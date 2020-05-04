@@ -104,6 +104,7 @@ function displayData(json_data ,state,county) {
    var ctype = "state"; 
    var state_name = json_data['summary_info'].state_name;
    var state_code = json_data['summary_info'].state_code; 
+   var state_total_cases = json_data['summary_info'].cases; 
    var sum_info = json_data['summary_info'];
 
    if (typeof(county) === 'undefined') {
@@ -225,12 +226,11 @@ function displayData(json_data ,state,county) {
    zdv = zero_day_vals.slice();
 
    fit_days = 14;
+   
 
    // Draw graphs & Gauges for New Cases
    // New Cases
    //  at " + dateFormat(last_date) + "
-   title = "<b>" + full_state_name  + " New Cases</b><br>per day since first case";
-   pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60);
    
 
    zdv2 = zero_day_vals.slice();
@@ -240,16 +240,28 @@ function displayData(json_data ,state,county) {
    zdv6 = zero_day_vals.slice();
 
    // Growth
+   model_data = []
    title = "<b>" + full_state_name  + " - Growth</b><br> per day since first case";
+<<<<<<< HEAD
+   out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60,[])
+   
+
+   // New Deaths
+   title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
+   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[]);
+   //title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
+   //pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60,[]);
+=======
    out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
     
    // New Deaths
    title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
    pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60); 
+>>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
 
    // Death Growth
    title = "<b>" + full_state_name  + " - Death Growth</b><br> per day since first case";
-   out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60)
+   out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60,[])
 
    // Growth Decay
    title = "<b>" + full_state_name  + " - Growth Decay</b><br> per day since first case";
@@ -259,7 +271,7 @@ function displayData(json_data ,state,county) {
    // Tests
    if (ctype == 'state') {
       title = "<b>" + full_state_name  + " - Tests per day</b>";
-      out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60)
+      out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60,model_data)
    }
 
    // mortality div
@@ -270,18 +282,49 @@ function displayData(json_data ,state,county) {
    var total_cases = new_cases_vals.reduce(function(a, b){
       return a + b;
    }, 0);
+   var total_deaths = new_deaths_vals.reduce(function(a, b){
+      return a + b;
+   }, 0);
 
    phantom = parseFloat(document.getElementById("calc_phantom").value )
    herd_thresh = parseFloat(document.getElementById("herd_thresh").value/100 )
    current_zero_day = nc_org2.length
 
    // This is the MAIN summary at the top of the page.
+<<<<<<< HEAD
+   MIT = json_data['model_data']['MIT']
+   LA = json_data['model_data']['MIT']
+   if (county != "ALL") {
+      county_perc = (total_cases / state_total_cases )
+   }
+   else {
+      county_perc = 1
+   }
+ 
+   fr = forecast(zdv6,nc_org2,total_cases,total_deaths,mortality,phantom,state_pop,current_zero_day,herd_thresh,MIT,LA,county_perc);
+   if (county == "ALL") {
+      total_cases = json_data['summary_info']['cases']
+      total_deaths = json_data['summary_info']['deaths']
+   }
+   else {
+      county_stats = json_data['county_stats'][county]['county_stats']
+      last = county_stats.length - 1
+      total_cases = county_stats[last].cases
+      total_deaths= county_stats[last].deaths
+
+   }
+   //console.log("DISPLAY DATA FORECAST");
+   //console.log(fr);
+
+=======
    fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh);
   
+>>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
    document.getElementById("calc_mortality").value = (mortality*100).toFixed(2)
    document.getElementById("f_xs").value = zdv6
    document.getElementById("f_ys").value = nc_org2 
    document.getElementById("f_total_cases").value = total_cases
+   document.getElementById("f_total_deaths").value = total_deaths
    document.getElementById("f_state_pop").value = state_pop 
    document.getElementById("f_current_zero_day").value = current_zero_day 
    document.getElementById("f_state_name").value = state_name
@@ -293,10 +336,10 @@ function displayData(json_data ,state,county) {
    //console.log("JSON MORT ", json_data['summary_info'].mortality);
 
    // See corona-ui-data.js
-   sum_info['cases'] = last_cases 
-   sum_info['deaths'] = last_deaths
-   sum_info['total_infected'] = last_cases * phantom
-   sum_info['not_infected'] = state_pop - ((last_cases * phantom)  + last_cases + last_deaths)
+   sum_info['cases'] = total_cases 
+   sum_info['deaths'] = total_deaths 
+   sum_info['total_infected'] = total_cases * phantom
+   sum_info['not_infected'] = state_pop - ((total_cases * phantom)  + total_cases + last_deaths)
    document.getElementById("f_total_infected").value = sum_info['total_infected'] 
    document.getElementById("f_not_infected").value = sum_info['not_infected'] 
    document.getElementById("f_cases").value = last_cases 
@@ -336,6 +379,10 @@ function displayData(json_data ,state,county) {
       fr['14_day'].not_infected  =  state_pop - fr['14_day'].total_infected - fr['14_day'].total_cases - fr['14_day'].total_dead;
    }
  
+   // add model data to these graphs
+   title = "<b>" + full_state_name  + " New Cases</b><br>per day since first case";
+   pred = makeGraph(zero_day_vals, nc_org,title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60,fr['MIT']['ys']);
+
  
    fillSummary(full_state_name,fr,sum_info);
  
@@ -532,6 +579,7 @@ function recalculate() {
    herd_thresh = parseFloat(document.getElementById("herd_thresh").value/100 )
 
    f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
+   f_total_deaths = parseFloat(document.getElementById("f_total_deaths").value)
    f_mortality = parseFloat(document.getElementById("calc_mortality").value/100)
    f_phantom = parseFloat(document.getElementById("calc_phantom").value )
    f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
@@ -547,7 +595,7 @@ function recalculate() {
 
    // This is the MAIN summary at the top of the page.
 
-   fr = forecast(f_xs,f_ys,f_total_cases,f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh)
+   fr = forecast(f_xs,f_ys,f_total_cases,total_deaths, f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh, MIT, LA, county_perc)
  
    // See corona-ui-data.js
    fillSummary(state_name,fr,sum_info);
@@ -592,7 +640,7 @@ function recalculate() {
 
 
 
-function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
+function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_data) {
    var local_xs = xs_in.slice(0)
    var local_ys = ys_in.slice(0)
    var out = ""
@@ -734,7 +782,8 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days) {
    //last_zd7_val = ys3.slice(-1)[0] 
    //last_zd3_val = ys4.slice(-1)[0] 
    out = [last_zd14_day, last_zd7_day, last_exp_day] // , last_zd3_day
-   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar") 
+
+   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar",model_data) 
 
    return(out)
 
@@ -832,7 +881,7 @@ function getJSONData(url,state,county,reload) {
 }
 
 
-function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type) {
+function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type, model_ys) {
     var trace1 = {
       x: xd,
       y: yd,
@@ -872,7 +921,15 @@ function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type) {
       type: type
    };
 
-   var data = [trace1 , trace2, trace3,trace4,trace5];
+   var trace6 = {
+      x: xd,
+      y: model_ys,
+      name: yl,
+      name: "MIT Model (entire state)",
+      type: "line" 
+   };
+
+   var data = [trace1 , trace2, trace3,trace4,trace5,trace6];
 
    var layout = {
       barmode: 'stack',
