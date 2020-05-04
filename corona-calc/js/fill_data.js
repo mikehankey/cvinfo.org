@@ -58,8 +58,8 @@ function fillUSData() {
       Plotly.newPlot('us_graph', [cases_trace,death_trace], {responsive:true, title:'<b>US COVID-19 Deaths & Cases</b>',legend: { orientation: "h",  x: 0,
       y: 1},  yaxis2: {side:'right',overlaying: 'y',  titlefont: {color: '#c00'},  tickfont: {color: '#c00'},}});
 
-      $('#tot_death').html(usFormat(deaths[deaths.length-1])).css('color','#7F7F7F');
-      $('#tot_cases').html(usFormat(cases[cases.length-1])).css('color','#c00');
+      $('#tot_death').html(usFormat(deaths[deaths.length-1])).css('color','#c00');
+      $('#tot_cases').html(usFormat(cases[cases.length-1])).css('color','#7F7F7F');
 
    });
 
