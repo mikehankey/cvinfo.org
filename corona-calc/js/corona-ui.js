@@ -1,12 +1,6 @@
 var init_select_county;
 
-function usFormat(n) {
-  return String(n).replace(/(.)(?=(\d{3})+$)/g,'$1,');
-} 
 
-function dateFormat(s) {
-   return s.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3');
-}
 
 function show_loader() {
    $('body').addClass('wait');
@@ -32,7 +26,6 @@ function reset() {
       reset();
       $('#recalculate').trigger('click');
    })
-
 }
 
 
@@ -59,13 +52,12 @@ function countySelect(p, state) {
 
    sel += "<input type=hidden id='state' value='" + state + "'></select>"
    $('#county_select').html(sel);
-
-
-
+ 
 }
 
+
+// Recreate Gauges for Summary
 function createSvg() {
-   // For the Summary   
    $('#forecast .14days,#forecast .7days').html('\
       <svg viewBox="0 0 1000 500">\
          <path d="M 950 500 A 450 450 0 0 0 50 500"></path>\
@@ -73,7 +65,6 @@ function createSvg() {
          <text class="percentage" text-anchor="middle" alignment-baseline="middle" x="500" y="395" font-size="145" font-weight="bold"></text>\
          </svg><div class="trend">14-Day trend</div>');
    $("#forecast .7days .trend").text("7-Day trend");
-    
 } 
 
 $(function() {

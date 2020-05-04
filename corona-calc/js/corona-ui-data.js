@@ -328,6 +328,8 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
       type: type
    };
 
+   // Trends shouldn't start at 0
+ 
    var trace2 = {
       x: xd,
       y: yd2,
@@ -343,16 +345,7 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
       name: "7-Day Trend",
       type: type  
    };
-
-   /*
-   var trace4 = {
-      x: xd,
-      y: yd4,
-      name: yl,
-      name: "3-Day Trend",
-      type: type  
-   };
-   */
+ 
 
    var trace5 = {
       x: xd,
@@ -406,17 +399,9 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 
 // Create real graphs
 function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
-   
- 
+    
    var ymax = Math.max.apply(Math, yd) + Math.max.apply(Math, yd)/8;
-   /*
-   if (dv == 'new_cases_div') {
-      ymax = Math.max.apply(Math, yd) * 2
-   } else {
-      ymax = Math.max.apply(Math, yd) * 1.5
-   }
-   */
-
+    
    for (var i = 0; i <= xd.length-1; i++) {
       if (yd[i] > 0) {
          cur_day = xd[i]
@@ -430,11 +415,13 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
       type: type
    };
 
+ 
+
    var trace2 = {
       x: xd,
       y: yd2,
       name: "14-Day Trend",
-      type: "line" 
+      type: "line"
    };
 
    var trace3 = {
@@ -476,11 +463,6 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
          }
       }],
       yaxis : {
-         /*
-         title: {
-            text: yl
-         },
-         */
          range: [0,ymax],
          autorange: false,
          autotick: true,
@@ -489,7 +471,7 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
          dtick: 0.25,
          ticklen: 8,
          tickwidth: 1,
-         tickcolor: '#000'
+         tickcolor: '#000' 
       }, 
       xaxis : { 
          autotick: true,
@@ -498,7 +480,7 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type) {
          dtick: 0.25,
          ticklen: 8,
          tickwidth: 1,
-         tickcolor: '#000'
+         tickcolor: '#000', 
       },
       title :  t,
       margin: {"t": 80, "b": 80, "l": 80, "r": 50},
