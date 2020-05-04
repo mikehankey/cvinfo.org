@@ -100,12 +100,8 @@ return(out)
 
 
 function displayData(json_data ,state,county) {
-
-   // make hidden divs visible
-   // hack because i could not figure out how to hide / show the new divs I added.  
-   ctype = "state"
-
-   var out = "";
+ 
+   var ctype = "state"; 
    var state_name = json_data['summary_info'].state_name;
    var state_code = json_data['summary_info'].state_code; 
    var state_total_cases = json_data['summary_info'].cases; 
@@ -113,31 +109,19 @@ function displayData(json_data ,state,county) {
 
    if (typeof(county) === 'undefined') {
    
-      var county_list = {}
-      p = json_data['county_stats'] 
+      var county_list = {};
+      p = json_data['county_stats'];
       for (var key in p) {
          if (p.hasOwnProperty(key)) {
-            tc = p[key]['county_stats']
-            ccc = tc[tc.length-1].cases
-            county_list[key] = ccc
-            //county_pop[key]
+            tc = p[key]['county_stats'];
+            ccc = tc[tc.length-1].cases;
+            county_list[key] = ccc;
          }
       }
  
       countySelect(county_list, state_code) 
       county = "ALL"
-   }
- 
-
-   var state_name = json_data['summary_info'].state_name;
-   
-   // Use the value in the FORM instead
-   //var mortality = json_data['summary_info'].mortality / 100;
-
-
-
-   var cg_med = json_data['summary_info'].cg_med;
-   var cg_med_decay = json_data['summary_info'].cg_med_decay;
+   } 
 
    if (typeof(county) == "undefined" || county == "ALL") {
       var state_pop = json_data['summary_info'].state_population * 1000000;
@@ -258,6 +242,7 @@ function displayData(json_data ,state,county) {
    // Growth
    model_data = []
    title = "<b>" + full_state_name  + " - Growth</b><br> per day since first case";
+<<<<<<< HEAD
    out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60,[])
    
 
@@ -266,6 +251,13 @@ function displayData(json_data ,state,county) {
    pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[]);
    //title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
    //pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60,[]);
+=======
+   out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60)
+    
+   // New Deaths
+   title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
+   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60); 
+>>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
 
    // Death Growth
    title = "<b>" + full_state_name  + " - Death Growth</b><br> per day since first case";
@@ -299,6 +291,7 @@ function displayData(json_data ,state,county) {
    current_zero_day = nc_org2.length
 
    // This is the MAIN summary at the top of the page.
+<<<<<<< HEAD
    MIT = json_data['model_data']['MIT']
    LA = json_data['model_data']['MIT']
    if (county != "ALL") {
@@ -323,6 +316,10 @@ function displayData(json_data ,state,county) {
    //console.log("DISPLAY DATA FORECAST");
    //console.log(fr);
 
+=======
+   fr = forecast(zdv6,nc_org2,total_cases,mortality,phantom,state_pop,current_zero_day,herd_thresh);
+  
+>>>>>>> 637d755ddf5da243dbf4e1b2cf16c0414e0a8b2c
    document.getElementById("calc_mortality").value = (mortality*100).toFixed(2)
    document.getElementById("f_xs").value = zdv6
    document.getElementById("f_ys").value = nc_org2 
@@ -817,17 +814,20 @@ function change_state() {
 
 
 function getJSONData(url,state,county,reload) {
+
    if(typeof reload == 'undefined') {
       show_loader();	
    }
+
    $.ajax({
       type: "get",
       url:  url,
       dataType: "json",
 
       success: function (result, status, xhr) {
-         
+          
          displayData(result,state,county);
+
          // Create action on county select
          $('#county_selector').unbind('change').change(function() {load_data()}); 
  

@@ -6,3 +6,11 @@ function convert_zero_day_to_date(xs,dates) {
    } 
    return(jsdates)
 }
+
+function usFormat(n) {
+   return String(n).replace(/(.)(?=(\d{3})+$)/g,'$1,');
+ } 
+ 
+ function dateFormat(s) {
+    return s.replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3');
+ }

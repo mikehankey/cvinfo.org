@@ -1,3 +1,9 @@
+/**
+ * Open custom window (or new tab in mobile)
+ * for social sharing
+ * 
+ * @param {*} url 
+ */
 function socialWindow(url) {
    var left = (screen.width - 570) / 2;
    var top = (screen.height - 570) / 2;
@@ -5,12 +11,17 @@ function socialWindow(url) {
    window.open(url,"NewWindow",params);
 }
 
+/**
+ * Setup Social Share links based on 
+ * selected state and/or county
+ * 
+ * @param Json data 
+ */
 function setShareLinks(data) {
    var pageUrl;
    var title = $("meta[property='og:description']").attr("content");
    var initUrl =  $.trim($("meta[property='og:url']").attr("content"));
-
-
+ 
    if(typeof data == "undefined") {
  
       pageUrl = document.URL;
@@ -60,5 +71,6 @@ function setShareLinks(data) {
 } 
 
 $(function() {
+   // Setup default social links
    setShareLinks();
 })
