@@ -29,6 +29,9 @@ function reset() {
 }
 
 
+/**
+ * Fill County Selector
+ */
 function countySelect(p, state) {
    var sel = "<select id='county_selector'><option value='ALL'>All Counties</option>"
    var sortable = [];
@@ -43,11 +46,8 @@ function countySelect(p, state) {
       return b[1] - a[1];
    }); 
    for (i = 0; i <= sorted.length-1; i++) { 
-      // Don't display "Unknown anymore"
-      if($.trim(sorted[i][0])!="Unknown"){
-         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + " conf. cases)</option>\n";
+         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + " cases)</option>\n";
          all_counties.push(sorted[i][0]);
-      }
    }
 
    sel += "<input type=hidden id='state' value='" + state + "'></select>"

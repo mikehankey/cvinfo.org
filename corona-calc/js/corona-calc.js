@@ -1,48 +1,50 @@
+/**
+ * Get county list + # of cases at day-1
+ * from State and fill the related select element
+ * @param {*} json_data 
+ */
+function getAllCounties(json_data) {
+   var counties = json_data['county_stats'];
+   var county_list = {}, all_cases;
+
+   $.each(counties, function(key,vals) { 
+      if(key!=='Unknown') {
+         county_list[key] = vals.county_stats[vals.county_stats.length-1].cases;
+      }
+   })
+ 
+   return county_list;
+}
+
+
 function displayData(json_data ,state,county) {
-
-   console.log(json_data);
-
-
  
    var ctype = "state"; 
    var state_name = json_data['summary_info'].state_name;
    var state_code = json_data['summary_info'].state_code; 
    var state_total_cases = json_data['summary_info'].cases; 
    var sum_info = json_data['summary_info'];
+   var state_pop = json_data['summary_info'].state_population * 1000000; // Default - State pop
+   var ss = json_data['state_stats']; // Default - State stats
 
    if (typeof(county) === 'undefined') {
-   
-      var county_list = {};
-      p = json_data['county_stats'];
-      for (var key in p) {
-         if (p.hasOwnProperty(key)) {
-            tc = p[key]['county_stats'];
-            ccc = tc[tc.length-1].cases;
-            county_list[key] = ccc;
-         }
-      }
- 
-      countySelect(county_list, state_code) 
-      county = "ALL"
-   } 
+      // If no county is selected, we build the county selector & get the stats for all state
+      countySelect(getAllCounties(json_data) , state_code);
+      county = "ALL";
+      full_state_name = state_name; 
+   } else {
+      // If one county is selected... 
 
-   if (typeof(county) == "undefined" || county == "ALL") {
-      var state_pop = json_data['summary_info'].state_population * 1000000;
-      var ss = json_data['state_stats'];
-      full_state_name = state_name
-   }  else { 
-      state_pop = json_data['county_pop'][county]
-      var ss = json_data['county_stats'][county]['county_stats'];
-      if (county.toLowerCase().indexOf("city") === -1) {
-         full_state_name = county + " County, " + state_code
-      }
-      else {
-         full_state_name = county + ", " + state_code
-      }
-      //state_name = full_state_name
+      state_pop = json_data['county_pop'][county];
+      ss = json_data['county_stats'][county]['county_stats'];
+      
+      // County / City names
+      if (county.toLowerCase().indexOf("city") === -1) {   full_state_name = county + " County, " + state_code;   }
+      else {   full_state_name = county + ", " + state_code;   }
       ctype = "county"
    }
-
+  
+ 
    var date_vals = [];
    var zero_day_vals = [];
    var total_cases_vals = [];
