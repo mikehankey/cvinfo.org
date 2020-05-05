@@ -24,13 +24,16 @@ function fillUSData() {
  
       // Build graph serices
       $.each(all_us_data,function(i,v){
-         //var v = v.split(',');
-         dates.push(v[0]);
-         cases.push(parseInt(v[1]));
-         deaths.push(parseInt(v[2]));
+         if(parseInt(v[1])>=1) {
+            dates.push(v[0]);
+            cases.push(parseInt(v[1]));
+            deaths.push(parseInt(v[2]));
+         }  
       });
- 
- 
+      
+      console.log(cases);
+      console.log(deaths);
+
       cases_trace = {
          type: "scatter",
          mode: "lines",
@@ -39,7 +42,7 @@ function fillUSData() {
          y: cases,
          mode: 'lines+markers',
          type: 'scatter',
-         line: {color: '#7F7F7F'}
+         line: {color: '#7F7F7F'},
       };
 
       death_trace = {
@@ -49,14 +52,17 @@ function fillUSData() {
          x: dates,
          y: deaths, 
          type: 'bar',
-         marker: {
-            color: '#c00'  
-          },
+         marker: {    color: '#c00'      },
+         xaxis:'x', 
          yaxis: 'y2'
       };
- 
-      Plotly.newPlot('us_graph', [cases_trace,death_trace], {responsive:true, title:'<b>US COVID-19 Deaths & Cases</b>',legend: { orientation: "h",  x: 0,
-      y: 1},  yaxis2: {side:'right',overlaying: 'y',  titlefont: {color: '#c00'},  tickfont: {color: '#c00'},}});
+      
+      Plotly.newPlot('us_graph', [cases_trace,death_trace], {responsive:true, title:'<b>US COVID-19 Deaths & Cases</b>',
+      legend: { orientation: "h",  x: 0.02,  y: 1},  
+      yaxis: { rangemode:'tozero'},
+      yaxis2: {rangemode:'tozero', overlaying:'y',  side:'right', titlefont: {color: '#c00'}, tickfont: {color: '#c00'}}
+      });
+
 
       $('#tot_death').html(usFormat(deaths[deaths.length-1])).css('color','#c00');
       $('#tot_cases').html(usFormat(cases[cases.length-1])).css('color','#7F7F7F');
