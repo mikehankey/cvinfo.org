@@ -40,6 +40,7 @@ function getInitJSONData(state,county) {
                   setShareLinks({state:county+", "+ state, state_code:state,county:county});   
                } else {
                   $('#county_selector').val(county); 
+                  cur_county = county;
                   setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
                }
                   

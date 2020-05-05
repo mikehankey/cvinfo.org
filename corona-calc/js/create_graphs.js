@@ -124,12 +124,7 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
    var layout = { 
       range: [0,ymax],
       autorange: false, 
-      yaxis : {
-         /*
-         title: {
-            text: yl
-         },
-         */
+      yaxis : { 
          autorange: true,
          autotick: true,
          ticks: 'outside',
@@ -154,6 +149,11 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
       legend: {
          orientation: "h" 
       }
+   }
+
+   if(dv=="mortality_div") {
+      // We hide below 0 (?)
+      layout.yaxis.rangemode = 'tozero';  
    }
 
    Plotly.newPlot(dv, data, layout, {responsive: true});

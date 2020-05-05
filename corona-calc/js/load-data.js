@@ -24,7 +24,11 @@ function load_data(urlInfo, reload) {
    
    var state  = (urlInfo&&urlInfo.state)?urlInfo.state:($('#state_selector').val()?$('#state_selector').val():"0");
    var county = (urlInfo&&urlInfo.county)?urlInfo.county:($('#county_selector').val()?$('#county_selector').val():undefined);
-    
+   
+   console.log("STATE", state);
+   console.log("COUNTY", county);
+
+   
    if($.trim(state)!=='0') {
       // Update Soc Sharing with Full State Name
       if(county!=='' && typeof county !== "undefined") {
@@ -103,7 +107,11 @@ function setupActions() {
    $('#recalculate').click(function() { 
       $(this).attr('data-htmlx',$(this).html()).html('Computing...');
       $('body').addClass('wait');
-      setTimeout(function() { displayData(cur_json_data,cur_state,cur_county)},850);
+      setTimeout(function() {
+         console.log("CUR STATE ", cur_state);
+         console.log("CUR COUNTY ", cur_county);
+         displayData(cur_json_data,cur_state,cur_county);
+      },850);
    });
 
       

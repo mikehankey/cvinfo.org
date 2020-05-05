@@ -24,6 +24,7 @@ function displayData(json_data ,state,county) {
    var state_code = json_data['summary_info'].state_code; 
    var state_total_cases = json_data['summary_info'].cases; 
    var sum_info = json_data['summary_info'];
+
    var state_pop = json_data['summary_info'].state_population * 1000000; // Default - State pop
    var ss = json_data['state_stats']; // Default - State stats
  
@@ -32,8 +33,7 @@ function displayData(json_data ,state,county) {
       // If no county is selected, we build the county selector & get the stats for all state
       full_state_name = state_name; 
       county = "ALL";
-   } else {
- 
+   } else { 
       // If one county is selected... 
       state_pop = json_data['county_pop'][county];
       ss = json_data['county_stats'][county]['county_stats'];
@@ -43,7 +43,7 @@ function displayData(json_data ,state,county) {
       else {   full_state_name = county + ", " + state_code;   }
       ctype = "county"
    }
-  
+ 
  
    var date_vals = [];
    var zero_day_vals = [];
@@ -103,9 +103,11 @@ function displayData(json_data ,state,county) {
       last_county_mortality = arrayItem.mortality;
    });
 
+
+   console.log("LAST COUNTY MORTALITY ", last_county_mortality );
    
    // We take the last county mortality into account note that for the state, it's the same
-    var mortality = last_county_mortality/100;
+   var mortality = last_county_mortality/100;
    $("#init_mortality").val(mortality); 
 
    // If the user entered another value, we take it into account instead
@@ -114,8 +116,7 @@ function displayData(json_data ,state,county) {
    }
    
    $('#calc_mortality').val((mortality*100).toFixed(2));
-   
-   
+    
    // make some JS dates
    js_dates = convert_zero_day_to_date(total_cases_vals, date_vals)
    // important dates are
