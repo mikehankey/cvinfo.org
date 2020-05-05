@@ -151,11 +151,9 @@ function displayData(json_data ,state,county) {
    
 
    // New Deaths
-//   title = "<b>" + full_state_name  + " - New Deaths</b><br>at " + dateFormat(last_date) + " in days since first case";
-//   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[]);
-   //title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
-   //pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New CaDeathsses", "new_deaths_div", fit_days, 60,[]);
-
+   title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
+   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[]);
+  
    // Death Growth
    title = "<b>" + full_state_name  + " - Death Growth</b><br> per day since first case";
    out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60,[])
@@ -718,44 +716,23 @@ function getJSONData(url,state,county,reload) {
       dataType: "json",
 
       success: function (result, status, xhr) {
-          
+         
+         if(init_select_county!='') {
+            var all_counties_for_state =  getAllCounties(result);
+            if(all_counties_for_state[init_select_county] !== undefined) {
+               county = init_select_county;
+               init_select_county = '';
+            }
+         }
+         
+         console.log("DISPLAY FOR ", state, " ", county);
+
          displayData(result,state,county);
 
          // Create action on county select
          $('#county_selector').unbind('change').change(function() {load_data()}); 
  
-         if(init_select_county!='') {
-            var possibleCounties = [];
-            var possibleCountiesIndex = [];
-
-            // Does init_select_county is in county_selector
-            $('#county_selector option').each(function(i,v){
-               possibleCounties.push(v.value);
-               possibleCounties.push(v.value.replace(/\s/g, ''));
-               possibleCounties.push(v.value.replace("'","").replace(/\s/g, ''));
-               possibleCounties.push(v.value.replace("'",""));
-               possibleCounties.push(v.value.replace(".",""));
-               possibleCounties.push(v.value.replace(".","").replace("'",""));
-               possibleCounties.push(v.value.replace(".","").replace("'","").replace(/\s/g, ''));
-               possibleCountiesIndex.push(i);
-               possibleCountiesIndex.push(i);
-               possibleCountiesIndex.push(i);
-               possibleCountiesIndex.push(i);
-               possibleCountiesIndex.push(i); 
-               possibleCountiesIndex.push(i);
-               possibleCountiesIndex.push(i);
-            })
-
           
-            var toTest = possibleCounties.indexOf(init_select_county);
-            if(toTest>0) { 
-               // Select County
-               var $opt = $('#county_selector option').get(possibleCountiesIndex[toTest]);
-               $('#county_selector').val($($opt).attr('value')).trigger('change');
-            }
-            possibleCounties = null;
-            init_select_county = "";
-         }
           
 
          if(typeof reload  == 'undefined') {
