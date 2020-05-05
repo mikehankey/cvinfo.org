@@ -26,15 +26,15 @@ function displayData(json_data ,state,county) {
    var sum_info = json_data['summary_info'];
    var state_pop = json_data['summary_info'].state_population * 1000000; // Default - State pop
    var ss = json_data['state_stats']; // Default - State stats
-
-   if (typeof(county) === 'undefined') {
+ 
+      
+   if (typeof(county) === 'undefined' || $.trim(county)=='') {
       // If no county is selected, we build the county selector & get the stats for all state
-      countySelect(getAllCounties(json_data) , state_code);
-      county = "ALL";
       full_state_name = state_name; 
+      county = "ALL";
    } else {
+ 
       // If one county is selected... 
-
       state_pop = json_data['county_pop'][county];
       ss = json_data['county_stats'][county]['county_stats'];
       
@@ -148,8 +148,7 @@ function displayData(json_data ,state,county) {
    model_data = []
    title = "<b>" + full_state_name  + " - Growth</b><br> per day since first case";
    out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60,[])
-   
-
+    
    // New Deaths
    title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
    pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[]);
@@ -276,7 +275,11 @@ function displayData(json_data ,state,county) {
 
  
    fillSummary(full_state_name,fr,sum_info);
- 
+   
+   $('body').removeClass('wait');
+   hide_loader();
+   $('#recalculate').html($('#recalculate').attr('data-htmlx'));
+   $('#recalculate').removeAttr('data-htmlx');
 
 }
 
@@ -681,74 +684,11 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
 }
 
 
-function load_data(reload) {
-   var state = $('#state_selector').val();
-   var county = $('#county_selector').val();  
-   var url = "../json/" + state + ".json";
-   if($.trim(state)!=='') {
-      // Update Soc Sharing with Full State Name
-      if(county!=='' && typeof county !== "undefined") {
-         setShareLinks({state:county+", "+ state, state_code:state,county:county});
-      } else {
-         setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
-      }
-    
-      getJSONData(url,state,county,reload);
-   }
-}
-
-function change_state() { 
-   $("#county_select").html("");
-   $('#calc_mortality').val(""); 
-   load_data();
-}
 
 
-function getJSONData(url,state,county,reload) {
 
-   if(typeof reload == 'undefined') {
-      show_loader();	
-   }
 
-   $.ajax({
-      type: "get",
-      url:  url,
-      dataType: "json",
 
-      success: function (result, status, xhr) {
-         
-         if(init_select_county!='') {
-            var all_counties_for_state =  getAllCounties(result);
-            if(all_counties_for_state[init_select_county] !== undefined) {
-               county = init_select_county;
-               init_select_county = '';
-            }
-         }
-         
-         console.log("DISPLAY FOR ", state, " ", county);
-
-         displayData(result,state,county);
-
-         // Create action on county select
-         $('#county_selector').unbind('change').change(function() {load_data()}); 
- 
-          
-          
-
-         if(typeof reload  == 'undefined') {
-            hide_loader();	 
-         } else { 
-            $('#recalculate').html($('#recalculate').attr('data-htmlx'));
-            $('#recalculate').removeAttr('data-htmlx');
-            $('body').removeClass('wait');
-         }
-      },
-      error: function (xhr, status, error) {
-         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-         hide_loader();	
-      }
-   });
-}
 
 
 function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type, model_ys) {

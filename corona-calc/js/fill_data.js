@@ -76,13 +76,10 @@ function fillUSData() {
 
 }
 
-
+// About Page
 $(function(){
-   fillUSData();
-
-   fillJsonData();
-
- 
+   fillUSData(); 
+   fillJsonData(); 
 })
 
 
