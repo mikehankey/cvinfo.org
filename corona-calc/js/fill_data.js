@@ -80,6 +80,7 @@ function fillUSData() {
 $(function(){
    fillUSData(); 
    fillJsonData(); 
+   hide_loader();
 })
 
 
