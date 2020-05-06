@@ -81,6 +81,9 @@ function getJSONData(url,state,county,reload) {
          cur_county = county;
          cur_state = state;
          displayData(result,state,county);
+
+         //console.log("NEW GRAPH");
+         //create_new_graphs(result,state,county);
  
          hide_loader();	 
          $('#recalculate').html($('#recalculate').attr('data-htmlx'));
