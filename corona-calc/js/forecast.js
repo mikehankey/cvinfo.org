@@ -172,7 +172,7 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
       
       TX = current_zero_day + i
       PY14  = lx_14['slope'] * TX + lx_14['intercept']
-      PY7   = lx_7['slope'] * TX + lx_7['intercept'] 
+      PY7   = lx_7['slope'] * TX + lx_7['intercept']
 
       if (PY14 < 0) { PY14 = 0;  }
       if (PY7 < 0) { PY7 = 0; }

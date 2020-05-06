@@ -134,13 +134,7 @@ function displayData(json_data ,state,county) {
    zdv = zero_day_vals.slice();
 
    fit_days = 14;
-   
-
-   // Draw graphs & Gauges for New Cases
-   // New Cases
-   //  at " + dateFormat(last_date) + "
-   
-
+ 
    zdv2 = zero_day_vals.slice();
    zdv3 = zero_day_vals.slice();
    zdv4 = zero_day_vals.slice();
@@ -162,28 +156,22 @@ function displayData(json_data ,state,county) {
 
    // Growth Decay
    title = "<b>" + full_state_name  + " - Growth Decay</b><br> per day since first case";
-   fitsObj = getFits(zdv4, decay_vals);
-   console.log("GROWTH DECAY getFits");
-   console.log(fitsObj);
+   fitsObj = getFits(zdv4, decay_vals); 
    out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "Growth Decay", title, "decay_div", "line")
 
    // Tests
    if (ctype == 'state') {
-      title = "<b>" + full_state_name  + " - Tests per day</b>";
+      title = "<b>" + full_state_name  + " - Tests per day</b><br> per day since first case";
       out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60,model_data)
    }
 
-   // mortality div
+   // Mortality
    fitsObj = getFits(zdv5, mortality_vals)
-   title = "<b>" + full_state_name  + " - Mortality</b><br>at " + dateFormat(last_date) + " in days since first case"; 
+   title = "<b>" + full_state_name  + " - Mortality</b><br> per day since first case"; 
    out2 = plot_data_line(zdv5, mortality_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "Mortality Percentage", title, "mortality_div", "line")
 
-   var total_cases = new_cases_vals.reduce(function(a, b){
-      return a + b;
-   }, 0);
-   var total_deaths = new_deaths_vals.reduce(function(a, b){
-      return a + b;
-   }, 0);
+   var total_cases = new_cases_vals.reduce(function(a, b){  return a + b;  }, 0);
+   var total_deaths = new_deaths_vals.reduce(function(a, b){  return a + b;  }, 0);
 
    phantom = parseFloat(document.getElementById("calc_phantom").value )
    herd_thresh = parseFloat(document.getElementById("herd_thresh").value/100 )
@@ -192,14 +180,17 @@ function displayData(json_data ,state,county) {
    // This is the MAIN summary at the top of the page.
    MIT = json_data['model_data']['MIT']
    LA = json_data['model_data']['MIT']
+
    if (county != "ALL") {
       county_perc = (total_cases / state_total_cases )
    }
    else {
       county_perc = 1
    }
- 
+   
+   
    fr = forecast(zdv6,nc_org2,total_cases,total_deaths,mortality,phantom,state_pop,current_zero_day,herd_thresh,MIT,LA,county_perc);
+
    if (county == "ALL") {
       total_cases = json_data['summary_info']['cases']
       total_deaths = json_data['summary_info']['deaths']
@@ -211,24 +202,19 @@ function displayData(json_data ,state,county) {
       total_deaths= county_stats[last].deaths
 
    }
-   //console.log("DISPLAY DATA FORECAST");
-   //console.log(fr);
+   
 
    document.getElementById("calc_mortality").value = (mortality*100).toFixed(2)
    document.getElementById("f_xs").value = zdv6
    document.getElementById("f_ys").value = nc_org2 
    document.getElementById("f_total_cases").value = total_cases
    document.getElementById("f_total_deaths").value = total_deaths
-
    document.getElementById("f_state_pop").value = state_pop 
    document.getElementById("f_current_zero_day").value = current_zero_day 
    document.getElementById("f_state_name").value = state_name
    document.getElementById("f_county").value = county;
 
-   $('#f_mortality').val(mortality); //json_data['summary_info'].mortality );
-
-   //console.log("MORTALITY ", mortality);
-   //console.log("JSON MORT ", json_data['summary_info'].mortality);
+   $('#f_mortality').val(mortality); 
 
    // See corona-ui-data.js
    sum_info['cases'] = total_cases 
