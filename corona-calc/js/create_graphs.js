@@ -164,8 +164,7 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 
 // Create real graphs
 function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
- 
-   
+  
    var ymax = Math.max.apply(Math, yd) + Math.max.apply(Math, yd)/8;
     
    for (var i = 0; i <= xd.length-1; i++) {
@@ -255,11 +254,142 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
          tickcolor: '#000', 
       },
       title :  t,
-      margin: {"t": 80, "b": 80, "l": 80, "r": 50},
+      margin: {"t": 80, "b": 80, "l": 50, "r": 20},
       showlegend: true,
       legend: {
          orientation: "h" 
       },
    };
    Plotly.newPlot(dv, data, layout, {responsive: true});
+} 
+
+
+/**
+ * Compute data before drawing graphs
+ */
+function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_data) {
+ 
+   var local_xs = xs_in.slice(0);  
+   var local_ys = ys_in.slice(0);
+    
+   var out = "";
+
+   // Make fit lines
+   // 14 days
+   var local_ys2 = []
+   // 7 days
+   var local_ys3 = []
+   // 3 days
+   var local_ys4 = []
+
+   // curve fit
+
+   var rdata = []
+   for (var i  = 0; i <= local_xs.length -1; i++) {
+      var point = [local_xs[i], local_ys[i]]
+      rdata.push(point)
+      var last_x = local_xs[i]
+   }
+
+   var linReg = regression('polynomial', rdata);
+   var tx = 0
+   for (var i = 0; i<= 60; i++) {
+      tx = last_x + i
+      point = [tx, local_ys[i]]
+      rdata.push(point)
+   }
+
+   var exp = extraPoints(rdata,linReg)
+
+   var local_exp_ys = []
+   var ey = 0
+   for (var i  = 0; i <= exp.length -1; i++) {
+   ey = exp[i].y
+   local_exp_ys.push(ey)
+   } 
+
+   // 14 DAY FIT
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - fit_days, 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - fit_days, 1))
+   var lx_14 = linearRegression(lr_xs,lr_ys)
+
+   // 7 DAY FIT
+   var lr_xs = local_xs.slice(Math.max(local_xs.length - 7 , 1))
+   var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
+   var lx_7 = linearRegression(lr_xs,lr_ys)
+
+  
+
+   for (var i  = 0; i <= local_xs.length -1; i++) {
+   var X = local_xs[i]
+   var Y = local_ys[i]
+   if (local_xs.length - 14 < i + 1) {
+      var PY14 = lx_14['slope'] * X + lx_14['intercept'] 
+   }
+   else {
+      var PY14 = 0
+   }
+   if (local_xs.length - 7 < i + 1) {
+      var PY7 = lx_7['slope'] * X + lx_7['intercept'] 
+   }
+   else {
+      var PY7 = 0
+   }
+   
+   if (PY14 < 0) {
+      var PY14 = 0
+   }
+   if (PY7 < 0) {
+      var PY7 = 0
+   }
+   
+   local_ys2.push(PY14)
+   local_ys3.push(PY7)
+   
+   }
+
+   last_x = X
+   last_zd14_day = 9999
+   last_zd7_day = 9999
+   last_zd3_day = 9999
+   last_exp_day = 9999
+
+   exp_pos = 0
+   for (var i = 0; i <= proj_days; i++) {
+   TX = last_x + i   
+   PY14 = lx_14['slope'] * TX + lx_14['intercept'] 
+   PY7 = lx_7['slope'] * TX + lx_7['intercept'] 
+   //PY3 = lx_3['slope'] * TX + lx_3['intercept'] 
+   local_xs.push(TX)
+   local_ys.push(0)
+   local_ys2.push(PY14)
+   local_ys3.push(PY7) 
+   if (last_zd14_day == 9999 && PY14 <= 0) {
+      last_zd14_day = i
+   }
+   if (last_zd7_day == 9999 && PY7 <= 0) {
+      last_zd7_day = i
+   }
+   
+   if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
+      last_exp_day = i
+   }
+   if (local_exp_ys[i+last_x] > 0) {
+      exp_pos = 1
+   }
+   
+   } 
+   if (last_exp_day == 9999) {
+   if (local_exp_ys.slice(-1)[0] <= 0) {
+      last_exp_day = 0
+   }
+   
+   }
+ 
+   out = [last_zd14_day, last_zd7_day, last_exp_day]  
+
+   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar",model_data) 
+
+   return(out)
+
 } 
