@@ -16,25 +16,28 @@ function getAllCounties(json_data) {
    return county_list;
 }
 
-
+/**
+ * Compute & Display analysis
+ * @param {*} json_data 
+ */
 function displayData(json_data ,state,county) {
  
-   var ctype = "state"; 
+   var ctype = "state";                                        // Default
    var state_name = json_data['summary_info'].state_name;
    var state_code = json_data['summary_info'].state_code; 
    var state_total_cases = json_data['summary_info'].cases; 
    var sum_info = json_data['summary_info'];
 
    var state_pop = json_data['summary_info'].state_population * 1000000; // Default - State pop
-   var ss = json_data['state_stats']; // Default - State stats
+   var ss = json_data['state_stats'];                                     // Default - State stats
  
       
    if (typeof(county) === 'undefined' || $.trim(county)=='') {
-      // If no county is selected, we build the county selector & get the stats for all state
+      // If no county is selected, we get the stats for all state
       full_state_name = state_name; 
       county = "ALL";
    } else { 
-      // If one county is selected... 
+      // If one county is selected, we update the default values
       state_pop = json_data['county_pop'][county];
       ss = json_data['county_stats'][county]['county_stats'];
       
@@ -103,8 +106,7 @@ function displayData(json_data ,state,county) {
       last_county_mortality = arrayItem.mortality;
    });
 
-
-   console.log("LAST COUNTY MORTALITY ", last_county_mortality );
+ 
    
    // We take the last county mortality into account note that for the state, it's the same
    var mortality = last_county_mortality/100;
@@ -160,7 +162,9 @@ function displayData(json_data ,state,county) {
 
    // Growth Decay
    title = "<b>" + full_state_name  + " - Growth Decay</b><br> per day since first case";
-   fitsObj = getFits(zdv4, decay_vals)
+   fitsObj = getFits(zdv4, decay_vals);
+   console.log("GROWTH DECAY getFits");
+   console.log(fitsObj);
    out2 = plot_data_line(zdv4, decay_vals,fitsObj['ys2'], fitsObj.ys3, fitsObj.ys4, fitsObj.exp_ys, "Days since first case", "Growth Decay", title, "decay_div", "line")
 
    // Tests
@@ -286,146 +290,7 @@ function displayData(json_data ,state,county) {
 
 
 
-function getFits(xs,ys) {
-nxs = []
-ys2  = []
-ys3  = []
-ys4  = []
-exp_ys  = []
-for (var i = 0; i <= xs.length; i++) {
- nxs.push(xs[i])
-}
 
-// curve fit
-
-var rdata = []
-for (var i  = 0; i <= xs.length -1; i++) {
- var point = [xs[i], ys[i]]
- rdata.push(point)
- var last_x = xs[i]
-}
-
-var linReg = regression('polynomial', rdata);
-var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
-for (var i = 0; i<= 60; i++) {
- tx = last_x + i
- point = [tx, ys[i]]
- rdata.push(point)
-
-}
-
-var exp = extraPoints(rdata,linReg)
-
-var exp_ys = []
-for (var i  = 0; i <= exp.length -1; i++) {
- ey = exp[i].y
- exp_ys.push(ey)
-}
-
-// 14 DAY FIT
-lr_xs = xs.slice(Math.max(xs.length - 14, 1))
-lr_ys = ys.slice(Math.max(ys.length - 14, 1))
-lx_14 = linearRegression(lr_xs,lr_ys)
-// 7 DAY FIT
-lr_xs = xs.slice(Math.max(xs.length - 7 , 1))
-lr_ys = ys.slice(Math.max(ys.length - 7, 1))
-lx_7 = linearRegression(lr_xs,lr_ys)
-
-lr_xs = xs.slice(Math.max(xs.length - 3 , 1))
-lr_ys = ys.slice(Math.max(ys.length - 3, 1))
-lx_3 = linearRegression(lr_xs,lr_ys)
-
-
-for (var i  = 0; i <= xs.length -1; i++) {
- X = xs[i]
- Y = ys[i]
- if (xs.length - 14 < i + 1) {
-    PY14 = lx_14['slope'] * X + lx_14['intercept']
- }
- else {
-    PY14 = 0
- }
- if (xs.length - 7 < i + 1) {
-    PY7 = lx_7['slope'] * X + lx_7['intercept']
- }
- else {
-    PY7 = 0
- }
- if (xs.length - 3 < i + 1) {
-    PY3 = lx_3['slope'] * X + lx_3['intercept']
- }
- else {
-    PY3 = 0
- }
- if (PY14 < 0) {
-    PY14 = 0
- }
- if (PY7 < 0) {
-    PY7 = 0
- }
- if (PY3 < 0) {
-    PY3 = 0
- }
- ys2.push(PY14)
- ys3.push(PY7)
- ys4.push(PY3)
- //out += PY.toString() + "<BR>";
-}
-
-// add 60 day projections
-last_x = X
-last_zd14_day = 9999
-last_zd7_day = 9999
-last_zd3_day = 9999
-last_exp_day = 9999
-
-proj_days = 60
-exp_pos = 0
-for (var i = 0; i <= proj_days; i++) {
- TX = last_x + i
- PY14 = lx_14['slope'] * TX + lx_14['intercept']
- PY7 = lx_7['slope'] * TX + lx_7['intercept']
- PY3 = lx_3['slope'] * TX + lx_3['intercept']
- xs.push(TX)
- ys.push(0)
- ys2.push(PY14)
- ys3.push(PY7)
- ys4.push(PY3)
- if (last_zd14_day == 9999 && PY14 <= 0) {
-    last_zd14_day = i
- }
- if (last_zd7_day == 9999 && PY7 <= 0) {
-    last_zd7_day = i
- }
- if (last_zd3_day == 9999 && PY3 <= 0) {
-    last_zd3_day = i
- }
- if (last_exp_day == 9999 && exp_ys[i+last_x] <= 0 && exp_pos == 1) {
-    last_exp_day = i
- }
- if (exp_ys[i+last_x] > 0) {
-    exp_pos = 1
- }
-
-}
-
-
-
-
-
-robj = {
- "nxs" : nxs,
- "ys2" : ys2,
- "ys3" : ys3,
- "ys4" : ys4,
- "exp_ys" : exp_ys
-}
-
-
-
-
-return(robj)
-}
 
 
 function extraPoints(data,polyReg) {
@@ -459,80 +324,7 @@ return extrapolatedPts;
 
 
 
-function recalculate() {
-
-   f_xs_str = document.getElementById("f_xs").value 
-   f_ys_str = document.getElementById("f_ys").value 
-   f_xs_ar = f_xs_str.split(",") 
-   f_ys_ar = f_ys_str.split(",") 
-   f_xs = []
-   f_ys = []
-   for (i =0; i< f_xs_ar.length; i++) {
-   f_xs.push(parseFloat(f_xs_ar[i]))
-   f_ys.push(parseFloat(f_ys_ar[i]))
-   }
-   herd_thresh = parseFloat(document.getElementById("herd_thresh").value/100 )
-
-   f_total_cases = parseFloat(document.getElementById("f_total_cases").value)
-   f_total_deaths = parseFloat(document.getElementById("f_total_deaths").value)
-   f_mortality = parseFloat(document.getElementById("calc_mortality").value/100)
-   f_phantom = parseFloat(document.getElementById("calc_phantom").value )
-   f_state_pop = parseFloat(document.getElementById("f_state_pop").value)
-   f_current_zero_day = parseFloat(document.getElementById("f_current_zero_day").value)
-   state_name = document.getElementById("f_state_name").value
-   county = document.getElementById("f_county").value
-
-   sum_info = {} 
-   sum_info['cases'] = document.getElementById("f_cases").value
-   sum_info['deaths'] = document.getElementById("f_deaths").value
-   sum_info['total_infected'] = document.getElementById("f_total_infected").value
-   sum_info['not_infected'] = document.getElementById("f_not_infected").value
-
-   // This is the MAIN summary at the top of the page.
-
-   fr = forecast(f_xs,f_ys,f_total_cases,total_deaths, f_mortality,f_phantom,f_state_pop,f_current_zero_day, herd_thresh, MIT, LA, county_perc)
  
-   // See corona-ui-data.js
-   fillSummary(state_name,fr,sum_info);
- 
-   extra_data = {
-   "yd2": fr['14_day'].dys,
-   "yd3": fr['14_day'].iys,
-   "yd4":  [],
-   "exp_yd": []
-   }
-   extra_labels = {
-   "yd": "Confirmed Cases",
-   "yd2": "Deaths",
-   "yd3": "Infected",
-   "yd4":  "",
-   "exp_yd": ""
-   }
-   title = "Impact Forecast for " + state_name + " based on linear projection of 14-Day Trend" 
-   div_id = "forecast_bar_14"
-   //plot_data_bars(fr['14_day'].xs,fr['14_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
-
-   extra_data = {
-   "yd2": fr['7_day'].dys,
-   "yd3": fr['7_day'].iys,
-   "yd4":  [],
-   "exp_yd": []
-   }
-   extra_labels = {
-   "yd": "Confirmed Cases",
-   "yd2": "Deaths",
-   "yd3": "Infected",
-   "yd4":  "",
-   "exp_yd": ""
-   }
-   title = "Impact Forecast for " + state_name + " based on linear projection of 7-Day Trend"
-   div_id = "forecast_bar_7"
-   //plot_data_bars(fr['7_day'].xs,fr['7_day'].ys,extra_data, extra_labels,xlab,ylab,title,div_id,"bar")
-
-
-
-}
-
 
 
 function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_data) {
@@ -557,7 +349,6 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
    }
 
    var linReg = regression('polynomial', rdata);
-   var linRegEq = "Lin: y = " + linReg.equation[0].toFixed(4) + "x + " + linReg.equation[1].toFixed(2) + ", r2 = " + linReg.r2.toFixed(3);
    var tx = 0
    for (var i = 0; i<= 60; i++) {
       tx = last_x + i
@@ -584,11 +375,7 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
    var lr_ys = local_ys.slice(Math.max(local_ys.length - 7, 1))
    var lx_7 = linearRegression(lr_xs,lr_ys)
 
-   /*
-   var lr_xs = local_xs.slice(Math.max(local_xs.length - 3 , 1))
-   var lr_ys = local_ys.slice(Math.max(local_ys.length - 3, 1))
-   var lx_3 = linearRegression(lr_xs,lr_ys)
-   */
+  
 
    for (var i  = 0; i <= local_xs.length -1; i++) {
    var X = local_xs[i]
@@ -605,29 +392,17 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
    else {
       var PY7 = 0
    }
-   /*
-   if (local_xs.length - 3 < i + 1) {
-      var PY3 = lx_3['slope'] * X + lx_3['intercept'] 
-   }
-   else {
-      var PY3 = 0
-   }
-   */
+   
    if (PY14 < 0) {
       var PY14 = 0
    }
    if (PY7 < 0) {
       var PY7 = 0
    }
-   /*
-   if (PY3 < 0) {
-      var PY3 = 0
-   }
-   */
+   
    local_ys2.push(PY14)
    local_ys3.push(PY7)
-   //local_ys4.push(PY3)
-   //out += PY.toString() + "<BR>";
+   
    }
 
    last_x = X
@@ -653,11 +428,7 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
    if (last_zd7_day == 9999 && PY7 <= 0) {
       last_zd7_day = i
    }
-   /*
-   if (last_zd3_day == 9999 && PY3 <= 0) {
-      last_zd3_day = i
-   }
-   */
+   
    if (last_exp_day == 9999 && local_exp_ys[i+last_x] <= 0 && exp_pos == 1) {
       last_exp_day = i
    }
@@ -672,110 +443,11 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
    }
    
    }
-
-   //last_zd14_val = ys2.slice(-1)[0] 
-   //last_zd7_val = ys3.slice(-1)[0] 
-   //last_zd3_val = ys4.slice(-1)[0] 
-   out = [last_zd14_day, last_zd7_day, last_exp_day] // , last_zd3_day
+ 
+   out = [last_zd14_day, last_zd7_day, last_exp_day]  
 
    plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar",model_data) 
 
    return(out)
 
-}
-
-
-
-
-
-
-
-
-
-function plot_data_bars(xd,yd,extra_d,extra_l,xl,yl,t,dv,type, model_ys) {
-    var trace1 = {
-      x: xd,
-      y: yd,
-      name: extra_l.yd,
-      type: type
-   };
-
-   var trace2 = {
-      x: xd,
-      y: extra_data.yd2,
-      name: yl,
-      name: extra_l.yd2,
-      type: type
-   };
-
-   var trace3 = {
-      x: xd,
-      y: extra_data.yd3,
-      name: yl,
-      name: extra_l.yd3,
-      type: type
-   };
-
-   var trace4 = {
-      x: xd,
-      y: extra_data.yd4,
-      name: yl,
-      name: "3-Day Trend",
-      type: type
-   };
-
-   var trace5 = {
-      x: xd,
-      y: extra_data.exp_yd,
-      name: yl,
-      name: "Curve",
-      type: type
-   };
-
-   var trace6 = {
-      x: xd,
-      y: model_ys,
-      name: yl,
-      name: "MIT Model (entire state)",
-      type: "line" 
-   };
-
-   var data = [trace1 , trace2, trace3,trace4,trace5,trace6];
-
-   var layout = {
-      barmode: 'stack',
-      title : t,
-      yaxis : {
-         title: {
-            text: yl
-         },
-         autorange: true,
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
-      },
-      xaxis : {
-         title: {
-            text: xl
-         },
-         autotick: true,
-         ticks: 'outside',
-         tick0: 0,
-         dtick: 0.25,
-         ticklen: 8,
-         tickwidth: 4,
-         tickcolor: '#000'
-      }
-   }
-
-   Plotly.newPlot(dv, data, layout, {responsive: true, displayModeBar: false});
-
-
-}
-
-
-
+} 

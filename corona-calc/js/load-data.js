@@ -108,8 +108,6 @@ function setupActions() {
       $(this).attr('data-htmlx',$(this).html()).html('Computing...');
       $('body').addClass('wait');
       setTimeout(function() {
-         console.log("CUR STATE ", cur_state);
-         console.log("CUR COUNTY ", cur_county);
          displayData(cur_json_data,cur_state,cur_county);
       },850);
    });
