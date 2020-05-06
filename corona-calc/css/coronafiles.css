@@ -653,15 +653,27 @@ ul.share-buttons img {
 .adp {
    column-count: 2;
    text-align: left;
+   max-width: 800px;
+   margin: 2rem auto;
 }
 
 .adp span {
    display: inline-block;
    min-width: 10rem;
+}
 
+
+/* Graphs */
+.js-plotly-plot {
+   margin:0 2rem;
 }
 
 @media (max-width: 48em) {
+
+   .js-plotly-plot {
+      margin:0;
+   }
+
    body {
       background-position: -250px -150px;
    }

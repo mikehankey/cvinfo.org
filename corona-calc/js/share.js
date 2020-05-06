@@ -23,9 +23,7 @@ function setShareLinks(data) {
    var initUrl =  $.trim($("meta[property='og:url']").attr("content"));
  
    if(typeof data == "undefined") {
- 
-      pageUrl = document.URL;
-
+       pageUrl = document.URL;
    } else {
       if(typeof data.state !== "undefined" && typeof data.state_code !== "undefined" ) {
          title += " for " + data.state; 
@@ -68,9 +66,4 @@ function setShareLinks(data) {
       socialWindow(url);
   })
    
-} 
-
-$(function() {
-   // Setup default social links
-   setShareLinks();
-})
+}  

@@ -1,6 +1,4 @@
-var init_select_county;
-
-
+ 
 
 function show_loader() {
    $('body').addClass('wait');
@@ -22,13 +20,14 @@ function reset() {
    $('#herd_thresh').val(60);
    $('#calc_phantom').val(4);
    $('#calc_mortality').val(init_mort.toFixed(2));
-   $('#reset').click(function() {
-      reset();
-      $('#recalculate').trigger('click');
-   })
+
 }
 
 
+
+/**
+ * Fill County Selector
+ */
 function countySelect(p, state) {
    var sel = "<select id='county_selector'><option value='ALL'>All Counties</option>"
    var sortable = [];
@@ -43,14 +42,12 @@ function countySelect(p, state) {
       return b[1] - a[1];
    }); 
    for (i = 0; i <= sorted.length-1; i++) { 
-      // Don't display "Unknown anymore"
-      if($.trim(sorted[i][0])!="Unknown"){
-         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + " conf. cases)</option>\n";
+         sel += "<option value=\"" + sorted[i][0] + "\">" + sorted[i][0] + " (" + usFormat(sorted[i][1]) + " cases)</option>\n";
          all_counties.push(sorted[i][0]);
-      }
    }
 
-   sel += "<input type=hidden id='state' value='" + state + "'></select>"
+   sel += "<input type=hidden id='state' value='" + state + "'></select>";
+   $('#county_select').change(function() {change_county()});
    $('#county_select').html(sel);
  
 }
@@ -67,64 +64,4 @@ function createSvg() {
    $("#forecast .7days .trend").text("7-Day trend");
 } 
 
-$(function() {
-   var cururl, params, selState, possibleStates=[];
 
-   // Once the page is loaded we enable the state select
-   $('#state_selector').removeAttr('disabled');
-   $('body').removeClass('wait');
-
-   // Create action on state select 
-   $('#state_selector').change(function() { change_state(); });
-
-   // Creation action on recalculate button
-   $('#recalculate').click(function() { 
-      $(this).attr('data-htmlx',$(this).html()).html('Computing...');
-      $('body').addClass('wait');
-      load_data(false); 
-   }) 
-
-   // Creation action on reset button
-   $('#reset').click(function() {reset(); }) 
-
-   // ... 
-   hide_loader(false);
-
-   // Do we have parameters we can work with 
-   // We want 
-   // coronafiles.us/?MD+Baltimore
-   // or 
-   // coronafiles.us/?MD
-   cururl = decodeURIComponent(window.location.href);
-   if(cururl.indexOf('?')>0) {
-      selState = cururl.substring(cururl.indexOf('?')+1, cururl.length);
-
-      if(selState.indexOf('+')>0) {
-         init_select_county = selState.substring(selState.indexOf('+')+1, selState.length);
-         selState = selState.substring(0,selState.indexOf('+')).toUpperCase();
-      } else {
-         selState = selState.toUpperCase();
-      }
-
-      // Get all the possible state value
-      $('#state_selector option').each(function(i,v){
-         possibleStates.push(v.value);
-      })
-      
-      if(possibleStates.indexOf(selState)>0) {
-         // Select State
-         $('#state_selector').val(selState).trigger('change');
-
-         // Update Soc Sharing with Full State Name
-         setShareLinks({state:$("#state_selector option[value='"+selState+"']").text(), state_code:selState});
- 
-      }
-
-      possibleStates = null;
-        
-   } 
-
-   // Scroll Top even with hidden elements
-   window.scrollTo(0,0);
-
-})

@@ -173,7 +173,6 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
       TX = current_zero_day + i
       PY14  = lx_14['slope'] * TX + lx_14['intercept']
       PY7   = lx_7['slope'] * TX + lx_7['intercept']
-      PY3   = lx_3['slope'] * TX + lx_3['intercept']
 
       if (PY14 < 0) { PY14 = 0;  }
       if (PY7 < 0) { PY7 = 0; }
@@ -305,7 +304,7 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
       }
       new_cases = MIT.Total_Detected[i] - last_cases
       new_deaths = MIT.Total_Detected_Deaths[i] - last_deaths
-      console.log( MIT.Total_Detected[i], MIT.Total_Detected_Deaths[i],new_cases, new_deaths)
+      //console.log( MIT.Total_Detected[i], MIT.Total_Detected_Deaths[i],new_cases, new_deaths)
       new_cases = new_cases * county_perc
       new_deaths = new_deaths * county_perc
       forecast_result['MIT']['xs'].push(i+current_zero_day)
