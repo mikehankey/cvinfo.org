@@ -42,7 +42,7 @@ function dateFormatMITFromDate(s) {
    var dd = s.getDate();
    var mm = s.getMonth()+1; 
    var yyyy = s.getFullYear();
-   return dd+" "+A[mm-1] + " " +yyyy;
+   return A[mm-1] + " " + dd +  ", " +yyyy;
 }
 
 

@@ -109,6 +109,10 @@ function compute_Xdeg_poly_regression_with_dates(xdata,ydata,start_day_minus,end
    var x_to_return = [];
    var y_to_return = [];
 
+   var delta; // Solution of the 2nd deg equation
+   var reach_0;
+   var reach_raw_d;
+
    if(start_day_minus==-1) {
       start_day_minus= ydata.length;
    }  
@@ -159,7 +163,36 @@ function compute_Xdeg_poly_regression_with_dates(xdata,ydata,start_day_minus,end
       }
       c++;
    } 
- 
+   
+
+   // Now we try to know if there's at least one solution for 
+   // a + bx  + cx²  = 0 (to know if we're going to reach 0 at one point)
+   // WARNING IT ONLY WORKS WITH the 2nd deg!!
+   // EQUAT: ax²+bx+c=0 
+   a = parseFloat(reg_solution[2]);
+   b = parseFloat(reg_solution[1]);
+   c = parseFloat(reg_solution[0]);
+
+   delta = Math.pow(b,2) - 4*a*c;
+   if(delta<0) {
+      console.log("NO SOLUTION");
+      reach_0 = -1;
+   } else if(delta==0) {
+      console.log("NO SOLUTION");
+      reach_0 = -b/(2*a);
+   } else {
+      // We take the max of the 2 solution
+      reach_0  = Math.max( (-b-Math.sqrt(delta))/(2*a), 
+                           (-b+Math.sqrt(delta))/(2*a)
+      );
+   }
+
+   console.log("REACH 0 for polynomial solution");
+   console.log(reach_0); 
+   console.log("RES BACK");
+   console.log(a + b*reach_0 + c*Math.pow(reach_0,2));
+
+
    return {x:x_to_return, y:y_to_return, equa: reg_solution};
  
 }
