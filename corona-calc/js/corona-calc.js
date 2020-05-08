@@ -1,20 +1,4 @@
-/**
- * Get county list + # of cases at day-1
- * from State and fill the related select element
- * @param {*} json_data 
- */
-function getAllCounties(json_data) {
-   var counties = json_data['county_stats'];
-   var county_list = {}, all_cases;
 
-   $.each(counties, function(key,vals) { 
-      if(key!=='Unknown') {
-         county_list[key] = vals.county_stats[vals.county_stats.length-1].cases;
-      }
-   })
- 
-   return county_list;
-}
 
 /**
  * Compute & Display analysis
