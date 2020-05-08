@@ -67,7 +67,7 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
 
       // populate forecast with poly results 
       forecast_result['exp']['total_cases'] = curve_total_cases; 
-      forecast_result['exp']['total_dead'] = curve_total_cases * mortality;
+      forecast_result['exp']['total_dead']   = curve_total_cases * mortality;
       forecast_result['exp']['death_percent'] =  ((curve_total_cases * mortality)/ state_pop) * 100;
       forecast_result['exp']['total_infected'] = curve_total_cases * phantom;
       forecast_result['exp']['infected_percent'] = ((curve_total_cases * phantom) / state_pop) * 100;

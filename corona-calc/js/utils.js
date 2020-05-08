@@ -19,6 +19,14 @@ function dateFormatMIT(s) {
    return s.replace(/(\d{4})(\d{2})(\d{2})/, '$2/$3/$1');
 }
 
+function dateFormatMITFromDate(s) {
+   var A=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+   var dd = s.getDate();
+   var mm = s.getMonth()+1; 
+   var yyyy = s.getFullYear();
+   return dd+" "+A[mm-1] + " " +yyyy;
+}
+
 
 function linearRegression(x,y){
    var lr = {};

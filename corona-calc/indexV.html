@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>  
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
+   <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
+ 
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="msapplication-TileColor" content="#f0f0f0">
+   <meta name="theme-color" content="#f0f0f0">
+ 
+   <meta property="fb:app_id" content="542306269804125"/>
+   <meta property="og:title" content="CoronaFiles.us - COVID-19 Forecasting and Stats Visualizer for your State and county"/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:url" content="https://coronafiles.us/"/>
+   <meta property="og:site_name" content="CoronaFiles.us"/>
+   <meta property="og:description" content="COVID-19 Forecasting and Stats Visualizer"/>
+   <meta property="og:locale" content="en_US"/>
+   <meta property="og:image" content="https://coronafiles.us/img/coronafile_fb.jpg"/>
+   <meta property="og:image:width" content="1200"/>
+   <meta property="og:image:height" content="630"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - When could Corona Virus End?"/>
+
+   <meta name="author" content="Mike Hankey">
+	<meta name="description" content="When could Corona Virus end? COVID-19 Forecasting and Stats Visualizer.">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="keywords" content="corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
+
+	<title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>   
+ 
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="./css/coronafiles.css" rel="stylesheet">
+
+   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+   <link rel="manifest" href="./site.webmanifest">
+   <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+ 
+</head>
+<body class="wait">
+
+   <header class="header clearfix">
+      <a href="" class="logo"><img src="./img/logo.png"/> <span>CoronaFiles.us</span></a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul class="menu">
+         <li class="active"><a href="./index.html">Forecast</a></li>
+         <li><a href="./data.html">Data</a></li> 
+         <li><a href="./about.html">About</a></li> 
+      </ul>
+   </header>
+
+   <div id="header">
+      <h1>US Corona Calculator</h1>
+      <h2>COVID-19 Forecasting Tool</h2>
+   </div>
+   <div id="main-content">
+
+      <div id="state_select" style="display:none"><select id="state_selector" disabled><option value="0">Select State</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option></select></div>
+      <div id="county_select"></div>
+      <a href="#disclaimer" class="notice">IMPORTANT NOTICE</a>
+      <div id="loader" ><img src="./img/loader.gif"/>Loading...</div>
+
+      <div id="forecast" class="box">
+         <div id="top_summary"></div>
+         <div class="inout_ty">
+               <div id="new_trends"> 
+                    <table>
+                       <thead>
+                          <tr>
+                                <th>&nbsp;</th>
+                                <th colspan="2">Current</th>
+                                <th colspan="2">14-day Trend</th>
+                                <th colspan="2">7-day Trend</th>
+                          </tr>
+                       </thead>
+                       <tbody>
+                       </tbody>
+                       <tfoot>
+                             <tr class="nb">
+                                   <td colspan="3">&nbsp;</td>
+                                   <td class="brd" colspan="5">Projection in 1200 days if the pandemic doesn't end before</td>
+                             </tr>
+                       </tfoot>
+                    </table> 
+              </div>
+         </div>
+      </div>
+
+
+      <div id="std">
+         <h3>Historical Data and Trends</h3>
+         <p>The following graphs represent the data used to determine the growth trend and default mortality rate values used by the calculator above. </p>
+      </div>
+      <div class="box">
+            <div id="newcases_graph_details" class="graph_det"></div>
+            <div id="newcases_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="deaths_graph_details" class="graph_det"></div>
+            <div id="deaths_graph"></div>
+      </div>
+ 
+      <div class="box">
+            <div id="growth_graph_details"  class="graph_det"></div>
+            <div id="growth_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="tests_graph_details"  class="graph_det"></div>
+            <div id="tests_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="death_growth_graph_details"  class="graph_det"></div>
+            <div id="death_growth_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="growth_decay_graph_details"  class="graph_det"></div>
+            <div id="growth_decay_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="mortality_details"  class="graph_det"></div>
+            <div id="mortality_graph"></div>
+      </div>
+
+
+      <div id="results" style="visibility:hidden">
+         <div id="forecast" class="box" style="visibility:hidden">
+            <div id="summary" style="visibility:hidden"></div>
+            <div id="metric 14days" class="metric 14days" style="visibility:hidden"></div>
+            <div id="metric 7days" class="metric 7days" style="visibility:hidden"></div> 
+            <div id="sum_peak" style="visibility:hidden"></div>
+            <div id="outcome" class="clearfix" >
+          
+               <h3>Predicted Outcome</h3>
+               <p>
+                  Recent testing efforts haved greatly increased in many states. 
+                  This can result in more cases being reported which can negatively impact trends. 
+                  See <a href="#test_div">testing graph</a> to corelate recent case growth with increased testing.  
+               </p>
+               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_14" style="height:250px"></div></div><div class="leg"></div></div>
+               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_7" style="height:250px"></div></div><div class="leg"></div></div>
+            </div>
+            <div class="inout_ty">
+                   <div id="new_trends"> 
+                        <table>
+                           <thead>
+                              <tr>
+                                    <th>&nbsp;</th>
+                                    <th colspan="2">Current</th>
+                                    <th colspan="2">14-day Trend</th>
+                                    <th colspan="2">7-day Trend</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                           </tbody>
+                           <tfoot>
+                                 <tr class="nb">
+                                       <td colspan="3">&nbsp;</td>
+                                       <td class="brd" colspan="5">Projection for the end of the pandemic</td>
+                                 </tr>
+                           </tfoot>
+                        </table> 
+                  </div>
+             </div>
+
+            <div id="recalc_form" >
+               <p class="to">Predicted outcome calculated with current data trends and the following values:</p>
+               <div class="form-group clearfix">
+                     <label for="herd_thresh">Herd Immunity Threshold
+                       <span>Percentage of population needed for herd immunity.</span>
+                     </label>
+                     <div class="form-input">
+                        <div class="group">
+                              <input type="number"  id="herd_thresh" value="60"/>
+                              <span class="input-group-text">%</span>
+                        </div>
+                     </div>
+               </div>
+               <div class="form-group clearfix">
+                     <label for="calc_mortality">Confirmed Case Mortality Rate
+                     <span>Percentage of confirmed cases that end in death.</span></label>
+                     <div class="form-input">
+                        <div class="group">
+                           <input type="number" id="calc_mortality" />
+                           <span class="input-group-text">%</span>
+                        </div>
+                     </div>
+               </div>
+               <div class="form-group clearfix">
+                     <label for="calc_phantom">Non-Tracked Factor
+                     <span>For each confirmed case there are X non-tracked cases.</span></label>
+                     <div class="form-input">
+                       <input type="number"  id="calc_phantom" value="4"/>
+                     </div>
+               </div>
+               <input type="hidden" id="f_xs">
+               <input type="hidden" id="f_ys">
+               <input type="hidden" id="f_total_cases">
+               <input type="hidden" id="f_total_deaths">
+               <input type="hidden" id="f_state_pop">
+               <input type="hidden" id="f_current_zero_day">
+               <input type="hidden" id="f_state_name">
+               <input type="hidden" id="f_state_code">
+               <input type="hidden" id="f_county">
+               <input type="hidden" id="f_total_infected">
+               <input type="hidden" id="f_not_infected">
+               <input type="hidden" id="f_cases">
+               <input type="hidden" id="f_deaths">
+               <input type="hidden" id="f_mortality">
+
+               <input type="hidden" id="init_mortality">
+               <input type="hidden" id="used_mortality">
+               
+               <button id="recalculate">Re-Calculate Predicted Outcome</button>
+               <button id="reset" class="btn">Reset</button>
+            </div>
+         </div>
+
+         <div id="std">
+           </div>
+               
+               <div id="graphs"> 
+               </div>
+               <div class="box" id="newcase_cont"  style="visibility:hidden">
+                  <div id="new_cases_forecast"></div>
+                  <div id="new_cases_div"></div>
+               </div>
+
+               <div class="box" id="growth_cont" style="visibility:hidden">
+                  <div id="growth_forecast"></div>
+                  <div id="growth_div"></div>
+               </div>     
+                
+               <div class="box" id="decay_cont" style="visibility:hidden">
+                  <div id="decay_forecast"></div>
+                  <div id="decay_div"></div>
+               </div>    
+ 
+               <div class="box"  style="visibility:hidden"><div id="test_div"></div></div>
+               <div class="box"  style="visibility:hidden"><div id="new_deaths_div"></div></div>
+               <div class="box"  style="visibility:hidden"><div id="deaths_growth_div"></div></div>
+               <div class="box"  style="visibility:hidden"><div id="mortality_div"></div></div>
+
+
+
+            
+         </div>
+
+      </div>
+   </div>
+
+  
+   
+   <div id="soc">
+      <ul class="share-buttons">
+            <li class="social-share facebook"><img src="./img/Facebook.svg" alt="Share Page on Facebook" /></li>
+            <li class="social-share twitter"><img src="./img/Twitter.svg" alt="Share Page on Twitter" /></li>
+            <li class="social-share linkedin"><img src="./img/LinkedIn.svg" alt="Share Page on LinkedIn" /></li>
+            <li class="social-share reddit"><img src="./img/Reddit.svg" alt="Share Page on Reddit" /></li>
+     </ul>
+   </div>
+
+   <div id="disclaimer"> 
+         <strong>IMPORTANT NOTICE:</strong>
+          This tool is a linear, straight line projection based on current data and trends as reported through 
+          John's Hopkins and the CDC. <strong>This is NOT a model and should not be interpreted as such.</strong> 
+          It is simply a status report of where a state or county is right now and where that path
+          will lead if it is continued without changing. In reality, these trends and values will
+          change each day and the ending result will look like a curve. Modeling these outcomes is
+          very complicated and it is not our intention to minimize those efforts. Rather, we are presenting a mathematical,
+          straight line forecasting method, to project how things <b>'might'</b> end up.
+   </div>
+
+   <div id="footer">
+         coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
+         <br/>contact: mike.hankey[@]gmail.com
+   </div>
+ 
+   <script src="./js/shared/framework_plugs.js"></script>    
+   <script src="./js/share.js"></script>    
+   <script src="./js/gauges.js"></script>
+   <script src="./js/utils.js"></script>
+   <script src="./js/create_graphs.js"></script> 
+
+   <script src="./js/maths/squarefiiter-fit.js"></script>
+   <script src="./js/maths/least-square-fit.js"></script>
+   <script src="./js/maths/numeric.js"></script>  
+   <script src="./js/maths/regression.js"></script>  
+   
+   <script src="./js/summary.js"></script>
+   <script src="./js/create_new_graphs.js"></script>
+   
+   <script src="./js/corona-ui-data.js"></script>
+   <script src="./js/forecast.js"></script> 
+   <script src="./js/calc-functions.js"></script> 
+   <script src="./js/corona-calc.js"></script> 
+   <script src="./js/corona-ui.js"></script>
+   <script src="./js/init-data.js"></script>
+   <script src="./js/load-dataV.js"></script>
+
+</body>
+</html>
