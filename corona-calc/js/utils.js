@@ -1,3 +1,21 @@
+/**
+ * Get county list + # of cases at day-1
+ * from State and fill the related select element
+ * @param {*} json_data 
+ */
+function getAllCounties(json_data) {
+   var counties = json_data['county_stats'];
+   var county_list = {}, all_cases;
+
+   $.each(counties, function(key,vals) { 
+      if(key!=='Unknown') {
+         county_list[key] = vals.county_stats[vals.county_stats.length-1].cases;
+      }
+   })
+ 
+   return county_list;
+}
+
 function convert_zero_day_to_date(xs,dates) {
    var jsdates = [];
    for (i = 0; i <= xs.length -1 ; i++) {
@@ -24,7 +42,7 @@ function dateFormatMITFromDate(s) {
    var dd = s.getDate();
    var mm = s.getMonth()+1; 
    var yyyy = s.getFullYear();
-   return dd+" "+A[mm-1] + " " +yyyy;
+   return A[mm-1] + " " + dd +  ", " +yyyy;
 }
 
 

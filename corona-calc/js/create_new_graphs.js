@@ -216,13 +216,13 @@ function new_display_data(data,state,county) {
    ); 
 
    // And we complete with
-   data_for_summary.name = all_graph_data['name'];
-   data_for_summary.pop  = all_graph_data['pop'];
-   data_for_summary.last_mortality_rate  = all_graph_data['last_mortality_rate'];
-   data_for_summary.total_death = all_graph_data['total_death'];
-   data_for_summary.total_case = all_graph_data['total_case'];
-   data_for_summary.last_day_data = all_graph_data['last_day_data'];
-   data_for_summary.last_day_number_data = all_graph_data['last_day_number_data'];
+   data_for_summary.name                  = all_graph_data['name'];
+   data_for_summary.pop                   = all_graph_data['pop'];
+   data_for_summary.last_mortality_rate   = all_graph_data['last_mortality_rate'];
+   data_for_summary.total_death           = all_graph_data['total_death'];
+   data_for_summary.total_case            = all_graph_data['total_case'];
+   data_for_summary.last_day_data         = all_graph_data['last_day_data'];
+   data_for_summary.last_day_number_data  = all_graph_data['last_day_number_data'];
   
    // Graph for Growth
    compute_new_graph_data(
@@ -300,7 +300,8 @@ function new_display_data(data,state,county) {
    );  
 
    // And Now we can fill the summary
-   createSummary(data_for_summary);
+   console.log(data_for_summary);
+//   createSummary(data_for_summary);
 
  }
 
@@ -387,6 +388,7 @@ function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,opti
    toDraw.title3  = "14-Day Trend";
 
    // 2th degree polynomial regression from the beginning (new curve)
+   console.log("POLY FOR ", title);
    reg = compute_Xdeg_poly_regression_with_dates(x,y,-1,new Date(total_x[total_x.length-1]),2);
    x_poly = reg['x'];
    y_poly = reg['y'];
