@@ -668,6 +668,16 @@ ul.share-buttons img {
    margin:0 2rem;
 }
 
+
+.graph_det p {
+   margin-bottom: 0;
+   margin-top: .2rem;
+}
+
+.wn {
+   white-space: nowrap;
+}
+
 @media (max-width: 48em) {
 
    .js-plotly-plot {

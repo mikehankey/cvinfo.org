@@ -37,8 +37,8 @@ function load_data(urlInfo, reload) {
       if(cur_json_data=="") { 
          getJSONData("../json/" + state + ".json",$.trim(state),$.trim(county));
       } else { 
-          displayData(cur_json_data,cur_state,county); 
-         
+         //displayData(cur_json_data,cur_state,county); 
+         new_display_data(cur_json_data,state,county);
       }
      
    } 
@@ -77,7 +77,7 @@ function getJSONData(url,state,county,reload) {
          cur_json_data = result;
          cur_county     = county;   
          cur_state      = state;
-         displayData(result,state,county)  
+         new_display_data(result,state,county)  
          hide_loader();	 
          $('#recalculate').html($('#recalculate').attr('data-htmlx'));
          $('#recalculate').removeAttr('data-htmlx');

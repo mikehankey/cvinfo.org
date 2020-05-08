@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-<head> 
+<head>  
    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
-  
+ 
    <meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="msapplication-TileColor" content="#f0f0f0">
@@ -62,6 +62,74 @@
       <div id="county_select"></div>
       <a href="#disclaimer" class="notice">IMPORTANT NOTICE</a>
       <div id="loader" ><img src="./img/loader.gif"/>Loading...</div>
+
+      <div id="forecast" class="box">
+         <div id="top_summary"></div>
+         <div class="inout_ty">
+               <div id="new_trends"> 
+                    <table>
+                       <thead>
+                          <tr>
+                                <th>&nbsp;</th>
+                                <th colspan="2">Current</th>
+                                <th colspan="2">14-day Trend</th>
+                                <th colspan="2">7-day Trend</th>
+                          </tr>
+                       </thead>
+                       <tbody>
+                       </tbody>
+                       <tfoot>
+                             <tr class="nb">
+                                   <td colspan="3">&nbsp;</td>
+                                   <td class="brd" colspan="5">Projection in 1200 days if the pandemic doesn't end before</td>
+                             </tr>
+                       </tfoot>
+                    </table> 
+              </div>
+         </div>
+      </div>
+
+
+      <div id="std">
+         <h3>Historical Data and Trends</h3>
+         <p>The following graphs represent the data used to determine the growth trend and default mortality rate values used by the calculator above. </p>
+      </div>
+      <div class="box">
+            <div id="newcases_graph_details" class="graph_det"></div>
+            <div id="newcases_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="deaths_graph_details" class="graph_det"></div>
+            <div id="deaths_graph"></div>
+      </div>
+ 
+      <div class="box">
+            <div id="growth_graph_details"  class="graph_det"></div>
+            <div id="growth_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="tests_graph_details"  class="graph_det"></div>
+            <div id="tests_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="death_growth_graph_details"  class="graph_det"></div>
+            <div id="death_growth_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="growth_decay_graph_details"  class="graph_det"></div>
+            <div id="growth_decay_graph"></div>
+      </div>
+
+      <div class="box">
+            <div id="mortality_details"  class="graph_det"></div>
+            <div id="mortality_graph"></div>
+      </div>
+
+
       <div id="results" style="visibility:hidden">
          <div id="forecast" class="box" style="visibility:hidden">
             <div id="summary" style="visibility:hidden"></div>
@@ -156,13 +224,10 @@
          </div>
 
          <div id="std">
-               <h3>Historical Data and Trends</h3>
-               <p>The following graphs represent the data used to determine the growth trend and default mortality rate values used by the calculator above. </p>
-         </div>
-         <div id="graphs">
-             <div id="forecast_bar_14"></div>
-             <div id="forecast_bar_7"></div>
-             </div>
+           </div>
+               
+               <div id="graphs"> 
+               </div>
                <div class="box" id="newcase_cont"  style="visibility:hidden">
                   <div id="new_cases_forecast"></div>
                   <div id="new_cases_div"></div>
@@ -185,7 +250,7 @@
 
 
 
-               <div class="box"><div id="new_graph"></div></div>
+            
          </div>
 
       </div>
@@ -225,9 +290,11 @@
    <script src="./js/create_graphs.js"></script> 
 
    <script src="./js/maths/squarefiiter-fit.js"></script>
-   <script src="./js/maths/least-square-fit.js"></script> 
-   <script src="./js/maths/regression.js"></script> 
-
+   <script src="./js/maths/least-square-fit.js"></script>
+   <script src="./js/maths/numeric.js"></script>  
+   <script src="./js/maths/regression.js"></script>  
+   
+   <script src="./js/summary.js"></script>
    <script src="./js/create_new_graphs.js"></script>
    
    <script src="./js/corona-ui-data.js"></script>
@@ -236,7 +303,7 @@
    <script src="./js/corona-calc.js"></script> 
    <script src="./js/corona-ui.js"></script>
    <script src="./js/init-data.js"></script>
-   <script src="./js/load-data.js"></script>
+   <script src="./js/load-dataV.js"></script>
 
 </body>
 </html>
