@@ -109,12 +109,14 @@ function compute_Xdeg_poly_regression_with_dates(xdata,ydata,start_day_minus,end
    var x_to_return = [];
    var y_to_return = [];
 
-   var delta; // Solution of the 2nd deg equation
+   // Solution of the 2nd deg equation
+   var delta;  
+   var a,b,c,sol_1,sol_0;
    var reach_0;
    var reach_raw_d;
 
    if(start_day_minus==-1) {
-      start_day_minus= ydata.length;
+      start_day_minus = ydata.length;
    }  
    
    first_day = xdata[xdata.length-start_day_minus];
@@ -172,25 +174,30 @@ function compute_Xdeg_poly_regression_with_dates(xdata,ydata,start_day_minus,end
    a = parseFloat(reg_solution[2]);
    b = parseFloat(reg_solution[1]);
    c = parseFloat(reg_solution[0]);
-
+ 
    delta = Math.pow(b,2) - 4*a*c;
-   if(delta<0) {
-      console.log("NO SOLUTION");
+   if(delta<0) { 
+      // NO SOLUTION
+      sol_0 = -1;
       reach_0 = -1;
    } else if(delta==0) {
-      console.log("NO SOLUTION");
-      reach_0 = -b/(2*a);
+     // 1 SOLUTION
+      sol_0 = -b/(2*a);
    } else {
-      // We take the max of the 2 solution
-      reach_0  = Math.max( (-b-Math.sqrt(delta))/(2*a), 
-                           (-b+Math.sqrt(delta))/(2*a)
-      );
+      // 2 SOLUTION 
+      sol_0  =  (-b-Math.sqrt(delta))/(2*a); 
+      sol_1  =  (-b+Math.sqrt(delta))/(2*a); 
+      // We take the max
+      sol_0 = Math.max(sol_1,sol_0); 
    }
-
-   console.log("REACH 0 for polynomial solution");
-   console.log(reach_0); 
-   console.log("RES BACK");
-   console.log(a + b*reach_0 + c*Math.pow(reach_0,2));
+ 
+   if(sol_0 != -1 ) {
+      
+      // We need to find the day that corresponds to sol_0
+      // Since we're using this function always with the entire data 
+      first_data = new Date(xdata[0]);
+      
+   }
 
 
    return {x:x_to_return, y:y_to_return, equa: reg_solution};
