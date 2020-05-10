@@ -163,7 +163,7 @@ function plot_data_line(xd,yd,yd2,yd3,yd4,exp_yd,xl,yl,t,dv,type) {
 
 
 // Create real graphs
-function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
+function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys,model2_ys) {
   
    var ymax = Math.max.apply(Math, yd) + Math.max.apply(Math, yd)/8;
     
@@ -216,7 +216,20 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
    }
    else {
       var data = [trace1, trace2, trace3,trace5]; //
+   }
 
+   if (model2_ys.length > 0) {
+      var mxs = xd.slice(0, model2_ys.length)
+      var trace7 = {
+         x: xd,
+         y: model2_ys,
+         name: "Los Alamos Model",
+         type: "line" 
+      };
+      var data = [trace1, trace2, trace3,trace5,trace6,trace7]; //
+   }
+   else {
+      var data = [trace1, trace2, trace3,trace5]; //
    }
 
    var layout = {
@@ -267,7 +280,7 @@ function plot_data(xd,yd,yd2,yd3,yd4,exp_y,xl,yl,t,dv,type,model_ys) {
 /**
  * Compute data before drawing graphs
  */
-function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_data) {
+function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_data,model_data2) {
  
    var local_xs = xs_in.slice(0);  
    var local_ys = ys_in.slice(0);
@@ -388,7 +401,7 @@ function makeGraph(xs_in,ys_in,title,xlab,ylab,div_id,fit_days,proj_days,model_d
  
    out = [last_zd14_day, last_zd7_day, last_exp_day]  
 
-   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar",model_data) 
+   plot_data(local_xs,local_ys,local_ys2,local_ys3,local_ys4,local_exp_ys, xlab,ylab,title,div_id,"bar",model_data,model_data2) 
 
    return(out)
 

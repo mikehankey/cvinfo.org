@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+   .squares {
+      padding: 0px;
+      background-color:white;
+
+   }
+   .sq_plot {
+      width: 350px;
+      height: 350px;
+      float: left;
+      padding: 0px;
+      margin: 0px;
+   }
+   </style>
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
+   <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
+
+   <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="msapplication-TileColor" content="#f0f0f0">
+   <meta name="theme-color" content="#f0f0f0">
+
+   <meta property="fb:app_id" content="542306269804125"/>
+   <meta property="og:title" content="CoronaFiles.us - COVID-19 Forecasting and Stats Visualizer for your State and county"/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:url" content="https://coronafiles.us/"/>
+   <meta property="og:site_name" content="CoronaFiles.us"/>
+   <meta property="og:description" content="COVID-19 Forecasting and Stats Visualizer"/>
+   <meta property="og:locale" content="en_US"/>
+   <meta property="og:image" content="https://coronafiles.us/img/coronafile_fb.jpg"/>
+   <meta property="og:image:width" content="1200"/>
+   <meta property="og:image:height" content="630"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - When could Corona Virus End?"/>
+
+   <meta name="author" content="Mike Hankey">
+        <meta name="description" content="When could Corona Virus end? COVID-19 Forecasting and Stats Visualizer.">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="keywords" content="corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
+
+        <title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>
+
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="./css/coronafiles-gbu.css" rel="stylesheet">
+
+   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+   <link rel="manifest" href="./site.webmanifest">
+   <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+
+</head>
+<body >
+
+   <header class="header clearfix">
+      <a href="" class="logo"><img src="./img/logo.png"/> <span>CoronaFiles.us</span></a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul class="menu">
+         <li class="active"><a href="./index.html">Forecast</a></li>
+         <li><a href="./data.html">Data</a></li>
+         <li><a href="./about.html">About</a></li>
+      </ul>
+   </header>
+
+   <div id="header">
+      <h1>United States - Corona Virus New Cases Compared</h1>
+      Here we see the rolling 7-day average for new cases per state. States are grouped into categories based on the current day's value compared to the highest historical peak value. 
+   </div>
+   <div id="main-content">
+
+
+
+
+   <div class="squares">
+   <div id="good"></div>
+   <div style="clear: both"></div>
+
+   <div id="bad"></div>
+   <div style="clear: both"></div>
+   <div id="ugly"></div>
+   <div style="clear: both"></div>
+   </div>
+
+</div>
+   <script src="./js/shared/framework_plugs.js"></script>
+   <script src="./js/share.js"></script>
+   <script src="./js/gauges.js"></script>
+   <script src="./js/utils.js"></script>
+   <script src="./js/create_graphs.js"></script>
+
+   <script src="./js/maths/squarefiiter-fit.js"></script>
+   <script src="./js/maths/least-square-fit.js"></script>
+   <script src="./js/maths/regression.js"></script>
+
+   <script src="./js/create_new_graphs.js"></script>
+
+   <script src="js/gbu.js"></script>
+
+   <script>
+      temp = decodeURIComponent(window.location.href).split("?");
+      if (temp.length <= 1) {
+         gbuInit("../json/gbu-states.json", "ALL")
+      }
+      else {
+         gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
+      }
+
+   </script>
