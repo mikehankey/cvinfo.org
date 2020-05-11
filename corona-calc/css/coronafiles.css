@@ -194,11 +194,7 @@ a, a:visited {
  @media (min-width: 48em) {
 
 
-   .graph_c {
-      float: none;
-      margin-left: auto;
-      margin-right: auto;
-   }
+ 
 
    .header li {
      float: left;
@@ -718,6 +714,13 @@ ul.share-buttons img {
 }
 
 @media (max-width: 48em) {
+
+
+   .graph_c {
+      float: none;
+      margin-left: auto;
+      margin-right: auto;
+   }
 
    .js-plotly-plot {
       margin:0;
