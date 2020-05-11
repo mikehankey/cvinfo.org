@@ -573,11 +573,14 @@ def compare_state(st) :
    groups['good'] = {}
    groups['bad'] = {}
    groups['ugly'] = {}
+   groups['low_cases'] = {}
    rel_data = {}
    rel_data[st] = {}
    sd = load_json_file(JSON_PATH + "/" + st + ".json") 
    cd = sd['county_stats']
-   for county in cd:
+   if "Unknown" in cd:
+      del cd['Unknown']
+   for county in sorted(cd):
       max_val = 0
       cs = cd[county]['county_stats']
       temp = []
@@ -592,8 +595,11 @@ def compare_state(st) :
          if avg > max_val:
             max_val = avg
       last_val_perc = avg / max_val
-      print(st, last_val_perc, rel_data[county])
-      if last_val_perc >= .8 and avg > 5:
+      print(st, last_val_perc, rel_data[county]) 
+      max_val = np.max(rel_data[county])
+      if max_val <= 5:
+         groups['low_cases'][county] = rel_data[county]
+      elif last_val_perc >= .8 and avg > 5:
          groups['ugly'][county] = rel_data[county]
       elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'][county] = rel_data[county]

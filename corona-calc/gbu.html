@@ -111,20 +111,29 @@
    <script src="js/gbu.js"></script>
    <script>
       $(function () {
-         temp = decodeURIComponent(window.location.href).split("?");
-         $('#low_cases_title, #low_cases').hide();
-         if (temp.length <= 1) {
-            gbuInit("../json/gbu-states.json", "ALL");
-         }
+      temp = decodeURIComponent(window.location.href).split("?");
+      $('#low_cases_title, #low_cases').hide();
+      if (temp.length > 1) {
+         if (temp[1].length != 2) {
+            gbuInit("../json/gbu-states.json", "ALL")
+
+         }  
          else {
             if (temp[1].includes("&")) {
-               xxx = temp[1].split("&");
-               temp[1] = xxx[0];
-               gbuInit("../json/" + temp[1] + "-gbu.json", temp[1]);
+               xxx = temp[1].split("&")
+               temp[1] = xxx[0]
+               gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
+
             } else {
-               gbuInit("../json/" + temp[1] + "-gbu.json", temp[1]);
+               gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
             }
          }
+      }
+      else {
+         gbuInit("../json/gbu-states.json", "ALL")
+
+
+      }
       })
    </script>
 
