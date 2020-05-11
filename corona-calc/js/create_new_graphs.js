@@ -222,10 +222,7 @@ function new_display_data(data,state,county) {
    data_for_summary.total_case            = all_graph_data['total_case'];
    data_for_summary.last_day_data         = all_graph_data['last_day_data'];
    data_for_summary.last_day_number_data  = all_graph_data['last_day_number_data'];
-   
-   //console.log("DATA FOR SUMMARY");
-   //console.log(data_for_summary);
-   //console.log("***************************");
+    
 
    // Graph for Growth
    compute_new_graph_data(
