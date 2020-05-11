@@ -58,10 +58,10 @@ function make_gbu(result,state) {
  
    // We select the state in the main selector 
    $('#state_selector').val(state);
-
   
-   if(result['groups']['good']==0) {
+   if(Object.keys(result['groups']['good']).length<=0) {
       // No Good Result
+      $('#good_title').closest('.box').hide();
       $('#good_title, #good').hide();
    } else {
       // We show before building otherwide plotly doesn't create the graphs properly
@@ -69,8 +69,9 @@ function make_gbu(result,state) {
       display_group(result, result['groups']['good'], "green", "good");
    }
 
-   if(result['groups']['bad']==0) {
-      // No Good Result
+   if(Object.keys(result['groups']['bad']).length<=0) {
+      // No Bad Result
+      $('#bad_title').closest('.box').hide();
       $('#bad_title, #bad').hide();
    } else {
       // We show before building otherwide plotly doesn't create the graphs properly
@@ -79,14 +80,17 @@ function make_gbu(result,state) {
    }
 
 
-   if(result['groups']['ugly']==0) {
-      // No Good Result
+   if(Object.keys(result['groups']['ugly']).length<=0) {
+      // No Ugly Result
+      $('#ugly_title').closest('.box').hide();
       $('#ugly_title, #ugly').hide();
    } else {
       // We show before building otherwide plotly doesn't create the graphs properly
       $('#ugly_title, #ugly, #graphs').show();
       display_group(result, result['groups']['ugly'], "red", "ugly");
    }
+
+   
  
 }
 
@@ -107,10 +111,10 @@ function plot_data_line(xd,yd,xl,yl,t,dv,type,color) {
    var data = [trace1]; // , trace4
    var layout = {
       autosize: false,
-      width: 365,
+      width: 345,
       height: 350,
       showlegend: false,
-      margin: {"t": 5, "b": 50, "l": 45, "r": 45},
+      margin: {"t": 5, "b": 50, "l": 50, "r": 50},
       yaxis: {fixedrange: true},
       xaxis : {fixedrange: true}
    }
