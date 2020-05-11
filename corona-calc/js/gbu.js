@@ -76,7 +76,7 @@ function make_gbu(result,state) {
    }
 
     
-   if(result['groups']['low_cases'] !== undefined && Object.keys(result['groups']['low_cases']).length<=0) {
+   if(typeof result['groups']['low_cases'] == "undefined" || Object.keys(result['groups']['low_cases']).length<=0) {
       // No Good Result
       $('#low_cases_title').closest('.box').hide();
       $('#low_cases_title, #low_cases').hide();
