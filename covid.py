@@ -445,6 +445,8 @@ def update_all():
          make_all_county_page()
          make_all_county_page('cg_med')
          make_all_county_page('mortality')
+         load_models()
+         tests()
          os.system("tar -cvf states.tar states/")
          os.system("gzip states.tar")
  
@@ -565,12 +567,107 @@ def cdc() :
    #plt.ylabel(y_lab)
    #plt.xlabel(x_lab)
    plt.show()
-   
 
+def compare_state(st) :   
+   groups = {}
+   groups['good'] = {}
+   groups['bad'] = {}
+   groups['ugly'] = {}
+   rel_data = {}
+   rel_data[st] = {}
+   sd = load_json_file(JSON_PATH + "/" + st + ".json") 
+   cd = sd['county_stats']
+   for county in cd:
+      max_val = 0
+      cs = cd[county]['county_stats']
+      temp = []
+      rel_data[county] = []
+      for stat in cs:
+         temp.append(stat['new_cases'])
+         if len(temp) < 7:
+            avg = np.mean(temp)
+         else:
+            avg = np.mean(temp[-7:])
+         rel_data[county].append(avg)
+         if avg > max_val:
+            max_val = avg
+      last_val_perc = avg / max_val
+      print(st, last_val_perc, rel_data[county])
+      if last_val_perc >= .8 and avg > 5:
+         groups['ugly'][county] = rel_data[county]
+      elif .4 < last_val_perc < .8 and avg > 5:
+         groups['bad'][county] = rel_data[county]
+      else:
+         groups['good'][county] = rel_data[county]
+
+   jdata = {}
+   jdata['groups'] = groups
+   save_json_file("json/" + st + "-gbu.json", jdata)
+
+def compare():
+   rel_data = {}
+   groups = {}
+   groups['good'] = {}
+   groups['bad'] = {}
+   groups['ugly'] = {}
+   state_names, state_codes = load_state_names()
+   js_states = "var state_names = { \n"
+   for st in state_names: 
+      js_states += "'" + st +"': '" + state_names[st] + "',\n"
+   js_states += "}"
+   fp = open("states.js", "w")
+   fp.write(js_states)
+   fp.close()
+
+   for st in state_names: 
+      if st == 'VI':
+         continue
+      print("test report for " + st)
+      sd = load_json_file(JSON_PATH + "/" + st + ".json") 
+      rel_data[st] = []
+      stats = sd['state_stats']
+      temp = []
+      max_val = 0
+      for ss in stats:
+         cases = ss['new_cases']
+         temp.append(cases)
+         if len(temp) < 7:
+            avg = int(np.mean(temp))
+         else: 
+            avg = int(np.mean(temp[-7:]))
+         rel_data[st].append(avg)
+         if avg > max_val:
+            max_val = avg
+
+      last_val_perc = avg / max_val
+      print(st, last_val_perc, rel_data[st])
+      if last_val_perc >= .8 and avg > 5:
+         groups['ugly'][st] = rel_data[st]
+      elif .4 < last_val_perc < .8 and avg > 5:
+         groups['bad'][st] = rel_data[st]
+      else:
+         groups['good'][st] = rel_data[st]
+      if False:
+         fig = plt.figure()
+         plt.plot(rel_data[st], '-')
+
+         title = state_names[st]
+
+         plt.title(title, fontsize=16)
+         #plt.show()
+
+
+      compare_state(st)
+   json_data = {}
+   json_data['state_names'] = state_names
+   json_data['groups'] = groups
+   save_json_file("json/gbu-states.json", json_data)
+     
 
 def tests() :
-#   cdc()
-#   exit()
+   compare()
+   #cdc()
+   exit()
    state_names, state_codes = load_state_names()
    for st in state_names: 
       if st == 'VI':
@@ -3084,7 +3181,7 @@ def analyze_data_for_state(this_state,state_data,state_pop):
    last_deaths = 0
 
    level2_data = []
-
+   print(state_data)
    temp = sorted(state_data[this_state], key=lambda x: x[0], reverse=False)
 
    last_cases = 0
@@ -3267,30 +3364,38 @@ def load_state_data():
    state_data = {}
    fp = open("covid-19-data/covidtracking.com-daily.csv", "r")
    lc = 0
+   tests_total_pos = 0
+   tests_total_neg = 0
    for line in fp:
       line = line.replace("\n", "")
       fields = line.split(",")
       #print(len(fields))
 #date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease
-      if len(fields) == 25 and lc > 0:
+      date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,dataQualityGrade,lastUpdateEt,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease = fields
+
+      print(len(fields))
+      if len(fields) == 27 and lc > 0:
          #print(fields[14], fields[15])
          date = fields[0]
          state = fields[1]
          
          cases = fields[2]
-         deaths = fields[14]
+         deaths = fields[16]
          icu_now = fields[7]
          vent_now = fields[9]
          hospital_now= fields[5]
          recovered = fields[11]
-         tests = fields[17]
-         death_increase = fields[20]
+         #tests = fields[17]
+         tests = totalTestResults
+        # death_increase = fields[20]
 
-         tests_total_pos = fields[2]
-         tests_total_neg = fields[3]
-         tests_new_neg = fields[22]
-         tests_new_pos = fields[23]
-         tests_new_tot = fields[24]
+         if positiveIncrease != "":
+            tests_total_pos += int(positiveIncrease )
+         if negativeIncrease != "":
+            tests_total_neg += int(negativeIncrease)
+         tests_new_neg = fields[24]
+         tests_new_pos = positiveIncrease
+         tests_new_tot = negativeIncrease
          if tests_total_pos == "":
             tests_total_pos = 0
          else: 
@@ -3328,8 +3433,8 @@ def load_state_data():
             recovered = int(recovered)
          if tests == "":
             tests = 0
-         if death_increase == "":
-            death_increase = 0
+         #if death_increase == "":
+         #   death_increase = 0
 
          if state not in state_data:
             state_data[state] = []

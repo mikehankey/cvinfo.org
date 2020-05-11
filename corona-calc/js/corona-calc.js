@@ -128,15 +128,15 @@ function displayData(json_data ,state,county) {
    // Growth
    model_data = []
    title = "<b>" + full_state_name  + " - Growth</b><br> per day since first case";
-   out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60,[])
+   out = makeGraph(zdv, case_growth_vals,title, "days since first case", "Growth", "growth_div", fit_days, 60,[],[])
     
    // New Deaths
    title = "<b>" + full_state_name  + " - New Deaths</b><br> per day since first case";
-   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[]);
+   pred = makeGraph(zdv2, new_deaths_vals,title, "Days since first case", "New Deaths", "new_deaths_div", fit_days, 60,[],[]);
   
    // Death Growth
    title = "<b>" + full_state_name  + " - Death Growth</b><br> per day since first case";
-   out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60,[])
+   out2 = makeGraph(zdv3, death_growth_vals,title, "Days since first case", "Death Growth", "deaths_growth_div", fit_days, 60,[],[])
 
    // Growth Decay
    title = "<b>" + full_state_name  + " - Growth Decay</b><br> per day since first case";
@@ -146,7 +146,7 @@ function displayData(json_data ,state,county) {
    // Tests
    if (ctype == 'state') {
       title = "<b>" + full_state_name  + " - Tests per day</b><br> per day since first case";
-      out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60,model_data)
+      out2 = makeGraph(zdv2, test_vals ,title, "Days since first case", "Tests per day", "test_div", fit_days, 60,model_data,[])
    }
 
    // Mortality
@@ -163,10 +163,10 @@ function displayData(json_data ,state,county) {
 
    // This is the MAIN summary at the top of the page.
    MIT = json_data['model_data']['MIT']
-   LA = json_data['model_data']['MIT']
+   LA = json_data['model_data']['LA']
 
    if (county != "ALL") {
-      county_perc = (total_cases / state_total_cases )
+      county_perc = (total_cases / json_data['summary_info'].cases)
    }
    else {
       county_perc = 1
@@ -201,19 +201,20 @@ function displayData(json_data ,state,county) {
    $('#f_mortality').val(mortality); 
 
    // See corona-ui-data.js
-   sum_info['cases'] = total_cases 
-   sum_info['deaths'] = total_deaths 
-   sum_info['total_infected'] = total_cases * phantom
-   sum_info['not_infected'] = state_pop - ((total_cases * phantom)  + total_cases + last_deaths)
-   document.getElementById("f_total_infected").value = sum_info['total_infected'] 
-   document.getElementById("f_not_infected").value = sum_info['not_infected'] 
+   si = {}
+   si['cases'] = total_cases 
+   si['deaths'] = total_deaths 
+   si['total_infected'] = total_cases * phantom
+   si['not_infected'] = state_pop - ((total_cases * phantom)  + total_cases + total_deaths)
+   document.getElementById("f_total_infected").value = si['total_infected'] 
+   document.getElementById("f_not_infected").value = si['not_infected'] 
    document.getElementById("f_cases").value = last_cases 
    document.getElementById("f_deaths").value = last_deaths
 
 
    // We are near the end so we're missing data
    if(typeof fr['7_day'].total_dead  == "undefined" ) {
-      fr['7_day'].total_dead  = sum_info.deaths;
+      fr['7_day'].total_dead  = si.deaths;
    }
 
    if(typeof fr['14_day'].total_dead  == "undefined" ) {
@@ -221,7 +222,7 @@ function displayData(json_data ,state,county) {
    }
    
    if(typeof fr['7_day'].total_cases  == "undefined" ) {
-      fr['7_day'].total_cases  = sum_info.cases;
+      fr['7_day'].total_cases  = si.cases;
    }
 
    if(typeof fr['14_day'].total_cases  == "undefined" ) {
@@ -246,10 +247,9 @@ function displayData(json_data ,state,county) {
  
    // add model data to these graphs
    title = "<b>" + full_state_name  + " New Cases</b><br>per day since first case"; 
-   makeGraph(zero_day_vals, nc_org, title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60,fr['MIT']['ys']);
+   makeGraph(zero_day_vals, nc_org, title, "Days since first case", "New Cases", "new_cases_div", fit_days, 60,fr['MIT']['ys'], fr['LA']['ys']);
 
- 
-   fillSummary(full_state_name,fr,sum_info);
+   fillSummary(full_state_name,fr,si);
    
    $('body').removeClass('wait');
    hide_loader();

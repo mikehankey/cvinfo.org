@@ -1,4 +1,5 @@
 function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,current_zero_day,herd_thresh,MIT,LA,county_perc) {
+   
    // this function projects the data forward to find end zero days or herd immunity and outcome values.
    var ys = fys;
    var total_cases_org = total_cases;
@@ -320,6 +321,37 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
       last_deaths= MIT.Total_Detected_Deaths[i];
 
    }
+
+   // LOAD IN THE LA MODEL DATA
+   last_cases = 0
+   last_deaths = total_deaths
+   for (i = 0; i <= current_zero_day; i++) {
+      forecast_result['LA']['xs'].push(i)
+      forecast_result['LA']['ys'].push(0)
+   }
+   // load only future forecast mit data
+
+   for (i = 0; i < LA.Total_Detected.length; i++) {
+      if (i == 0) {
+         last_cases = LA.Total_Detected[i]
+      }
+      new_cases = LA.Total_Detected[i] - last_cases
+      new_deaths = LA.Total_Detected_Deaths[i] - last_deaths
+      //console.log( LA.Total_Detected[i], LA.Total_Detected_Deaths[i],new_cases, new_deaths)
+      new_cases = new_cases * county_perc
+      new_deaths = new_deaths * county_perc
+      forecast_result['LA']['xs'].push(i+current_zero_day)
+      forecast_result['LA']['ys'].push(new_cases)
+      forecast_result['LA']['yds'].push(new_deaths)
+
+      last_cases = LA.Total_Detected[i];
+      last_deaths= LA.Total_Detected_Deaths[i];
+
+   }
+   //alert("MIT")
+   //alert(forecast_result['MIT']['ys'])
+   //alert("LA")
+   //alert(forecast_result['LA']['ys'])
    
    return(forecast_result);
 }
