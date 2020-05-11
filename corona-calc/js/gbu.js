@@ -14,7 +14,7 @@ function display_group(result, data, color, type) {
             xd = [];
             for (i = 0; i <= yd.length; i++) {
                xd.push(i);
-            }
+            } 
 
             // Full Name (for states)
             if(result['state_names'] !== undefined) {
@@ -44,11 +44,7 @@ function display_group(result, data, color, type) {
                   window.location.href = "gbu.html";
                });
             }
-           
-      }
-       
-
-
+      } 
    })
 }
 
