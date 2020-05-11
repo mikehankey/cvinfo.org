@@ -150,14 +150,11 @@ function gbuInit(url,state) {
 
    // Action on selector 
    $('#state_selector').change(function() {
-      $('.js-plotly-plot, .graph_c').remove();
-      $('#bad_title, #bad').hide();
-      $('#good_title, #good').hide();
-      $('#ugly_title, #ugly').hide();
+     
       if($(this).val()=='ALL') {
-         gbuInit("../json/gbu-states.json", "ALL");
+         window.location.href = "gbu.html";
       } else {
-         gbuInit("../json/" + $(this).val() + "-gbu.json", $(this).val());
+         window.location.href = "gbu.html?" + $(this).val();
       }
    });   
 }
