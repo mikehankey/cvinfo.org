@@ -107,7 +107,10 @@
    <script>
       $(function () {
       temp = decodeURIComponent(window.location.href).split("?");
+      $('#low_cases_title, #low_cases').hide();
       if (temp.length <= 1) {
+
+
          gbuInit("../json/gbu-states.json", "ALL")
       }
       else {
