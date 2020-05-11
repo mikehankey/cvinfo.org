@@ -60,8 +60,8 @@
       <input class="menu-btn" type="checkbox" id="menu-btn" />
       <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
       <ul class="menu">
-         <li class="active"><a href="./index.html">Forecast</a></li>
-         <li><a href="./data.html">Data</a></li>
+         <li ><a href="./index.html">Forecast</a></li>
+         <li class="active"><a href="./gbu.html">Compare</a></li>
          <li><a href="./about.html">About</a></li>
       </ul>
    </header>
@@ -69,6 +69,7 @@
    <div id="header">
       <h1>United States - Corona Virus New Cases Compared</h1>
       Here we see the rolling 7-day average for new cases per state. States are grouped into categories based on the current day's value compared to the highest historical peak value. 
+   <div id="state_select"></div>
    </div>
    <div id="main-content">
 
@@ -98,6 +99,7 @@
 
    <script src="./js/create_new_graphs.js"></script>
 
+   <script src="js/states.js"></script>
    <script src="js/gbu.js"></script>
 
    <script>
@@ -110,3 +112,10 @@
       }
 
    </script>
+
+   <div id="footer">
+         coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
+         <br/>contact: mike.hankey[@]gmail.com
+   </div>
+
+</html>

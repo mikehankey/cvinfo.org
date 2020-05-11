@@ -445,6 +445,8 @@ def update_all():
          make_all_county_page()
          make_all_county_page('cg_med')
          make_all_county_page('mortality')
+         load_models()
+         tests()
          os.system("tar -cvf states.tar states/")
          os.system("gzip states.tar")
  
@@ -591,9 +593,9 @@ def compare_state(st) :
             max_val = avg
       last_val_perc = avg / max_val
       print(st, last_val_perc, rel_data[county])
-      if last_val_perc >= .8:
+      if last_val_perc >= .8 and avg > 5:
          groups['ugly'][county] = rel_data[county]
-      elif .4 < last_val_perc < .8:
+      elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'][county] = rel_data[county]
       else:
          groups['good'][county] = rel_data[county]
@@ -608,8 +610,15 @@ def compare():
    groups['good'] = {}
    groups['bad'] = {}
    groups['ugly'] = {}
-
    state_names, state_codes = load_state_names()
+   js_states = "var state_names = { \n"
+   for st in state_names: 
+      js_states += "'" + st +"': '" + state_names[st] + "',\n"
+   js_states += "}"
+   fp = open("states.js", "w")
+   fp.write(js_states)
+   fp.close()
+
    for st in state_names: 
       if st == 'VI':
          continue
@@ -632,9 +641,9 @@ def compare():
 
       last_val_perc = avg / max_val
       print(st, last_val_perc, rel_data[st])
-      if last_val_perc >= .8:
+      if last_val_perc >= .8 and avg > 5:
          groups['ugly'][st] = rel_data[st]
-      elif .4 < last_val_perc < .8:
+      elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'][st] = rel_data[st]
       else:
          groups['good'][st] = rel_data[st]
