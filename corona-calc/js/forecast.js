@@ -12,6 +12,7 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
       "7_day" : {}, 
       "exp" : {}
    };
+   
    forecast_result['exp']['herd_immunity_met'] = 0
    forecast_result['exp']['dys'] = []
 
@@ -167,6 +168,10 @@ function forecast(xs,fys,total_cases,total_deaths,mortality,phantom,state_pop,cu
    forecast_result['LA']['death_percent'] = []
    forecast_result['LA']['total_infected'] = []
    forecast_result['LA']['infected_percent'] = []
+
+
+   console.log("TREND 7");
+   console.log(forecast_result['7_day']);
 
 
    while(final_status14 == 0 || final_status7 == 0 ) {

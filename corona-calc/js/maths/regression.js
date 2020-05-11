@@ -18,7 +18,8 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
    var x_to_return = [];
    var y_to_return = [];
 
-   var reach_0 = -1; // When the trend will reach 0
+   var reach_0 = -1;        // When the trend will reach 0
+   var res_first_deg_equ;   // Res of First Deg equation 
 
    first_day = xdata[xdata.length-start_day_minus];
    
@@ -44,11 +45,16 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
       prevDate = new Date(prevDate);
       prevDate.setDate(prevDate.getDate() + 1); 
       x_to_return.push(prevDate); 
+
       if(type=='poly') {
          y_to_return.push(reg['equation'][2]*c*c + reg['equation'][1]*c + reg['equation'][0]); 
       } else {
-         y_to_return.push(reg['equation'][0]*c + reg['equation'][1]);
+         // We don't push negative numbers
+         if(reg['equation'][0]*c + reg['equation'][1]>=0) {
+            y_to_return.push(reg['equation'][0]*c + reg['equation'][1]);
+         }  
       }
+      
       c++;
    }
      
@@ -59,32 +65,26 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
    if(type=='poly') {
 
      // When does the poly equation will reach 0?
-     // Well we don't use this function anymore for poly 
+     // Well we don't use this function anymore for poly!
 
    } else {
       
       // For linear... it's easy
       c = 0;
-      res      = parseFloat(reg['equation'][0])*c + parseFloat(reg['equation'][1]);
-      res_next = parseFloat(reg['equation'][0])*(c+1) + parseFloat(reg['equation'][1]);
 
-      
-      // When will it reach 0?
-      if(res_next<res) { 
-         
-         while(res>0) {
-            res = parseInt(reg['equation'][0]*c + reg['equation'][1]);
-            c++;
-         }
-   
-         // Get got the last day!
+      // Result of the first deg equation
+      res_first_deg_equ = -reg['equation'][1]/reg['equation'][0];
+
+      if(!isNaN(res_first_deg_equ) && res_first_deg_equ>0) {
+         // We got a result, we now compute the corresponding day
+       
          n_first_day = new Date(first_day); 
-         n_first_day.setDate(n_first_day.getDate() + c);   
+         n_first_day.setDate(n_first_day.getDate() +   Math.round(res_first_deg_equ));   
          reach_0 = dateFormatMITFromDate(n_first_day); 
- 
-      } 
-      // else: if will never reach 0
-   } 
+      }
+      // ... else, we'll never reach 0!      
+      
+   }
 
    // Note: reach_raw_d is used for the summary
    return {x:x_to_return, y:y_to_return, reach: reach_0, reach_raw_d: n_first_day, equa: reg['equation'] };
@@ -157,6 +157,7 @@ function compute_Xdeg_poly_regression_with_dates(xdata,ydata,start_day_minus,end
             tmp_y+= parseFloat(v)*Math.pow(c,i);
          }
       })  
+
       // We don't push negative numbers
       if(tmp_y>0) {
          y_to_return.push(tmp_y);

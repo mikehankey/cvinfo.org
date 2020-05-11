@@ -160,8 +160,7 @@ function prepareData(data) {
       y_axis_new_deaths.push(val.new_deaths>0?val.new_deaths:0);
        
    });
-  
-    
+   
 
    return {
       'name'                  :  data.name,
@@ -223,7 +222,11 @@ function new_display_data(data,state,county) {
    data_for_summary.total_case            = all_graph_data['total_case'];
    data_for_summary.last_day_data         = all_graph_data['last_day_data'];
    data_for_summary.last_day_number_data  = all_graph_data['last_day_number_data'];
-  
+   
+   //console.log("DATA FOR SUMMARY");
+   //console.log(data_for_summary);
+   //console.log("***************************");
+
    // Graph for Growth
    compute_new_graph_data(
       all_graph_data.growth[0],
@@ -300,8 +303,8 @@ function new_display_data(data,state,county) {
    );  
 
    // And Now we can fill the summary
-   console.log(data_for_summary);
-//   createSummary(data_for_summary);
+   //console.log(data_for_summary);
+   createSummary(data_for_summary);
 
  }
 
@@ -388,7 +391,7 @@ function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,opti
    toDraw.title3  = "14-Day Trend";
 
    // 2th degree polynomial regression from the beginning (new curve)
-   console.log("POLY FOR ", title);
+   //console.log("POLY FOR ", title);
    reg = compute_Xdeg_poly_regression_with_dates(x,y,-1,new Date(total_x[total_x.length-1]),2);
    x_poly = reg['x'];
    y_poly = reg['y'];
@@ -491,6 +494,7 @@ function draw_graph(data,option ) {
          y: data.y3,
          name: data.title3,
          type: "line",
+         mode: 'lines',
          xaxis: 'x2',
          line: {
             color: 'rgba(255,127,14,.8)' 
@@ -502,7 +506,8 @@ function draw_graph(data,option ) {
          x: data.x4,
          y: data.y4,
          name: data.title4,
-         type: "line",
+         type: "line", 
+         mode: 'lines',
          xaxis: 'x2',
          line: {
             color: 'rgba(44,160,44,.8)',

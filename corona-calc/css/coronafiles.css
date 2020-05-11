@@ -1,14 +1,13 @@
 body {
    margin:0;
    font-family: 'Lato', sans-serif;  
-   color:#676a6c; 
+   color:#484b4c; 
    background: url("../img/bg.png") no-repeat 0 0 #f0f0f0;
 }
 
 body.wait {
    cursor: wait;
-}
-
+} 
 
 .clearfix::after {
    display: block;
@@ -33,6 +32,34 @@ a, a:visited {
    color:#000;
 }
  
+
+.grapht {
+   margin-top:1rem;
+}
+
+
+.grapht h2 {
+   margin-bottom:0;
+   text-transform: uppercase;
+}
+
+ 
+
+.box_graph  { 
+   width: 100%;
+}
+ 
+.graph_c {  
+   float: left; 
+} 
+
+.graph_c .js-plotly-plot {
+   margin:0;
+}
+ 
+
+ 
+
 
 /* Header */
 
@@ -565,6 +592,10 @@ table thead tr th, table tbody tr th {
 table thead tr th, table tbody td {
    text-align: right;
 }
+table thead tr th span {
+   font-weight: normal;
+}
+
 table tbody td.ar {
    padding-left: 35px;
    background-position: 10px 50%;
