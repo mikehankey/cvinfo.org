@@ -147,5 +147,15 @@ function gbuInit(url,state) {
          hide_gbu_loader();
       }
    });
+
+   // Action on selector 
+   $('#state_selector').change(function() {
+     
+      if($(this).val()=='ALL') {
+         window.location.href = "gbu.html";
+      } else {
+         window.location.href = "gbu.html?" + $(this).val();
+      }
+   });   
 }
 
