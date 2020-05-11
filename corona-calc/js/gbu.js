@@ -1,159 +1,101 @@
+// Display one group
+function display_group(result, data, color, type) {
 
-function update_state_select(state_code) {
-   select_html = "<p>To see all counties for a state select below " 
-   if (state_code == "ALL") {
-      select_html += " or click on a state's graph. "
-   }
-   select_html += "</p>"
-   select_html += "<select id=state_code onChange='javascript:goto()'><option value='ALL'>All States\n"
-   Object.keys(state_names).sort().forEach(function(prop) {
-      if (prop == state_code) {
-         select_html += "<option selected value='" + prop + "'>" + state_names[prop] + "\n"
-      } else {
-         select_html += "<option value='" + prop + "'>" + state_names[prop] + "\n"
+   var selected_state  = $("#state_selector").val(), county = false;
+   
+   // We Build the Graphs & Display for the "Good" states;
+   $.each(data,function(state_code, values ){
+
+      if(state_code !== "Unknown") {
+            // Y data
+            yd = values;
+
+            // X data
+            xd = [];
+            for (i = 0; i <= yd.length; i++) {
+               xd.push(i);
+            }
+
+            // Full Name (for states)
+            if(result['state_names'] !== undefined) {
+               full_name = result['state_names'][state_code];
+            } else {
+               full_name = state_code + ", " + selected_state;
+               county = true;
+            }
+
+            // Create the DIV
+            $('<div class="graph_c"><h3>'+full_name+'</h3><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
+
+            // Plot Graph
+            plot_data_line(xd,yd,"days since first case","new cases per day",full_name, state_code,"line",color);
+
+            // What's going on if we click a graph?
+            if(!county) {
+               $('#'+ state_code).click(function() {
+                  window.location.href = "gbu.html?" + state_code;
+               });
+            } else {
+               // A click will go back to the all state page
+               $('#'+ state_code).click(function() {
+                  window.location.href = "gbu.html";
+               });
+            }
+           
       }
+       
+
 
    })
-   select_html += "</select>"
-
-   document.getElementById("state_select").innerHTML= select_html
-
 }
 
-function goto() {
-   var s = document.getElementById("state_code")
-   var state_code = s.options[s.selectedIndex].value
-   if (state_code == "ALL") {
-      window.location.href = "gbu.html" 
+
+
+function make_gbu(result,state) { 
+ 
+   // We select the state in the main selector 
+   $('#state_selector').val(state);
+
+ 
+
+
+   if(result['groups']['good']==0) {
+      // No Good Result
+      $('#good_title, #good').hide();
    } else {
-      window.location.href = "gbu.html?" + state_code
+      // We show before building otherwide plotly doesn't create the graphs properly
+      $('#good_title, #good, #graphs').show();
+      display_group(result, result['groups']['good'], "green", "good");
    }
 
-}
-
-
-function make_gbu(result,state) {
-   update_state_select(state)
-   good_html = ""
-   bad_html = ""
-   ugly_html = ""
-   if (Object.keys(result['groups']['good']).length > 0) {
-      good_html = "<h1>Winning</h1> <p>Current value is less than 40% of the highest peak value OR lastest new cases is less than 5 per day.</p>"
-   }
-   //for (const prop in result['groups']['good']) {
-   Object.keys(result['groups']['good']).sort().forEach(function(prop) {
-      if (result['groups']['good'].hasOwnProperty(prop)) {
-         div = prop.replace("'", "")
-         if (state == "ALL") {
-            good_html += "<a href=gbu.html?" + prop + "><div id='" + div + "' class='sq_plot'></div></a>" 
-         } else {
-            good_html += "<div id='" + div + "' class='sq_plot'></div>" 
-
-         }
-      }
-   })
-
-   document.getElementById("good").innerHTML= good_html
-
-   if (Object.keys(result['groups']['bad']).length > 0) {
-      bad_html = "<h1>Improving</h1><p>Current value is between 40-80% of the highest peak value.</p>"
-   }
-   //for (const prop in result['groups']['bad']) {
-   Object.keys(result['groups']['bad']).sort().forEach(function(prop) {
-      if (result['groups']['bad'].hasOwnProperty(prop)) {
-         div = prop.replace("'", "")
-         if (state == "ALL") {
-            bad_html += "<a href=gbu.html?" + prop + "><div id='" + div + "' class='sq_plot'></div></a>"
-         } else {
-            bad_html += "<div id='" + div + "' class='sq_plot'></div>"
-         }
-      }
-   })
-
-   document.getElementById("bad").innerHTML= bad_html
-
-   if (Object.keys(result['groups']['ugly']).length > 0) {
-      ugly_html = "<h1>Loosing</h1><p>Current value is greater than 80% of the highest peak value.</p>"
-   }
-   //for (const prop in result['groups']['ugly']) {
-   Object.keys(result['groups']['ugly']).sort().forEach(function(prop) {
-      if (result['groups']['ugly'].hasOwnProperty(prop)) {
-         div = prop.replace("'", "")
-         if (state == "ALL") {
-            ugly_html += "<a href=gbu.html?" + prop + "><div id='" + div + "' class='sq_plot'></div></a>"
-         } else {
-            ugly_html += "<div id='" + div + "' class='sq_plot'></div>"
-         }
-      }
-   })
-
-   document.getElementById("ugly").innerHTML= ugly_html
-
-   for (const prop in result['groups']['good']) {
-      yd = result['groups']['good'][prop]
-      xd = []
-      for (i = 0; i <= yd.length; i++) {
-         xd.push(i)
-      }
-      if (state == "ALL") {
-         sn = result['state_names'][prop]
-      } 
-      else {
-         tt = prop + ", " + state
-         sn = tt
-      }
-      div = prop.replace("'", "")
-      
-      plot_data_line(xd,yd,"days since first case","new cases per day",sn,div,"line","green")
-   }
-
-   for (const prop in result['groups']['bad']) {
-      yd = result['groups']['bad'][prop]
-      xd = []
-      for (i = 0; i <= yd.length; i++) {
-         xd.push(i)
-      }
-      if (state == "ALL") {
-         sn = result['state_names'][prop]
-      }
-      else {
-         tt = prop + ", " + state
-         sn = tt
-      }
-      div = prop.replace("'", "")
-      plot_data_line(xd,yd,"days since first case","new cases per day",sn,div,"line","orange")
-   }
-
-   for (const prop in result['groups']['ugly']) {
-      yd = result['groups']['ugly'][prop]
-      xd = []
-      for (i = 0; i <= yd.length; i++) {
-         xd.push(i)
-      }
-      if (state == "ALL") {
-         sn = result['state_names'][prop]
-      }
-      else {
-         tt = prop + ", " + state
-         sn = tt
-      }
-      div = prop.replace("'", "")
-      plot_data_line(xd,yd,"days since first case","new cases per day",sn,div,"line","red")
+   if(result['groups']['bad']==0) {
+      // No Good Result
+      $('#bad_title, #bad').hide();
+   } else {
+      // We show before building otherwide plotly doesn't create the graphs properly
+      $('#bad_title, #bad, #graphs').show();
+      display_group(result, result['groups']['bad'], "orange", "bad");
    }
 
 
+   if(result['groups']['ugly']==0) {
+      // No Good Result
+      $('#ugly_title, #ugly').hide();
+   } else {
+      // We show before building otherwide plotly doesn't create the graphs properly
+      $('#ugly_title, #ugly, #graphs').show();
+      display_group(result, result['groups']['ugly'], "red", "ugly");
+   }
+ 
 }
 
 function plot_data_line(xd,yd,xl,yl,t,dv,type,color) {
-   var ymax = Math.max.apply(Math, yd) * 1.2;
-
+  
    var trace1 = {
       x: xd,
       y: yd,
       name: yl,
-      marker : {
-         color: color
-      },
+      marker : {   color: color   },
       hoverinfo: 'none',
       hovermode: 'none',
       mode: 'lines',
@@ -163,53 +105,45 @@ function plot_data_line(xd,yd,xl,yl,t,dv,type,color) {
    // Trends shouldn't start at 0
    var data = [trace1]; // , trace4
    var layout = {
-      title :  { 
-         text: t,
-         y: 0.10,
-         
-         yanchor: 'bottom'
-      }
+      autosize: false,
+      width: 365,
+      height: 350,
+      showlegend: false,
+      margin: {"t": 5, "b": 50, "l": 45, "r": 45},
+      yaxis: {fixedrange: true},
+      xaxis : {fixedrange: true}
    }
 
-   Plotly.newPlot(dv, data, layout, {responsive: true}, config={displayModeBar: false});
+   Plotly.newPlot(dv, data, layout, {responsive: true});
 }
 
-function gbuInit(url,state) {
-   /*
-   if(typeof reload == 'undefined') {
-      show_loader();
-   }
-   */
+function show_gbu_loader() {
+   $('#loader').css('display','block');  
+   $('body').addClass('wait');
+}
 
+
+function hide_gbu_loader() {
+   $('#loader').css('display','none');  
+   $('body').removeClass('wait');
+}
+
+
+
+function gbuInit(url,state) {
+   show_gbu_loader();
    $.ajax({
       type: "get",
       url:  url,
       dataType: "json",
 
-      success: function (result, status, xhr) {
-
-         // Create Select County
-         /*
-         countySelect(getAllCounties(result) , state);
-         $('#county_selector').unbind("change").change(function(e) {
-            change_county();
-            return false;
-         })
-         */
-
-         cur_json_data = result;
-         //cur_county     = county;
-         cur_state      = state;
-         make_gbu(result,state)
-         //hide_loader();
-         //$('#recalculate').html($('#recalculate').attr('data-htmlx'));
-         //$('#recalculate').removeAttr('data-htmlx');
-
-
+      success: function (result, status, xhr) { 
+         make_gbu(result,state);
+         hide_gbu_loader();
       },
       error: function (xhr, status, error) {
          alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
-         //hide_loader();
+         hide_gbu_loader();
       }
    });
 }
