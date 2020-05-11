@@ -5,7 +5,7 @@
    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
 
    <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="msapplication-TileColor" content="#f0f0f0">
    <meta name="theme-color" content="#f0f0f0">
 
@@ -26,7 +26,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta name="keywords" content="corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
 
-        <title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>
+   <title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>
 
    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
@@ -100,33 +100,32 @@
 
 
    </div>
-   <script src="./js/shared/framework_plugs.js"></script>   
-   <script src="js/gbu.js"></script>
 
-   <script>
-      $(function () {
-      temp = decodeURIComponent(window.location.href).split("?");
-      $('#low_cases_title, #low_cases').hide();
-      if (temp.length <= 1) {
-         gbuInit("../json/gbu-states.json", "ALL")
-      }
-      else {
-         if (temp[1].includes("&")) {
-            xxx = temp[1].split("&")
-            temp[1] = xxx[0]
-            gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
-
-         } else {
-            gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
-         }
-      }
-      })
-
-   </script>
 
    <div id="footer">
          coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
          <br/>contact: mike.hankey[@]gmail.com
    </div>
+
+   <script src="./js/shared/framework_plugs.js"></script>   
+   <script src="js/gbu.js"></script>
+   <script>
+      $(function () {
+         temp = decodeURIComponent(window.location.href).split("?");
+         $('#low_cases_title, #low_cases').hide();
+         if (temp.length <= 1) {
+            gbuInit("../json/gbu-states.json", "ALL");
+         }
+         else {
+            if (temp[1].includes("&")) {
+               xxx = temp[1].split("&");
+               temp[1] = xxx[0];
+               gbuInit("../json/" + temp[1] + "-gbu.json", temp[1]);
+            } else {
+               gbuInit("../json/" + temp[1] + "-gbu.json", temp[1]);
+            }
+         }
+      })
+   </script>
 
 </html>
