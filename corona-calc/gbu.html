@@ -88,22 +88,43 @@
                   <div id="ugly" class=" box_graph clearfix"></div> 
             </div>
          </div>
+
+            <div class="box clearfix">
+               <div class="grapht " id="low_cases_title">
+                  <h2 class="low_cases_t">Barely Impacted</h2>
+                  <p>The following counties have had less than 5 new cases reported in a single day, they have not been affected by the virus very much so far. </p>
+               </div>
+               <div id="low_cases" class=" box_graph clearfix"></div>
+            </div>
+
       
 
    </div>
    <script src="./js/shared/framework_plugs.js"></script>  
+   <script src="js/states.js"></script>
    <script src="js/gbu.js"></script>
 
    <script>
       $(function () {
-         var temp = decodeURIComponent(window.location.href).split("?");
-         if (temp.length <= 1) {
-            gbuInit("../json/gbu-states.json", "ALL")
-         }
-         else {
+      temp = decodeURIComponent(window.location.href).split("?");
+      $('#low_cases_title, #low_cases').hide();
+      if (temp.length <= 1) {
+
+
+         gbuInit("../json/gbu-states.json", "ALL")
+      }
+      else {
+         if (temp[1].includes("&")) {
+            xxx = temp[1].split("&")
+            temp[1] = xxx[0]
             gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
-         } 
-      }) 
+
+         } else {
+            gbuInit("../json/" + temp[1] + "-gbu.json", temp[1])
+         }
+      }
+      })
+
    </script>
 
    <div id="footer">

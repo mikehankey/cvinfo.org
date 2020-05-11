@@ -75,6 +75,19 @@ function make_gbu(result,state) {
       display_group(result, result['groups']['bad'], "orange", "bad");
    }
 
+   if (state != "ALL")  {
+   if(Object.keys(result['groups']['low_cases']).length<=0) {
+      // No Good Result
+      $('#low_cases_title, #low_cases').hide();
+   } else {
+      // We show before building otherwide plotly doesn't create the graphs properly
+      $('#low_cases_title, #low_cases, #graphs').show();
+      display_group(result, result['groups']['low_cases'], "black", "low_cases");
+   }
+   } else {
+      $('#low_cases_title, #low_cases').hide();
+   }
+
 
    if(Object.keys(result['groups']['ugly']).length<=0) {
       // No Ugly Result
