@@ -147,5 +147,18 @@ function gbuInit(url,state) {
          hide_gbu_loader();
       }
    });
+
+   // Action on selector 
+   $('#state_selector').change(function() {
+      $('.js-plotly-plot, .graph_c').remove();
+      $('#bad_title, #bad').hide();
+      $('#good_title, #good').hide();
+      $('#ugly_title, #ugly').hide();
+      if($(this).val()=='ALL') {
+         gbuInit("../json/gbu-states.json", "ALL");
+      } else {
+         gbuInit("../json/" + $(this).val() + "-gbu.json", $(this).val());
+      }
+   });   
 }
 
