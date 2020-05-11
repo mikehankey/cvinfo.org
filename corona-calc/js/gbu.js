@@ -23,6 +23,9 @@ function display_group(result, data, color, type) {
                full_name = state_code + ", " + selected_state;
                county = true;
             }
+            
+            // Clean the name
+            state_code = state_code.replace(/[^\w!?]/g,'');
 
             // Create the DIV
             $('<div class="graph_c"><h3>'+full_name+'</h3><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
@@ -56,9 +59,7 @@ function make_gbu(result,state) {
    // We select the state in the main selector 
    $('#state_selector').val(state);
 
- 
-
-
+  
    if(result['groups']['good']==0) {
       // No Good Result
       $('#good_title, #good').hide();
