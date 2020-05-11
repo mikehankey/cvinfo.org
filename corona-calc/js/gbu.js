@@ -75,20 +75,16 @@ function make_gbu(result,state) {
       display_group(result, result['groups']['bad'], "orange", "bad");
    }
 
-   if (state != "ALL")  {
-      if (typeof result['groups']['low_cases'] !== "undefined") {
-         if(Object.keys(result['groups']['low_cases']).length<=0) {
-            // No Good Result
-            $('#low_cases_title, #low_cases').hide();
-         } else {
-            // We show before building otherwide plotly doesn't create the graphs properly
-            $('#low_cases_title, #low_cases, #graphs').show();
-            display_group(result, result['groups']['low_cases'], "black", "low_cases");
-      }
-   }
-   } else {
+    
+   if(result['groups']['low_cases'] !== undefined && Object.keys(result['groups']['low_cases']).length<=0) {
+      // No Good Result
+      $('#low_cases_title').closest('.box').hide();
       $('#low_cases_title, #low_cases').hide();
-   }
+   } else {
+      // We show before building otherwide plotly doesn't create the graphs properly
+      $('#low_cases_title, #low_cases, #graphs').show();
+      display_group(result, result['groups']['low_cases'], "black", "low_cases");
+  }
 
 
    if(Object.keys(result['groups']['ugly']).length<=0) {
@@ -125,7 +121,7 @@ function plot_data_line(xd,yd,xl,yl,t,dv,type,color) {
       width: 345,
       height: 350,
       showlegend: false,
-      margin: {"t": 5, "b": 50, "l": 50, "r": 50},
+      margin: {"t": 5, "b": 50, "l": 50, "r": 30},
       yaxis: {fixedrange: true},
       xaxis : {fixedrange: true}
    }
