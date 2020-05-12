@@ -162,6 +162,8 @@ function prepareData(data) {
    });
    
 
+   
+
    return {
       'name'                  :  data.name,
       'pop'                   :  data.pop, 
@@ -204,7 +206,8 @@ function new_display_data(data,state,county) {
    // Warning: here we get the date for the summary
    // this way we don't have to compute the same stuff twice
    data_for_summary = compute_new_graph_data(
-      {
+      {  
+         pop: all_graph_data['pop'],
          x:  all_graph_data.new_cases[0],
          y:  all_graph_data.new_cases[1],
          title:  "New Cases per Day",
@@ -307,16 +310,7 @@ function new_display_data(data,state,county) {
 
 /**
  * Compute New Graph Data as well as the data for the summary on top of the page
-*
- {
-         x:  all_graph_data.new_cases[0],
-         y:  all_graph_data.new_cases[1],
-         title:  "New Cases per Day",
-         name: all_data.name,
-         graph_div: 'newcases_graph'
-         graph_details_div: 'newcases_graph_details',
-         modes: [all_graph_data.MIT_model]
- }
+* 
  *
  */
 
@@ -335,6 +329,9 @@ function compute_new_graph_data(data) {
    var reg, reg_7, reg_14;
    var last_day = null;
    var toDraw = {};
+
+   var phantom = 1/4;
+   var herd_thresh = 60;
 
 
    // Option is... optionnal!
@@ -428,45 +425,96 @@ function compute_new_graph_data(data) {
 
       // We need to compute the total cases at reg_7['reach'] & reg_14['reach'] (if possible)
       // for the summary
-      
+
+      var start_day = 7;
+      var equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
+      var new_total = data.total;
+      var total_real_infected; // For herd
+      var total_real_perc;     // For herd
+ 
       // We reach 0 with reg_7
       if(reg_7['reach']!=-1) {
-       
-         var start_day = 7;
-         var equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
-         var new_total = data.total;
-
+        
+         // We stop at 0
          while(equ_res>0) {
             equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
             new_total += equ_res>0?equ_res:0;
             start_day++;
-           
          }
          
          reg_7["total_at_end"] = new_total;
+ 
+      } else {
+ 
+         // We compute herd immunity! 
+         new_total += equ_res>0?equ_res:0;
+         total_real_infected = new_total / phantom + new_total;
+         total_real_perc  = 100*total_real_infected/data.pop;
 
+         while(total_real_perc<=herd_thresh) {
+            equ_res   = reg_7.equa[0]*start_day + reg_7equa[1];
+            new_total += equ_res>0?equ_res:0;
+            total_real_infected = new_total / phantom + new_total;
+            total_real_perc  = (100*total_real_infected)/data.pop;
+            start_day++;
+         } 
 
-     
+         // Compute herd_reach_date
+         tmp_day = new Date(total_x[total_x.length-1]-7);
+         tmp_day.setDate(tmp_day.getDate() + start_day); 
+ 
+
+         reg_7["herd_reach_day"]    = start_day;
+         reg_7["herd_reach_date"]   = new Date(tmp_day); 
+         reg_7equa["total_at_end"]  = new_total;
+
       }
 
 
+      var start_day = 14;
+      var equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
+      var new_total = data.total;
+
       // We reach 0 with reg_7
       if(reg_14['reach']!=-1) {
-       
-         var start_day = 14;
-         var equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
-         var new_total = data.total;
-
+        
          while(equ_res>0) {
             equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
             new_total += equ_res>0?equ_res:0;
             start_day++;
-           
          }
          
          reg_14["total_at_end"] = new_total;
      
+      } else {
+
+         // We compute herd immunity!  
+         total_case     = new_total;
+         total_infected = total_case + (total_case / phantom);
+         
+         total_infected_perc  = (total_infected*100)/data.pop;
+         total_case_per       =  (total_case*100)/data.pop;
+ 
+         while((total_infected_perc+total_case_per) <= herd_thresh) {
+            equ_res    = reg_14.equa[0]*start_day + reg_14.equa[1];
+            total_case+= equ_res>0?equ_res:0;
+
+            total_infected = total_case + (total_case / phantom);
+            total_infected_perc  = (total_infected*100)/data.pop;
+            total_case_per       = (total_case*100)/data.pop;
+            start_day++;
+         }
+        
+         reg_14["total_at_end"] = total_case;
+
+         // We now compute the date at +start_day  
+         day = new Date(total_x[total_x.length-1])
+         day.setDate(day.getDate() - 14 + start_day );
+
+         reg_14["herd_reach_date"] = day;
+          
       }
+
 
       return {
          trend_7: reg_7,
