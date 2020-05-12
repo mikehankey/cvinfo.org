@@ -50,12 +50,13 @@ function displayData(json_data ,state,county) {
    var last_tests = 0;
    
    var last_county_mortality = 0;
-
    ss.forEach(function (arrayItem) {
       if (typeof(arrayItem.date) != "undefined") {
          date_vals.push(arrayItem.date);
          this_date = arrayItem.date
-         test_pd = arrayItem.tests - last_tests
+   
+         test_pd = parseInt(arrayItem.tests_new_pos) + parseInt(arrayItem.tests_new_neg)
+         console.log("TESTS:", test_pd,  arrayItem.tests_new_pos,  arrayItem.tests_new_neg)
          test_vals.push(test_pd)
          last_tests = arrayItem.tests
       }

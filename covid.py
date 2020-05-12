@@ -584,6 +584,8 @@ def compare_state(st) :
       max_val = 0
       cs = cd[county]['county_stats']
       temp = []
+      temp_tests = []
+      temp_tests_pos = []
       rel_data[county] = []
       for stat in cs:
          temp.append(stat['new_cases'])
@@ -2806,6 +2808,7 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    for data in level2_data:
       stat_obj = {}
       (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg) = data 
+      print("TESTS:", state_code, date, tests_total_pos, tests_total_neg, tests_new_pos, tests_new_neg)
       if case_increase < 0:
          case_increase = 0
       if death_increase < 0:
@@ -3370,8 +3373,6 @@ def load_state_data():
    state_data = {}
    fp = open("covid-19-data/covidtracking.com-daily.csv", "r")
    lc = 0
-   tests_total_pos = 0
-   tests_total_neg = 0
    for line in fp:
       line = line.replace("\n", "")
       fields = line.split(",")
@@ -3380,6 +3381,7 @@ def load_state_data():
       date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,dataQualityGrade,lastUpdateEt,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease = fields
 
       print(len(fields))
+      print("TESTS:", state, date, totalTestResults, negativeIncrease, positiveIncrease, totalTestResultsIncrease)
       if len(fields) == 27 and lc > 0:
          #print(fields[14], fields[15])
          date = fields[0]
@@ -3391,37 +3393,19 @@ def load_state_data():
          vent_now = fields[9]
          hospital_now= fields[5]
          recovered = fields[11]
-         #tests = fields[17]
-         tests = totalTestResults
+         if totalTestResultsIncrease == "":
+            totalTestResultsIncrease = 0
+         else: 
+            totalTestResultsIncrease = int(totalTestResultsIncrease)
+         tests = totalTestResultsIncrease
         # death_increase = fields[20]
 
-         if positiveIncrease != "":
-            tests_total_pos += int(positiveIncrease )
-         if negativeIncrease != "":
-            tests_total_neg += int(negativeIncrease)
-         tests_new_neg = fields[24]
-         tests_new_pos = positiveIncrease
-         tests_new_tot = negativeIncrease
-         if tests_total_pos == "":
-            tests_total_pos = 0
-         else: 
-            tests_total_pos = int(tests_total_pos)
-         if tests_total_neg == "":
-            tests_total_neg = 0
-         else: 
-            tests_total_neg = int(tests_total_neg)
-         if tests_new_neg == "":
-            tests_new_neg = 0
-         else: 
-            tests_new_neg = int(tests_new_neg)
-         if tests_new_pos == "":
-            tests_new_pos = 0
-         else: 
-            tests_new_pos = int(tests_new_pos)
-         if tests_new_tot == "":
-            tests_new_tot = 0
-         else: 
-            tests_new_tot = int(tests_new_tot)
+         if positiveIncrease == "":
+            positiveIncrease = 0
+         if negativeIncrease == "":
+            negativeIncrease = 0
+         tests_new_pos = int(positiveIncrease)
+         tests_new_neg = int(negativeIncrease)
 
          if cases == "":
             cases = 0
@@ -3437,10 +3421,6 @@ def load_state_data():
             recovered = 0
          else:
             recovered = int(recovered)
-         if tests == "":
-            tests = 0
-         #if death_increase == "":
-         #   death_increase = 0
 
          if state not in state_data:
             state_data[state] = []
@@ -3449,17 +3429,13 @@ def load_state_data():
          else:
             deaths = int(deaths)
 
-         if tests == "":
-            tests = 0
-         else:
-            tests = int(tests)
          if cases == "":
             cases = 0
          else:
             if "," in str(cases):
                cases = cases.replace(",", "")
             cases = int(cases)
-         state_data[state].append([date,cases,deaths,0,0,tests,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_neg,tests_new_pos])
+         state_data[state].append([date,cases,deaths,0,0,tests,hospital_now,icu_now,vent_now,recovered,0,0,tests_new_neg,tests_new_pos])
 
 
 
@@ -3469,7 +3445,6 @@ def load_state_data():
    #   print("LATEST STATE DATA: ", st, state_data[st][0])
       #for day in state_data[st]:
       #   print("LATEST STATE DATA: ", st, day)
-
    return(state_data, state_pop)
 
 def load_us_cities():
