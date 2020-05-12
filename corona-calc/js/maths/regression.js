@@ -28,7 +28,7 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
       tmp_data.push([c,ydata[i]]);
       c++;
    }
-   
+    
    if(type=='poly') {
       reg = regression('polynomial', tmp_data); 
    } else {
@@ -62,12 +62,9 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
    // We trying know if the current reg will reach 0 at one point
    // and if yes... when 
    c = 0;
-   if(type=='poly') {
 
-     // When does the poly equation will reach 0?
-     // Well we don't use this function anymore for poly!
-
-   } else {
+   // Well we don't use this function anymore for poly!
+   if(type!=='poly') {
       
       // For linear... it's easy
       c = 0;
@@ -77,17 +74,24 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
 
       if(!isNaN(res_first_deg_equ) && res_first_deg_equ>0) {
          // We got a result, we now compute the corresponding day
-       
          n_first_day = new Date(first_day); 
          n_first_day.setDate(n_first_day.getDate() +   Math.round(res_first_deg_equ));   
          reach_0 = dateFormatMITFromDate(n_first_day); 
       }
-      // ... else, we'll never reach 0!      
+      
+      
       
    }
 
    // Note: reach_raw_d is used for the summary
-   return {x:x_to_return, y:y_to_return, reach: reach_0, reach_raw_d: n_first_day, equa: reg['equation'] };
+   return { 
+      x:x_to_return, 
+      y:y_to_return, 
+      reach: reach_0, 
+      reach_raw_d: n_first_day, 
+      equa: reg['equation'],
+      first_day: first_day
+   };
 }
 
 

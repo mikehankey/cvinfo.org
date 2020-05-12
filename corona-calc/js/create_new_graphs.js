@@ -196,8 +196,7 @@ function new_display_data(data,state,county) {
    } else {
       all_data = getInitData(data);  
    } 
-    
-  
+     
    // Prepare data 
    all_graph_data = prepareData(all_data);
    
@@ -205,16 +204,21 @@ function new_display_data(data,state,county) {
    // Warning: here we get the date for the summary
    // this way we don't have to compute the same stuff twice
    data_for_summary = compute_new_graph_data(
-      all_graph_data.new_cases[0],
-      all_graph_data.new_cases[1],
-      "New Cases per Day", 
-      all_data.name, 
-      'newcases_graph', 
-      'newcases_graph_details',
-      all_graph_data.MIT_model
+      {
+         x:  all_graph_data.new_cases[0],
+         y:  all_graph_data.new_cases[1],
+         title:  "New Cases per Day",
+         name: all_data.name,
+         graph_div: 'newcases_graph',
+         graph_details_div: 'newcases_graph_details',
+         models: {    'MIT':  all_graph_data.MIT_model  },
+         total :              all_graph_data['total_case'],     
+         last_day_data:       all_graph_data['last_day_data'],         
+         last_day_data_raw :  all_graph_data['last_day_number_data']     
+      }
    ); 
 
-   // And we complete with
+   // And we complete with other info useful for the summary
    data_for_summary.name                  = all_graph_data['name'];
    data_for_summary.pop                   = all_graph_data['pop'];
    data_for_summary.last_mortality_rate   = all_graph_data['last_mortality_rate'];
@@ -222,85 +226,80 @@ function new_display_data(data,state,county) {
    data_for_summary.total_case            = all_graph_data['total_case'];
    data_for_summary.last_day_data         = all_graph_data['last_day_data'];
    data_for_summary.last_day_number_data  = all_graph_data['last_day_number_data'];
-    
-
+      
+   
    // Graph for Growth
-   compute_new_graph_data(
-      all_graph_data.growth[0],
-      all_graph_data.growth[1],
-      "New Cases Growth", 
-      all_data.name, 
-      'growth_graph', 
-      'growth_graph_details',
-      [], // Not Model for now,
-      {  type: "bars", info: false}      // Specific Options
-   );
-
+   compute_new_graph_data({
+      x:all_graph_data.growth[0],
+      y:all_graph_data.growth[1],
+      title:"New Cases Growth", 
+      name:all_data.name, 
+      graph_div:'growth_graph', 
+      graph_details_div:'growth_graph_details',
+      option: {  type: "bars", info: false}      // Specific Options
+   });
+   
    // Graph for Tests
    if(type !== "county") {
-      compute_new_graph_data(
-         all_graph_data.tests[0],
-         all_graph_data.tests[1],
-         "Tests per Day", 
-         all_data.name, 
-         'tests_graph', 
-         'tests_graph_details',
-         [], // Not Model for now,
-         { type: "bars", info: false }      // Specific Options: no curve, no info
-      );
+      compute_new_graph_data({
+         x:all_graph_data.tests[0],
+         y:all_graph_data.tests[1],
+         title:"Tests per Day", 
+         name:all_data.name, 
+         graph_div:'tests_graph', 
+         graph_details_div:'tests_graph_details',
+         option: {  type: "bars", info: false}  
+      });
    }  else {
       // We reset the DOM elements
       $('#tests_graph,#tests_graph_details').html('');
    }
  
+   
    // Graph for Death Growth
-   compute_new_graph_data(
-      all_graph_data.death_growth[0],
-      all_graph_data.death_growth[1],
-      "Death Growth", 
-      all_data.name, 
-      'death_growth_graph', 
-      'death_growth_graph_details',
-      [] // Not Model for now
-   );
+   compute_new_graph_data({
+      x:all_graph_data.death_growth[0],
+      y: all_graph_data.death_growth[1],
+      title:"Death Growth", 
+      name:all_data.name, 
+      graph_div:'death_growth_graph', 
+      graph_details_div:'death_growth_graph_details' 
+   });
 
    // Graph for Growth Decay
-   compute_new_graph_data(
-      all_graph_data.growth_decay[0],
-      all_graph_data.growth_decay[1],
-      "Growth Decay", 
-      all_data.name, 
-      'growth_decay_graph', 
-      'growth_decay_graph_details',
-      [], // Not Model for now,
-      { type: 'line_not_to_zero', info: false}      // Specific Options
-   );
+   compute_new_graph_data({
+      x: all_graph_data.growth_decay[0],
+      y: all_graph_data.growth_decay[1],
+      title:"Growth Decay", 
+      name:all_data.name, 
+      graph_div:'growth_decay_graph', 
+      graph_details_div:'growth_decay_graph_details',
+      option:{ type: 'line_not_to_zero', info: false}      // Specific Options
+   });
     
+   
    // Graph for Mortality
-   compute_new_graph_data(
-      all_graph_data.mortality[0],
-      all_graph_data.mortality[1],
-      "% of Mortality among positive tested people", 
-      all_data.name, 
-      'mortality_graph', 
-      'mortality_details',
-      [], // Not Model for now,
-      { type: 'line_not_to_zero'}      // Specific Options
-   );  
+   compute_new_graph_data({
+      x:all_graph_data.mortality[0],
+      y:all_graph_data.mortality[1],
+      title:"% of Mortality among positive tested people", 
+      name:all_data.name, 
+      graph_div:'mortality_graph', 
+      graph_details_div:'mortality_details',
+      option:{ type: 'line_not_to_zero'}      // Specific Options
+   });  
 
    // Graph for Deaths
-   compute_new_graph_data(
-      all_graph_data.deaths[0],
-      all_graph_data.deaths[1],
-      "Deaths", 
-      all_data.name, 
-      'deaths_graph', 
-      'deaths_graph_details',
-      []  // Not Model for now, 
-   );  
-
+   compute_new_graph_data({
+      x:all_graph_data.deaths[0],
+      y:all_graph_data.deaths[1],
+      title:"Deaths", 
+      name:all_data.name, 
+      graph_div:'deaths_graph', 
+      graph_details_div:'deaths_graph_details' 
+   });  
+     
    // And Now we can fill the summary
-   //console.log(data_for_summary);
    createSummary(data_for_summary);
 
  }
@@ -308,8 +307,20 @@ function new_display_data(data,state,county) {
 
 /**
  * Compute New Graph Data as well as the data for the summary on top of the page
+*
+ {
+         x:  all_graph_data.new_cases[0],
+         y:  all_graph_data.new_cases[1],
+         title:  "New Cases per Day",
+         name: all_data.name,
+         graph_div: 'newcases_graph'
+         graph_details_div: 'newcases_graph_details',
+         modes: [all_graph_data.MIT_model]
+ }
+ *
  */
-function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,option) {
+
+function compute_new_graph_data(data) {
   
    var add_info = "";
    var x_trend_14, y_trend_14;
@@ -325,34 +336,36 @@ function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,opti
    var last_day = null;
    var toDraw = {};
 
+
    // Option is... optionnal!
-   if(option == undefined ) {
-      option = {
+   if(data.option == undefined ) {
+      data.option = {
          type: 'bars',
          info: true
       }
    }
     
-   // MIT Model (ONLY FOR NEW CASES FOR NOW)
-   if(MIT_model !== undefined && MIT_model.length!=0 && MIT_model[0].length>1) {
-  
-      // MIT Model Data for projection for 2nd data set
-      $.each(MIT_model[0], function(i,val) {
-         x_model.push(new Date(val));
-      });
+   if(data.models !== undefined) {
+      if(data.models['MIT'] !== undefined) {
+            // MIT Model Data for projection for 2nd data set
+            $.each(data.models['MIT'][0], function(i,val) {
+               x_model.push(new Date(val));
+            });
 
-      total_x = x_model;
-      y_model = MIT_model[1]; 
-      toDraw.x2 = x_model;
-      toDraw.y2 = y_model;
-      toDraw.title2 = "MIT Trend Model"; 
+            total_x = x_model;
+            y_model = data.models['MIT'][1]; 
+            toDraw.x2 = x_model;
+            toDraw.y2 = y_model;
+            toDraw.title2 = "MIT Trend Model"; 
+      }
    }
+   
   
    // If we don't have a model, we need to compute the total_x
    if(total_x.length==0) {
 
       // Copy the Array of X
-      $.each(x, function(i,x) {
+      $.each(data.x, function(i,x) {
          total_x.push(x);
       }) 
       
@@ -364,24 +377,24 @@ function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,opti
          total_x.push(last_day);
       }
    } 
-  
-   // 7-Day Trend  (linear regression)
-   reg_7 = compute_regression_with_dates(x,y,7,new Date(total_x[total_x.length-1]),'linear');
+ 
+   // 7-Day Trend  (linear regression) 
+   reg_7 = compute_regression_with_dates(data.x,data.y,7,new Date(total_x[total_x.length-1]),'linear');
    x_trend_7   = reg_7['x'];
    y_trend_7   = reg_7['y']; 
-   if(reg_7['reach']!=-1 && option.info) {
-      add_info += "<p>Based on the 7-Day Trend, " + name + "'s " + title + " could reach 0 around <b>" + reg_7['reach'] +"</b>.</p>";
+   if(reg_7['reach']!=-1 && data.option.info) {
+      add_info += "<p>Based on the 7-Day Trend, " + data.name + "'s " + data.title + " could reach 0 around <b>" + reg_7['reach'] +"</b>.</p>";
    }
    toDraw.x4 = x_trend_7;
    toDraw.y4 = y_trend_7;
    toDraw.title4 = "7-Day Trend";  
 
    // 14-Day Trend (linear regression)
-   reg_14 = compute_regression_with_dates(x,y,14,new Date(total_x[total_x.length-1]),'linear');
+   reg_14 = compute_regression_with_dates(data.x,data.y,14,new Date(total_x[total_x.length-1]),'linear');
    x_trend_14 = reg_14['x'];
    y_trend_14 = reg_14['y'];  
-   if(reg_14['reach']!=-1 && option.info) {
-      add_info += "<p>Based on the 14-Day Trend, " + name + "'s " + title + " could reach 0 around <b>" + reg_14['reach'] +"</b>.</p>";
+   if(reg_14['reach']!=-1 && data.option.info) {
+      add_info += "<p>Based on the 14-Day Trend, " + data.name + "'s " + data.title + " could reach 0 around <b>" + reg_14['reach'] +"</b>.</p>";
    }
    toDraw.x3 = x_trend_14;
    toDraw.y3 = y_trend_14;
@@ -389,7 +402,7 @@ function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,opti
 
    // 2th degree polynomial regression from the beginning (new curve)
    //console.log("POLY FOR ", title);
-   reg = compute_Xdeg_poly_regression_with_dates(x,y,-1,new Date(total_x[total_x.length-1]),2);
+   reg = compute_Xdeg_poly_regression_with_dates(data.x,data.y,-1,new Date(total_x[total_x.length-1]),2);
    x_poly = reg['x'];
    y_poly = reg['y'];
    toDraw.x5 = x_poly;
@@ -397,21 +410,64 @@ function compute_new_graph_data(x,y,title,name,domEl,domElDetails,MIT_model,opti
    toDraw.title5  = "Curve";    
     
    // Other Info to draw
-   toDraw.title  = name + ", " + title;
+   toDraw.title  = data.name + ", " + data.title;
    toDraw.add_info = add_info;
-   toDraw.el = domEl;
-   toDraw.el_title = domElDetails;
+   toDraw.el = data.graph_div;
+   toDraw.el_title =  data.graph_details_div;
    
    // Main stuff 
-   toDraw.title1 = title;
-   toDraw.x1 = x;
-   toDraw.y1 = y;
+   toDraw.title1 = data.title;
+   toDraw.x1 = data.x;
+   toDraw.y1 = data.y;
     
    // Draw the Graph
-   draw_graph(toDraw,option);  
+   draw_graph(toDraw,data.option);  
 
    // We return the info used to fill the top Summary based on the info we get from New Cases 
-   if(title == "New Cases per Day" ) {
+   if(data.title == "New Cases per Day" ) {
+
+      // We need to compute the total cases at reg_7['reach'] & reg_14['reach'] (if possible)
+      // for the summary
+      
+      // We reach 0 with reg_7
+      if(reg_7['reach']!=-1) {
+       
+         var start_day = 7;
+         var equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
+         var new_total = data.total;
+
+         while(equ_res>0) {
+            equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
+            new_total += equ_res>0?equ_res:0;
+            start_day++;
+           
+         }
+         
+         reg_7["total_at_end"] = new_total;
+
+
+     
+      }
+
+
+      // We reach 0 with reg_7
+      if(reg_14['reach']!=-1) {
+       
+         var start_day = 14;
+         var equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
+         var new_total = data.total;
+
+         while(equ_res>0) {
+            equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
+            new_total += equ_res>0?equ_res:0;
+            start_day++;
+           
+         }
+         
+         reg_14["total_at_end"] = new_total;
+     
+      }
+
       return {
          trend_7: reg_7,
          trend_14: reg_14,

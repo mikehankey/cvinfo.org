@@ -7,37 +7,93 @@
 }
 
 // Fill Entire Table
-function fillPredictedOutcome(fr,sum_info) {
-   var tbody, total = parseInt($("#f_state_pop").val());
-   tbody =  fillPredictedOutComeRow("Deaths",total,parseInt(sum_info.deaths),parseInt(fr['14_day'].total_dead),parseInt(fr['7_day'].total_dead));
-   tbody += fillPredictedOutComeRow("Confirmed Cases",total,parseInt(sum_info.cases),parseInt(fr['14_day'].total_cases),parseInt(fr['7_day'].total_cases));
-   tbody += fillPredictedOutComeRow("Non-Tracked Infected",total,parseInt(sum_info.total_infected),parseInt(fr['14_day'].total_infected),parseInt(fr['7_day'].total_infected));
-   tbody += fillPredictedOutComeRow("Not Infected",total,parseInt(sum_info.not_infected),parseInt(fr['14_day'].total_not_infected),parseInt(fr['7_day'].total_not_infected));
+function fillPredictedOutcome(data,cur,trend7,trend14) {
+   var tbody;
+ 
+
+   tbody =  fillPredictedOutComeRow("Deaths",data.pop, cur.deaths, trend14.deaths, trend7.deaths);
+   tbody += fillPredictedOutComeRow("Confirmed Cases",data.pop, cur.conf_case,  trend14.conf_case, trend7.conf_case);
+   tbody += fillPredictedOutComeRow("Non-Tracked Infected",data.pop, cur.total_infected, trend14.total_infected, trend7.total_infected);
+   tbody += fillPredictedOutComeRow("Not Infected",data.pop, cur.not_infected,  trend14.not_infected, trend7.not_infected); 
    $('#new_trends tbody').html(tbody);
 } 
 
-// Fill Top Table
-function fill_top_table(data,phantom) {
+// Fill Top Table & Pie Chars
+function fill_top_table(data,phantom, herd_immunity_info) {
    var tbody, total = data.pop; 
-
+ 
    var total_non_tracked_infected = (data.total_case/phantom)-data.total_death;
    var total_not_infected = data.pop-total_non_tracked_infected-data.total_case;
+   
+   var herd_7 = data.trend_7.reach==-1?true:false; // It means herd immunity
+   var herd_14 = data.trend_14.reach==-1?true:false; 
+   
+   var cur_table_data =  {
+      deaths: 0,
+      conf_case: 0,
+      non_tracked_case: 0,
+      not_infected: 0,
+      total_infected: 0
+   };
+
+
+   var trend7_table_data = {
+         deaths: 0,
+         conf_case: 0,
+         non_tracked_case: 0,
+         not_infected: 0,
+         total_infected: 0
+   };
+  
+   var trend14_table_data =  {
+      deaths: 0,
+      conf_case: 0,
+      non_tracked_case: 0,
+      not_infected: 0,
+      total_infected: 0
+   };
+
+   // Herd or 0
+   if(!herd_7) {
+      $('#7_day_date').text(data.trend_7.reach);
  
-   $('#14_day_date').text(data.trend_14.reach);
-   $('#7_day_date').text(data.trend_7.reach);
+      // We prepare the data
+      trend7_table_data.conf_case               = parseInt(data.trend_7.total_at_end);
+      trend7_table_data.deaths                  = parseInt(data.trend_7.total_at_end*data.last_mortality_rate/100);
+      trend7_table_data.total_infected          = parseInt((trend7_table_data.conf_case / phantom ) + trend7_table_data.conf_case);
+      trend7_table_data.not_infected            = data.pop -  trend7_table_data.total_infected -  trend7_table_data.deaths;
+ 
+ 
 
-   // DEATHS
-   tbody +='<tr><th>Deaths</th><td>' + usFormat(data.total_death) + '</td>\
-                               <td>' +  (data.total_death*100/total).toFixed(2) + '%</td>';
-   // CONF CASES
-   tbody +='<tr><th>Confirmed Cases</th><td>' + usFormat(data.total_case) + '</td><td>' +   (data.total_case*100/total).toFixed(2) + '%</td>';
-   // NON TRACKED INFECTED
-   tbody +='<tr><th>Non-Tracked Infected</th><td>' + usFormat(total_non_tracked_infected) + '</td><td>' +   ((total_non_tracked_infected)*100/total).toFixed(2) + '%</td>';
-   // NOT INFECTED
-   tbody +='<tr><th>Not Infected</th><td>' + usFormat(total_not_infected) + '</td><td>' +   ((total_not_infected)*100/total).toFixed(2) + '%</td>';
+   } else {
+      $('#7_day_date').text(dateFormatMITFromDate(herd_immunity_info.trend_7.herd_immunity_date));
+   }
+   
+   // Herd or 0
+   if(!herd_14) {
+      $('#14_day_date').text(data.trend_14.reach);
 
+       // We prepare the data
+       trend14_table_data.conf_case               = parseInt(data.trend_14.total_at_end);
+       trend14_table_data.deaths                  = parseInt(data.trend_14.total_at_end*data.last_mortality_rate/100);
+       trend14_table_data.total_infected          = parseInt((trend14_table_data.conf_case / phantom ) + trend14_table_data.conf_case);
+       trend14_table_data.not_infected            = data.pop -  trend7_table_data.total_infected -  trend14_table_data.deaths;
+  
 
-   $('#new_trends tbody').html(tbody);
+   } else {
+      $('#14_day_date').text(dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date));
+   }
+   
+   
+   // Cur Data 
+   cur_table_data.conf_case               = parseInt(data.total_case);
+   cur_table_data.deaths                  = parseInt(data.total_death);
+   cur_table_data.total_infected          = parseInt((data.total_case / phantom ) + data.total_case);
+   cur_table_data.not_infected            = data.pop -   cur_table_data.total_infected  -  cur_table_data.deaths;
+
+   console.log("FILL PRED");
+   fillPredictedOutcome(data,cur_table_data, trend7_table_data,trend14_table_data );
+ 
 
 }
  
@@ -121,6 +177,9 @@ function create_top_page(data, phantom) {
  
 
       }
+
+       // Fill Top Table
+       fill_top_table(data, phantom, herd_immunity_info);
        
 
    }
@@ -133,5 +192,10 @@ function create_top_page(data, phantom) {
 
 function createSummary(data) {
   var phantom = 1/4;
+
+
+   console.log("createSummary ");
+   console.log(data);
+
   create_top_page(data, phantom);
 }
