@@ -28,7 +28,7 @@ function fill_top_table(data,phantom) {
    var cur_table_data =  {  deaths: 0, conf_case: 0,  non_tracked_case: 0, not_infected: 0,  total_infected: 0  };
    var trend7_table_data =  {  deaths: 0, conf_case: 0,  non_tracked_case: 0, not_infected: 0,  total_infected: 0  };
    var trend14_table_data =  {  deaths: 0, conf_case: 0,  non_tracked_case: 0, not_infected: 0,  total_infected: 0  };
-
+ 
    // Herd or 0
    if(!herd_7) {
       $('#7_day_date').text(data.trend_7.reach);

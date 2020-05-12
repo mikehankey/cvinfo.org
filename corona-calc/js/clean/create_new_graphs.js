@@ -189,24 +189,23 @@ function prepareData(data) {
  */
 function new_display_data(data,state,county) {
    var all_data = {}, all_graph_data, type = "state"; 
-   var data_for_summary; // Bases on new cases trendss
+   var data_for_summary = {}; // Bases on new cases trendss
     
    // Get data based on state and/or county
-   if(county !== undefined && $.trim(county) !== ''  && $.trim(county) !== "ALL") {
+   if(county !== undefined && $.trim(county)!== ''  && $.trim(county) !== "ALL") {
       all_data = getInitData(data,county);  
-      type = "county";
+      type = "county"; 
    } else {
-      all_data = getInitData(data);  
+      all_data = getInitData(data);   
    } 
-     
+      
    // Prepare data 
-   all_graph_data = prepareData(all_data);
+   all_graph_data = prepareData(all_data); 
    
    // Graph for New Cases
    // Warning: here we get the date for the summary
    // this way we don't have to compute the same stuff twice
-   data_for_summary = compute_new_graph_data(
-      {  
+   data_for_summary = compute_new_graph_data( {  
          pop: all_graph_data['pop'],
          x:  all_graph_data.new_cases[0],
          y:  all_graph_data.new_cases[1],
@@ -308,14 +307,16 @@ function new_display_data(data,state,county) {
  }
 
 
-/**
- * Compute New Graph Data as well as the data for the summary on top of the page
-* 
- *
- */
 
-function compute_new_graph_data(data) {
-  
+
+
+ 
+
+/**
+* Compute New Graph Data as well as the data for the summary on top of the page
+**/
+function compute_new_graph_data(input_data) {
+ 
    var add_info = "";
    var x_trend_14, y_trend_14;
    var x_trend_7, y_trend_7;
@@ -325,32 +326,37 @@ function compute_new_graph_data(data) {
    var x_model  = []; 
    var y_model = []; 
    var max_day = 30; // When we don't have a model, we compute the graphs until last_day + 'max_day' days
-   var total_x = []; // If we have a model, it's the model X, if not it the last day of the current data set (x) + max_day
-   var reg, reg_7, reg_14;
+   var total_x = []; // If we have a model, it's the model X, if not it the last day of the current input_data set (x) + max_day
+   var reg = {}, reg_7 = {}, reg_14 = {};
    var last_day = null;
    var toDraw = {};
+   var start_day = 0, equ_res= [], new_total = 0;
+   var total_real_infected = 0; // For herd
+   var total_real_perc = 0;     // For herd
+   var day = null;
 
    var phantom = 1/4;
    var herd_thresh = 60;
+   var toReturn = {};
 
 
    // Option is... optionnal!
-   if(data.option == undefined ) {
-      data.option = {
+   if(input_data.option == undefined ) {
+      input_data.option = {
          type: 'bars',
          info: true
       }
    }
     
-   if(data.models !== undefined) {
-      if(data.models['MIT'] !== undefined) {
-            // MIT Model Data for projection for 2nd data set
-            $.each(data.models['MIT'][0], function(i,val) {
+   if(input_data.models !== undefined) {
+      if(input_data.models['MIT'] !== undefined) {
+            // MIT Model input_data for projection for 2nd input_data set
+            $.each(input_data.models['MIT'][0], function(i,val) {
                x_model.push(new Date(val));
             });
 
             total_x = x_model;
-            y_model = data.models['MIT'][1]; 
+            y_model = input_data.models['MIT'][1]; 
             toDraw.x2 = x_model;
             toDraw.y2 = y_model;
             toDraw.title2 = "MIT Trend Model"; 
@@ -362,7 +368,7 @@ function compute_new_graph_data(data) {
    if(total_x.length==0) {
 
       // Copy the Array of X
-      $.each(data.x, function(i,x) {
+      $.each(input_data.x, function(i,x) {
          total_x.push(x);
       }) 
       
@@ -376,22 +382,22 @@ function compute_new_graph_data(data) {
    } 
  
    // 7-Day Trend  (linear regression) 
-   reg_7 = compute_regression_with_dates(data.x,data.y,7,new Date(total_x[total_x.length-1]),'linear');
+   reg_7 = compute_regression_with_dates(input_data.x,input_data.y,7,new Date(total_x[total_x.length-1]),'linear');
    x_trend_7   = reg_7['x'];
    y_trend_7   = reg_7['y']; 
-   if(reg_7['reach']!=-1 && data.option.info) {
-      add_info += "<p>Based on the 7-Day Trend, " + data.name + "'s " + data.title + " could reach 0 around <b>" + reg_7['reach'] +"</b>.</p>";
+   if(reg_7['reach']!=-1 && input_data.option.info) {
+      add_info += "<p>Based on the 7-Day Trend, " + input_data.name + "'s " + input_data.title + " could reach 0 around <b>" + reg_7['reach'] +"</b>.</p>";
    }
    toDraw.x4 = x_trend_7;
    toDraw.y4 = y_trend_7;
    toDraw.title4 = "7-Day Trend";  
 
    // 14-Day Trend (linear regression)
-   reg_14 = compute_regression_with_dates(data.x,data.y,14,new Date(total_x[total_x.length-1]),'linear');
+   reg_14 = compute_regression_with_dates(input_data.x,input_data.y,14,new Date(total_x[total_x.length-1]),'linear');
    x_trend_14 = reg_14['x'];
    y_trend_14 = reg_14['y'];  
-   if(reg_14['reach']!=-1 && data.option.info) {
-      add_info += "<p>Based on the 14-Day Trend, " + data.name + "'s " + data.title + " could reach 0 around <b>" + reg_14['reach'] +"</b>.</p>";
+   if(reg_14['reach']!=-1 && input_data.option.info) {
+      add_info += "<p>Based on the 14-Day Trend, " + input_data.name + "'s " + input_data.title + " could reach 0 around <b>" + reg_14['reach'] +"</b>.</p>";
    }
    toDraw.x3 = x_trend_14;
    toDraw.y3 = y_trend_14;
@@ -399,7 +405,7 @@ function compute_new_graph_data(data) {
 
    // 2th degree polynomial regression from the beginning (new curve)
    //console.log("POLY FOR ", title);
-   reg = compute_Xdeg_poly_regression_with_dates(data.x,data.y,-1,new Date(total_x[total_x.length-1]),2);
+   reg = compute_Xdeg_poly_regression_with_dates(input_data.x,input_data.y,-1,new Date(total_x[total_x.length-1]),2);
    x_poly = reg['x'];
    y_poly = reg['y'];
    toDraw.x5 = x_poly;
@@ -407,30 +413,30 @@ function compute_new_graph_data(data) {
    toDraw.title5  = "Curve";    
     
    // Other Info to draw
-   toDraw.title  = data.name + ", " + data.title;
+   toDraw.title  = input_data.name + ", " + input_data.title;
    toDraw.add_info = add_info;
-   toDraw.el = data.graph_div;
-   toDraw.el_title =  data.graph_details_div;
+   toDraw.el = input_data.graph_div;
+   toDraw.el_title =  input_data.graph_details_div;
    
    // Main stuff 
-   toDraw.title1 = data.title;
-   toDraw.x1 = data.x;
-   toDraw.y1 = data.y;
+   toDraw.title1 = input_data.title;
+   toDraw.x1 = input_data.x;
+   toDraw.y1 = input_data.y;
     
    // Draw the Graph
-   draw_graph(toDraw,data.option);  
+   draw_graph(toDraw,input_data.option);  
 
    // We return the info used to fill the top Summary based on the info we get from New Cases 
-   if(data.title == "New Cases per Day" ) {
+   if(input_data.title == "New Cases per Day" ) {
 
       // We need to compute the total cases at reg_7['reach'] & reg_14['reach'] (if possible)
       // for the summary
 
-      var start_day = 7;
-      var equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
-      var new_total = data.total;
-      var total_real_infected; // For herd
-      var total_real_perc;     // For herd
+      start_day = 7;
+      equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
+      new_total = input_data.total;
+      total_real_infected; // For herd
+      total_real_perc;     // For herd
  
       // We reach 0 with reg_7
       if(reg_7['reach']!=-1) {
@@ -449,31 +455,30 @@ function compute_new_graph_data(data) {
          // We compute herd immunity! 
          new_total += equ_res>0?equ_res:0;
          total_real_infected = new_total / phantom + new_total;
-         total_real_perc  = 100*total_real_infected/data.pop;
+         total_real_perc  = 100*total_real_infected/input_data.pop;
 
          while(total_real_perc<=herd_thresh) {
             equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
             new_total += equ_res>0?equ_res:0;
             total_real_infected = new_total / phantom + new_total;
-            total_real_perc  = (100*total_real_infected)/data.pop;
+            total_real_perc  = (100*total_real_infected)/input_data.pop;
             start_day++;
          } 
 
          // Compute herd_reach_date
          tmp_day = new Date(total_x[total_x.length-1]-7);
          tmp_day.setDate(tmp_day.getDate() + start_day); 
- 
-
+  
          reg_7["herd_reach_day"]    = start_day;
          reg_7["herd_reach_date"]   = new Date(tmp_day); 
-         reg_7["total_at_end"]  = new_total;
+         reg_7["total_at_end"]      = new_total;
 
       }
 
 
-      var start_day = 14;
-      var equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
-      var new_total = data.total;
+      start_day = 14;
+      equ_res   = reg_14.equa[0]*start_day + reg_14.equa[1];
+      new_total = input_data.total;
 
       // We reach 0 with reg_7
       if(reg_14['reach']!=-1) {
@@ -492,16 +497,16 @@ function compute_new_graph_data(data) {
          total_case     = new_total;
          total_infected = total_case + (total_case / phantom);
          
-         total_infected_perc  = (total_infected*100)/data.pop;
-         total_case_per       =  (total_case*100)/data.pop;
+         total_infected_perc  = (total_infected*100)/input_data.pop;
+         total_case_per       =  (total_case*100)/input_data.pop;
  
          while((total_infected_perc+total_case_per) <= herd_thresh) {
             equ_res    = reg_14.equa[0]*start_day + reg_14.equa[1];
             total_case+= equ_res>0?equ_res:0;
 
             total_infected = total_case + (total_case / phantom);
-            total_infected_perc  = (total_infected*100)/data.pop;
-            total_case_per       = (total_case*100)/data.pop;
+            total_infected_perc  = (total_infected*100)/input_data.pop;
+            total_case_per       = (total_case*100)/input_data.pop;
             start_day++;
          }
         
@@ -516,161 +521,13 @@ function compute_new_graph_data(data) {
       }
 
 
-      return {
+      toReturn =  {
          trend_7: reg_7,
          trend_14: reg_14,
          trend : reg
       };
-   }
-
-}
-
-
  
-
-/**
- * Draw standard graph with 7,14 trends and eventual
- * @param {*} data 
- */
-function draw_graph(data,option ) {
-   var maxDate1, minDate1, maxDate2, minDate2, min, max;
-   var dataSet1,dataSet2,dataSet3,dataSet4,dataSet5;
- 
-   // Get Range for X AXIS
-   maxDate1 = new Date(Math.max.apply(null,data.x1));
-   minDate1 = new Date(Math.min.apply(null,data.x1));
-   
-   if(data.x2 !== undefined) {
-      // We have models
-      maxDate2=new Date(Math.max.apply(null,data.x2));
-      minDate2=new Date(Math.min.apply(null,data.x2)); 
-      max = (maxDate1<maxDate2)?maxDate2:maxDate1;
-      min = (minDate1<minDate2)?minDate1:minDate2;
-   } else {
-      // We don't have models
-      // We take max in data.x3 (one of the Trend)
-      max = new Date(Math.max.apply(null,data.x3));
-      min = new Date(Math.min.apply(null,data.x1));
+      return toReturn;
    }
-    
-   // MAX for Y AXIS
-   var maxY = 1.25*( Math.max.apply(null,data.y1));
-
-   // The dashed line will appear at dateSet max date + 1
-   var curDay = maxDate1;
-   curDay.setDate(curDay.getDate() + 1); 
- 
-   // Org Data
-   dataSet1 = {
-      x: data.x1,
-      y: data.y1,
-      name: data.title1,
-      type: "bar",
-      marker: {  color: 'rgb(31,119,180)'    }
-   };
- 
-
-   // Typically for Growth Decay
-   if(option.type !== "bars") {
-      dataSet1.type = "scatter";
-      dataSet1.mode =  'lines';
-      dataSet1.line =  {shape: 'spline'};
-   }
-
-   // MIT Prevision
-   if(data.x2 !== undefined) {
-      dataSet2 = {
-         x: data.x2,
-         y: data.y2,
-         name: data.title2,
-         type: "bar",
-         xaxis: 'x2',
-         marker: {  color: 'rgb(158,202,225)'  }
-      };  
-   }
-
-   // Linear Trend 1
-   dataSet3 = {
-         x: data.x3,
-         y: data.y3,
-         name: data.title3,
-         type: "line",
-         mode: 'lines',
-         xaxis: 'x2',
-         line: {
-            color: 'rgba(255,127,14,.8)' 
-         }
-   };  
-
-   // Linear Trend 2
-   dataSet4 = {
-         x: data.x4,
-         y: data.y4,
-         name: data.title4,
-         type: "line", 
-         mode: 'lines',
-         xaxis: 'x2',
-         line: {
-            color: 'rgba(44,160,44,.8)',
-         }
-   };  
-
-
-   // Curve
-   dataSet5 = {
-      x: data.x5,
-      y: data.y5,
-      name: data.title5,
-      type: "line",
-      xaxis: 'x2',
-      line: {
-         color: 'rgba(169,25,147,.8)',
-      }
-   };  
-
-   var layout = { 
-      xaxis: {   range: [min,max]   },
-      xaxis2: {
-        overlaying: 'x',
-        range: [min,max]
-      },
-      yaxis: { range:[0,maxY] }, 
-      margin: {"t": 20, "b": 80, "l": 50, "r": 10},
-      showlegend: true,
-      legend: { orientation: "h" },
-      // Dashed grey line
-      shapes : [{ 
-         type: 'line',
-         x0: curDay,
-         y0: 0,
-         x1: curDay,
-         yref: 'paper',
-         y1: 1,
-         line: {
-            color: 'grey',
-            width: 1.5,
-            dash: 'dot'
-         }
-      }]
-   };
-
-   // Specific option for y values < 0
-   // Typically for Growth Decay 
-   if(option.type !== "bar") {
-      layout.yaxis.range = [Math.min.apply(null,data.y1), Math.max.apply(null,data.y1)];
-   }
-
-   if(data.x2 !== undefined) {
-      // With Model
-      all_set = [dataSet1,dataSet2,dataSet3,dataSet4,dataSet5];
-   } else { 
-      // Without Model
-      all_set =  [dataSet1, dataSet3,dataSet4,dataSet5];
-   }
-
-   Plotly.newPlot(data.el, all_set, layout);
-   
-   // Add more info 
-   $('#'+data.el_title).html("<h3>"+data.title +"</h3>" + data.add_info);
 
 }

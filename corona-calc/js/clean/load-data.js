@@ -13,7 +13,7 @@ function change_state() {
 }
 
 function change_county() {  
-   //show_loader();
+   show_loader(false);
    $('#calc_mortality').val(""); 
    setTimeout(function() {load_data();},150);
 }
@@ -36,8 +36,14 @@ function load_data(urlInfo, reload) {
       if(cur_json_data=="") { 
          getJSONData("../json/" + state + ".json",$.trim(state),$.trim(county));
       } else { 
-         //displayData(cur_json_data,cur_state,county); 
+         
+         console.log("NEW DISPLAY DATA");
+         console.log("cur_json", cur_json_data);
+         console.log("state", state);
+         console.log("county", county);
+
          new_display_data(cur_json_data,state,county);
+         hide_loader();
       }
      
    } 
@@ -91,29 +97,6 @@ function getJSONData(url,state,county,reload) {
 }
 
 
-/**
- * Setup action on selects
- */
-function setupActions() {
-   // Create action on state select 
-   $('#state_selector').change(function() { change_state(); });
-
-   // Creation action on recalculate button
-   $('#recalculate').click(function() { 
-      $(this).attr('data-htmlx',$(this).html()).html('Computing...');
-      $('body').addClass('wait');
-      setTimeout(function() {
-         displayData(cur_json_data,cur_state,cur_county);
-      },850);
-   });
-
-      
-   $('#reset').click(function() {
-      reset();
-      $('#recalculate').trigger('click');
-   })
- 
-}
 
 // Do we have parameters we can work with 
 // We want 
@@ -122,7 +105,7 @@ function setupActions() {
 // coronafiles.us/?MD
 function getInfoFromUrl(cururl) {
    var selState;
-   var toReturn = {state:"",county:""}, possibleStates=[];
+   var toReturn = {state:"ALL",county:"ALL"}, possibleStates=[];
 
    // Remove Dash from url
    if (cururl.indexOf('#') > 0) {
@@ -159,32 +142,65 @@ function getInfoFromUrl(cururl) {
 
 }
 
+
+
+
+
+/**
+ * Setup action on selects
+ */
+function setupActions() {
+
+   // Create action on state select 
+   $('#state_selector').change(function() { change_state(); });
+
+   // Creation action on recalculate button
+   $('#recalculate').click(function() { 
+      $(this).attr('data-htmlx',$(this).html()).html('Computing...');
+      $('body').addClass('wait');
+      setTimeout(function() {
+         displayData(cur_json_data,cur_state,cur_county);
+      },850);
+   });
  
+   $('#reset').click(function() {
+      reset();
+      $('#recalculate').trigger('click');
+   })
+ 
+}
+ 
+
+
+
+
 
 
 $(function() {
     
-
    // Once the page is loaded we enable the state select
    $('#state_selector').removeAttr('disabled');
    $('body').removeClass('wait');
 
-   setupActions();
-  
-   // ... 
-   hide_loader(false);
+   setupActions(); 
 
    // Do we have parameters we can work with 
    // We want 
    // coronafiles.us/?MD+Baltimore
    // or 
    // coronafiles.us/?MD
-   urlInfo = getInfoFromUrl(decodeURIComponent(window.location.href));
-   load_init_data(urlInfo);
-   
-   setShareLinks();
-
+   var urlInfo = {"state":"ALL", "county": "ALL"};
+   urlInfo  = getInfoFromUrl(decodeURIComponent(window.location.href));
+ 
+   if(urlInfo.state!=="ALL") {
+      $('#state_selector').val(urlInfo.state); 
+      cur_state = urlInfo.state; // Shared
+      getInitJSONData(urlInfo.state,urlInfo.county);
+      setShareLinks();
+   }  
    // Scroll Top even with hidden elements
    window.scrollTo(0,0);
+ 
+   hide_loader(false);
 
-})
+}) 
