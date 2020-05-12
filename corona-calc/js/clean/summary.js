@@ -76,9 +76,8 @@ function fill_top_table(data,phantom) {
 
 
 // Create Main Top Sentence, compute herd immunity if necessary and fill the top of the page
-function create_top_page(data, phantom) {
-   var top_sentence = ""; 
-   var herd_immunity_info ;
+function create_top_page(data,   phantom, herd_tresh) {
+   var top_sentence = "";  
      
    if(data.trend_7['reach']!=-1 && data.trend_14['reach']!=-1) {
        // We reach 0 cases at one point 
@@ -153,14 +152,13 @@ function create_top_page(data, phantom) {
    }
 
    // Fill Top Table & Pies
-   fill_top_table(data, phantom);
+   fill_top_table(data, phantom, herd_tresh);
 
    // Create top Sentence
    $('#top_summary').html("<div id='sum_main'>"+top_sentence+"</div>"); 
  
 } 
 
-function createSummary(data) {
-  var phantom = 1/4;
-  create_top_page(data, phantom);
+function createSummary(data, phantom, herd_tresh) { 
+  create_top_page(data, phantom, herd_tresh);
 }

@@ -154,7 +154,9 @@ function setupActions() {
       $(this).attr('data-htmlx',$(this).html()).html('Computing...');
       $('body').addClass('wait');
       setTimeout(function() {
-         displayData(cur_json_data,cur_state,cur_county);
+         new_display_data(cur_json_data,cur_state,cur_county);
+         $('#recalculate').html($('#recalculate').attr('data-htmlx'));
+         $('body').removeClass('wait');
       },850);
    });
  

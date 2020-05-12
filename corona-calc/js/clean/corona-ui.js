@@ -20,7 +20,7 @@ function hide_loader(show_graphs) {
 }
 
 function reset() {
-   var init_mort = parseFloat($('#init_mortality').val())*100;
+   var init_mort = parseFloat($('#init_mortality').val());
    $('#herd_thresh').val(60);
    $('#calc_phantom').val(4);
    $('#calc_mortality').val(init_mort.toFixed(2));

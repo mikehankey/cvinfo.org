@@ -187,7 +187,7 @@ function prepareData(data) {
  */
 function new_display_data(data,state,county) {
    var all_data = {}, all_graph_data, type = "state"; 
-   var data_for_summary = {}; // Bases on new cases trendss
+   var data_for_summary = {}; // Bases on new cases trends
     
    // Get data based on state and/or county
    if(county !== undefined && $.trim(county)!== ''  && $.trim(county) !== "ALL") {
@@ -199,6 +199,24 @@ function new_display_data(data,state,county) {
  
    // Prepare data 
    all_graph_data = prepareData(all_data); 
+ 
+   // Put last mortality rate on the form
+   var init_mortality_rate  =  all_graph_data.last_mortality_rate;
+   $('#init_mortality').val(init_mortality_rate);
+
+   // If we don't have a mortality in the form we put it back in
+   if($('#calc_mortality').val()=='' || $('#calc_mortality').val()==0) {
+      $('#calc_mortality').val(init_mortality_rate);
+   } else {
+      // We use the one in the form 
+      all_graph_data.last_mortality_rate = parseFloat($('#calc_mortality').val());
+   }
+ 
+   // Get Data for computation
+   // based on form on the page
+   var phantom = 1/parseFloat($('#calc_phantom').val());
+   var herd_thresh =  parseFloat($('#herd_thresh').val());
+  
  
    // Graph for New Cases
    // Warning: here we get the date for the summary
@@ -214,7 +232,9 @@ function new_display_data(data,state,county) {
          models: {    'MIT':  all_graph_data.MIT_model  },
          total :              all_graph_data['total_case'],     
          last_day_data:       all_graph_data['last_day_data'],         
-         last_day_data_raw :  all_graph_data['last_day_number_data']     
+         last_day_data_raw :  all_graph_data['last_day_number_data'],
+         phantom:      phantom,
+         herd_thresh: herd_thresh
       }
    ); 
 
@@ -300,7 +320,7 @@ function new_display_data(data,state,county) {
    });  
      
    // And Now we can fill the summary
-   createSummary(data_for_summary);
+   createSummary(data_for_summary,phantom, herd_thresh);
 
  }
 
@@ -333,8 +353,8 @@ function compute_new_graph_data(input_data) {
    var total_real_perc = 0;     // For herd
    var day = null;
 
-   var phantom = 1/4;
-   var herd_thresh = 60;
+   var phantom = input_data.phantom;
+   var herd_thresh = input_data.herd_thresh;
    var toReturn = {};
 
  
