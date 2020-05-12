@@ -102,9 +102,7 @@ function create_top_page(data, phantom) {
          } else { 
             top_sentence +=  "<span class='wn'>around "  + data.trend_7['reach']  + " </span>";
          }
-      }
-
-    
+      } 
 
    } else {
 
@@ -129,29 +127,26 @@ function create_top_page(data, phantom) {
 
       } else { 
 
-         //if(data.trend2['herd_reach_day'] < ) {
-
+         // Both are HERD
+ 
          
-         /*
-         
-         if(herd_immunity_info.trend_7.herd_immunity_date == herd_immunity_info.trend_14.herd_immunity_date) {
+         if(data.trend_7['herd_reach_date'] == data.trend_14['herd_reach_date']) {
             top_sentence = "Based on the latest trends,<br>" +  data.name;
             top_sentence += " could reach <span class='ugly_t'>herd immunity around"
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date) + "</span></span>.";
-         } else if( herd_immunity_info.trend_7.herd_immunity_date < herd_immunity_info.trend_14.herd_immunity_date ) {
+            top_sentence += " <span class='wn'>" +  dateFormatMITFromDate(data.trend_14['herd_reach_date']) + "</span></span>.";
+         } else if( data.trend_7['herd_reach_date'] < data.trend_14['herd_reach_date'] ) {
             top_sentence = "Based on the latest trends,<br>" +  data.name;
             top_sentence += " could reach <span class='ugly_t'>herd immunity between"
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_7.herd_immunity_date) + "</span> and ";
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date) + "</span>";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_7['herd_reach_date']) + "</span> and ";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_14['herd_reach_date']) + "</span>";
             top_sentence += "</span>.";
          } else {
             top_sentence = "Based on the latest trends,<br>" +  data.name;
             top_sentence += " could reach <span class='ugly_t'>herd immunity between"
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date) + "</span> and ";
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_7.herd_immunity_date) + "</span>";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_14['herd_reach_date']) + "</span> and ";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_7['herd_reach_date'])  + "</span>";
             top_sentence += "</span>.";
-          }
-          */
+          } 
  
 
       } 

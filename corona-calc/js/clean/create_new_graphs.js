@@ -452,7 +452,7 @@ function compute_new_graph_data(data) {
          total_real_perc  = 100*total_real_infected/data.pop;
 
          while(total_real_perc<=herd_thresh) {
-            equ_res   = reg_7.equa[0]*start_day + reg_7equa[1];
+            equ_res   = reg_7.equa[0]*start_day + reg_7.equa[1];
             new_total += equ_res>0?equ_res:0;
             total_real_infected = new_total / phantom + new_total;
             total_real_perc  = (100*total_real_infected)/data.pop;
@@ -466,7 +466,7 @@ function compute_new_graph_data(data) {
 
          reg_7["herd_reach_day"]    = start_day;
          reg_7["herd_reach_date"]   = new Date(tmp_day); 
-         reg_7equa["total_at_end"]  = new_total;
+         reg_7["total_at_end"]  = new_total;
 
       }
 
