@@ -72,25 +72,29 @@
                This can result in more cases being reported which can negatively impact trends. 
                See <a href="#test_div">testing graph</a> to corelate recent case growth with increased testing.  
             </p>
-            <div class="inout_ty">
-                  <div id="new_trends"> 
-                     <table>
-                        <thead>
-                           <tr>
-                                 <th>Totals</th>
-                                 <th colspan="2">Current</th>
-                                 <th colspan="2">14-day Trend<br/><span>on </span></spanb><span id="14_day_date"></span></span></th>
-                                 <th colspan="2">7-day Trend<br/><span>on <span id="7_day_date"></span></span></th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                     </table> 
-               </div>
-            </div>
+            <div class="clearfix">
+               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_14" style="height:250px"></div></div><div class="leg"></div></div>
+               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_7" style="height:250px"></div></div><div class="leg"></div></div>
+            </div>   
          </div>
+      
+         <div class="inout_ty">
+               <div id="new_trends"> 
+                  <table>
+                     <thead>
+                        <tr>
+                           <th>Totals</th>
+                           <th colspan="2">Current</th>
+                           <th colspan="2">14-day Trend<br/><span>on <span id="14_day_date"></span></span></th>
+                           <th colspan="2">7-day Trend<br/><span>on <span id="7_day_date"></span></span></th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                     </tbody>
+                  </table> 
+            </div>
+         </div> 
       </div>
-
 
       <div id="std">
          <h3>Historical Data and Trends</h3>
@@ -130,28 +134,7 @@
             <div id="mortality_details"  class="graph_det"></div>
             <div id="mortality_graph"></div>
       </div>
-
-
-      <div id="results" style="visibility:hidden">
-         <div id="forecast" class="box" style="visibility:hidden">
-            <div id="summary" style="visibility:hidden"></div>
-            <div id="metric 14days" class="metric 14days" style="visibility:hidden"></div>
-            <div id="metric 7days" class="metric 7days" style="visibility:hidden"></div> 
-            <div id="sum_peak" style="visibility:hidden"></div>
-            <div id="outcome" class="clearfix" >
-          
-               <h3>Predicted Outcome</h3>
-               <p>
-                  Recent testing efforts haved greatly increased in many states. 
-                  This can result in more cases being reported which can negatively impact trends. 
-                  See <a href="#test_div">testing graph</a> to corelate recent case growth with increased testing.  
-               </p>
-               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_14" style="height:250px"></div></div><div class="leg"></div></div>
-               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_7" style="height:250px"></div></div><div class="leg"></div></div>
-            </div>
-             
-
-            <div id="recalc_form" >
+        <div id="recalc_form" >
                <p class="to">Predicted outcome calculated with current data trends and the following values:</p>
                <div class="form-group clearfix">
                      <label for="herd_thresh">Herd Immunity Threshold
@@ -203,40 +186,7 @@
                <button id="reset" class="btn">Reset</button>
             </div>
          </div>
-
-         <div id="std">
-           </div>
-               
-               <div id="graphs"> 
-               </div>
-               <div class="box" id="newcase_cont"  style="visibility:hidden">
-                  <div id="new_cases_forecast"></div>
-                  <div id="new_cases_div"></div>
-               </div>
-
-               <div class="box" id="growth_cont" style="visibility:hidden">
-                  <div id="growth_forecast"></div>
-                  <div id="growth_div"></div>
-               </div>     
-                
-               <div class="box" id="decay_cont" style="visibility:hidden">
-                  <div id="decay_forecast"></div>
-                  <div id="decay_div"></div>
-               </div>    
- 
-               <div class="box"  style="visibility:hidden"><div id="test_div"></div></div>
-               <div class="box"  style="visibility:hidden"><div id="new_deaths_div"></div></div>
-               <div class="box"  style="visibility:hidden"><div id="deaths_growth_div"></div></div>
-               <div class="box"  style="visibility:hidden"><div id="mortality_div"></div></div>
-
-
-
-            
-         </div>
-
       </div>
-   </div>
-
   
    
    <div id="soc">
