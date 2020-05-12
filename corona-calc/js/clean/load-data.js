@@ -33,15 +33,10 @@ function load_data(urlInfo, reload) {
          setShareLinks({state:$("#state_selector option[value='"+state+"']").text(), state_code:state});
       } 
       cur_county = county;
+      show_loader();
       if(cur_json_data=="") { 
          getJSONData("../json/" + state + ".json",$.trim(state),$.trim(county));
       } else { 
-         
-         console.log("NEW DISPLAY DATA");
-         console.log("cur_json", cur_json_data);
-         console.log("state", state);
-         console.log("county", county);
-
          new_display_data(cur_json_data,state,county);
          hide_loader();
       }

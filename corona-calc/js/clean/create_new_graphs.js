@@ -51,7 +51,7 @@ function getInitData(data,county) {
       $.each(toReturn.stats,function(i,v) {
          // We have "day" in county and "date" in state but in 2 different format (!!!!!)
          toReturn.stats[i]['date'] =  v['day'].replace(/-/g, '');
-         toReturn.stats[i]['day']  = '';
+         toReturn.stats[i]['day']  = v['day'].replace(/-/g, '');
       });
  
    } 
@@ -124,6 +124,7 @@ function prepareData(data) {
       var tmp_growth_val = val.cg_last == undefined ? val.case_growth:  val.cg_last;         // Lack of consistencty of the data for GROWTH
       var tmp_death_growth_val = val.dg_last == undefined ? val.death_growth : val.dg_last   // Same for DEATH GROWTH
       var curDate = new Date(dateFormatMIT(val.date));
+ 
        
       // GROWTH
       x_axis_growth.push(curDate);
@@ -160,10 +161,7 @@ function prepareData(data) {
       y_axis_new_deaths.push(val.new_deaths>0?val.new_deaths:0);
        
    });
-   
-
-   
-
+    
    return {
       'name'                  :  data.name,
       'pop'                   :  data.pop, 
@@ -198,10 +196,10 @@ function new_display_data(data,state,county) {
    } else {
       all_data = getInitData(data);   
    } 
-      
+ 
    // Prepare data 
    all_graph_data = prepareData(all_data); 
-   
+ 
    // Graph for New Cases
    // Warning: here we get the date for the summary
    // this way we don't have to compute the same stuff twice
@@ -339,6 +337,7 @@ function compute_new_graph_data(input_data) {
    var herd_thresh = 60;
    var toReturn = {};
 
+ 
 
    // Option is... optionnal!
    if(input_data.option == undefined ) {
@@ -422,6 +421,8 @@ function compute_new_graph_data(input_data) {
    toDraw.title1 = input_data.title;
    toDraw.x1 = input_data.x;
    toDraw.y1 = input_data.y;
+
+
     
    // Draw the Graph
    draw_graph(toDraw,input_data.option);  

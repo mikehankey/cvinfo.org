@@ -1,18 +1,5 @@
 
-/**
- * Load_init_data (from url parameter)
- */
-function load_init_data(urlInfo) {
-   var state  = (urlInfo&&urlInfo.state)?urlInfo.state:"0";
-   var county;
 
-   if(state!=0) {
-      $('#state_selector').val(state);
-      county =  (urlInfo&&urlInfo.county)?urlInfo.county:"undefined";
-      cur_state = state;
-   } 
-   getInitJSONData($.trim(state),$.trim(county));
-}
 
 /**
  * Load Init JSON (from url parameter)
