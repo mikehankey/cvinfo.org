@@ -10,11 +10,11 @@
    <meta name="theme-color" content="#f0f0f0">
  
    <meta property="fb:app_id" content="542306269804125"/>
-   <meta property="og:title" content="CoronaFiles.us - COVID-19 Forecasting and Stats Visualizer for your State and county"/>
+   <meta property="og:title" content="CoronaFiles.us - Herd Immunity Calculator "/>
    <meta property="og:type" content="website"/>
-   <meta property="og:url" content="https://coronafiles.us/"/>
+   <meta property="og:url" content="https://coronafiles.us/herd_immunity_calculator.html"/>
    <meta property="og:site_name" content="CoronaFiles.us"/>
-   <meta property="og:description" content="COVID-19 Forecasting and Stats Visualizer"/>
+   <meta property="og:description" content="COVID-19  Herd Immunity Calculator"/>
    <meta property="og:locale" content="en_US"/>
    <meta property="og:image" content="https://coronafiles.us/img/coronafile_fb.jpg"/>
    <meta property="og:image:width" content="1200"/>
@@ -22,11 +22,11 @@
    <meta property="og:image:alt" content="CoronaFiles.us - When could Corona Virus End?"/>
 
    <meta name="author" content="Mike Hankey">
-	<meta name="description" content="When could Corona Virus end? COVID-19 Forecasting and Stats Visualizer.">
+	<meta name="description" content="COVID-19 Herd Immunity Calculator.">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta name="keywords" content="corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
 
-	<title>COVID-19 Forecasting and Stats Visualizer for your State and county</title>   
+	<title>COVID-   Herd Immunity Calculator</title>   
  
    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
@@ -46,15 +46,17 @@
       <input class="menu-btn" type="checkbox" id="menu-btn" />
       <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
       <ul class="menu">
-         <li class="active"><a href="./index.html">Forecast</a></li>
+         <li><a href="./index.html">Forecast</a></li>
+         <li class="active"><a href="./herd_immunity_calculator.html">Herd Immunity Calculator</a></li> 
+         <li><a href="./gbu.html">Compare</a></li>
          <li><a href="./data.html">Data</a></li> 
          <li><a href="./about.html">About</a></li> 
       </ul>
    </header>
 
    <div id="header">
-      <h1>US Corona Calculator</h1>
-      <h2>COVID-19 Forecasting Tool</h2>
+      <h1>US COVID-19</h1>
+      <h2>Herd Immunity Calculator</h2>
    </div>
    <div id="main-content">
 
@@ -63,124 +65,91 @@
       <a href="#disclaimer" class="notice">IMPORTANT NOTICE</a>
       <div id="loader" ><img src="./img/loader.gif"/>Loading...</div>
 
-      <div id="forecast_container" style="visibility:hidden">
+      <div id="forecast_container" > <!-- style="visibility:hidden" -->
+ 
+         <div class="box">
 
-      
-      <div id="forecast" class="box">
-         <div id="top_summary"></div>
-         <div id="outcome">
-            <h3>Predicted Outcome</h3>
-            <p>
-               Recent testing efforts haved greatly increased in many states. 
-               This can result in more cases being reported which can negatively impact trends. 
-               See <a href="#test_div">testing graph</a> to corelate recent case growth with increased testing.  
-            </p>
-            <div class="clearfix">
-               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_14" style="height:250px"></div></div><div class="leg"></div></div>
-               <div class="pie_chart"><div class="inout"><div id="new_cases_pie_7" style="height:250px"></div></div><div class="leg"></div></div>
-            </div>   
-         </div>
-      
-         <div class="inout_ty">
-               <div id="new_trends"> 
-                  <table>
-                     <thead>
-                        <tr>
-                           <th>Totals</th>
-                           <th colspan="2">Current</th>
-                           <th colspan="2">14-day Trend<br/><span>on <span id="14_day_date"></span></span></th>
-                           <th colspan="2">7-day Trend<br/><span>on <span id="7_day_date"></span></span></th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                     </tbody>
-                  </table> 
-            </div>
-         </div> 
+               <div id="sum_main"></div>
 
+            <div id="recalc_form" class="lg">
+               <p class="to">You can adjust the current variable below to obtain a new prediction.</p>
+               <input type="hidden" name="init_pop"/>
+               <input type="hidden" name="init_total_infected"/>
+               <input type="hidden" name="init_new_case_per_day"/>
+               <input type="hidden" name="init_new_case_growth_per_day"/>
+               <input type="hidden" name="init_mortality_rate"/>
+               <input type="hidden" name="init_non_tracked_factor"/>
+               <input type="hidden" name="init_herd_immunity_threshold"/>
 
-         <div id="recalc_form" >
-               <p class="to">Predicted outcome calculated with current data trends and the following values:</p>
+               <input type="hidden" name="current_dead"/>
+               <input type="hidden" name="last_day_of_data"/>
+
                <div class="form-group clearfix">
-                     <label for="herd_thresh">Herd Immunity Threshold
-                       <span>Percentage of population needed for herd immunity.</span>
-                     </label>
+                     <label for="pop" class="no_e">Population</label>
                      <div class="form-input">
-                        <div class="group">
-                              <input type="number" id="herd_thresh" value="60"/>
-                              <span class="input-group-text">%</span>
-                        </div>
+                        <input type="number" id="pop" value="" class="lg"/>
                      </div>
                </div>
                <div class="form-group clearfix">
-                     <label for="calc_mortality">Confirmed Case Mortality Rate
-                     <span>Percentage of confirmed cases that end in death.</span></label>
-                     <div class="form-input">
-                        <div class="group">
-                           <input type="number" id="calc_mortality" />
-                           <span class="input-group-text">%</span>
-                        </div>
+                     <label for="total_infected" class="no_e">Total Infected people</label>
+                     <div class="form-input"> 
+                           <input type="number" id="total_infected" value="" />  
                      </div>
                </div>
+               <!--
                <div class="form-group clearfix">
-                     <label for="calc_phantom">Non-Tracked Factor
-                     <span>For each confirmed case there are X non-tracked cases.</span></label>
-                     <div class="form-input">
-                       <input type="number"  id="calc_phantom" value="4"/>
+                  <label for="new_case_per_day" class="no_e">New Confirmed Cases per day</label>
+                  <div class="form-input"> 
+                        <input type="number" id="new_case_per_day" value="" />  
+                  </div>
+               </div>  
+               -->
+               <div class="form-group clearfix">
+                  <label for="new_case_growth_per_day" class="no_e">New Cases growth per day</label>
+                  <div class="form-input"> 
+                     <div class="group">
+                        <input type="number" id="new_case_growth_per_day" />
+                        <span class="input-group-text">%</span>
+                     </div> 
+                  </div>
+               </div> 
+               <div class="form-group clearfix">
+                  <label for="mortality_rate" class="no_e">Mortality rate</label>
+                  <div class="form-input"> 
+                     <div class="group">
+                        <input type="number" id="mortality_rate" />
+                        <span class="input-group-text">%</span>
                      </div>
-               </div>
-              
-               <input type="hidden" id="f_mortality">
-               <input type="hidden" id="init_mortality">
-               <input type="hidden" id="used_mortality">
+                  </div>
+               </div> 
+               <div class="form-group clearfix">
+                  <label for="non_tracked_factor">Non-tracked Factor  
+                  <span>For each confirmed case, there are <span class="explained"></span> non-tracked cases.</span></label>
+                  <div class="form-input"> 
+                     <div class="group">
+                        <input type="number" id="non_tracked_factor" /> 
+                     </div>
+                  </div>
+               </div>  
+               <div class="form-group clearfix">
+                  <label for="herd_immunity_threshold">Herd Immunity Threshold  
+                  <span><span class="explained"></span>% of the population needed to be immune to protect everybody*.</span></label>
+                  <div class="form-input"> 
+                     <div class="group">
+                        <input type="number" id="herd_immunity_threshold" />
+                        <span class="input-group-text">%</span>
+                     </div>
+                  </div>
+               </div> 
                
                <button id="recalculate">Re-Calculate Predicted Outcome</button>
                <button id="reset" class="btn">Reset</button>
+
+               <p>* No scientific study has shown yet if individuals can become immune by recovering from an earlier infection of COVID-19.</p>
             </div>
-      </div>
- 
-      <div id="std">
-         <h3>Historical Data and Trends</h3>
-         <p>The following graphs represent the data used to determine the growth trend and default mortality rate values used by the calculator above. </p>
-      </div>
-      <div class="box">
-            <div id="newcases_graph_details" class="graph_det"></div>
-            <div id="newcases_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="deaths_graph_details" class="graph_det"></div>
-            <div id="deaths_graph"></div>
-      </div>
- 
-      <div class="box">
-            <div id="growth_graph_details"  class="graph_det"></div>
-            <div id="growth_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="tests_graph_details"  class="graph_det"></div>
-            <div id="tests_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="death_growth_graph_details"  class="graph_det"></div>
-            <div id="death_growth_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="growth_decay_graph_details"  class="graph_det"></div>
-            <div id="growth_decay_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="mortality_details"  class="graph_det"></div>
-            <div id="mortality_graph"></div>
-      </div>
-        
-   </div>
-   </div>
-   
+         </div>
+    </div>
+  
    <div id="soc">
       <ul class="share-buttons">
             <li class="social-share facebook"><img src="./img/Facebook.svg" alt="Share Page on Facebook" /></li>
@@ -206,16 +175,11 @@
          <br/>contact: mike.hankey[@]gmail.com
    </div>
  
-   <script src="./js/clean/framework_plugs.js"></script>  
-   <script src="./js/clean/maths/numeric.js"></script>  
-   <script src="./js/clean/maths/regression.js"></script>   
-
+   <script src="./js/clean/framework_plugs.js"></script>   
    <script src="./js/clean/share.js"></script>     
    <script src="./js/clean/utils.js"></script>
-   <script src="./js/clean/draw_graphs.js"></script>  
-   <script src="./js/clean/create_new_graphs.js"></script>
-   <script src="./js/clean/summary.js"></script>
-    
+   <script src="./js/clean/draw_graphs.js"></script> 
+   <script src="./js/clean/herd.js"></script>  
    <script src="./js/clean/corona-ui.js"></script>
    <script src="./js/clean/init-data.js"></script>
    <script src="./js/clean/load-data.js"></script>

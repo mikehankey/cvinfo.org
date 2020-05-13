@@ -28,7 +28,7 @@ function fill_top_table(data,phantom) {
    var cur_table_data =  {  deaths: 0, conf_case: 0,  non_tracked_case: 0, not_infected: 0,  total_infected: 0  };
    var trend7_table_data =  {  deaths: 0, conf_case: 0,  non_tracked_case: 0, not_infected: 0,  total_infected: 0  };
    var trend14_table_data =  {  deaths: 0, conf_case: 0,  non_tracked_case: 0, not_infected: 0,  total_infected: 0  };
- 
+
    // Herd or 0
    if(!herd_7) {
       $('#7_day_date').text(data.trend_7.reach);
@@ -76,9 +76,8 @@ function fill_top_table(data,phantom) {
 
 
 // Create Main Top Sentence, compute herd immunity if necessary and fill the top of the page
-function create_top_page(data, phantom) {
-   var top_sentence = ""; 
-   var herd_immunity_info ;
+function create_top_page(data,   phantom, herd_tresh) {
+   var top_sentence = "";  
      
    if(data.trend_7['reach']!=-1 && data.trend_14['reach']!=-1) {
        // We reach 0 cases at one point 
@@ -102,9 +101,7 @@ function create_top_page(data, phantom) {
          } else { 
             top_sentence +=  "<span class='wn'>around "  + data.trend_7['reach']  + " </span>";
          }
-      }
-
-    
+      } 
 
    } else {
 
@@ -129,43 +126,39 @@ function create_top_page(data, phantom) {
 
       } else { 
 
-         //if(data.trend2['herd_reach_day'] < ) {
-
+         // Both are HERD
+ 
          
-         /*
-         
-         if(herd_immunity_info.trend_7.herd_immunity_date == herd_immunity_info.trend_14.herd_immunity_date) {
+         if(data.trend_7['herd_reach_date'] == data.trend_14['herd_reach_date']) {
             top_sentence = "Based on the latest trends,<br>" +  data.name;
             top_sentence += " could reach <span class='ugly_t'>herd immunity around"
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date) + "</span></span>.";
-         } else if( herd_immunity_info.trend_7.herd_immunity_date < herd_immunity_info.trend_14.herd_immunity_date ) {
+            top_sentence += " <span class='wn'>" +  dateFormatMITFromDate(data.trend_14['herd_reach_date']) + "</span></span>.";
+         } else if( data.trend_7['herd_reach_date'] < data.trend_14['herd_reach_date'] ) {
             top_sentence = "Based on the latest trends,<br>" +  data.name;
             top_sentence += " could reach <span class='ugly_t'>herd immunity between"
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_7.herd_immunity_date) + "</span> and ";
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date) + "</span>";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_7['herd_reach_date']) + "</span> and ";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_14['herd_reach_date']) + "</span>";
             top_sentence += "</span>.";
          } else {
             top_sentence = "Based on the latest trends,<br>" +  data.name;
             top_sentence += " could reach <span class='ugly_t'>herd immunity between"
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_14.herd_immunity_date) + "</span> and ";
-            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(herd_immunity_info.trend_7.herd_immunity_date) + "</span>";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_14['herd_reach_date']) + "</span> and ";
+            top_sentence += " <span class='wn'>" + dateFormatMITFromDate(data.trend_7['herd_reach_date'])  + "</span>";
             top_sentence += "</span>.";
-          }
-          */
+          } 
  
 
       } 
    }
 
    // Fill Top Table & Pies
-   fill_top_table(data, phantom);
+   fill_top_table(data, phantom, herd_tresh);
 
    // Create top Sentence
    $('#top_summary').html("<div id='sum_main'>"+top_sentence+"</div>"); 
  
 } 
 
-function createSummary(data) {
-  var phantom = 1/4;
-  create_top_page(data, phantom);
+function createSummary(data, phantom, herd_tresh) { 
+  create_top_page(data, phantom, herd_tresh);
 }

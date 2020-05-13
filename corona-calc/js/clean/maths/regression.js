@@ -1,5 +1,5 @@
 /**
- * Compute linear or 2th deg polynomial regresssion
+ * Compute linear  
  * start_day_minus =  the start day from the last item in xdata (ex: 7 or 14) - if -1 all the x_data are taken into account
  * endDate = whatever date you want so it doesn't end at xdata[lenght-1]
  */
