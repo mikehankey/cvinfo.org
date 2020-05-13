@@ -48,12 +48,84 @@ function display_group(result, data, color, type) {
    })
 }
 
+function display_sum_info(result,state) {
 
+   $('#sum_info_title, #sum_info, #graphs').show();
+   state_code = state
+   type = "sum_info"
+
+   full_name = "Avg New Cases Per Day for " + state
+   div_id = "sum_info_cases"
+
+   color = "red"
+   grp = result['sum_data']['group']
+   if (grp == 'bad') {
+      color = "orange"
+   }
+   if (grp == 'good') {
+      color = "green"
+   }
+
+
+   var xd = []
+   yd = result['sum_data']['avg']['cases']
+   for (i = 0; i < yd.length; i++) {
+      xd.push(i)
+   }
+   title_si_cases = "New Cases Per Day for " + state
+   title_si_deaths = "New Deaths Per Day for " + state
+   title_si_tests = "New Tests Per Day for " + state
+   title_si_tests_pos_perc = "Positive % of Tests " + state
+
+   document.getElementById("title_si_cases").innerHTML= title_si_cases;
+   document.getElementById("title_si_deaths").innerHTML= title_si_deaths;
+   document.getElementById("title_si_tests").innerHTML= title_si_tests;
+   document.getElementById("title_si_tests_pos_perc").innerHTML= title_si_tests_pos_perc;
+   plot_data_line(xd,yd,"days since first case","new cases per day",full_name, "sum_info_cases" ,"line",color);
+
+
+   var xd = []
+   yd = result['sum_data']['avg']['deaths']
+   for (i = 0; i < yd.length; i++) {
+      xd.push(i)
+   }
+   plot_data_line(xd,yd,"days since first case","new deaths per day",full_name, "sum_info_deaths" ,"line",color);
+
+   var xd = []
+   var yd = []
+   var yd_pp = []
+
+   yd1 = result['sum_data']['avg']['tests_pos']
+   yd2 = result['sum_data']['avg']['tests_neg']
+   for (i = 0; i < yd1.length; i++) {
+      yd.push(yd1[i] + yd2[i])
+      xd.push(i)
+      pp = 1 - (yd1[i]/(yd1[i] + yd2[i]))
+      yd_pp.push( pp*100)
+   }
+
+   plot_data_line(xd,yd,"days since first case","new tests per day",full_name, "sum_info_tests" ,"line",color);
+
+   plot_data_line(xd,yd_pp,"days since first case","new tests per day",full_name, "sum_info_tests_pos_perc" ,"line",color);
+
+}
 
 function make_gbu(result,state) { 
  
    // We select the state in the main selector 
    $('#state_selector').val(state);
+
+   if (state == "ALL") {
+      $('#sum_info_title').closest('.box').hide();
+      $('#sum_info_title, #sum_info').hide();
+   }
+   else {
+      //$('<div class="graph_c"><h3>'+full_name+'</h3><div id=sum_info_"' + state_code+'"></div></div>').appendTo($('#sum_info'));
+      display_sum_info(result,state)
+      // file summary info div when we are looking at a specific state
+      // for the summary show 3 graphs total cases in state, total deaths in state, total_tests in state
+
+   }
   
    if(Object.keys(result['groups']['good']).length<=0) {
       // No Good Result

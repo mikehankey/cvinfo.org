@@ -568,7 +568,42 @@ def cdc() :
    #plt.xlabel(x_lab)
    plt.show()
 
-def compare_state(st) :   
+def county_alerts():
+   state_names, state_codes = load_state_names()
+   alert_data = {}
+   alerts_final = {}
+   alerts = []
+   del state_names['VI']
+   i = 0
+   for st in state_names: 
+      sj = load_json_file("json/" + st + "-gbu.json")
+      for group in sj['groups']:
+         for county in sj['groups'][group]:
+            cd = sj['groups'][group][county]
+            if len(cd) > 7: 
+               cur_new_cases = cd[-1] 
+               last_new_cases = cd[-7] 
+               if last_new_cases > 0:
+                  perc = cur_new_cases / last_new_cases
+               else:
+                  perc = 0
+               if perc > 1.25 and cur_new_cases >= 10:
+                  print(i, st, county, cur_new_cases, last_new_cases, perc)
+                  alerts.append((st, county, cur_new_cases, last_new_cases, perc))
+                  key = st + "." + county 
+                  alert_data[key] = cd
+                  i += 1
+   data_sorted = sorted(alerts, key=lambda x: x[4], reverse=True)
+   for data in data_sorted:
+      (st, county, cur_new_cases, last_new_cases, perc) = data
+      loc = st + "." + county
+      alerts_final[loc] = {}
+      alerts_final[loc]['cases'] = alert_data[loc]
+      alerts_final[loc]['delta'] = perc
+      print(data)
+   save_json_file("json/alerts.json", alerts_final)
+
+def compare_state(st,state_sum_data) :   
    groups = {}
    groups['good'] = {}
    groups['bad'] = {}
@@ -610,6 +645,7 @@ def compare_state(st) :
 
    jdata = {}
    jdata['groups'] = groups
+   jdata['sum_data'] = state_sum_data
    save_json_file("json/" + st + "-gbu.json", jdata)
 
 def compare():
@@ -627,23 +663,59 @@ def compare():
    fp.write(js_states)
    fp.close()
 
+   sum_data = {}
+
    for st in state_names: 
       if st == 'VI':
          continue
       print("test report for " + st)
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
       rel_data[st] = []
+      sum_data[st] = {}
+      sum_data[st]['avg'] = {}
+      sum_data[st]['stats'] = {}
+      sum_data[st]['avg']['cases'] = []
+      sum_data[st]['avg']['deaths'] = []
+      sum_data[st]['avg']['tests_pos'] = []
+      sum_data[st]['avg']['tests_neg'] = []
+      sum_data[st]['stats']['cases'] = []
+      sum_data[st]['stats']['deaths'] = []
+      sum_data[st]['stats']['tests_pos'] = []
+      sum_data[st]['stats']['tests_neg'] = []
       stats = sd['state_stats']
       temp = []
+      temp_deaths = []
+      temp_tests_pos = []
+      temp_tests_neg = []
       max_val = 0
       for ss in stats:
          cases = ss['new_cases']
+         deaths = ss['new_deaths']
+         tests_pos = ss['tests_new_pos']
+         tests_neg = ss['tests_new_neg']
          temp.append(cases)
+         temp_deaths.append(deaths)
+         temp_tests_pos.append(tests_pos)
+         temp_tests_neg.append(tests_neg)
          if len(temp) < 7:
             avg = int(np.mean(temp))
+            avg_deaths = int(np.mean(temp_deaths))
+            avg_tests_pos = int(np.mean(temp_tests_pos))
+            avg_tests_neg = int(np.mean(temp_tests_neg))
          else: 
             avg = int(np.mean(temp[-7:]))
+            avg_deaths = int(np.mean(temp_deaths[-7:]))
+            avg_tests_pos = int(np.mean(temp_tests_pos[-7:]))
+            avg_tests_neg = int(np.mean(temp_tests_neg[-7:]))
          rel_data[st].append(avg)
+         sum_data[st]['avg']['cases'].append(avg)
+         sum_data[st]['avg']['deaths'].append(avg_deaths)
+         sum_data[st]['avg']['tests_pos'].append(avg_tests_pos)
+         sum_data[st]['avg']['tests_neg'].append(avg_tests_neg)
+         sum_data[st]['stats']['cases'].append(cases)
+         sum_data[st]['stats']['deaths'].append(deaths)
+         sum_data[st]['stats']['tests_pos'].append(tests_pos)
+         sum_data[st]['stats']['tests_neg'].append(tests_neg)
          if avg > max_val:
             max_val = avg
 
@@ -651,10 +723,13 @@ def compare():
       print(st, last_val_perc, rel_data[st])
       if last_val_perc >= .8 and avg > 5:
          groups['ugly'][st] = rel_data[st]
+         sum_data[st]['group'] = "ugly"
       elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'][st] = rel_data[st]
+         sum_data[st]['group'] = "bad"
       else:
          groups['good'][st] = rel_data[st]
+         sum_data[st]['group'] = "good"
       if False:
          fig = plt.figure()
          plt.plot(rel_data[st], '-')
@@ -665,14 +740,17 @@ def compare():
          #plt.show()
 
 
-      compare_state(st)
+      compare_state(st, sum_data[st])
    json_data = {}
    json_data['state_names'] = state_names
    json_data['groups'] = groups
+   #json_data['sum_data'] = sum_data 
    save_json_file("json/gbu-states.json", json_data)
      
 
 def tests() :
+   county_alerts()
+   exit()
    compare()
    #cdc()
    exit()
