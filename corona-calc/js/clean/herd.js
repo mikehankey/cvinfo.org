@@ -6,20 +6,15 @@ var max_day_to_compute = 365*5; // If it's in more than 5 years, we stop computi
 // if the data entered isn't valid
 function replace_invalid_data(name,value,type) {
    var cur_input_val = $('#'+name).val();
-   
+
+   if(cur_input_val == "" ) {
+      console.log("NAME ", name ,  " is empty");
+      $('#'+name).val(value);
+   } 
+
+   // Init value (yeah... each time not optimized)
    $('input[name=init_'+name+']').val(value);
 
-   if(type=="int") {
-      // If it's a new val entered by the user but it's a dumb number...
-      if(!((Number(cur_input_val) === cur_input_val && cur_input_val % 1 === 0) && parseInt(cur_input_val) != value)) {
-         $('#'+name).val(value);
-      }
-   } else if (type=="float") {
-      // If it's a new val entered by the user but it's a dumb number...
-      if(!((Number(cur_input_val) === cur_input_val && cur_input_val % 1 !== 0) && parseFloat(cur_input_val) != value)) {
-         $('#'+name).val(value);
-      }
-   }
 }
 
 
@@ -72,15 +67,14 @@ function update_explained() {
 // Warning, the name of this function is the same 
 // than for the main page - see the list of js included on indexV.html vs herd_immunity_calculator.html
 function new_display_data(result, state, county) {
-   
+
    if(county=="" || county=="ALL") {
       fill_data_for_state(result);
    } else {
       fill_data_for_county(result,county);
    }
 
-   update_explained();
-
+   update_explained(); // UI 
    compute_data_for_herd(state,county);
 }
 
@@ -152,12 +146,35 @@ function display_top_results(state,county,how_many_days_until_herd,deads,total_i
       top_sentence += " in more than five years.";
    } else {
       // Compute the end date form last date of data
-      last_day = "on " + new Date( new Date($('input[name=last_day_of_data]').val()));
+      last_day = new Date( new Date($('input[name=last_day_of_data]').val()));
       last_day.setDate(last_day.getDate() + how_many_days_until_herd); 
       
-      top_sentence += "<span class='wn'>"+dateFormatMITFromDate(last_day) + "</span></span>.";
+      top_sentence += "on <span class='wn'>"+dateFormatMITFromDate(last_day) + "</span></span>.";
    }
     
    $('#sum_main').html(top_sentence);
  
 }
+
+// Redefined change_state to reset the form
+function change_state() { 
+   cur_json_data = "";
+   cur_state = "";
+   cur_county = "";
+   $("#county_select").html(""); 
+   $('input').val('');
+   load_data();
+}
+// Redefined change_county to reset the form
+function change_county() {  
+   show_loader(false); 
+   $('input').val('');
+   setTimeout(function() {load_data();},150);
+}
+
+
+$(function() {
+
+      $('#reset').unbind('click').click(function() {});
+
+});
