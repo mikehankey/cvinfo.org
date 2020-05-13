@@ -22,11 +22,13 @@ function replace_invalid_data(name,value,type) {
 // if they don't correspond to the initial value and they aren't valid
 function fill_data_for_state(data) {
   replace_invalid_data("pop",data.summary_info.state_population*1000000,"int");
-  replace_invalid_data("total_infected",data.summary_info.cases,"int"); 
   replace_invalid_data("new_case_growth_per_day",parseFloat(data.summary_info.cg_last)<=1?5:data.summary_info.cg_last,"float");
   replace_invalid_data("mortality_rate",parseFloat(data.summary_info.mortality)<=.5?2:data.summary_info.mortality,"float");
   replace_invalid_data("non_tracked_factor",default_non_tracked_factor,"float");
   replace_invalid_data("herd_immunity_threshold",default_herd_immunity_treshold,"float");
+
+  
+  replace_invalid_data("total_infected",parseInt(data.summary_info.cases)+parseInt(data.summary_info.cases)*$('#non_tracked_factor').val(),"int"); 
 
   $('input[name=last_day_of_data]').val(dateFormat(data.summary_info.state_data_last_updated));  
   $('input[name=current_dead]').val(data.summary_info.deaths);
@@ -42,16 +44,15 @@ function fill_data_for_county(data,county) {
    replace_invalid_data("pop",count_stats.population,"int");
 
    count_stats = data.county_stats[county].county_stats[data.county_stats[county].county_stats.length-1];
+  
 
-   console.log("case_growth ", )
-   console.log(parseFloat(count_stats.case_growth)<=1?5:data.summary_info.cg_last);
-
-   replace_invalid_data("total_infected",count_stats.cases,"int");
    //replace_invalid_data("new_case_per_day",count_stats.new_cases,"int");
    replace_invalid_data("new_case_growth_per_day",parseFloat(count_stats.case_growth)<=1?5:count_stats.case_growth,"float");
    replace_invalid_data("mortality_rate",parseFloat(count_stats.mortality)<=.5?2:count_stats.mortality,"float");
    replace_invalid_data("non_tracked_factor",default_non_tracked_factor,"float");
    replace_invalid_data("herd_immunity_threshold",default_herd_immunity_treshold,"float");
+
+   replace_invalid_data("total_infected",parseInt(count_stats.cases)+parseInt(count_stats.cases)*parseFloat($('#non_tracked_factor').val()),"int");
 
    $('input[name=last_day_of_data]').val(count_stats.day);  
    $('input[name=current_dead]').val(count_stats.deaths);
@@ -89,7 +90,7 @@ function compute_data_for_herd(state,county) {
 
    var deads                     = parseInt($('input[name=current_dead]').val());
    var pop                       = parseInt($('#pop').val());
-   var total_infected            = parseInt($('#total_infected').val());
+   var total_infected            = parseInt($('#total_infected').val())*parseFloat($('#non_tracked_factor').val());
    //var new_case_per_day          = parseInt($('#new_case_per_day').val());
    var new_case_growth_per_day   = parseFloat($('#new_case_growth_per_day').val());
    var mortality_rate            = parseFloat($('#mortality_rate').val());
@@ -106,7 +107,7 @@ function compute_data_for_herd(state,county) {
       // Newly infected based on growth per day
       total_infected += new_day_cases;  
  
-      non_tracked = total_infected *non_tracked_factor;
+      non_tracked = total_infected * non_tracked_factor;
        
       // Total deaths
       deads = total_infected * (mortality_rate/100);
@@ -116,7 +117,7 @@ function compute_data_for_herd(state,county) {
       
       if(impacted >= herd_immunity_threshold || how_many_days_until_herd >  max_day_to_compute) {
          herd_met = true;
-      }
+      } 
 
       how_many_days_until_herd++;
  
@@ -131,6 +132,7 @@ function compute_data_for_herd(state,county) {
 function display_top_results(state,county,how_many_days_until_herd,deads,total_infected) {
    var top_sentence = "Based on the current data,<br><span class='ugly_t'>";
    var last_day, tbody= "";
+   var county = false;
 
    var start_deads                     = parseInt($('input[name=current_dead]').val());
    var start_pop                       = parseInt($('#pop').val());
@@ -146,8 +148,9 @@ function display_top_results(state,county,how_many_days_until_herd,deads,total_i
    increase = start_deads>0? usFormat(parseInt(( ( deads - start_deads ) / start_deads ) * 100)) + "%":"n/a";
 
    if(county == "" || county == "ALL") {
-      top_sentence += $('#state_selector option:selected').text();
+         top_sentence += $('#state_selector option:selected').text();
    } else {
+      county = true;
       if(county.indexOf("city") !== -1) {
          top_sentence+= county ;
       } else {
@@ -170,7 +173,12 @@ function display_top_results(state,county,how_many_days_until_herd,deads,total_i
 
    if(increase !== "n/a")  {
       top_sentence += "<br/>The total cost of herd immunity would be ";
-      top_sentence += "<span class='ugly_t'>" + usFormat(parseInt(deads)) + " deaths </span>.";
+      top_sentence += "<span class='ugly_t'>" + usFormat(parseInt(deads)) + " deaths </span>";
+      if(county) {
+         top_sentence += " in the county.";
+      } else {
+         top_sentence += " in the state.";
+      }
    }
   
 
@@ -184,8 +192,10 @@ function display_top_results(state,county,how_many_days_until_herd,deads,total_i
       increase = start_total_infected>0? usFormat(parseInt(( ( total_infected - start_total_infected ) / start_total_infected ) * 100)) + "%":"n/a";
    }
 
+   // " ("+  (deads/start_pop*100).toFixed(2) +"% of the population of the " + (county?"county":"state") + ")
+
    tbody = "<tr><th>Total Dead</th><td>"+usFormat(start_deads)+"</td>\
-                                   <td>"+usFormat(parseInt(deads))+"</td>\
+                                   <td>"+usFormat(parseInt(deads))+ "</td>\
                                    <td rowspan='2'><strong class='ugly_t'>+"+  increase  +"</strong></td>\
                                    </tr>";
    tbody += "<tr><th>Total Infected</th><td>"+usFormat(start_total_infected)+"</td>\
