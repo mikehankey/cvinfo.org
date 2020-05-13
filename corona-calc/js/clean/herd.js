@@ -151,6 +151,10 @@ function display_top_results(state,county,how_many_days_until_herd,deads,total_i
       
       top_sentence += "on <span class='wn'>"+dateFormatMITFromDate(last_day) + "</span></span>.";
    }
+
+   top_sentence += "<br/>The total cost of herd immunity would be ";
+   top_sentence += "<span class='ugly_t'>" + usFormat(parseInt(deads)) + " deaths </span>.";
+
     
    $('#sum_main').html(top_sentence);
  
