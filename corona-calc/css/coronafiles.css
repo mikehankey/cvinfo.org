@@ -339,6 +339,19 @@ p.to {
    background: #f0f0f0;
 }
 
+#recalc_form.lg {
+   max-width: 1000px;
+}
+
+#recalc_form.lg .form-group  {
+   margin-left: 1rem;
+}
+
+#recalc_form.lg label {
+   width:29rem;
+}
+
+
 .form-group {
    margin-bottom: 1rem;
    margin-left: 8rem;
@@ -355,11 +368,19 @@ p.to {
    font-weight: bold;
 }
 
+.form-group label.no_e {
+   line-height: calc(1.5em + .75rem + 2px);
+}
+
 .form-group label span {
    font-weight: normal;
    font-size: .85rem;
    display: block;
    line-height: 1.85;
+}
+
+.form-group label span.explained {
+   display: inline;
 }
 
 .form-group .form-input {
@@ -384,6 +405,12 @@ input, .group span {
    word-wrap: normal;
    margin-bottom: .2rem;
 }
+
+/*
+input.lg {
+   width: 13.5rem;
+}
+*/
 
 .group {
    display: -ms-flexbox;
