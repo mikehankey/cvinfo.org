@@ -7,8 +7,7 @@ var max_day_to_compute = 365*5;          // If it's in more than 5 years, we sto
 function replace_invalid_data(name,value,type) {
    var cur_input_val = $('#'+name).val();
 
-   if(cur_input_val == "" ) {
-      console.log("NAME ", name ,  " is empty");
+   if(cur_input_val == "" || $('input[name=init_'+name+']').val() != value ) {
       $('#'+name).val(value);
    } 
 
@@ -21,13 +20,14 @@ function replace_invalid_data(name,value,type) {
 // Fill the values on the form 
 // if they don't correspond to the initial value and they aren't valid
 function fill_data_for_state(data) {
+
   replace_invalid_data("pop",data.summary_info.state_population*1000000,"int");
+
   replace_invalid_data("new_case_growth_per_day",parseFloat(data.summary_info.cg_last)<=1?5:data.summary_info.cg_last,"float");
   replace_invalid_data("mortality_rate",parseFloat(data.summary_info.mortality)<=.5?2:data.summary_info.mortality,"float");
   replace_invalid_data("non_tracked_factor",default_non_tracked_factor,"float");
   replace_invalid_data("herd_immunity_threshold",default_herd_immunity_treshold,"float");
 
-  
   replace_invalid_data("total_infected",parseInt(data.summary_info.cases)+parseInt(data.summary_info.cases)*$('#non_tracked_factor').val(),"int"); 
 
   $('input[name=last_day_of_data]').val(dateFormat(data.summary_info.state_data_last_updated));  
@@ -44,14 +44,12 @@ function fill_data_for_county(data,county) {
    replace_invalid_data("pop",count_stats.population,"int");
 
    count_stats = data.county_stats[county].county_stats[data.county_stats[county].county_stats.length-1];
-  
-
+   
    //replace_invalid_data("new_case_per_day",count_stats.new_cases,"int");
    replace_invalid_data("new_case_growth_per_day",parseFloat(count_stats.case_growth)<=1?5:count_stats.case_growth,"float");
    replace_invalid_data("mortality_rate",parseFloat(count_stats.mortality)<=.5?2:count_stats.mortality,"float");
    replace_invalid_data("non_tracked_factor",default_non_tracked_factor,"float");
    replace_invalid_data("herd_immunity_threshold",default_herd_immunity_treshold,"float");
-
    replace_invalid_data("total_infected",parseInt(count_stats.cases)+parseInt(count_stats.cases)*parseFloat($('#non_tracked_factor').val()),"int");
 
    $('input[name=last_day_of_data]').val(count_stats.day);  
