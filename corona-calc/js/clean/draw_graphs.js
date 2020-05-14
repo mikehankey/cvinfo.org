@@ -189,3 +189,76 @@ function draw_graph(data,option) {
    $('#'+data.el_title).html("<h3>"+data.title +"</h3>" + data.add_info);
 
 }
+
+
+
+
+
+
+
+
+/**
+ * Draw standard graph for herd
+ * @param {*} data 
+ */
+function draw_graph_herd(data ) {
+   var all_set = [];
+
+   // MAX for Y AXIS
+   var maxY = 1.25*( Math.max.apply(null,data.y1));
+ 
+  
+   dataSet1 = {
+      x: data.x1,
+      y: data.y1,
+      type: "bar", 
+      name: data.title1
+   };
+
+   dataSet2 = {
+      x: data.x2,
+      y: data.y2,
+      type: "bar",
+      name: data.title2
+   };
+
+   dataSet3 = {
+      x: data.x3,
+      y: data.y3,
+      type: "bar",
+      name: data.title3
+   };
+  
+   var layout = { 
+      margin: {"t": 80, "b": 80, "l": 50, "r": 10},
+      showlegend: true,
+      legend: { orientation: "h" },
+      barmode: 'stack',
+      title: data.title,
+      yaxis: {
+         tickformat: '%',
+         range: [0,1]
+      },
+      shapes : [{ 
+         type: 'line',
+         x0: data.x1[0],
+         y0: data.threshold,
+         x1: data.x1[data.x1.length-1],
+         yref: 'paper',
+         y1:  data.threshold,
+         line: {
+            color: 'grey',
+            width: 1.5,
+            dash: 'dot'
+         }
+      }]
+   }; 
+
+   all_set = [dataSet1, dataSet2, dataSet3];
+
+   Plotly.newPlot(data.el, all_set, layout);
+   
+   // Add more info 
+   $('#'+data.el_title).html("<h3>"+data.title +"</h3>");
+
+}

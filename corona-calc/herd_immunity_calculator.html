@@ -81,12 +81,12 @@
                   </tbody>
                </table>  
 
-               <p>* Only COVID-19 deaths are taken into account for the decline of the population.</p>
+               <!--<p>* Only COVID-19 deaths are taken into account for the decline of the population.</p>-->
 
-               <div class="clearfix">
+               <div class="clearfix" style="max-width: 880px; margin: 2rem auto">
                      <div class="pie_chart"><div class="inout"><div id="current_pie" style="height:250px"></div></div><div class="leg"></div></div>
                      <div class="pie_chart"><div class="inout"><div id="end_pie" style="height:250px"></div></div><div class="leg"></div></div>
-                  </div>
+               </div>
 
         
 
@@ -144,7 +144,7 @@
                -->
                <div class="form-group clearfix">
                   <label for="new_case_growth_per_day">New Cases growth per day 
-                        <span>% of the population who will be newly infected each day</span></label>
+                        <span>Daily % growth of infected people</span></label>
                   <div class="form-input"> 
                      <div class="group">
                         <input type="number" id="new_case_growth_per_day" />
@@ -180,6 +180,14 @@
                <p>* No scientific study has shown yet if individuals can become immune by recovering from an earlier infection of COVID-19.</p>
             </div>
          </div>
+
+
+         <div id="std"><h3>Detail Graphs</h3></div>
+         <div class="box">
+            <div id="perc"></div>
+            <div id="perc_graph"></div>
+         </div>
+
     </div>
   
    <div id="soc">
