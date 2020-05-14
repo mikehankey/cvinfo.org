@@ -157,8 +157,8 @@ function compute_data_for_herd(state,county,name_to_display) {
       deads: [start_data.deads/start_data.pop]
    } 
 
-   /*
-      var max_non_tracked_factor_1 = 0;
+   
+   var max_non_tracked_factor_1 = 0;
    var max_non_tracked_factor_2 = 0;
    // Test if the current non-tracked factor is too high and we go beyond the current total population
    if(    start_data.non_tracked_infected > start_data.pop 
@@ -181,8 +181,7 @@ function compute_data_for_herd(state,county,name_to_display) {
        });
 
       return false;
-   }
-   */
+   } 
     
    while(!herd_met) {
       
@@ -217,7 +216,7 @@ function compute_data_for_herd(state,county,name_to_display) {
       // pop = pop - deads; 
    }
 
-   not_infected = pop - total_infected;
+   not_infected = pop - total_infected - non_tracked - deads;
 
    end_data = {
       deads:                  deads,
@@ -299,7 +298,7 @@ function fill_top_table(herd_immunity_reached_day,start_data,end_data) {
                <td>"+usFormat(parseInt(end_data.not_infected))+"</td>\
                <td>"+perc_not_infected_end.toFixed(2)+"%</td></tr>";
    
-   
+   /*
    tbody += "<tr><th>Non-Infected people</th>\
                <td>"+usFormat(parseInt(start_data.not_infected))+"</td>\
                <td>"+perc_not_infected_start.toFixed(2)+"%</td>\
