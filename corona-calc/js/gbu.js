@@ -8,12 +8,13 @@ function display_group(result, data, color, type) {
 
       if(state_code !== "Unknown") {
             // Y data
-            yd = values;
-
+            yd = values['avg_cases'];
+            yd2 = values['cases'];
+            xd = values['days'];
             // X data
-            xd = [];
+            xdd = [];
             for (i = 0; i <= yd.length; i++) {
-               xd.push(i);
+               xdd.push(i);
             } 
 
             // Full Name (for states)
@@ -101,6 +102,9 @@ function display_sum_info(result,state) {
       yd.push(yd1[i] + yd2[i])
       xd.push(i)
       pp = 1 - (yd1[i]/(yd1[i] + yd2[i]))
+      if (pp >= .5 && state != 'NJ' && state != 'NY') {
+         pp = 0
+      }
       yd_pp.push( pp*100)
    }
 
@@ -240,5 +244,60 @@ function gbuInit(url,state) {
          window.location.href = "gbu.html?" + $(this).val();
       }
    });   
+}
+
+function make_alerts(result ) {
+
+   var row_count = Object.keys(result).length
+   alert_count = row_count + " Counties Matching Criteria"
+   document.getElementById("alert_count").innerHTML= alert_count;
+
+   $.each(result,function(key, values){   
+      yd = values['avg_cases']
+      yd2 = values['cases']
+      xdd = values['days']
+      delta = values['delta']
+      delta14 = values['delta14']
+      xd = []
+      for (i = 0; i <= yd.length; i++) {
+         xd.push(i)
+      }
+      // Create the DIV
+      temp = key.split(":")
+      st =temp[0]
+      ct =temp[1]
+      full_name = ct + ", " + st 
+      dtxt = " &Delta;7-Day: " + delta.toString() + "<br> &Delta;14-Day: " + delta14.toString() 
+      state_code = key 
+      color = "red"
+      type = "ugly"
+      $('#ugly_title, #ugly, #graphs').show();
+
+      $('<div class="graph_c"><h3>'+full_name+'</h3><p>' + dtxt + '</p><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
+
+      // Plot Graph
+      plot_data_line(xdd,yd,"days since first case","new cases per day",full_name, state_code,"line",color);
+
+
+   })
+}
+
+function alertsInit(url) {
+   show_gbu_loader();
+   $.ajax({
+      type: "get",
+      url:  url,
+      dataType: "json",
+
+      success: function (result, status, xhr) {
+         make_alerts(result);
+         hide_gbu_loader();
+      },
+      error: function (xhr, status, error) {
+         alert("Result: " + status + " " + error + " " + xhr.status + " " + xhr.statusText)
+         hide_gbu_loader();
+      }
+   });
+
 }
 
