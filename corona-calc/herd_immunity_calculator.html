@@ -74,7 +74,7 @@
                      <tr>
                         <th></th>
                         <th colspan="2">Current</th>
-                        <th colspan="2">When Herd Immunity is reached<br/><span><span id="day_end"></span></span></th>
+                        <th colspan="2">When Herd Immunity is reached<br/><span><span class="day_end"></span></span></th>
                      </tr>
                   </thead>
                   <tbody>
@@ -82,6 +82,13 @@
                </table>  
 
                <p>* Only COVID-19 deaths are taken into account for the decline of the population.</p>
+
+               <div class="clearfix">
+                     <div class="pie_chart"><div class="inout"><div id="current_pie" style="height:250px"></div></div><div class="leg"></div></div>
+                     <div class="pie_chart"><div class="inout"><div id="end_pie" style="height:250px"></div></div><div class="leg"></div></div>
+                  </div>
+
+        
 
             <div id="recalc_form" class="lg">
              
@@ -111,8 +118,7 @@
                            <span id="total_infected_val" class="dval"></span>
                         </div>
                   </div>
-                  
-                  
+                   
                   <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 2rem 3rem 1.5rem; padding: 0;"/>
                </div>
                <p class="to">Adjust the variable below to obtain a new prediction.</p>

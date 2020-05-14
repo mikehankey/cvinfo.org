@@ -184,7 +184,7 @@ function fill_top_table(herd_immunity_reached_day,start_data,end_data) {
    perc_not_infected_end = perc_not_infected_start;
   
    // Date on table head
-   $("#day_end").text('on ' + dateFormatMITFromDate(herd_immunity_reached_day) );
+   $(".day_end").text('on ' + dateFormatMITFromDate(herd_immunity_reached_day) );
 
    temp_per_start = parseFloat(start_data.deads*100/start_data.pop).toFixed(2);
    temp_per_end = parseFloat(end_data.deads*100/end_data.pop).toFixed(2);
@@ -274,8 +274,14 @@ function fill_top_sentence(state,county,herd_immunity_reached_day,end_data) {
    }
 
    $('#sum_main').html(top_sentence);
+}
 
- 
+
+function create_pies(start_data,end_data,herd_immunity_reached_day) {
+   var pie_lb = [ 'Not Infected', 'Infected', 'Confirmed Cases', 'Deaths'];
+   plot_pie([start_data.not_infected, start_data.non_tracked_infected, start_data.total_infected,  start_data.deads],pie_lb,"Current","current_pie");
+   plot_pie([end_data.not_infected, end_data.non_tracked_infected, end_data.total_infected,  end_data.deads],pie_lb,"On " + dateFormatMITFromDate(herd_immunity_reached_day),"end_pie");
+
 }
 
 function display_top_results(state,county,how_many_days_until_herd,start_data,end_data) {
@@ -285,8 +291,10 @@ function display_top_results(state,county,how_many_days_until_herd,start_data,en
 
    fill_top_table(herd_immunity_reached_day,start_data,end_data);
    fill_top_sentence(state,county,herd_immunity_reached_day,end_data);
+   create_pies(start_data,end_data,herd_immunity_reached_day);
+     
+   
  
-      
  
 }
 
