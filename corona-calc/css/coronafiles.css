@@ -368,7 +368,7 @@ p.to {
    font-weight: bold;
 }
 
-.form-group label.no_e {
+.form-group label.no_e, .dval {
    line-height: calc(1.5em + .75rem + 2px);
 }
 
@@ -411,6 +411,7 @@ input.lg {
    width: 13.5rem;
 }
 */
+
 
 .group {
    display: -ms-flexbox;
