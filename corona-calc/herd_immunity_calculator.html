@@ -73,16 +73,18 @@
                   <thead>
                      <tr>
                         <th></th>
-                        <th>Current</th>
-                        <th>When Herd Immunity is reached<br/><span><span id="day_end"></span></span></th>
-                        <th>Increase</th>
+                        <th colspan="2">Current</th>
+                        <th colspan="2">When Herd Immunity is reached<br/><span><span id="day_end"></span></span></th>
                      </tr>
                   </thead>
                   <tbody>
                   </tbody>
                </table>  
+
+               <p>* Only COVID-19 deaths are taken into account for the decline of the population.</p>
+
             <div id="recalc_form" class="lg">
-               <p class="to">Adjust the variable below to obtain a new prediction.</p>
+             
                <input type="hidden" name="init_pop"/>
                <input type="hidden" name="init_total_infected"/>
                <input type="hidden" name="init_new_case_per_day"/>
@@ -94,18 +96,38 @@
                <input type="hidden" name="current_dead"/>
                <input type="hidden" name="last_day_of_data"/>
 
-               <div class="form-group clearfix">
-                     <label for="pop" class="no_e">Population</label>
-                     <div class="form-input">
-                        <input type="number" id="pop" value="" class="lg" disabled/>
-                     </div>
+               <div  style="display:none">
+                  <div class="form-group clearfix">
+                        <label for="pop" class="no_e">Current Population</label>
+                        <div class="form-input">
+                           <input type="number" id="pop" value="" class="lg" disabled style="display: none"/>
+                           <span id="pop_val" class="dval"></span>
+                        </div>
+                  </div>
+                  <div class="form-group clearfix">
+                        <label for="total_infected" class="no_e">Total Current Confirmed Infected people</label>
+                        <div class="form-input"> 
+                           <input type="number" id="total_infected" value="" disabled style="display: none"/>  
+                           <span id="total_infected_val" class="dval"></span>
+                        </div>
+                  </div>
+                  
+                  
+                  <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 2rem 3rem 1.5rem; padding: 0;"/>
                </div>
-               <div class="form-group clearfix">
-                     <label for="total_infected" class="no_e">Total Current Infected people</label>
+               <p class="to">Adjust the variable below to obtain a new prediction.</p>
+
+                  <div class="form-group clearfix">
+                     <label for="non_tracked_factor">Non-tracked Factor  
+                     <span>For each confirmed case, there are <span class="explained"></span> non-tracked cases.</span></label>
                      <div class="form-input"> 
-                           <input type="number" id="total_infected" value="" disabled />  
+                        <div class="group">
+                           <input type="number" id="non_tracked_factor" /> 
+                        </div>
                      </div>
-               </div>
+                  </div>  
+               
+               
                <!--
                <div class="form-group clearfix">
                   <label for="new_case_per_day" class="no_e">New Confirmed Cases per day</label>
@@ -116,7 +138,7 @@
                -->
                <div class="form-group clearfix">
                   <label for="new_case_growth_per_day">New Cases growth per day 
-                        <span>% of the population who will be newly infected each deay</span></label>
+                        <span>% of the population who will be newly infected each day</span></label>
                   <div class="form-input"> 
                      <div class="group">
                         <input type="number" id="new_case_growth_per_day" />
@@ -134,15 +156,7 @@
                      </div>
                   </div>
                </div> 
-               <div class="form-group clearfix">
-                  <label for="non_tracked_factor">Non-tracked Factor  
-                  <span>For each confirmed case, there are <span class="explained"></span> non-tracked cases.</span></label>
-                  <div class="form-input"> 
-                     <div class="group">
-                        <input type="number" id="non_tracked_factor" /> 
-                     </div>
-                  </div>
-               </div>  
+              
                <div class="form-group clearfix">
                   <label for="herd_immunity_threshold">Herd Immunity Threshold  
                   <span><span class="explained"></span>% of the population needed to be immune to protect everybody*.</span></label>
