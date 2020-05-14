@@ -64,7 +64,7 @@
       <div id="county_select"></div> 
       <div id="loader" ><img src="./img/loader.gif"/>Loading...</div>
 
-      <div id="forecast_container" > <!-- style="visibility:hidden" -->
+      <div id="forecast_container" style="visibility:hidden" >  
  
          <div class="box">
 
@@ -80,12 +80,11 @@
                   <tbody>
                   </tbody>
                </table>  
-
-               <!--<p>* Only COVID-19 deaths are taken into account for the decline of the population.</p>-->
+ 
 
                <div class="clearfix" style="max-width: 880px; margin: 2rem auto">
-                     <div class="pie_chart"><div class="inout"><div id="current_pie" style="height:250px"></div></div><div class="leg"></div></div>
-                     <div class="pie_chart"><div class="inout"><div id="end_pie" style="height:250px"></div></div><div class="leg"></div></div>
+                     <div class="pie_chart"><div class="inout"><div id="current_pie" class="pig_e" style="height:250px"></div></div><div class="leg"></div></div>
+                     <div class="pie_chart"><div class="inout"><div id="end_pie" class="pig_e" style="height:250px"></div></div><div class="leg"></div></div>
                </div>
 
         
@@ -177,7 +176,7 @@
                <button id="recalculate">Calculate</button>
                <button id="reset_herd" class="btn">Reset</button>
 
-               <p>* No scientific study has shown yet if individuals can become immune by recovering from an earlier infection of COVID-19.</p>
+               <p>* <b>No scientific study has shown yet if individuals can become immune by recovering from an earlier infection of COVID-19.</b></p>
             </div>
          </div>
 

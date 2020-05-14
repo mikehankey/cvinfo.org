@@ -2,6 +2,14 @@ var default_non_tracked_factor = 4;
 var default_herd_immunity_treshold = 70; // % of the population
 var max_day_to_compute = 365*5;          // If it's in more than 5 years, we stop computing
 
+
+// Utils for date
+Date.prototype.addDays = function(days) {
+   var date = new Date(this.valueOf());
+   date.setDate(date.getDate() + days);
+   return date;
+}
+
 // Replace the value in the form by the default value 
 // if the user didn't enter specific data
 function fill_values(name,value) {
@@ -62,7 +70,6 @@ function fill_data_for_county(data,county) {
    $('#total_infected_val').text(usFormat(count_stats.cases));
 
    fill_values("non_tracked_factor",default_non_tracked_factor);
-  
    
    // Case Growth (if<=1, we put 2)
    fill_values("new_case_growth_per_day",parseFloat(count_stats.case_growth)<=1?2:count_stats.case_growth);
@@ -139,6 +146,18 @@ function compute_data_for_herd(state,county,name_to_display) {
                                  -parseInt($('#total_infected').val())
                                  -(parseInt($('#total_infected').val())*parseFloat($('#non_tracked_factor').val()))
    }; 
+
+   // Validate the start_data
+   if(start_data.new_case_growth_per_day<=0 || start_data.new_case_growth_per_day>50) {
+      swal({
+         title: "WRONG DATA",
+         text: "Please, enter a realistic New Cases growth per day (between 0.1% and 50%)",
+         icon: "error", 
+         dangerMode: true,
+       });
+       return false;
+   }
+
  
    var end_data = {}; 
    var new_day_cases = start_data.total_infected;
@@ -160,6 +179,7 @@ function compute_data_for_herd(state,county,name_to_display) {
    
    var max_non_tracked_factor_1 = 0;
    var max_non_tracked_factor_2 = 0;
+
    // Test if the current non-tracked factor is too high and we go beyond the current total population
    if(    start_data.non_tracked_infected > start_data.pop 
       || (start_data.non_tracked_infected+start_data.total_infected)>start_data.pop 
@@ -172,11 +192,11 @@ function compute_data_for_herd(state,county,name_to_display) {
       max_non_tracked_factor_1 = Math.min(max_non_tracked_factor_1,max_non_tracked_factor_2);
 
       swal({
-         title: "WARNING",
+         title: "WRONG DATA",
          text: "The maximum possibly value for the non-tracked factor in " + name_to_display + " is " +  max_non_tracked_factor_1.toFixed(2)+ ".\
                If the non-tracked is " +  max_non_tracked_factor_1.toFixed(2)+ " it means 100% of the population is already infected.\
                Since new cases are still being added, this value is not possible.\n\nPlease lower the non-tracked factor.",
-         icon: "warning", 
+         icon: "error", 
          dangerMode: true,
        });
 
@@ -204,8 +224,18 @@ function compute_data_for_herd(state,county,name_to_display) {
       
       // % of the pop impacted
       impacted = ((total_infected + non_tracked + deads)/pop)*100;
- 
-      
+
+      if(impacted>100) {
+         swal({
+            title: "WRONG DATA",
+            text: "The current data you entered don't allow us to compute a realistic herd immunity date.",
+            icon: "error", 
+            dangerMode: true,
+          });
+   
+         return false;
+      }
+  
       if(impacted >= start_data.herd_immunity_threshold || how_many_days_until_herd >  max_day_to_compute) {
          herd_met = true;
       } else {
@@ -227,6 +257,8 @@ function compute_data_for_herd(state,county,name_to_display) {
    }
 
    display_top_results(state,county,how_many_days_until_herd,start_data,end_data,name_to_display, graph_data_y);
+
+ 
  
 }
 
@@ -324,7 +356,12 @@ function fill_top_sentence(state,county,herd_immunity_reached_day,end_data,name_
    top_sentence += " could reach herd immunity on <span class='wn'>"+dateFormatMITFromDate(herd_immunity_reached_day) + "</span></span>.";
    top_sentence += "<br/>And it could cost <span class='ugly_t'>" + usFormat(parseInt(end_data.deads)) + " deaths </span>";
    if(county !== "" && county !== "ALL") {
-      top_sentence += " in the county.";
+      if(name_to_display.toLowerCase().indexOf("city")!==-1) {
+         top_sentence += " in the city.";
+      } else {
+         top_sentence += " in the county.";
+      }
+     
    } else {
       top_sentence += " in the state.";
    }
@@ -340,18 +377,13 @@ function create_pies(start_data,end_data,herd_immunity_reached_day) {
 
 }
 
-Date.prototype.addDays = function(days) {
-   var date = new Date(this.valueOf());
-   date.setDate(date.getDate() + days);
-   return date;
-}
+
 
 function display_top_results(state,county,how_many_days_until_herd,start_data,end_data, name_to_display, graph_data_y) {
    // We compute the herd_immunity day
    var herd_immunity_reached_day_start = new Date($('input[name=last_day_of_data]').val());
    var herd_immunity_reached_day; 
-   herd_immunity_reached_day_start.setDate(herd_immunity_reached_day_start.getDate() + how_many_days_until_herd); 
-   herd_immunity_reached_day =  herd_immunity_reached_day_start;
+   herd_immunity_reached_day =  herd_immunity_reached_day_start.addDays(how_many_days_until_herd);
 
 
    herd_immunity_reached_day_start = new Date($('input[name=last_day_of_data]').val());
@@ -384,8 +416,8 @@ function display_top_results(state,county,how_many_days_until_herd,start_data,en
       title: "<b>" + name_to_display + " % of COVID-19 Cases</b>",
       threshold: start_data.herd_immunity_threshold/100,
 
-      el: 'perc',
-      el_title: 'perc_graph' 
+      el: 'perc_graph',
+      el_title: 'perc' 
    });
    
     
@@ -397,13 +429,14 @@ function change_state() {
    cur_json_data = "";
    cur_state = "";
    cur_county = "";
-   $("#county_select").html(""); 
+   $("#county_select, .pie_chart h3, .pig_e").html(""); 
    $('input').val('');
    load_data();
 }
 // Redefined change_county to reset the form
 function change_county() {  
    show_loader(false); 
+   $(".inout h3, .pie_chart h3,  .pig_e").html(""); 
    $('input').val('');
    setTimeout(function() {load_data();},150);
 }
