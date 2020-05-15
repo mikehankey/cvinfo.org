@@ -148,8 +148,16 @@
          var temp = decodeURIComponent(window.location.href).split("?");
          $('#low_cases_title, #low_cases').hide();
          if (temp.length > 1) {
+            
+            temp[1] = temp[1].replace(/=/g, "")
             if (temp[1].length != 2) {
+               if (temp[1].includes("&")) {
+                  xxx = temp[1].split("&")
+                  temp[1] = xxx[0]
+                  gbuInit("../json/" + temp[1] + "-gbu.json", temp[1]);
+               } else {
                gbuInit("../json/gbu-states.json", "ALL");
+               }
             }  else {
                if (temp[1].includes("&")) {
                   xxx = temp[1].split("&")

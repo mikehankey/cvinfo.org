@@ -659,6 +659,64 @@ def county_alerts():
    save_json_file("json/hotspots.json", hot_final)
  
 
+def compute_herd_immunity(state, county, pop, cases, phantom, growth, mortality , thresh): 
+   herd_met = 0
+   total_cases = cases
+   new_cases = 0
+   herd_days = 0
+   while (herd_met == 0) :
+      new_cases = int(total_cases * growth)
+      total_cases += new_cases
+      not_tracked = int(total_cases * phantom)
+      dead = int(total_cases * (mortality/100))
+      impacted = total_cases + not_tracked + dead
+      iperc = impacted / pop
+      not_infected = pop - impacted 
+      if iperc > thresh:
+         herd_met = 1
+      herd_days += 1
+   print("HERD MET WITH THESE VALUES FOR ", state,county )
+   print("Pop:                     ", pop)
+   print("Day:                     ", herd_days)
+   print("Dead:                    ", int(dead))
+   print("Dead %:                  ", round(dead / pop,5) * 100)
+   print("Case Mortality %:        ", mortality )
+   true_mortality = (dead / impacted) * 100
+
+   print("True Mortality %:        ", round(true_mortality,5))
+   print("Cases:                   ", int(total_cases))
+   print("Not-Tracked:             ", int(not_tracked))
+   print("Not-Infected:            ", int(not_infected))
+   return(herd_days, dead, round(dead / pop,5) * 100, true_mortality, cases, not_tracked, not_infected) 
+
+def herd_master():
+   state_names, state_codes = load_state_names()
+   del state_names['VI']
+   tm4 = []
+   tm9 = []
+   for st in state_names:
+      sd = load_json_file(JSON_PATH + "/" + st + ".json") 
+      cases = sd['summary_info']['cases']
+      mortality = sd['summary_info']['mortality']
+      pop = sd['summary_info']['state_population'] * 1000000
+      print(st, cases, mortality, pop)
+      county = "ALL"
+      phantom = 4
+      thresh = .7
+      growth = .02
+      (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, phantom, growth, mortality , thresh)
+      tm4.append(true_mortality)
+      (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, 9, growth, mortality , thresh)
+      tm9.append(true_mortality)
+
+   fig = plt.figure()
+   xs = np.linspace(0,len(tm4),len(tm4), endpoint=False)
+   plt.scatter(xs, tm4)
+   title = "Estimate True Mortality US States"
+   plt.title(title, fontsize=16)
+   plt.show()
+ 
+
 
 def compare_state(st,state_sum_data) :   
    groups = {}
@@ -691,9 +749,14 @@ def compare_state(st,state_sum_data) :
             avg = np.mean(temp)
          else:
             avg = np.mean(temp[-7:])
+         if avg < 0: 
+            avg = 0
          day_data[county].append(stat['day'])
          rel_data[county]['avg_cases'].append(avg)
-         rel_data[county]['cases'].append(stat['new_cases'])
+         if stat['new_cases'] > 0: 
+            rel_data[county]['cases'].append(stat['new_cases'])
+         else:
+            rel_data[county]['cases'].append(0)
          rel_data[county]['days'].append(stat['day'])
          if avg > max_val:
             max_val = avg
@@ -716,6 +779,8 @@ def compare_state(st,state_sum_data) :
    save_json_file("json/" + st + "-gbu.json", jdata)
 
 def compare():
+   herd_master()
+   #exit()
    rel_data = {}
    groups = {}
    groups['good'] = {}
@@ -744,6 +809,7 @@ def compare():
       sum_data[st] = {}
       sum_data[st]['avg'] = {}
       sum_data[st]['stats'] = {}
+      sum_data[st]['avg']['days'] = []
       sum_data[st]['avg']['cases'] = []
       sum_data[st]['avg']['deaths'] = []
       sum_data[st]['avg']['tests_pos'] = []
@@ -788,6 +854,7 @@ def compare():
          rel_data[st]['days'].append(date)
 
 
+         sum_data[st]['avg']['days'].append(date)
          sum_data[st]['avg']['cases'].append(avg)
          sum_data[st]['avg']['deaths'].append(avg_deaths)
          sum_data[st]['avg']['tests_pos'].append(avg_tests_pos)
@@ -813,9 +880,7 @@ def compare():
       if False:
          fig = plt.figure()
          plt.plot(rel_data[st], '-')
-
          title = state_names[st]
-
          plt.title(title, fontsize=16)
          #plt.show()
 

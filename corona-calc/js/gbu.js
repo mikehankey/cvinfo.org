@@ -32,7 +32,7 @@ function display_group(result, data, color, type) {
             $('<div class="graph_c"><h3>'+full_name+'</h3><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
 
             // Plot Graph
-            plot_data_line(xd,yd,"days since first case","new cases per day",full_name, state_code,"line",color);
+            plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, state_code,"line",color);
 
             // What's going on if we click a graph?
             if(!county) {
@@ -67,12 +67,11 @@ function display_sum_info(result,state) {
       color = "green"
    }
 
+   xd = result['sum_data']['avg']['days']
 
-   var xd = []
    yd = result['sum_data']['avg']['cases']
-   for (i = 0; i < yd.length; i++) {
-      xd.push(i)
-   }
+   yd2 = result['sum_data']['stats']['cases']
+
    title_si_cases = "New Cases Per Day for " + state
    title_si_deaths = "New Deaths Per Day for " + state
    title_si_tests = "New Tests Per Day for " + state
@@ -82,35 +81,50 @@ function display_sum_info(result,state) {
    document.getElementById("title_si_deaths").innerHTML= title_si_deaths;
    document.getElementById("title_si_tests").innerHTML= title_si_tests;
    document.getElementById("title_si_tests_pos_perc").innerHTML= title_si_tests_pos_perc;
-   plot_data_line(xd,yd,"days since first case","new cases per day",full_name, "sum_info_cases" ,"line",color);
+   plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, "sum_info_cases" ,"line",color);
 
 
-   var xd = []
    yd = result['sum_data']['avg']['deaths']
-   for (i = 0; i < yd.length; i++) {
-      xd.push(i)
-   }
-   plot_data_line(xd,yd,"days since first case","new deaths per day",full_name, "sum_info_deaths" ,"line",color);
+   yd2 = result['sum_data']['stats']['deaths']
+   plot_data_line(xd,yd,yd2,"days since first case","new deaths per day",full_name, "sum_info_deaths" ,"line",color);
 
-   var xd = []
    var yd = []
    var yd_pp = []
-
+   yd_tt2 = []
+   yd_pp2 = []
    yd1 = result['sum_data']['avg']['tests_pos']
    yd2 = result['sum_data']['avg']['tests_neg']
+   yd2_1 = result['sum_data']['stats']['tests_pos']
+   yd2_2 = result['sum_data']['stats']['tests_neg']
    for (i = 0; i < yd1.length; i++) {
-      yd.push(yd1[i] + yd2[i])
-      xd.push(i)
+      tt = yd1[i] + yd2[i]
+      tt2 = yd2_1[i] + yd2_2[i]
+      if (tt < 0) {
+         tt = 0
+      }
+      if (tt2 < 0) {
+         tt2 = 0
+      }
+      yd.push(tt)
+      yd_tt2.push(tt2)
       pp = 1 - (yd1[i]/(yd1[i] + yd2[i]))
+      pp_2 = 1 - (yd2_1[i]/(yd2_1[i] + yd2_2[i]))
       if (pp >= .5 && state != 'NJ' && state != 'NY') {
          pp = 0
       }
+      if (pp_2 >= .5 && state != 'NJ' && state != 'NY') {
+         pp_2 = 0
+      }
+      if (pp_2 < 0) {
+         pp_2 = 0 
+      }
       yd_pp.push( pp*100)
+      yd_pp2.push( pp_2*100)
    }
 
-   plot_data_line(xd,yd,"days since first case","new tests per day",full_name, "sum_info_tests" ,"line",color);
+   plot_data_line(xd,yd,yd_tt2,"days since first case","new tests per day",full_name, "sum_info_tests" ,"line",color);
 
-   plot_data_line(xd,yd_pp,"days since first case","new tests per day",full_name, "sum_info_tests_pos_perc" ,"line",color);
+   plot_data_line(xd,yd_pp,yd_pp2,"days since first case","new tests per day",full_name, "sum_info_tests_pos_perc" ,"line",color);
 
 }
 
@@ -177,21 +191,36 @@ function make_gbu(result,state) {
  
 }
 
-function plot_data_line(xd,yd,xl,yl,t,dv,type,color) {
+function plot_data_line(xd,yd,yd2,xl,yl,t,dv,type,color) {
   
    var trace1 = {
       x: xd,
       y: yd,
       name: yl,
-      marker : {   color: color   },
+      marker : {   
+         color: color   
+      },
       hoverinfo: 'none',
       hovermode: 'none',
       mode: 'lines',
       type: type
    };
-
+   var trace2 = {
+      x: xd,
+      y: yd2,
+      name: yl,
+      marker : {   
+         color: '#D3D3D3',
+         opactity: .01,
+         size: 4
+      },
+      hoverinfo: 'none',
+      hovermode: 'none',
+      mode: 'markers',
+      type: 'bar' 
+   };
    // Trends shouldn't start at 0
-   var data = [trace1]; // , trace4
+   var data = [trace1,trace2]; // , trace4
    var layout = {
       autosize: false,
       width: 345,
@@ -276,7 +305,7 @@ function make_alerts(result ) {
       $('<div class="graph_c"><h3>'+full_name+'</h3><p>' + dtxt + '</p><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
 
       // Plot Graph
-      plot_data_line(xdd,yd,"days since first case","new cases per day",full_name, state_code,"line",color);
+      plot_data_line(xdd,yd,yd2,"days since first case","new cases per day",full_name, state_code,"line",color);
 
 
    })
