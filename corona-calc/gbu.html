@@ -46,8 +46,11 @@
       <input class="menu-btn" type="checkbox" id="menu-btn" />
       <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
       <ul class="menu">
-         <li ><a href="./index.html">Forecast</a></li>
+         <li ><a href="./hotspots.html">Hotspots</a></li>
+         <li ><a href="./alerts.html">Alerts</a></li>
          <li class="active"><a href="./gbu.html">Compare</a></li>
+
+         <li ><a href="./index.html">Forecast</a></li>
          <li><a href="./about.html">About</a></li>
       </ul>
    </header>
@@ -63,6 +66,37 @@
          <div id="loader" ><img src="./img/loader.gif"/>Computing...</div>
 
          <div id="graphs" style="display:none">
+
+            <div class="box clearfix">
+               <div class="grapht " id="sum_info_title">
+                  <h2 class="good_t">State Summary</h2>
+               </div>
+               <div id="sum_info" class=" box_graph clearfix">
+                  <div class="graph_c">
+                     <h3><span id="title_si_cases"></span></h3>
+                     <div id="sum_info_cases" > </div>
+                  </div>
+
+                  <div class="graph_c">
+                     <h3><span id="title_si_tests"></span></h3>
+                     <div id="sum_info_tests" > </div>
+                  </div>
+
+
+
+                  <div class="graph_c">
+                     <h3><span id="title_si_tests_pos_perc"></span></h3>
+                     <div id="sum_info_tests_pos_perc" > </div>
+                  </div>
+
+                  <div class="graph_c">
+                     <h3><span id="title_si_deaths"></span></h3>
+                     <div id="sum_info_deaths" > </div>
+                  </div>
+
+               </div>
+            </div>
+
 
             <div class="box clearfix">
                <div class="grapht " id="good_title">
@@ -114,8 +148,16 @@
          var temp = decodeURIComponent(window.location.href).split("?");
          $('#low_cases_title, #low_cases').hide();
          if (temp.length > 1) {
+            
+            temp[1] = temp[1].replace(/=/g, "")
             if (temp[1].length != 2) {
+               if (temp[1].includes("&")) {
+                  xxx = temp[1].split("&")
+                  temp[1] = xxx[0]
+                  gbuInit("../json/" + temp[1] + "-gbu.json", temp[1]);
+               } else {
                gbuInit("../json/gbu-states.json", "ALL");
+               }
             }  else {
                if (temp[1].includes("&")) {
                   xxx = temp[1].split("&")

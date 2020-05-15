@@ -568,7 +568,157 @@ def cdc() :
    #plt.xlabel(x_lab)
    plt.show()
 
-def compare_state(st) :   
+def county_alerts():
+   state_names, state_codes = load_state_names()
+   alert_data = {}
+   hotspots_data = {}
+   day_data = {}
+   alerts_final = {}
+   alerts = []
+   hot = []
+   del state_names['VI']
+   i = 0
+   for st in state_names: 
+      sj = load_json_file("json/" + st + "-gbu.json")
+      for group in sj['groups']:
+         for county in sj['groups'][group]:
+            cd = sj['groups'][group][county]
+            
+            dd = sj['day_data'][county]
+            print("DD:", dd)
+            if len(cd['avg_cases']) > 14: 
+               cur_new_cases = cd['avg_cases'][-1] 
+               last_new_cases = cd['avg_cases'][-7] 
+               last_new_cases14 = cd['avg_cases'][-14] 
+               if last_new_cases < 1:
+                  last_new_cases = 1
+               if last_new_cases14 < 1:
+                  last_new_cases14 = 1
+               if last_new_cases > 0:
+                  perc = cur_new_cases / last_new_cases
+               else:
+                  perc = 0
+               if last_new_cases14 > 0:
+                  perc14 = cur_new_cases / last_new_cases14
+               else:
+                  perc14 = 0
+               if cur_new_cases >= 100: 
+                  hot.append((st, county, cur_new_cases, last_new_cases, perc,perc14))
+                  key = st + ":" + county 
+                  hotspots_data[key] = cd
+                  day_data[key] = dd
+                  i += 1
+               if (perc > 1.25 or perc14 > 1.25) and cur_new_cases >= 10 and perc > 1:
+                  print(i, st, county, cur_new_cases, last_new_cases, perc)
+                  alerts.append((st, county, cur_new_cases, last_new_cases, perc,perc14))
+                  key = st + ":" + county 
+                  alert_data[key] = cd
+                  day_data[key] = dd
+                  i += 1
+
+
+   # save alerts
+   data_sorted = sorted(alerts, key=lambda x: x[2], reverse=True)
+   for data in data_sorted:
+      (st, county, cur_new_cases, last_new_cases, perc,perc14) = data
+      loc = st + ":" + county
+      alerts_final[loc] = {}
+      alerts_final[loc] = alert_data[loc]
+      #alerts_final[loc] = day_data[loc]
+      alerts_final[loc]['delta'] = round(perc,1)
+      alerts_final[loc]['delta14'] = round(perc14,1)
+      print(data)
+   save_json_file("json/alerts-sort-cases.json", alerts_final)
+
+   alerts_final = {}
+   data_sorted = sorted(alerts, key=lambda x: x[4], reverse=True)
+   for data in data_sorted:
+      (st, county, cur_new_cases, last_new_cases, perc,perc14) = data
+      loc = st + ":" + county
+      alerts_final[loc] = {}
+      alerts_final[loc] = alert_data[loc]
+      alerts_final[loc]['delta'] = round(perc,1)
+      alerts_final[loc]['delta14'] = round(perc14,1)
+      print(data)
+   save_json_file("json/alerts.json", alerts_final)
+
+   # save hotspots
+   hot_final = {}
+   data_sorted = sorted(hot, key=lambda x: x[2], reverse=True)
+   for data in data_sorted:
+      (st, county, cur_new_cases, last_new_cases, perc,perc14) = data
+      loc = st + ":" + county
+      hot_final[loc] = {}
+      hot_final[loc]['avg_cases'] = hotspots_data[loc]['avg_cases']
+      hot_final[loc]['cases'] = hotspots_data[loc]['cases']
+
+      hot_final[loc]['days'] = day_data[loc]
+      hot_final[loc]['delta'] = round(perc,1)
+      hot_final[loc]['delta14'] = round(perc14,1)
+      print(data)
+   save_json_file("json/hotspots.json", hot_final)
+ 
+
+def compute_herd_immunity(state, county, pop, cases, phantom, growth, mortality , thresh): 
+   herd_met = 0
+   total_cases = cases
+   new_cases = 0
+   herd_days = 0
+   while (herd_met == 0) :
+      new_cases = int(total_cases * growth)
+      total_cases += new_cases
+      not_tracked = int(total_cases * phantom)
+      dead = int(total_cases * (mortality/100))
+      impacted = total_cases + not_tracked + dead
+      iperc = impacted / pop
+      not_infected = pop - impacted 
+      if iperc > thresh:
+         herd_met = 1
+      herd_days += 1
+   print("HERD MET WITH THESE VALUES FOR ", state,county )
+   print("Pop:                     ", pop)
+   print("Day:                     ", herd_days)
+   print("Dead:                    ", int(dead))
+   print("Dead %:                  ", round(dead / pop,5) * 100)
+   print("Case Mortality %:        ", mortality )
+   true_mortality = (dead / impacted) * 100
+
+   print("True Mortality %:        ", round(true_mortality,5))
+   print("Cases:                   ", int(total_cases))
+   print("Not-Tracked:             ", int(not_tracked))
+   print("Not-Infected:            ", int(not_infected))
+   return(herd_days, dead, round(dead / pop,5) * 100, true_mortality, cases, not_tracked, not_infected) 
+
+def herd_master():
+   state_names, state_codes = load_state_names()
+   del state_names['VI']
+   tm4 = []
+   tm9 = []
+   for st in state_names:
+      sd = load_json_file(JSON_PATH + "/" + st + ".json") 
+      cases = sd['summary_info']['cases']
+      mortality = sd['summary_info']['mortality']
+      pop = sd['summary_info']['state_population'] * 1000000
+      print(st, cases, mortality, pop)
+      county = "ALL"
+      phantom = 4
+      thresh = .7
+      growth = .02
+      (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, phantom, growth, mortality , thresh)
+      tm4.append(true_mortality)
+      (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, 9, growth, mortality , thresh)
+      tm9.append(true_mortality)
+
+   fig = plt.figure()
+   xs = np.linspace(0,len(tm4),len(tm4), endpoint=False)
+   plt.scatter(xs, tm4)
+   title = "Estimate True Mortality US States"
+   plt.title(title, fontsize=16)
+   plt.show()
+ 
+
+
+def compare_state(st,state_sum_data) :   
    groups = {}
    groups['good'] = {}
    groups['bad'] = {}
@@ -576,6 +726,8 @@ def compare_state(st) :
    groups['low_cases'] = {}
    rel_data = {}
    rel_data[st] = {}
+   day_data = {}
+   day_data[st] = {}
    sd = load_json_file(JSON_PATH + "/" + st + ".json") 
    cd = sd['county_stats']
    if "Unknown" in cd:
@@ -586,19 +738,31 @@ def compare_state(st) :
       temp = []
       temp_tests = []
       temp_tests_pos = []
-      rel_data[county] = []
+      rel_data[county] = {}
+      rel_data[county]['cases'] = []
+      rel_data[county]['avg_cases'] = []
+      rel_data[county]['days'] = []
+      day_data[county] = []
       for stat in cs:
          temp.append(stat['new_cases'])
          if len(temp) < 7:
             avg = np.mean(temp)
          else:
             avg = np.mean(temp[-7:])
-         rel_data[county].append(avg)
+         if avg < 0: 
+            avg = 0
+         day_data[county].append(stat['day'])
+         rel_data[county]['avg_cases'].append(avg)
+         if stat['new_cases'] > 0: 
+            rel_data[county]['cases'].append(stat['new_cases'])
+         else:
+            rel_data[county]['cases'].append(0)
+         rel_data[county]['days'].append(stat['day'])
          if avg > max_val:
             max_val = avg
       last_val_perc = avg / max_val
       print(st, last_val_perc, rel_data[county]) 
-      max_val = np.max(rel_data[county])
+      max_val = np.max(rel_data[county]['avg_cases'])
       if max_val <= 5:
          groups['low_cases'][county] = rel_data[county]
       elif last_val_perc >= .8 and avg > 5:
@@ -610,9 +774,13 @@ def compare_state(st) :
 
    jdata = {}
    jdata['groups'] = groups
+   jdata['sum_data'] = state_sum_data
+   jdata['day_data'] = day_data
    save_json_file("json/" + st + "-gbu.json", jdata)
 
 def compare():
+   herd_master()
+   #exit()
    rel_data = {}
    groups = {}
    groups['good'] = {}
@@ -627,23 +795,74 @@ def compare():
    fp.write(js_states)
    fp.close()
 
+   sum_data = {}
+
    for st in state_names: 
       if st == 'VI':
          continue
       print("test report for " + st)
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
-      rel_data[st] = []
+      rel_data[st] = {}
+      rel_data[st]['cases'] = []
+      rel_data[st]['avg_cases'] = []
+      rel_data[st]['days'] = []
+      sum_data[st] = {}
+      sum_data[st]['avg'] = {}
+      sum_data[st]['stats'] = {}
+      sum_data[st]['avg']['days'] = []
+      sum_data[st]['avg']['cases'] = []
+      sum_data[st]['avg']['deaths'] = []
+      sum_data[st]['avg']['tests_pos'] = []
+      sum_data[st]['avg']['tests_neg'] = []
+      sum_data[st]['stats']['cases'] = []
+      sum_data[st]['stats']['deaths'] = []
+      sum_data[st]['stats']['tests_pos'] = []
+      sum_data[st]['stats']['tests_neg'] = []
       stats = sd['state_stats']
       temp = []
+      temp_deaths = []
+      temp_tests_pos = []
+      temp_tests_neg = []
       max_val = 0
       for ss in stats:
          cases = ss['new_cases']
+         deaths = ss['new_deaths']
+         tests_pos = ss['tests_new_pos']
+         tests_neg = ss['tests_new_neg']
          temp.append(cases)
+         temp_deaths.append(deaths)
+         temp_tests_pos.append(tests_pos)
+         temp_tests_neg.append(tests_neg)
          if len(temp) < 7:
             avg = int(np.mean(temp))
+            avg_deaths = int(np.mean(temp_deaths))
+            avg_tests_pos = int(np.mean(temp_tests_pos))
+            avg_tests_neg = int(np.mean(temp_tests_neg))
          else: 
             avg = int(np.mean(temp[-7:]))
-         rel_data[st].append(avg)
+            avg_deaths = int(np.mean(temp_deaths[-7:]))
+            avg_tests_pos = int(np.mean(temp_tests_pos[-7:]))
+            avg_tests_neg = int(np.mean(temp_tests_neg[-7:]))
+         #rel_data[st].append(avg)
+         rel_data[st]['avg_cases'].append(avg)
+         rel_data[st]['cases'].append(cases)
+         dd = ss['date']
+         yy = dd[0:4]
+         mm = dd[4:6]
+         dd = dd[6:8]
+         date = yy + "-" + mm + "-" + dd
+         rel_data[st]['days'].append(date)
+
+
+         sum_data[st]['avg']['days'].append(date)
+         sum_data[st]['avg']['cases'].append(avg)
+         sum_data[st]['avg']['deaths'].append(avg_deaths)
+         sum_data[st]['avg']['tests_pos'].append(avg_tests_pos)
+         sum_data[st]['avg']['tests_neg'].append(avg_tests_neg)
+         sum_data[st]['stats']['cases'].append(cases)
+         sum_data[st]['stats']['deaths'].append(deaths)
+         sum_data[st]['stats']['tests_pos'].append(tests_pos)
+         sum_data[st]['stats']['tests_neg'].append(tests_neg)
          if avg > max_val:
             max_val = avg
 
@@ -651,29 +870,32 @@ def compare():
       print(st, last_val_perc, rel_data[st])
       if last_val_perc >= .8 and avg > 5:
          groups['ugly'][st] = rel_data[st]
+         sum_data[st]['group'] = "ugly"
       elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'][st] = rel_data[st]
+         sum_data[st]['group'] = "bad"
       else:
          groups['good'][st] = rel_data[st]
+         sum_data[st]['group'] = "good"
       if False:
          fig = plt.figure()
          plt.plot(rel_data[st], '-')
-
          title = state_names[st]
-
          plt.title(title, fontsize=16)
          #plt.show()
 
 
-      compare_state(st)
+      compare_state(st, sum_data[st])
    json_data = {}
    json_data['state_names'] = state_names
    json_data['groups'] = groups
+   #json_data['sum_data'] = sum_data 
    save_json_file("json/gbu-states.json", json_data)
      
 
 def tests() :
    compare()
+   county_alerts()
    #cdc()
    exit()
    state_names, state_codes = load_state_names()
