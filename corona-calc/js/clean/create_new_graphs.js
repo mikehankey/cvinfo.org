@@ -124,8 +124,7 @@ function prepareData(data) {
       var tmp_growth_val = val.cg_last == undefined ? val.case_growth:  val.cg_last;         // Lack of consistencty of the data for GROWTH
       var tmp_death_growth_val = val.dg_last == undefined ? val.death_growth : val.dg_last   // Same for DEATH GROWTH
       var curDate = new Date(dateFormatMIT(val.date));
- 
-       
+  
       // GROWTH
       x_axis_growth.push(curDate);
       y_axis_growth.push(parseFloat(tmp_growth_val));

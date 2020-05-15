@@ -491,7 +491,7 @@ function display_top_results(state,county,how_many_days_until_herd,start_data,en
       
       x3: graph_x,
       y3: graph_data_y.deads,
-      title3: "COVID-19 Daily Deaths",
+      title3: "Total COVID-19 Deaths",
 
       title: "<b>" + name_to_display + " - Path to Herd Immunity </b>",
       threshold: start_data.herd_immunity_threshold/100,
