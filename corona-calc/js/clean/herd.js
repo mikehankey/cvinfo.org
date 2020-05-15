@@ -483,11 +483,11 @@ function display_top_results(state,county,how_many_days_until_herd,start_data,en
    draw_graph_herd({
       x1: graph_x,
       y1: graph_data_y.new_cases,
-      title1: "Confirmed Daily Cases",
+      title1: "Total Confirmed Cases",
 
       x2: graph_x,
       y2: graph_data_y.non_tracked_infected,
-      title2: "Non Tracked Daily Cases",
+      title2: "Total Non Tracked Cases",
       
       x3: graph_x,
       y3: graph_data_y.deads,
