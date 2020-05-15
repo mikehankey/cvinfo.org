@@ -91,6 +91,22 @@ function update_explained() {
    $('label[for=herd_immunity_threshold]').find('span.explained').text($('#herd_immunity_threshold').val());
 }
 
+// Setup rest button
+function reset_reset_button() {
+   $('#reset_herd').unbind('click').click(function() {
+      $.each($('.inttv'), function(i,v){
+         var id   = $(v).attr('name');
+         var val  = $(v).val();
+        
+         // We remove init_ to get the ID on the form
+         id = id.substring(5, id.length);
+         $('#'+ id).val(val);
+
+         // Recalculate
+         $('#recalculate').click();
+      });
+   });
+}
 
 // Warning, the name of this function is the same 
 // than for the main page - see the list of js included on indexV.html vs herd_immunity_calculator.html
@@ -105,6 +121,17 @@ function new_display_data(result, state, county) {
 
    update_explained(); // UI 
 
+   // Reset button
+   reset_reset_button(); 
+
+   // So nice to have th enter button working fine
+   $('input').on("keypress", function(e) {
+      /* ENTER PRESSED*/
+      if (e.keyCode == 13) {
+         $('#recalculate').click();
+         return false;
+      }
+  });
 
    // Name to display
    if(county == "" || county == "ALL") {
@@ -127,6 +154,39 @@ function show_error(text) {
    $('<div class="error">'+text+'</div>').appendTo($('#forecast_container'));
 }
 
+// Validate 
+function validate_start_data(data) {
+   var all_errors_text = [], error_text;
+
+   $.each(data, function(i, v){
+      if(v.cur > v.max || v.cur < v.min) {
+         all_errors_text.push("<b>"+v.name + "</b> should be between " + v.min + " and " + v.max);
+      }
+   })
+
+   if(all_errors_text.length!=0) {
+
+      if(all_errors_text.length>1) {
+         error_text = "Please, correct the following data:<br>";
+      } else {
+         error_text = "Please, correct your data:<br> "
+      }
+
+      error_text += all_errors_text.join('<br>');
+
+      Swal.fire({
+         title: '<strong>Wrong data</strong>',
+         icon: 'error',
+         html: error_text 
+       })
+      return false;
+   } else {
+      return true;
+   }
+
+
+}
+
 // Compute & Display data for Herd Immunity Computation
 function compute_data_for_herd(state,county,name_to_display) {
 
@@ -147,16 +207,6 @@ function compute_data_for_herd(state,county,name_to_display) {
                                  -(parseInt($('#total_infected').val())*parseFloat($('#non_tracked_factor').val()))
    }; 
 
-   // Validate the start_data
-   if(start_data.new_case_growth_per_day<=0 || start_data.new_case_growth_per_day>50) {
-      swal({
-         title: "WRONG DATA",
-         text: "Please, enter a realistic New Cases growth per day (between 0.1% and 50%)",
-         icon: "error", 
-         dangerMode: true,
-       });
-       return false;
-   }
 
  
    var end_data = {}; 
@@ -174,11 +224,27 @@ function compute_data_for_herd(state,county,name_to_display) {
       new_cases: [start_data.total_infected/start_data.pop],
       non_tracked_infected: [start_data.non_tracked_infected/start_data.pop],
       deads: [start_data.deads/start_data.pop]
-   } 
-
+   }  
    
    var max_non_tracked_factor_1 = 0;
    var max_non_tracked_factor_2 = 0;
+
+   // In case we reach a % of impacted > 100%, we can take the previous data of the loop 
+   // to give an answer
+   var previous_data = {}; 
+
+
+   // Validate start data
+   if(!validate_start_data(
+      [  { name: "Herd Immunity Threshold", cur: start_data.herd_immunity_threshold, max: 100, min: 0 },
+         { name: "New Cases growth per day", cur: start_data.new_case_growth_per_day, max: 100, min: 0 },
+         { name: "Mortality rate", cur: start_data.mortality_rate, max: 100, min: 0 },
+      ]
+   )) {
+      return false;
+   };
+
+
 
    // Test if the current non-tracked factor is too high and we go beyond the current total population
    if(    start_data.non_tracked_infected > start_data.pop 
@@ -191,19 +257,28 @@ function compute_data_for_herd(state,county,name_to_display) {
 
       max_non_tracked_factor_1 = Math.min(max_non_tracked_factor_1,max_non_tracked_factor_2);
 
-      swal({
-         title: "WRONG DATA",
-         text: "The maximum possibly value for the non-tracked factor in " + name_to_display + " is " +  max_non_tracked_factor_1.toFixed(2)+ ".\
-               If the non-tracked is " +  max_non_tracked_factor_1.toFixed(2)+ " it means 100% of the population is already infected.\
-               Since new cases are still being added, this value is not possible.\n\nPlease lower the non-tracked factor.",
-         icon: "error", 
-         dangerMode: true,
-       });
+
+      Swal.fire({
+         icon: 'info',
+         title: 'Unrealistic Data',
+         html: "The maximum possibly value for the <b>Non-tracked Factor</b> in " + name_to_display + " is <b>" +  parseInt(max_non_tracked_factor_1) + "</b>.<br><br>\
+         If the non-tracked is " +  parseInt(max_non_tracked_factor_1) + " <b>it means 100% of the population is already infected</b>.\
+         Since new cases are still being added, this value is not possible.<br><br><b>Please lower the Non-tracked Factor.</b>" 
+      });
 
       return false;
    } 
     
    while(!herd_met) {
+
+      previous_data = {
+         deads: deads,
+         total_infected: total_infected,
+         not_infected: not_infected,
+         non_tracked_infected: non_tracked,
+         how_many_days_until_herd: how_many_days_until_herd,
+         impacted: impacted 
+      }
       
       // Newly infected based on growth per day
       new_day_cases =  total_infected * start_data.new_case_growth_per_day / 100;  
@@ -226,12 +301,15 @@ function compute_data_for_herd(state,county,name_to_display) {
       impacted = ((total_infected + non_tracked + deads)/pop)*100;
 
       if(impacted>100) {
-         swal({
-            title: "WRONG DATA",
-            text: "The current data you entered don't allow us to compute a realistic herd immunity date.",
-            icon: "error", 
-            dangerMode: true,
-          });
+
+         Swal.fire({
+            icon: 'info',
+            title: 'Unrealistic Data',
+            html:  "<b>The current data you entered don't allow us to compute a realistic Herd Immunity date.</b><br/><br/>\
+                   Based on your data, the Herd Immunity could be reached somewhere around " +  dateFormatMITFromDate(new Date($('input[name=last_day_of_data]').val()).addDays(previous_data.how_many_days_until_herd)) +"\
+                   but we cannot give you more details.<br><br><b>Please, enter more realstic data.</b>" 
+         });
+          
    
          return false;
       }
@@ -244,6 +322,7 @@ function compute_data_for_herd(state,county,name_to_display) {
 
       // BIG FLOW HERE: WE HAVE A CONSTANT POPULATION!
       // pop = pop - deads; 
+      
    }
 
    not_infected = pop - total_infected - non_tracked - deads;
@@ -354,6 +433,7 @@ function fill_top_sentence(state,county,herd_immunity_reached_day,end_data,name_
    var top_sentence = "Based on the current data,<br><span class='ugly_t'>" + name_to_display;
  
    top_sentence += " could reach herd immunity on <span class='wn'>"+dateFormatMITFromDate(herd_immunity_reached_day) + "</span></span>.";
+   /*
    top_sentence += "<br/>And it could cost <span class='ugly_t'>" + usFormat(parseInt(end_data.deads)) + " deaths </span>";
    if(county !== "" && county !== "ALL") {
       if(name_to_display.toLowerCase().indexOf("city")!==-1) {
@@ -365,7 +445,7 @@ function fill_top_sentence(state,county,herd_immunity_reached_day,end_data,name_
    } else {
       top_sentence += " in the state.";
    }
-
+   */
    $('#sum_main').html(top_sentence);
 }
 
@@ -403,17 +483,17 @@ function display_top_results(state,county,how_many_days_until_herd,start_data,en
    draw_graph_herd({
       x1: graph_x,
       y1: graph_data_y.new_cases,
-      title1: "% of Confirmed Daily Cases",
+      title1: "Confirmed Daily Cases",
 
       x2: graph_x,
       y2: graph_data_y.non_tracked_infected,
-      title2: "% of Non Tracked Daily Cases",
+      title2: "Non Tracked Daily Cases",
       
       x3: graph_x,
       y3: graph_data_y.deads,
-      title3: "% of COVID-19 Deaths",
+      title3: "COVID-19 Daily Deaths",
 
-      title: "<b>" + name_to_display + " % of COVID-19 Cases</b>",
+      title: "<b>" + name_to_display + " - Path to Herd Immunity </b>",
       threshold: start_data.herd_immunity_threshold/100,
 
       el: 'perc_graph',
