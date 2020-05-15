@@ -5,7 +5,7 @@ function display_group(result, data, color, type) {
    
    // We Build the Graphs & Display for the "Good" states;
    $.each(data,function(state_code, values ){
-
+   
       if(state_code !== "Unknown") {
             // Y data
             yd = values['avg_cases'];
