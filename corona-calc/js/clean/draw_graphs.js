@@ -230,15 +230,32 @@ function draw_graph_herd(data ) {
    };
   
    var layout = { 
-      margin: {"t": 80, "b": 80, "l": 50, "r": 10},
+      margin: {"t": 10, "b": 80, "l": 50, "r": 10},
       showlegend: true,
       legend: { orientation: "h" },
-      barmode: 'stack',
-      title: data.title,
+      barmode: 'stack', 
       yaxis: {
          tickformat: '%',
-         range: [0,1]
+         range: [0,1],
+         tickmode: "linear",
+         tick0: 0,
+         dtick: .1
+
       },
+      annotations: [ {
+           x: data.x1[parseInt((data.x1.length-1)/2)] ,
+           y: data.threshold + .01 ,
+           xref: 'x',
+           yref: 'y',
+           text: 'Herd Immunity Threshold: ' + data.threshold*100  + '%',
+           arrowhead: 0,
+           arrowsize: 0,
+           arrowwidth: 0,
+           borderwidth:0,
+           borderpad:0,
+           align: 'center'
+         }
+       ],
       shapes : [{ 
          type: 'line',
          x0: data.x1[0],
