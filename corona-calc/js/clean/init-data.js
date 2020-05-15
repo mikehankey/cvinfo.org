@@ -21,7 +21,7 @@ function getInitJSONData(state,county) {
                // Create Select County
                countySelect(getAllCounties(result) , state); 
        
-               if(county === undefined || $("#county_selector option[value="+county+"]").length==0) {
+               if(county === undefined || $("#county_selector option[value='"+decodeURIComponent(county)+"']").length==0) {
                   $('#county_selector').val("ALL");    
                   county = ""; // County doesnt exist for this state     
                   setShareLinks({state:county+", "+ state, state_code:state,county:county});   
