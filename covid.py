@@ -672,7 +672,7 @@ def compute_herd_immunity(state, county, pop, cases, phantom, growth, mortality 
       impacted = total_cases + not_tracked + dead
       iperc = impacted / pop
       not_infected = pop - impacted 
-      if iperc > thresh:
+      if iperc > thresh or herd_days > 1000:
          herd_met = 1
       herd_days += 1
    print("HERD MET WITH THESE VALUES FOR ", state,county )
@@ -689,11 +689,46 @@ def compute_herd_immunity(state, county, pop, cases, phantom, growth, mortality 
    print("Not-Infected:            ", int(not_infected))
    return(herd_days, dead, round(dead / pop,5) * 100, true_mortality, cases, not_tracked, not_infected) 
 
+def plot_herd():
+   herd = load_json_file("json/herd_data.json")
+   tm4 = []
+   tm9 = []
+   mt4 = []
+   mt9 = []
+   for row in herd['herd_data']:
+      (st,county,phantom,pop,mortality,herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = row
+      if phantom == 4:
+         tm4.append(true_mortality)
+         mt4.append(mortality)
+      if phantom == 9:
+         tm9.append(true_mortality)
+         mt9.append(mortality)
+   
+   fig = plt.figure()
+   #xs = np.linspace(0,len(tm4),len(tm4), endpoint=False)
+   plt.scatter(mt4, tm4,s=1)
+
+   #xs = np.linspace(0,len(tm9),len(tm9), endpoint=False)
+   plt.scatter(mt9, tm9,s=1)
+   title = "Estimate True Mortality US States "
+   plt.title(title, fontsize=16)
+   plt.show()
+
+
 def herd_master():
    state_names, state_codes = load_state_names()
    del state_names['VI']
    tm4 = []
    tm9 = []
+   ctm4 = []
+   ctm9 = []
+
+   sm4 = []
+   sm9 = []
+   cm4 = []
+   cm9 = []
+   herd_data = [] 
+
    for st in state_names:
       sd = load_json_file(JSON_PATH + "/" + st + ".json") 
       cases = sd['summary_info']['cases']
@@ -705,18 +740,51 @@ def herd_master():
       thresh = .7
       growth = .02
       (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, phantom, growth, mortality , thresh)
+      herd_data.append((st,"ALL",4,pop,mortality,herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected))
       tm4.append(true_mortality)
       (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, 9, growth, mortality , thresh)
+      herd_data.append((st,"ALL",9,pop,mortality,herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected))
       tm9.append(true_mortality)
+      sm4.append(mortality)
+      sm9.append(mortality)
+      for county in sd['county_pop']:
+         if county in sd['county_stats']:
+            pop = sd['county_pop'][county]
+            last = sd['county_stats'][county]['county_stats'][-1]
+            cases = last['cases']
+            mortality = last['mortality']
+            if mortality > 0:
+               (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, phantom, growth, mortality , thresh)
+               herd_data.append((st,county,4,pop,mortality,herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected))
+               if true_mortality > 0:
+                  ctm4.append(true_mortality)
+                  sm4.append(mortality)
+               (herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected) = compute_herd_immunity(st, county, pop, cases, 9, growth, mortality , thresh)
+               herd_data.append((st,county,9,pop,mortality,herd_days, dead, dead_perc, true_mortality, cases, not_tracked, not_infected))
+               if true_mortality > 0:
+                  ctm9.append(true_mortality)
+                  sm9.append(mortality)
+
 
    fig = plt.figure()
    xs = np.linspace(0,len(tm4),len(tm4), endpoint=False)
-   plt.scatter(xs, tm4)
-   title = "Estimate True Mortality US States"
+   plt.scatter(xs, tm4,s=1)
+   xs = np.linspace(0,len(tm9),len(tm9), endpoint=False)
+   plt.scatter(xs, tm9,s=1)
+   title = "Estimate True Mortality US States "
    plt.title(title, fontsize=16)
    plt.show()
  
-
+   fig = plt.figure()
+   xs = np.linspace(0,len(ctm4),len(ctm4), endpoint=False)
+   plt.scatter(xs, ctm4,s=1)
+   xs = np.linspace(0,len(ctm9),len(ctm9), endpoint=False)
+   plt.scatter(xs, ctm9,s=1)
+   title = "Estimate True Mortality US Counties"
+   plt.show()
+   json = {}
+   json['herd_data'] = herd_data
+   save_json_file("json/herd_data.json", json)
 
 def compare_state(st,state_sum_data) :   
    groups = {}
@@ -780,6 +848,7 @@ def compare_state(st,state_sum_data) :
 
 def compare():
    herd_master()
+   plot_herd()
    #exit()
    rel_data = {}
    groups = {}
