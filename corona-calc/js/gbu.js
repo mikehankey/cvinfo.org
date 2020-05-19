@@ -32,7 +32,7 @@ function display_group(result, data, color, type) {
             $('<div class="graph_c"><h3>'+full_name+'</h3><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
 
             // Plot Graph
-            plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, state_code,"line",color);
+            plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, state_code,"line",color, result['key_dates'][state_code]);
 
             // What's going on if we click a graph?
             if(!county) {
@@ -50,7 +50,7 @@ function display_group(result, data, color, type) {
 }
 
 function display_sum_info(result,state) {
-
+   
    $('#sum_info_title, #sum_info, #graphs').show();
    state_code = state
    type = "sum_info"
@@ -81,12 +81,12 @@ function display_sum_info(result,state) {
    document.getElementById("title_si_deaths").innerHTML= title_si_deaths;
    document.getElementById("title_si_tests").innerHTML= title_si_tests;
    document.getElementById("title_si_tests_pos_perc").innerHTML= title_si_tests_pos_perc;
-   plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, "sum_info_cases" ,"line",color);
+   plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, "sum_info_cases" ,"line",color,result['key_dates'][state_code]);
 
 
    yd = result['sum_data']['avg']['deaths']
    yd2 = result['sum_data']['stats']['deaths']
-   plot_data_line(xd,yd,yd2,"days since first case","new deaths per day",full_name, "sum_info_deaths" ,"line",color);
+   plot_data_line(xd,yd,yd2,"days since first case","new deaths per day",full_name, "sum_info_deaths" ,"line",color,result['key_dates'][state_code]);
 
    var yd = []
    var yd_pp = []
@@ -122,9 +122,9 @@ function display_sum_info(result,state) {
       yd_pp2.push( pp_2*100)
    }
 
-   plot_data_line(xd,yd,yd_tt2,"days since first case","new tests per day",full_name, "sum_info_tests" ,"line",color);
+   plot_data_line(xd,yd,yd_tt2,"days since first case","new tests per day",full_name, "sum_info_tests" ,"line",color,result['key_dates'][state_code]);
 
-   plot_data_line(xd,yd_pp,yd_pp2,"days since first case","new tests per day",full_name, "sum_info_tests_pos_perc" ,"line",color);
+   plot_data_line(xd,yd_pp,yd_pp2,"days since first case","new tests per day",full_name, "sum_info_tests_pos_perc" ,"line",color,result['key_dates'][state_code]);
 
 }
 
@@ -191,8 +191,28 @@ function make_gbu(result,state) {
  
 }
 
-function plot_data_line(xd,yd,yd2,xl,yl,t,dv,type,color) {
-  
+function plot_data_line(xd,yd,yd2,xl,yl,t,dv,type,color,key_dates) {
+   
+   if(key_dates !== undefined) {
+      open_date = key_dates[1] 
+      var ymax = Math.max.apply(null,yd2)
+      var shape = {
+         type: 'line',
+         x0: open_date,
+         y0: 0,
+         x1: open_date,
+         yref: open_date,
+         y1: ymax,
+         line: {
+            color: 'grey',
+            width: 1.5,
+            dash: 'dot'
+         }
+      }
+   }
+   else {
+      open_date = ""
+   }
    var trace1 = {
       x: xd,
       y: yd,
@@ -228,11 +248,30 @@ function plot_data_line(xd,yd,yd2,xl,yl,t,dv,type,color) {
       showlegend: false,
       margin: {"t": 5, "b": 50, "l": 50, "r": 30},
       yaxis: {fixedrange: true},
-      xaxis : {fixedrange: true}
-   }
+      xaxis : {fixedrange: true},
+      shapes: [ 
+         shape
+      ]
 
+
+   }
    Plotly.newPlot(dv, data, layout, {responsive: true});
 }
+/*
+      shapes: [{
+         type: 'line',
+         x0: '2020-05-01',
+         y0: 0,
+         x1: '2020-05-01',
+         yref: 0,
+         y1: ymax,
+         line: {
+            color: 'grey',
+            width: 1.5,
+            dash: 'dot'
+         }
+      }]
+*/
 
 function show_gbu_loader() {
    $('#loader').css('display','block');  

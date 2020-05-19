@@ -137,8 +137,8 @@ function prepareData(data) {
 
       // TESTS PER DAY
       x_axis_tests.push(curDate);
-      y_axis_tests.push(val.tests - last_test_val);
-      last_test_val = val.tests;
+      y_axis_tests.push(val.tests_new_pos + val.tests_new_neg);
+      //last_test_val = val.tests;
        
       // DEATH GROWTH
       x_axis_deaths_growth.push(curDate);
