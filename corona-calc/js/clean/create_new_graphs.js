@@ -9,7 +9,7 @@ function getInitData(data,county) {
 
       // State Data
       toReturn =  {
-         type:    '  state',
+         type:       'state',
          name:       data['summary_info'].state_name,
          pop:        data['summary_info'].state_population * 1000000,
          stats:      data['state_stats'],

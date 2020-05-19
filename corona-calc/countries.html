@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>  
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
+   <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
+ 
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="msapplication-TileColor" content="#f0f0f0">
+   <meta name="theme-color" content="#f0f0f0">
+ 
+   <meta property="fb:app_id" content="542306269804125"/>
+   <meta property="og:title" content="CoronaFiles.us - All Countries "/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:url" content="https://coronafiles.us/herd_immunity_calculator.html"/>
+   <meta property="og:site_name" content="CoronaFiles.us"/>
+   <meta property="og:description" content="COVID-19 - Herd Immunity Calculator"/>
+   <meta property="og:locale" content="en_US"/>
+   <meta property="og:image" content="https://coronafiles.us/img/coronafiles_herd_fb.jpg"/>
+   <meta property="og:image:width" content="1200"/>
+   <meta property="og:image:height" content="630"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - When will  your state or county reach  Herd Immunity ?"/>
+
+   <meta name="author" content="Mike Hankey">
+	<meta name="description" content="COVID-19: When will the Herd Immunity be reached in your state or county?">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="keywords" content="herd immunity, corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
+
+	<title>COVID-19 Countries Stats</title>   
+ 
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="./css/coronafiles.css" rel="stylesheet">
+
+   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+   <link rel="manifest" href="./site.webmanifest">
+   <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+ 
+</head>
+<body class="wait">
+
+   <header class="header clearfix">
+      <a href="" class="logo"><img src="./img/logo.png"/> <span>CoronaFiles.us</span></a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul class="menu">
+            <li><a href="./gbu.html">Compare</a></li>
+            <li><a  href="./hotspots.html">Hotspots</a></li>
+            <li><a href="./alerts.html">Alerts</a></li>
+            <li class="active"  ><a href="./herd_immunity_calculator.html">Herd Immunity</a></li>
+            <li><a href="./forecast.html">Forecast</a></li>
+            <li><a href="./about.html">About</a></li>
+       </ul>
+   </header>
+   <div id="header">
+         <h1>US COVID-19</h1>
+         <h2>Confirmed cases per country &amp; date</h2>
+   </div>
+   <div id="main-content">
+         <div id="state_select" style="display:none">
+            <select id="country_selector"></select>
+         </div>
+         <div id="country_graph"></div>
+   </div>
+
+
+   <script src="./js/clean/framework_plugs.js"></script>
+   <script src="./js/clean/countries.js"></script>
+   <script>
+   
+    
+
+      function SortByName(a, b){
+         var aName = a.Country.toLowerCase();
+         var bName = b.Country.toLowerCase(); 
+         return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+      }
+      
+      function fillCountryList() {
+         // Fill country select 
+         var settings = {
+            "url": "https://api.covid19api.com/countries",
+            "method": "GET",
+            "timeout": 0,
+         };
+
+         $.ajax(settings).done(function (response) {
+            var cs = "<option value='0'>Select a country</option>";
+
+            response.sort(SortByName);
+
+            $.each(response, function(i,v) {
+               cs += "<option value='"+v.Slug+"'>"+v.Country +"</option>";
+            });
+            $('#country_selector').html(cs);
+            $('#state_select').show();
+         });
+      }
+
+      function getDataForCountry(countryslug) {
+         // Fill country select 
+         var settings = {
+            "url": "https://api.covid19api.com/total/country/" + countryslug,
+            "method": "GET",
+            "timeout": 0,
+         };
+         $.ajax(settings).done(function (response) {
+            // We prepare the data
+            var init_data = getInitDataCountry(response,countryslug);
+
+            // Get data for graphs
+            var graph_data = prepareData(init_data);
+
+            draw_country_graph(init_data,graph_data);
+         });
+      }
+
+      $(function() {
+         fillCountryList();
+
+         // Action on select 
+         $('#country_selector').change(function() {
+            var country_slug = $(this).val(); 
+            if(country_slug !== 0) {
+               getDataForCountry(country_slug, $( "#country_selector option:selected" ).text());
+            }
+         })
+
+      })
+   </script>
+</body>
+</html>
