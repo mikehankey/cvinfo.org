@@ -439,7 +439,7 @@ input.lg {
    max-width: 2.5rem;
 }
 
-button{
+button, a.btn{
    margin: .5rem 0 1.5rem;
    display: inline-block;
    font-weight: 400;
@@ -459,12 +459,24 @@ button{
    border-radius: .25rem;
    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
    font-weight: bold;
+   text-decoration: none;
 }
 
-   button.btn {
+   a.btn:hover, a.btn:focus {
+      text-decoration: none;
+   }
+
+   button.btn  {
       font-weight: normal;
       background: #ccc;
       color: #666;
+   }
+
+   a.btn.disabled {
+      cursor: default;
+      font-weight: bold;
+      background: #fff;
+      color:#111;
    }
 
   select {

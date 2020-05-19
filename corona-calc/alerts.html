@@ -57,36 +57,24 @@
 
    <div id="header">
       <h1>United States - COVID-19 US County Alerts</h1>
-      <p>Here we see US Counties where the current 7-day average for new cases has spiked compared to 7 days ago. Rapid increase in new cases quickly could be a sign of an outbreak or unmanaged spread. </p>
+      <p>Here we see US Counties where the current 7-day average for new cases has spiked compared to 7 days ago.<br>
+         <b>Rapid increase in new cases quickly could be a sign of an outbreak or unmanaged spread.</b></p>
    </div>
    <div id="main-content">
-        <!-- <p>To see all counties for a state select below</p>
-         <div id="state_select"><select id="state_selector"><option value="ALL">Select State</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option></select></div>
--->
-
          <div id="loader" ><img src="./img/loader.gif"/>Computing...</div>
-
          <div id="graphs" style="display:none">
-
-
-
             <div class="box clearfix">
                <div class="grapht " id="good_title">
                   <h2 class="ugly_t">COVID-19 County Alerts</h2> 
-                  <p>The following counties have more than 10 cases per day and their 7 day average has increased more than 1.2 times since last week.</p>
-                      <p>Sorted by 7-Day Delta (change) - <a href=alerts-sc.html>Sort By New Case Values</a>
-                  </p>
+                  <p>The following counties have <b>more than 10 cases per day</b> and their <b>7 day average has increased more than 1.2 times</b> since last week.</p>
+                  <p><a class="btn disabled">Sorted by 7-Day Delta</a> <a href="alerts-sc.html" class="btn">Sort By New Case Values</a></p>
                </div>
-               <div id="alert_count"></div>
+               <p id="alert_count"></p>
                <div id="ugly" class=" box_graph clearfix"></div>
             </div>
-            
          </div>
-
-
    </div>
-
-
+ 
    <div id="footer">
          coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
          <br/>contact: mike.hankey[@]gmail.com

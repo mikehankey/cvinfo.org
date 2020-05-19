@@ -335,13 +335,12 @@ function make_alerts(result ) {
       st =temp[0]
       ct =temp[1]
       full_name = ct + ", " + st 
-      dtxt = " &Delta;7-Day: " + delta.toString() + "<br> &Delta;14-Day: " + delta14.toString() 
+      dtxt = " &Delta;7-Day: " + delta.toString() + "&nbsp;&nbsp;&Delta;14-Day: " + delta14.toString() 
       state_code = key 
       color = "red"
       type = "ugly"
       $('#ugly_title, #ugly, #graphs').show();
-
-      $('<div class="graph_c"><h3>'+full_name+'</h3><p>' + dtxt + '</p><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
+      $('<div class="graph_c"><h3 style="margin-bottom:0">'+full_name+'</h3><p style="margin-top:.5rem"><small>' + dtxt + '</small></p><div id="' + state_code+'"></div></div>').appendTo($('#'+type));
 
       // Plot Graph
       plot_data_line(xdd,yd,yd2,"days since first case","new cases per day",full_name, state_code,"line",color);

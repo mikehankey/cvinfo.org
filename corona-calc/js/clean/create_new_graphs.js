@@ -9,7 +9,7 @@ function getInitData(data,county) {
 
       // State Data
       toReturn =  {
-         type:    '  state',
+         type:       'state',
          name:       data['summary_info'].state_name,
          pop:        data['summary_info'].state_population * 1000000,
          stats:      data['state_stats'],
@@ -144,7 +144,7 @@ function prepareData(data) {
       x_axis_deaths_growth.push(curDate);
       y_axis_deaths_growth.push(parseFloat(tmp_death_growth_val)); 
 
-      // GROWTH DECATY
+      // GROWTH DECAY
       x_axis_growth_decay.push(curDate);
       y_axis_growth_decay.push(tmp_death_growth_val - last_growth_decay_val);
       last_growth_decay_val = tmp_death_growth_val;
