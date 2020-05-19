@@ -76,6 +76,8 @@ function prepareData(data) {
  */
 function draw_country_graph(init_data,graph_data) {
    
+ 
+
    // Org Data
    var dataDeaths = {
       x: graph_data.x_axis,
@@ -126,7 +128,14 @@ function draw_country_graph(init_data,graph_data) {
          title: 'Total Deaths', 
          overlaying: 'y',
          side: 'right',
-         rangemode: 'nonnegative'
+         rangemode: 'nonnegative',
+         autorange: true,
+         showgrid: false,
+         zeroline: false,
+         showline: false,
+         autotick: true,
+         ticks: '',
+         showticklabels: false
        },
        yaxis1: {  
          title: 'Total Cases', 
@@ -135,9 +144,14 @@ function draw_country_graph(init_data,graph_data) {
        }
       
    };
+
+
+ 
  
    all_set =  [ dataConfirmed, dataRecovered, dataActive, dataDeaths];
    Plotly.newPlot('country_graph', all_set, layout);
+
+   $('#country_graph_title').html('<h3>' + init_data.name +  '</h3>');
     
 
 }

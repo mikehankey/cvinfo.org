@@ -62,7 +62,10 @@
          <div id="state_select" style="display:none">
             <select id="country_selector"></select>
          </div>
-         <div id="country_graph"></div>
+         <div class="box">
+            <div id="country_graph_title"></div>
+            <div id="country_graph"></div>
+         </div>
    </div>
 
 
@@ -99,7 +102,7 @@
          });
       }
 
-      function getDataForCountry(countryslug) {
+      function getDataForCountry(countryslug, countryname) {
          // Fill country select 
          var settings = {
             "url": "https://api.covid19api.com/total/country/" + countryslug,
@@ -108,7 +111,7 @@
          };
          $.ajax(settings).done(function (response) {
             // We prepare the data
-            var init_data = getInitDataCountry(response,countryslug);
+            var init_data = getInitDataCountry(response,countryslug, countryname);
 
             // Get data for graphs
             var graph_data = prepareData(init_data);
