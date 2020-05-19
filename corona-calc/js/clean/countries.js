@@ -81,39 +81,62 @@ function draw_country_graph(init_data,graph_data) {
       x: graph_data.x_axis,
       y: graph_data.deaths,
       name: "Total Deaths",
-      type: "bar" 
+      type: "bar",
+      yaxis: 'y2',
+      marker: {color: 'rgba(55, 83, 109,.2)'},
    };
  
    var dataConfirmed = {
       x: graph_data.x_axis,
       y: graph_data.confirmed,
       name: "Total Confirmed Cases",
-      type: "line" 
+      type: 'scatter',
+      mode: 'lines',
+      yaxis: 'y1',
+      line: {
+         color: 'rgb(55, 128, 191)',
+         width: 3
+       }
    };
 
    var dataRecovered = {
       x: graph_data.x_axis,
       y: graph_data.recovered,
       name: "Total Recovered",
-      type: "line" 
+      type: 'scatter',
+      mode: 'lines',
+      yaxis: 'y1',
    };
 
    var dataActive = {
       x: graph_data.x_axis,
       y: graph_data.active,
       name: "Total Active",
-      type: "line" 
+      type: 'scatter',
+      mode: 'lines',
+      yaxis: 'y1',
    };
    
 
    var layout = { 
-      margin: {"t": 20, "b": 80, "l": 50, "r": 10},
+      margin: {"t": 20, "b": 80, "l": 80, "r": 80},
       showlegend: true,
       legend: { orientation: "h" },
+      yaxis2: { 
+         title: 'Total Deaths', 
+         overlaying: 'y',
+         side: 'right',
+         rangemode: 'nonnegative'
+       },
+       yaxis1: {  
+         title: 'Total Cases', 
+         side: 'left',
+         rangemode: 'nonnegative'
+       }
       
    };
  
-   all_set =  [dataDeaths, dataConfirmed, dataRecovered, dataActive];
+   all_set =  [ dataConfirmed, dataRecovered, dataActive, dataDeaths];
    Plotly.newPlot('country_graph', all_set, layout);
     
 
