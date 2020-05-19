@@ -846,9 +846,27 @@ def compare_state(st,state_sum_data) :
    jdata['day_data'] = day_data
    save_json_file("json/" + st + "-gbu.json", jdata)
 
+def key_dates():
+   # add key dates to json files
+   key_dates = {}
+   fp = open("data/key-dates.txt")
+
+
+   for line in fp:
+      line = line.replace("\n", "")
+      state,start,end,notes = line.split("|") 
+      key_dates[state] = [start,end]
+      js = load_json_file("json/" + state + ".json")
+      js['summary_info']['key_dates'] = [start,end]
+      save_json_file("json/" + state + ".json", js)
+      js = load_json_file("json/" + state + "-gbu.json")
+      js['key_dates'] = [start,end]
+      save_json_file("json/" + state + "-gbu.json", js)
+   js = load_json_file("json/gbu-states.json")
+   js['key_dates'] = key_dates
+   save_json_file("json/gbu-states.json", js)
+
 def compare():
-   herd_master()
-   plot_herd()
    #exit()
    rel_data = {}
    groups = {}
@@ -960,6 +978,9 @@ def compare():
    json_data['groups'] = groups
    #json_data['sum_data'] = sum_data 
    save_json_file("json/gbu-states.json", json_data)
+   key_dates()
+   herd_master()
+   plot_herd()
      
 
 def tests() :
