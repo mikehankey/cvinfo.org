@@ -144,7 +144,7 @@ function prepareData(data) {
       x_axis_deaths_growth.push(curDate);
       y_axis_deaths_growth.push(parseFloat(tmp_death_growth_val)); 
 
-      // GROWTH DECATY
+      // GROWTH DECAY
       x_axis_growth_decay.push(curDate);
       y_axis_growth_decay.push(tmp_death_growth_val - last_growth_decay_val);
       last_growth_decay_val = tmp_death_growth_val;
