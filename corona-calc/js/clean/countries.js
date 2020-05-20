@@ -116,13 +116,13 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
          showlegend: true,
          legend: { orientation: "h" },
          yaxis1: {  
-            title: 'Cases per million', 
+            title: 'New Cases per million', 
             side: 'left',
             rangemode: 'nonnegative'
          }
       };
 
-      var info = "";
+      
 
 
       all_set =  [ dateNCPM1, dateNCPM2];
@@ -145,6 +145,17 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
          name: init_data2.name + " New Deaths Per Million",
          type: "line+scatter", 
          marker: {color: 'rgba(50, 0, 50,.8)'},
+      };
+
+      layout = { 
+         margin: {"t": 20, "b": 80, "l": 80, "r": 80},
+         showlegend: true,
+         legend: { orientation: "h" },
+         yaxis1: {  
+            title: 'New Deaths per million', 
+            side: 'left',
+            rangemode: 'nonnegative'
+         }
       };
   
       all_set =  [ dateNDPM1, dateNDPM2];
