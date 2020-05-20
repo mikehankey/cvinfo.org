@@ -123,9 +123,14 @@ def parse_all_data():
 
             for country in all_countries: 
                if(country != "World" and country != "International"):
+
+                  if(row[country]==''):
+                     row[country]= 0
+
                   all_max_data['countries'].append({
                      "name":country, 
-                     str(cur_slug) :row[country]})
+                     str(cur_slug): float(row[country])
+                  })
             
             # We sort the current all_max_data['countries']
             newall_max_data  = sorted(all_max_data['countries'], key=itemgetter(str(cur_slug)), reverse=True)
@@ -137,6 +142,7 @@ def parse_all_data():
                if(country[str(cur_slug)]!=prev_value):
                   cur_rank+= 1
                country['rank'] = cur_rank
+               prev_value = float(country[str(cur_slug)])
  
             all_max_data = {"date": cur_date, "countries":newall_max_data}
 

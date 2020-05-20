@@ -116,18 +116,16 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
          "method": "GET",
          "timeout": 0,
       };
-
  
-
       $.ajax(settings).done(function (response) {
 
          // We find the rank of the country
          $.each(response['countries'],function(i,v) {
             if(v['name']== name1 && name1!= "World") {
-               $('#'+slug_type+"_"+slug_name1).html("(currently ranked #" + v['rank']+' worldwide)');
+               $('#'+slug_type+"_"+slug_name1).html("(currently ranked <a href='./countries_rank.html#"+slug_type+"'>#" + v['rank']+'</a> worldwide)');
             }
             if(v['name']== name2 && name2!= "World") {
-               $('#'+slug_type+"_"+slug_name2).html("(currently ranked #" + v['rank']+' worldwide)');
+               $('#'+slug_type+"_"+slug_name2).html("(currently ranked <a  href='./countries_rank.html#"+slug_type+"'>#" + v['rank']+'</a> worldwide)');
             }
          });
         

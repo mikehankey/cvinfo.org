@@ -1,63 +1,121 @@
-<div id="bigGraph" style=""></div>
-<script src="./js/clean/framework_plugs.js"></script>
-<script src="./js/clean/share.js"></script>
-<script>
-function makeplot() {
-   Plotly.d3.csv("../covid-19-intl-data/country/MAX_new_cases_per_million.json", function(data){ processData(data) } );
-};
+<!DOCTYPE html>
+<html>
+<head>  
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
+   <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
  
- function processData(allRows) {
-
-   var all_countries_to_deal_with = ["Afghanistan", "Albania"]; 
-   var all_y = [];
-   var x = [];
-
-   allRows = allRows['countries'];
-
-   $.each(all_countries_to_deal_with, function(i,v){
-      all_y[i] = [];
-   })
+   <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="msapplication-TileColor" content="#f0f0f0">
+   <meta name="theme-color" content="#f0f0f0">
  
-   for (var i=0; i<allRows.length; i++) {
-      row = allRows[i];
-      x.push( row['date'] );
-      
-      $.each(all_countries_to_deal_with, function(i,v){
-         all_y[i].push(row[v]);
-      })
-   }
-    
-   makeBigPlot(x,all_y,all_countries_to_deal_with)
+   <meta property="fb:app_id" content="542306269804125"/>
+   <meta property="og:title" content="CoronaFiles.us - All Countries "/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:url" content="https://coronafiles.us/herd_immunity_calculator.html"/>
+   <meta property="og:site_name" content="CoronaFiles.us"/>
+   <meta property="og:description" content="COVID-19 - Herd Immunity Calculator"/>
+   <meta property="og:locale" content="en_US"/>
+   <meta property="og:image" content="https://coronafiles.us/img/coronafiles_herd_fb.jpg"/>
+   <meta property="og:image:width" content="1200"/>
+   <meta property="og:image:height" content="630"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - When will  your state or county reach  Herd Immunity ?"/>
 
-    
- }
+   <meta name="author" content="Mike Hankey">
+	<meta name="description" content="COVID-19: When will the Herd Immunity be reached in your state or county?">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta name="keywords" content="herd immunity, corona virus, covid 19, forecast, prediction, predicted outcome, calculator">
+
+	<title>COVID-19 Countries Stats</title>   
  
- function makeBigPlot( x,all_y,all_countries_to_deal_with ){ 
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="./css/coronafiles.css" rel="stylesheet">
 
-   // Build traces
-   var traces = [];
+   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+   <link rel="manifest" href="./site.webmanifest">
+   <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+ 
+</head>
+<body class="wait">
 
-   $.each(all_countries_to_deal_with,function(i,country) {
-      if(i==0) {
-         traces.push({
-            x: x,
-            y: all_y[i],
-            name:country,
-            groupnorm:'percent',
-            stackgroup: 'one'
-         });
-      } else {
-         traces.push({
-            x: x,
-            y: all_y[i],
-            name:country,
-            stackgroup: 'one'
-         });
-      }
+   <header class="header clearfix">
+      <a href="" class="logo"><img src="./img/logo.png"/> <span>CoronaFiles.us</span></a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul class="menu">
+            <li><a href="./gbu.html">Compare</a></li>
+            <li><a  href="./hotspots.html">Hotspots</a></li>
+            <li><a href="./alerts.html">Alerts</a></li>
+            <li ><a href="./herd_immunity_calculator.html">Herd Immunity</a></li>
+            <li class="active"  ><a href="./countries.html">Intl. Comparison</a></li>
+            <li><a href="./forecast.html">Forecast</a></li>
+            <li><a href="./about.html">About</a></li>
+       </ul>
+   </header>
+   <div id="header">
+         <h1>US COVID-19</h1>
+         <h2>International Comparison</h2>
+   </div>
+   <div id="main-content">
+         
+         <div class="box" id="lists">
+            
+         </div>
+         
+   </div>
+
+   <div id="soc">
+      <ul class="share-buttons">
+            <li class="social-share facebook"><img src="./img/Facebook.svg" alt="Share Page on Facebook" /></li>
+            <li class="social-share twitter"><img src="./img/Twitter.svg" alt="Share Page on Twitter" /></li>
+            <li class="social-share linkedin"><img src="./img/LinkedIn.svg" alt="Share Page on LinkedIn" /></li>
+            <li class="social-share reddit"><img src="./img/Reddit.svg" alt="Share Page on Reddit" /></li>
+     </ul>
+   </div>
+ 
 
    
-   });    
-   Plotly.newPlot('bigGraph', traces,   {title: 'New Cases Per Million'});
- };
-   makeplot();
-</script> 
+   <div id="footer">
+      coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
+      <br/>contact: mike.hankey[@]gmail.com
+</div>
+
+   <script src="./js/clean/framework_plugs.js"></script>
+   <script src="./js/clean/share.js"></script>
+   <script src="./js/clean/countries.js"></script>
+   <script>
+      var FILE_TYPES = ['new_cases_per_million','new_deaths_per_million','total_cases_per_million','total_deaths_per_million'];
+      var TYPES_SLUG = ['ncpm','ndpm','tcpm','tdpm'];
+      $(function() {
+         
+            $.each(FILE_TYPES,function(i,v) {
+               
+               var settings = {
+                  "url": "../covid-19-intl-data/country/MAX_" + v  +".json",
+                  "method": "GET",
+                  "timeout": 0,
+               };
+
+                
+               $.ajax(settings).done(function (response) {
+                  var html = "";
+                  $('<div id="' + v +'"><h3>'+v.toLocaleUpperCase().replace(/_/g, ' ')+' on '  + response.date  +'</h3><table><thead><tr><th style="text-align:left">Rank &amp; Country</th><th>Value</th></thead><tbody></tbody></table></div>').appendTo($('#lists')); 
+                  
+                  // We display the list
+                  $.each(response['countries'],function(a,v) {
+                     html += "<tr><th>" +  v['rank']  + "  - " + v['name'] + "</th><td>" + v[TYPES_SLUG[i]] + "</td></tr>";
+                  });
+                  
+                 
+                  $('#' + v).find('tbody').html(html);
+                  
+               });
+            });
+
+      });
+   </script>
+</body>
+</html>
