@@ -2,6 +2,8 @@
 import os 
 import sys
 import csv, json
+from datetime import datetime, timedelta
+from operator import itemgetter
 
 
 DATA_PATH = "." + os.sep + "covid-19-intl-data"
@@ -85,6 +87,7 @@ def parse_all_data():
    all_countries_file.close()
 
    cur_date = "" 
+    
  
    # For each CSV, we get the data: date & value
    # HEAVY LOOP!
@@ -95,8 +98,13 @@ def parse_all_data():
       # Opened 
       reader = csv.DictReader(tmp_csv)
 
-      for row in reader:
+      # Total Rows (we assume last date is on last row)
+      rows = list(reader)
+      total_rows = len(rows)-1
+
+      for index, row in enumerate(rows):
          cur_date = row['date'] 
+           
          for country in all_countries: 
 
             if(country not in all_data):
@@ -106,19 +114,48 @@ def parse_all_data():
                all_data[country][cur_date] = {} 
             
             all_data[country][cur_date][cur_slug] = row[country] 
-          
+
+         if(index == total_rows):
+            # We build a file with all the countries value at the last date
+            cur_country_file = open(DATA_PATH_PER_COUNTRY + os.sep + "MAX_" + file_name + ".json", 'w+')
+            
+            all_max_data = {"date": cur_date, "countries": []}
+
+            for country in all_countries: 
+               if(country != "World" and country != "International"):
+                  all_max_data['countries'].append({
+                     "name":country, 
+                     str(cur_slug) :row[country]})
+            
+            # We sort the current all_max_data['countries']
+            newall_max_data  = sorted(all_max_data['countries'], key=itemgetter(str(cur_slug)), reverse=True)
+            
+            # We add the current rank of the country
+            cur_rank = 0
+            prev_value = 99999
+            for country in newall_max_data:
+               if(country[str(cur_slug)]!=prev_value):
+                  cur_rank+= 1
+               country['rank'] = cur_rank
+ 
+            all_max_data = {"date": cur_date, "countries":newall_max_data}
+
+            json.dump(all_max_data,cur_country_file)
+            cur_country_file.close() 
 
    # Create Files per Country 
    for country in all_countries:
 
       # Create the file where to dump the data
       cur_country_file = open(DATA_PATH_PER_COUNTRY + os.sep + country + ".json", 'w+')
-
+  
       # Dump the data
       json.dump(all_data[country],cur_country_file)
 
       cur_country_file.close()
    
+
+
 
 
 

@@ -1,0 +1,63 @@
+<div id="bigGraph" style=""></div>
+<script src="./js/clean/framework_plugs.js"></script>
+<script src="./js/clean/share.js"></script>
+<script>
+function makeplot() {
+   Plotly.d3.csv("../covid-19-intl-data/country/MAX_new_cases_per_million.json", function(data){ processData(data) } );
+};
+ 
+ function processData(allRows) {
+
+   var all_countries_to_deal_with = ["Afghanistan", "Albania"]; 
+   var all_y = [];
+   var x = [];
+
+   allRows = allRows['countries'];
+
+   $.each(all_countries_to_deal_with, function(i,v){
+      all_y[i] = [];
+   })
+ 
+   for (var i=0; i<allRows.length; i++) {
+      row = allRows[i];
+      x.push( row['date'] );
+      
+      $.each(all_countries_to_deal_with, function(i,v){
+         all_y[i].push(row[v]);
+      })
+   }
+    
+   makeBigPlot(x,all_y,all_countries_to_deal_with)
+
+    
+ }
+ 
+ function makeBigPlot( x,all_y,all_countries_to_deal_with ){ 
+
+   // Build traces
+   var traces = [];
+
+   $.each(all_countries_to_deal_with,function(i,country) {
+      if(i==0) {
+         traces.push({
+            x: x,
+            y: all_y[i],
+            name:country,
+            groupnorm:'percent',
+            stackgroup: 'one'
+         });
+      } else {
+         traces.push({
+            x: x,
+            y: all_y[i],
+            name:country,
+            stackgroup: 'one'
+         });
+      }
+
+   
+   });    
+   Plotly.newPlot('bigGraph', traces,   {title: 'New Cases Per Million'});
+ };
+   makeplot();
+</script> 

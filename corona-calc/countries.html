@@ -49,7 +49,8 @@
             <li><a href="./gbu.html">Compare</a></li>
             <li><a  href="./hotspots.html">Hotspots</a></li>
             <li><a href="./alerts.html">Alerts</a></li>
-            <li class="active"  ><a href="./herd_immunity_calculator.html">Herd Immunity</a></li>
+            <li ><a href="./herd_immunity_calculator.html">Herd Immunity</a></li>
+            <li class="active"  ><a href="./countries.html">Intl. Comparison</a></li>
             <li><a href="./forecast.html">Forecast</a></li>
             <li><a href="./about.html">About</a></li>
        </ul>
@@ -117,7 +118,9 @@
             var cs = "";
            
             $.each(response['countries'], function(i,v) {
-               cs += "<option value='"+v+"'>"+v +"</option>";
+               if(v!=='International')  {
+                  cs += "<option value='"+v+"'>"+v +"</option>";
+               }
             });
             $('#country_selector, #country_selector2').html(cs);
             $('#state_select').show();
@@ -127,6 +130,7 @@
       }
 
       function getDataForCountry(countryname1, countryname2, callback) {
+
          // Fill country select 
          var settings1 = {
             "url": "../covid-19-intl-data/country/" + countryname1 + ".json",
