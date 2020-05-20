@@ -98,7 +98,7 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
       var dateNCPM1 = {
          x: graph_data1.x_axis,
          y: graph_data1.new_cases_per_million,
-         name: init_data1 + " New Cases Per Million",
+         name: init_data1.name + " New Cases Per Million",
          type: "line+scatter", 
          marker: {color: 'rgba(200, 0 , 0,.8)'},
       };
@@ -106,7 +106,7 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
       var dateNCPM2 = {
          x: graph_data2.x_axis,
          y: graph_data2.new_cases_per_million,
-         name: init_data2 + " New Cases Per Million",
+         name: init_data2.name + " New Cases Per Million",
          type: "line+scatter", 
          marker: {color: 'rgba(50, 0, 50,.8)'},
       };
@@ -122,8 +122,11 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
          }
       };
 
+      var info = "";
+
+
       all_set =  [ dateNCPM1, dateNCPM2];
-      $('#country_graph_title').html('<h3>' +  init_data1  +  ' <i>vs.</i> '+ init_data2 +'</h3><p>New Cases per Million</p>');
+      $('#country_graph_title').html('<h3>' +  init_data1.name  +  ' <i>vs.</i> '+ init_data2.name +'</h3><p>New Cases per Million</p>');
       Plotly.newPlot('country_graph', all_set, layout);
       
 
@@ -131,7 +134,7 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
       var dateNDPM1 = {
          x: graph_data1.x_axis,
          y: graph_data1.new_deaths_per_million,
-         name: init_data1 + " New Deaths Per Million",
+         name: init_data1.name + " New Deaths Per Million",
          type: "line+scatter", 
          marker: {color: 'rgba(200, 0 , 0,.8)'},
       };
@@ -139,13 +142,13 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
       var dateNDPM2 = {
          x: graph_data2.x_axis,
          y: graph_data2.new_deaths_per_million,
-         name: init_data2 + " New Deaths Per Million",
+         name: init_data2.name + " New Deaths Per Million",
          type: "line+scatter", 
          marker: {color: 'rgba(50, 0, 50,.8)'},
       };
   
       all_set =  [ dateNDPM1, dateNDPM2];
-      $('#country_graph_title1').html('<h3>' +  init_data1  +  ' <i>vs.</i> '+ init_data2 +'</h3><p>New Deaths per Million</p>');
+      $('#country_graph_title1').html('<h3>' +  init_data1.name  +  ' <i>vs.</i> '+ init_data2.name +'</h3><p>New Deaths per Million</p>');
       Plotly.newPlot('country_graph1', all_set, layout);
 
  
