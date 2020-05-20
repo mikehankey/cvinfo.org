@@ -87,6 +87,65 @@ function prepareData(data) {
  
 
 
+/**
+ * Display top info for each graph
+ */
+
+function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, color1, color2) {
+   var formattedDate = last_date.toLocaleString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric" 
+    });
+
+    
+   $(domEl).html(
+      '<h3>' +  name1  +  ' <i>vs.</i> '+ name2 +' - ' + type  +'</h3>\
+      <p>On ' + formattedDate + '<br>\
+      <b style="color:'+color1+'">' + name1+ '</b>: \
+      <b style="color:'+color1+'">' + usFormatCommas(data1[data1.length-1]) + '</b> ' + type +'<br>\
+      <b style="color:'+color2+'">' + name2 + '</b>: \
+      <b style="color:'+color2+'">' + usFormatCommas(data2[data2.length-1]) + '</b> ' + type +' \
+      </p>');
+}
+
+
+/**
+ * Draw one single graph 
+ */
+function draw_country_vs_single(name1,data1,name2,data2,x_axis,type,domEl,color1,color2,layout) {
+  
+    var set1 = {
+      x: x_axis,
+      y: data1,
+      name: name1 + " " + type,
+      type: "line+scatter", 
+      marker: {color: color1},
+   };
+
+   
+   var set2 = {
+      x: x_axis,
+      y: data2,
+      name: name2 + " " + type,
+      type: "line+scatter", 
+      marker: {color: color2},
+   };
+
+   layout.yaxis1 = { side: 'left', rangemode: 'nonnegative', title: type }
+
+   Plotly.newPlot(domEl, [set1,set2], layout);
+
+}
+
+
+/**
+ * US Format Float
+ */
+function usFormatCommas(x) {
+   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+}
+
 
 /**
  * Draw standard graph with 7,14 trends and eventual
@@ -94,74 +153,30 @@ function prepareData(data) {
  */
 function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
 
-      // Data1 NCPM
-      var dateNCPM1 = {
-         x: graph_data1.x_axis,
-         y: graph_data1.new_cases_per_million,
-         name: init_data1.name + " New Cases Per Million",
-         type: "line+scatter", 
-         marker: {color: 'rgba(200, 0 , 0,.8)'},
-      };
-
-      var dateNCPM2 = {
-         x: graph_data2.x_axis,
-         y: graph_data2.new_cases_per_million,
-         name: init_data2.name + " New Cases Per Million",
-         type: "line+scatter", 
-         marker: {color: 'rgba(50, 0, 50,.8)'},
-      };
+      var color1 = 'rgba(200, 0 , 0,.8)';
+      var color2 = 'rgba(50, 0, 50,.8)';
 
       var layout = { 
          margin: {"t": 20, "b": 80, "l": 80, "r": 80},
          showlegend: true,
          legend: { orientation: "h" },
-         yaxis1: {  
-            title: 'New Cases per million', 
+         yaxis1: {   
             side: 'left',
             rangemode: 'nonnegative'
          }
       };
 
+      draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,"New Cases Per Million","country_graph1",color1,color2,layout)
+      display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,"New Cases Per Million",'#country_graph_title1',color1,color2);
       
-
-
-      all_set =  [ dateNCPM1, dateNCPM2];
-      $('#country_graph_title').html('<h3>' +  init_data1.name  +  ' <i>vs.</i> '+ init_data2.name +'</h3><p>New Cases per Million</p>');
-      Plotly.newPlot('country_graph', all_set, layout);
+      draw_country_vs_single(init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,graph_data1.x_axis,"New Deaths Per Million","country_graph2",color1,color2,layout)
+      display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,"New Deaths Per Million",'#country_graph_title2',color1,color2);
+     
+      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,"Total Deaths Per Million","country_graph3",color1,color2,layout)
+      display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,"Total Deaths Per Million",'#country_graph_title3',color1,color2);
+     
+      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,"Total Cases Per Million","country_graph4",color1,color2,layout)
+      display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,"Total Cases Per Million",'#country_graph_title4',color1,color2);
       
-
-      // Data1 NCPM
-      var dateNDPM1 = {
-         x: graph_data1.x_axis,
-         y: graph_data1.new_deaths_per_million,
-         name: init_data1.name + " New Deaths Per Million",
-         type: "line+scatter", 
-         marker: {color: 'rgba(200, 0 , 0,.8)'},
-      };
-
-      var dateNDPM2 = {
-         x: graph_data2.x_axis,
-         y: graph_data2.new_deaths_per_million,
-         name: init_data2.name + " New Deaths Per Million",
-         type: "line+scatter", 
-         marker: {color: 'rgba(50, 0, 50,.8)'},
-      };
-
-      layout = { 
-         margin: {"t": 20, "b": 80, "l": 80, "r": 80},
-         showlegend: true,
-         legend: { orientation: "h" },
-         yaxis1: {  
-            title: 'New Deaths per million', 
-            side: 'left',
-            rangemode: 'nonnegative'
-         }
-      };
-  
-      all_set =  [ dateNDPM1, dateNDPM2];
-      $('#country_graph_title1').html('<h3>' +  init_data1.name  +  ' <i>vs.</i> '+ init_data2.name +'</h3><p>New Deaths per Million</p>');
-      Plotly.newPlot('country_graph1', all_set, layout);
-
- 
 
 }

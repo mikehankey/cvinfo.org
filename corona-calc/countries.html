@@ -64,17 +64,41 @@
             <select id="country_selector2"></select>
          </div>
          <div class="box">
-            <div id="country_graph_title"></div>
-            <div id="country_graph"></div>
-         </div>
-         <div class="box">
             <div id="country_graph_title1"></div>
             <div id="country_graph1"></div>
          </div>
+         <div class="box">
+            <div id="country_graph_title2"></div>
+            <div id="country_graph2"></div>
+         </div>
+         <div class="box">
+            <div id="country_graph_title3"></div>
+            <div id="country_graph3"></div>
+         </div>
+         <div class="box">
+            <div id="country_graph_title4"></div>
+            <div id="country_graph4"></div>
+         </div>
    </div>
 
+   <div id="soc">
+      <ul class="share-buttons">
+            <li class="social-share facebook"><img src="./img/Facebook.svg" alt="Share Page on Facebook" /></li>
+            <li class="social-share twitter"><img src="./img/Twitter.svg" alt="Share Page on Twitter" /></li>
+            <li class="social-share linkedin"><img src="./img/LinkedIn.svg" alt="Share Page on LinkedIn" /></li>
+            <li class="social-share reddit"><img src="./img/Reddit.svg" alt="Share Page on Reddit" /></li>
+     </ul>
+   </div>
+ 
+
+   
+   <div id="footer">
+      coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
+      <br/>contact: mike.hankey[@]gmail.com
+</div>
 
    <script src="./js/clean/framework_plugs.js"></script>
+   <script src="./js/clean/share.js"></script>
    <script src="./js/clean/countries.js"></script>
    <script>
    
@@ -117,6 +141,7 @@
             "async": false
          };
           
+         $('body').addClass('wait');
 
          $.ajax(settings1).done(function (response1) {
             // We prepare the data
@@ -133,6 +158,8 @@
  
 
                callback(init_data1,graph_data1,init_data2,graph_data2);
+               
+               $('body').removeClass('wait');
 
             });
 
@@ -143,18 +170,23 @@
 
          var default1 = "World", default2 = "United States";
 
+         setShareLinks();
+
          fillCountryList(function() {
             // Default Word vs. USA
             $('#country_selector').val(default1);
             $('#country_selector2').val(default2);
+            $('#country_selector').trigger('change');
          });
          
          // Get Data & Draw Graph
-         getDataForCountry(default1,default2,function(a,b,c,d) { draw_country_graph(a,b,c,d); });
+         //getDataForCountry(default1,default2,function(a,b,c,d) { draw_country_graph(a,b,c,d); });
           
          $('#country_selector, #country_selector2').change(function(){
             getDataForCountry($('#country_selector').val(),$('#country_selector2').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); });
          });
+
+    
       })
    </script>
 </body>
