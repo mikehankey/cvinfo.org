@@ -56,15 +56,20 @@
    </header>
    <div id="header">
          <h1>US COVID-19</h1>
-         <h2>Confirmed cases per country &amp; date</h2>
+         <h2>International Comparison</h2>
    </div>
    <div id="main-content">
          <div id="state_select" style="display:none">
-            <select id="country_selector"></select>
+            <select id="country_selector"></select> <i>vs.</i>
+            <select id="country_selector2"></select>
          </div>
          <div class="box">
             <div id="country_graph_title"></div>
             <div id="country_graph"></div>
+         </div>
+         <div class="box">
+            <div id="country_graph_title1"></div>
+            <div id="country_graph1"></div>
          </div>
    </div>
 
@@ -75,7 +80,7 @@
    
      
       
-      function fillCountryList() {
+      function fillCountryList(callback) {
          // Fill country select 
          var settings = {
             "url": "../covid-19-intl-data/all_countries.json",
@@ -85,49 +90,71 @@
 
          $.ajax(settings).done(function (response) {
             
-            var cs = "<option value='0'>Select a country</option>";
+            var cs = "";
            
             $.each(response['countries'], function(i,v) {
                cs += "<option value='"+v+"'>"+v +"</option>";
             });
-            $('#country_selector').html(cs);
+            $('#country_selector, #country_selector2').html(cs);
             $('#state_select').show();
+            callback();
             
          });
       }
 
-      function getDataForCountry(countryname) {
+      function getDataForCountry(countryname1, countryname2, callback) {
          // Fill country select 
-         var settings = {
-            "url": "../covid-19-intl-data/country/" + countryname + ".json",
+         var settings1 = {
+            "url": "../covid-19-intl-data/country/" + countryname1 + ".json",
             "method": "GET",
             "timeout": 0,
+            "async": false
          };
-         $.ajax(settings).done(function (response) {
+         var settings2 = {
+            "url": "../covid-19-intl-data/country/" + countryname2 + ".json",
+            "method": "GET",
+            "timeout": 0,
+            "async": false
+         };
+          
+
+         $.ajax(settings1).done(function (response1) {
             // We prepare the data
-            var init_data = getInitDataCountry(response, countryname);
-
-            console.log("INIT DATA");
-            console.log(init_data);
-
+            var init_data1 = getInitDataCountry(response1, countryname1);
+  
             // Get data for graphs
-            var graph_data = prepareData(init_data);
+            var graph_data1 = prepareData(init_data1);
+            
+            $.ajax(settings2).done(function (response2) {
+               var init_data2 = getInitDataCountry(response2, countryname2);
+  
+               // Get data for graphs
+               var graph_data2 = prepareData(init_data2);
+ 
 
-            draw_country_graph(init_data,graph_data);
+               callback(countryname1,graph_data1,countryname2,graph_data2);
+
+            });
+
          });
       }
 
       $(function() {
-         fillCountryList();
 
-         // Action on select 
-         $('#country_selector').change(function() {
-            var countryname = $(this).val(); 
-            if(countryname !== 0) {
-               getDataForCountry(countryname);
-            }
-         })
+         var default1 = "World", default2 = "United States";
 
+         fillCountryList(function() {
+            // Default Word vs. USA
+            $('#country_selector').val(default1);
+            $('#country_selector2').val(default2);
+         });
+         
+         // Get Data & Draw Graph
+         getDataForCountry(default1,default2,function(a,b,c,d) { draw_country_graph(a,b,c,d); });
+          
+         $('#country_selector, #country_selector2').change(function(){
+            getDataForCountry($('#country_selector').val(),$('#country_selector2').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); });
+         });
       })
    </script>
 </body>

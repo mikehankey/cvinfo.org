@@ -22,10 +22,10 @@ function getInitDataCountry(data,country) {
    $.each(data,function(i,v) { 
       country_stats.push({
          'date':                    i,
-         'new_cases_per_million':   parseFloat(v.ncpm)>=0?parseFloat(v.ncpm):0,
-         'new_deaths_per_million':  parseFloat(v.ndpm)>=0?parseFloat(v.ndpm):0,
-         'total_cases_per_million': parseFloat(v.tcpm)>=0?parseFloat(v.tcpm):0,
-         'total_deaths_per_million':parseFloat(v.tdpm)>=0?parseFloat(v.tdpm):0 
+         'new_cases_per_million':   parseFloat(v.ncpm), //>=0?parseFloat(v.ncpm):0,
+         'new_deaths_per_million':  parseFloat(v.ndpm), //>=0?parseFloat(v.ndpm):0,
+         'total_cases_per_million': parseFloat(v.tcpm), //>=0?parseFloat(v.tcpm):0,
+         'total_deaths_per_million':parseFloat(v.tdpm)  //>=0?parseFloat(v.tdpm):0 
       });
       all_dates.push(new Date(i));
    })
@@ -92,84 +92,62 @@ function prepareData(data) {
  * Draw standard graph with 7,14 trends and eventual
  * @param {*} data 
  */
-function draw_country_graph(init_data,graph_data) {
-   
-  
-   // Org Data
-   var dateNCPM = {
-      x: graph_data.x_axis,
-      y: graph_data.new_deaths_per_million,
-      name: "New Deaths Per Million",
-      type: "bar",
-      //yaxis: 'y2',
-      marker: {color: 'rgba(55, 83, 109,.2)'},
-   };
- 
-   var dataNDPM = {
-      x: graph_data.x_axis,
-      y: graph_data.new_cases_per_million,
-      name: "New Cases Per Million",
-      type: 'scatter',
-      mode: 'lines',
-      //yaxis: 'y1',
-      line: {
-         color: 'rgb(55, 128, 191)',
-         width: 3
-       }
-   };
+function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
 
-   /*
-   var dataRecovered = {
-      x: graph_data.x_axis,
-      y: graph_data.recovered,
-      name: "Recovered",
-      type: 'scatter',
-      mode: 'lines',
-      yaxis: 'y1',
-   };
+      // Data1 NCPM
+      var dateNCPM1 = {
+         x: graph_data1.x_axis,
+         y: graph_data1.new_cases_per_million,
+         name: init_data1 + " New Cases Per Million",
+         type: "line+scatter", 
+         marker: {color: 'rgba(200, 0 , 0,.8)'},
+      };
 
-   var dataActive = {
-      x: graph_data.x_axis,
-      y: graph_data.active,
-      name: "Active",
-      type: 'scatter',
-      mode: 'lines',
-      yaxis: 'y1',
-   };
-   */
+      var dateNCPM2 = {
+         x: graph_data2.x_axis,
+         y: graph_data2.new_cases_per_million,
+         name: init_data2 + " New Cases Per Million",
+         type: "line+scatter", 
+         marker: {color: 'rgba(50, 0, 50,.8)'},
+      };
 
-   var layout = { 
-      margin: {"t": 20, "b": 80, "l": 80, "r": 80},
-      showlegend: true,
-      legend: { orientation: "h" },
-      yaxis2: { 
-         title: 'Deaths  per million', 
-         overlaying: 'y',
-         side: 'right',
-         rangemode: 'nonnegative',
-         autorange: true,
-         showgrid: false,
-         zeroline: false,
-         showline: false,
-         autotick: true,
-         ticks: '',
-         showticklabels: false
-       },
-       yaxis1: {  
-         title: 'Cases per million', 
-         side: 'left',
-         rangemode: 'nonnegative'
-       }
+      var layout = { 
+         margin: {"t": 20, "b": 80, "l": 80, "r": 80},
+         showlegend: true,
+         legend: { orientation: "h" },
+         yaxis1: {  
+            title: 'Cases per million', 
+            side: 'left',
+            rangemode: 'nonnegative'
+         }
+      };
+
+      all_set =  [ dateNCPM1, dateNCPM2];
+      $('#country_graph_title').html('<h3>' +  init_data1  +  ' <i>vs.</i> '+ init_data2 +'</h3><p>New Cases per Million</p>');
+      Plotly.newPlot('country_graph', all_set, layout);
       
-   };
 
+      // Data1 NCPM
+      var dateNDPM1 = {
+         x: graph_data1.x_axis,
+         y: graph_data1.new_deaths_per_million,
+         name: init_data1 + " New Deaths Per Million",
+         type: "line+scatter", 
+         marker: {color: 'rgba(200, 0 , 0,.8)'},
+      };
+
+      var dateNDPM2 = {
+         x: graph_data2.x_axis,
+         y: graph_data2.new_deaths_per_million,
+         name: init_data2 + " New Deaths Per Million",
+         type: "line+scatter", 
+         marker: {color: 'rgba(50, 0, 50,.8)'},
+      };
+  
+      all_set =  [ dateNDPM1, dateNDPM2];
+      $('#country_graph_title1').html('<h3>' +  init_data1  +  ' <i>vs.</i> '+ init_data2 +'</h3><p>New Deaths per Million</p>');
+      Plotly.newPlot('country_graph1', all_set, layout);
 
  
- 
-   all_set =  [ dateNCPM, dataNDPM];
-   Plotly.newPlot('country_graph', all_set, layout);
-
-   $('#country_graph_title').html('<h3>' + init_data.name +  '</h3>');
-    
 
 }
