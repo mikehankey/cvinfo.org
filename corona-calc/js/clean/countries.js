@@ -82,7 +82,7 @@ function draw_country_graph(init_data,graph_data) {
    var dataDeaths = {
       x: graph_data.x_axis,
       y: graph_data.deaths,
-      name: "Total Deaths",
+      name: "Deaths",
       type: "bar",
       yaxis: 'y2',
       marker: {color: 'rgba(55, 83, 109,.2)'},
@@ -91,7 +91,7 @@ function draw_country_graph(init_data,graph_data) {
    var dataConfirmed = {
       x: graph_data.x_axis,
       y: graph_data.confirmed,
-      name: "Total Confirmed Cases",
+      name: "Confirmed Cases",
       type: 'scatter',
       mode: 'lines',
       yaxis: 'y1',
@@ -104,7 +104,7 @@ function draw_country_graph(init_data,graph_data) {
    var dataRecovered = {
       x: graph_data.x_axis,
       y: graph_data.recovered,
-      name: "Total Recovered",
+      name: "Recovered",
       type: 'scatter',
       mode: 'lines',
       yaxis: 'y1',
@@ -113,7 +113,7 @@ function draw_country_graph(init_data,graph_data) {
    var dataActive = {
       x: graph_data.x_axis,
       y: graph_data.active,
-      name: "Total Active",
+      name: "Active",
       type: 'scatter',
       mode: 'lines',
       yaxis: 'y1',
