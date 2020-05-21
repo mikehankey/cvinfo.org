@@ -115,7 +115,12 @@ def parse_all_data():
             if(cur_date not in all_data[country]):
                all_data[country][cur_date] = {} 
             
-            all_data[country][cur_date][cur_slug] = row[country] 
+            if( row[country]==""):
+               val  = "0"
+            else:
+               val = row[country]  
+            
+            all_data[country][cur_date][cur_slug] = val
 
          if(index == total_rows):
             # We build a file with all the countries value at the last date
@@ -126,8 +131,8 @@ def parse_all_data():
             for country in all_countries: 
                if(country != "World" and country != "International"):
 
-                  if(row[country]==''):
-                     row[country]= 0
+                  if(row[country]==""):
+                     row[country]= "0"
 
                   all_max_data['countries'].append({
                      "name":country, 
@@ -184,7 +189,7 @@ def clean_us_data():
       clean_data_state = {}
 
       # We need to recompute the cpm & dpm with floats!
-      cur_pop = state_data['summary_info']['state_population']*1000000
+      cur_pop = state_data['summary_info']['state_population']*1000000 
        
       # For the All State
       for daily_state in state_data['state_stats']: 
@@ -195,22 +200,22 @@ def clean_us_data():
          real_date = date_time_object.strftime('%Y-%m-%d')
 
          if(daily_state['new_cases']/cur_pop):
-            ncpm = str("%.3f" % round(daily_state['new_cases']/cur_pop, 3))
+            ncpm = str("%.3f" % round(daily_state['new_cases']*1000000/cur_pop, 3))
          else:
             ncpm = "0"
          
          if(daily_state['new_deaths']/cur_pop):
-            ndpm = str("%.3f" % round(daily_state['new_deaths']/cur_pop, 3))
+            ndpm = str("%.3f" % round(daily_state['new_deaths']*1000000/cur_pop, 3))
          else:
             ndpm = "0"
          
          if(daily_state['cases']/cur_pop):
-            tcpm = str("%.3f" % round(daily_state['cases']/cur_pop, 3))
+            tcpm = str("%.3f" % round(daily_state['cases']*1000000/cur_pop, 3))
          else:
             tcpm = "0"
          
          if(daily_state['deaths']/cur_pop):
-            tdpm = str("%.3f" % round(daily_state['deaths']/cur_pop, 3))
+            tdpm = str("%.3f" % round(daily_state['deaths']*1000000/cur_pop, 3))
          else:
             tdpm = "0"
 
@@ -237,27 +242,27 @@ def clean_us_data():
          # We get the population where it is...
          # and build the related data set
          if(county in state_data['county_pop']):
-            cur_pop = state_data['county_pop'][county]*1000000
+            cur_pop = state_data['county_pop'][county]
              
             for daily_county in state_data['county_stats'][county]['county_stats']:
                 
                if(daily_county['new_cases']/cur_pop):
-                  ncpm = str("%.3f" % round(daily_county['new_cases']/cur_pop, 3))
+                  ncpm = str("%.3f" % round(daily_county['new_cases']*1000000/cur_pop, 3))
                else:
                   ncpm = "0"
                
                if(daily_county['new_deaths']/cur_pop):
-                  ndpm = str("%.3f" % round(daily_county['new_deaths']/cur_pop, 3))
+                  ndpm = str("%.3f" % round(daily_county['new_deaths']*1000000/cur_pop, 3))
                else:
                   ndpm = "0"
                
                if(daily_county['cases']/cur_pop):
-                  tcpm = str("%.3f" % round(daily_county['cases']/cur_pop, 3))
+                  tcpm = str("%.3f" % round(daily_county['cases']*1000000/cur_pop, 3))
                else:
                   tcpm = "0"
                
                if(daily_county['deaths']/cur_pop):
-                  tdpm = str("%.3f" % round(daily_county['deaths']/cur_pop, 3))
+                  tdpm = str("%.3f" % round(daily_county['deaths']*1000000/cur_pop, 3))
                else:
                   tdpm = "0"
 

@@ -32,13 +32,15 @@ function getInitDataCountry(data,country) {
  
    // Sort country states per date
    country_stats.sort( compare );
+ 
 
    // State Data
    toReturn =  { 
       name:       country, 
       stats:      country_stats,
       last_date:  new Date(Math.max.apply(null,all_dates))
-   };   
+   };    
+
    return toReturn;
 }
 
@@ -46,8 +48,7 @@ function getInitDataCountry(data,country) {
  * Compute all the needed data for the graphs
  */
 function prepareData(data) {
-
-   
+ 
    var x_axis  = [];  
 
    // new_cases_per_million  
@@ -137,10 +138,11 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
 /**
  * Draw one single graph 
  */
-function draw_country_vs_single(name1,data1,name2,data2,x_axis,type,domEl,color1,color2,layout) {
-  
+function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,domEl,color1,color2,layout) {
+ 
+
     var set1 = {
-      x: x_axis,
+      x: x_axis1,
       y: data1,
       name: name1 + " " + type,
       type: "line+scatter", 
@@ -149,7 +151,7 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis,type,domEl,color1
 
    
    var set2 = {
-      x: x_axis,
+      x: x_axis2,
       y: data2,
       name: name2 + " " + type,
       type: "line+scatter", 
@@ -161,8 +163,6 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis,type,domEl,color1
       showlegend: true,
       legend: { orientation: "h" },
       yaxis1: {   
-         side: 'left',
-         rangemode: 'nonnegative',
          title:type
       }
    };
@@ -189,16 +189,16 @@ function draw_country_graph(init_data1,graph_data1, init_data2,graph_data2) {
       var color1 = 'rgba(200, 0 , 0,.8)';
       var color2 = 'rgba(50, 0, 50,.8)';
  
-      draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,"New Cases Per Million","country_graph1",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Cases Per Million","country_graph1",color1,color2)
       display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,"New Cases Per Million",'#country_graph_title1',color1,color2);
       
-      draw_country_vs_single(init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,graph_data1.x_axis,"New Deaths Per Million","country_graph2",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Deaths Per Million","country_graph2",color1,color2)
       display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,"New Deaths Per Million",'#country_graph_title2',color1,color2);
       
-      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,"Total Deaths Per Million","country_graph3",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Deaths Per Million","country_graph3",color1,color2)
       display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,"Total Deaths Per Million",'#country_graph_title3',color1,color2);
       
-      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,"Total Cases Per Million","country_graph4",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Cases Per Million","country_graph4",color1,color2)
       display_graph_top_info(init_data1.last_date,init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,"Total Cases Per Million",'#country_graph_title4',color1,color2);
             
 
