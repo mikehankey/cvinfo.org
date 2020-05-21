@@ -16,9 +16,9 @@ function compare( a, b ) {
  */
 function getInitDataCountry(data,country) {
    var toReturn;
-   
    var country_stats = [], all_dates = [];
-
+   
+ 
    $.each(data,function(i,v) { 
       country_stats.push({
          'date':                    i,

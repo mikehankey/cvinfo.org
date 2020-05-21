@@ -184,7 +184,7 @@ def clean_us_data():
       clean_data_state = {}
 
       # We need to recompute the cpm & dpm with floats!
-      cur_pop = state_data['summary_info']['state_population'] 
+      cur_pop = state_data['summary_info']['state_population']*1000000
        
       # For the All State
       for daily_state in state_data['state_stats']: 
@@ -193,12 +193,33 @@ def clean_us_data():
          real_date = daily_state['date'] 
          date_time_object = datetime.strptime(real_date,'%Y%m%d')
          real_date = date_time_object.strftime('%Y-%m-%d')
-      
+
+         if(daily_state['new_cases']/cur_pop):
+            ncpm = str("%.3f" % round(daily_state['new_cases']/cur_pop, 3))
+         else:
+            ncpm = "0"
+         
+         if(daily_state['new_deaths']/cur_pop):
+            ndpm = str("%.3f" % round(daily_state['new_deaths']/cur_pop, 3))
+         else:
+            ndpm = "0"
+         
+         if(daily_state['cases']/cur_pop):
+            tcpm = str("%.3f" % round(daily_state['cases']/cur_pop, 3))
+         else:
+            tcpm = "0"
+         
+         if(daily_state['deaths']/cur_pop):
+            tdpm = str("%.3f" % round(daily_state['deaths']/cur_pop, 3))
+         else:
+            tdpm = "0"
+
+
          clean_data_state[real_date] =   {
-               'ncpm' :  daily_state['new_cases']/cur_pop,
-               'ndpm' : daily_state['new_deaths']/cur_pop ,
-               'tcpm' : daily_state['cases']/cur_pop,
-               'tdpm' : daily_state['deaths']/cur_pop 
+               'ncpm' : ncpm,
+               'ndpm' : ndpm,  
+               'tcpm' : tcpm,  
+               'tdpm' : tdpm,  
          }
       
 
@@ -216,16 +237,39 @@ def clean_us_data():
          # We get the population where it is...
          # and build the related data set
          if(county in state_data['county_pop']):
-            cur_pop = state_data['county_pop'][county]
+            cur_pop = state_data['county_pop'][county]*1000000
              
             for daily_county in state_data['county_stats'][county]['county_stats']:
+                
+               if(daily_county['new_cases']/cur_pop):
+                  ncpm = str("%.3f" % round(daily_county['new_cases']/cur_pop, 3))
+               else:
+                  ncpm = "0"
                
-               clean_data_county[daily_county['day'] ] =   {
-                  'ncpm' : daily_county['new_cases']/cur_pop,
-                  'ndpm' : daily_county['new_deaths']/cur_pop ,
-                  'tcpm' : daily_county['cases']/cur_pop,
-                  'tdpm' : daily_county['deaths']/cur_pop 
+               if(daily_county['new_deaths']/cur_pop):
+                  ndpm = str("%.3f" % round(daily_county['new_deaths']/cur_pop, 3))
+               else:
+                  ndpm = "0"
+               
+               if(daily_county['cases']/cur_pop):
+                  tcpm = str("%.3f" % round(daily_county['cases']/cur_pop, 3))
+               else:
+                  tcpm = "0"
+               
+               if(daily_county['deaths']/cur_pop):
+                  tdpm = str("%.3f" % round(daily_county['deaths']/cur_pop, 3))
+               else:
+                  tdpm = "0"
+
+
+               clean_data_county[daily_county['day']]  =   {
+                     'ncpm' : ncpm,
+                     'ndpm' : ndpm,  
+                     'tcpm' : tcpm,  
+                     'tdpm' : tdpm,  
                }
+
+            
 
             # We create the file for the county level & Dump the Data
             tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county + ".json",  'w+')
@@ -254,29 +298,40 @@ def main_menu():
    print("0) Exit") 
    print("1) Update International Data") 
    print("2) Parse International Data") 
-   print("3) Clean Up US Data (use covid update first to get the latest data") 
+   print("3) Clean Up US Data (use covid update first to get the latest data)") 
+   print("4) DO IT ALL") 
    
    cmd = input("Run: ")
    cmd = int(cmd) 
 
    if cmd == 1:
-      print ("Updating data sources.")
+      print ("UPDATING DATA.")
       update_data_sources()
-      print("\n  TASK DONE \n\n") 
+      print("\n>>>TASK DONE \n\n") 
    elif cmd== 2:
-      print("Parsing data.")
+      print("PARSING DATA.")
       parse_all_data()
-      print("\n  TASK DONE \n\n") 
+      print("\n>>>TASK DONE \n\n") 
    elif cmd== 3:
-      print("Cleaning up US Data.")
+      print("CLEANING UP US DATA.")
       clean_us_data()
-      print("\n  TASK DONE \n\n") 
+      print("\n>>>TASK DONE \n\n") 
+   elif cmd== 4:
+      print ("UPDATING DATA.")
+      update_data_sources()
+      print("\n>>>TASK DONE \n\n") 
+      print("PARSING DATA.")
+      parse_all_data()
+      print("\n>>>TASK DONE \n\n") 
+      print("CLEANING UP US DATA.")
+      clean_us_data()
+      print("\n>>>TASK DONE \n\n") 
    elif cmd== 0:
       print("Exit.")
       sys.exit(0)
-      print("\n  TASK DONE \n\n") 
+      print("\n>>>TASK DONE \n\n") 
    else:
-      print("\n*** Command Not Found \n\n***")
+      print("\n*>>>ERROR: Command Not Found \n\n")
       
    main_menu()
 
