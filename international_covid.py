@@ -11,6 +11,8 @@ DATA_PATH_PER_COUNTRY = "." + os.sep + "covid-19-intl-data"  + os.sep + "country
 FILE_TYPES = ['new_cases_per_million','new_deaths_per_million','total_cases_per_million','total_deaths_per_million']
 TYPES_SLUG = ['ncpm','ndpm','tcpm','tdpm']
 ALL_COUNTRIES =  DATA_PATH + os.sep + "all_countries.json"  # File for the UI
+US_STATES_DATA_PATH = DATA_PATH + os.sep + "US"
+US_STATES_ORG_DATA_PATH = '.' + os.sep + 'json' 
 
 # Get Data from 
 # https://github.com/owid/covid-19-data/blob/master/public/data/
@@ -161,9 +163,88 @@ def parse_all_data():
       cur_country_file.close()
    
 
+# Clean Up US DATA to have 
+# One JSON per State & one JSON per County
+# It allows not to have to deal with files with more than 65k lines
+def clean_us_data():
+   states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+          "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+          "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+          "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+          "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
 
+   if not os.path.exists(US_STATES_DATA_PATH):
+      os.makedirs(US_STATES_DATA_PATH)
 
+   for state in states:
+      # We open the related JSON file created by covid.py
+      tmp_json = open(US_STATES_ORG_DATA_PATH + os.sep + state + ".json",  'r')
+      state_data = json.load(tmp_json)
 
+      clean_data_state = {}
+
+      # We need to recompute the cpm & dpm with floats!
+      cur_pop = state_data['summary_info']['state_population'] 
+       
+      # For the All State
+      for daily_state in state_data['state_stats']: 
+
+         # Get real date format
+         real_date = daily_state['date'] 
+         date_time_object = datetime.strptime(real_date,'%Y%m%d')
+         real_date = date_time_object.strftime('%Y-%m-%d')
+      
+         clean_data_state[real_date] =   {
+               'ncpm' :  daily_state['new_cases']/cur_pop,
+               'ndpm' : daily_state['new_deaths']/cur_pop ,
+               'tcpm' : daily_state['cases']/cur_pop,
+               'tdpm' : daily_state['deaths']/cur_pop 
+         }
+      
+
+      # We create the new JSON Dir (for the counties)
+      if not os.path.exists(US_STATES_DATA_PATH + os.sep + state):
+         os.makedirs(US_STATES_DATA_PATH + os.sep + state)
+      
+      all_counties_for_cur_state = []
+
+      # For each county
+      for county in state_data['county_stats']:
+         clean_data_county = {}
+         all_counties_for_cur_state.append(county)
+
+         # We get the population where it is...
+         # and build the related data set
+         if(county in state_data['county_pop']):
+            cur_pop = state_data['county_pop'][county]
+             
+            for daily_county in state_data['county_stats'][county]['county_stats']:
+               
+               clean_data_county[daily_county['day'] ] =   {
+                  'ncpm' : daily_county['new_cases']/cur_pop,
+                  'ndpm' : daily_county['new_deaths']/cur_pop ,
+                  'tcpm' : daily_county['cases']/cur_pop,
+                  'tdpm' : daily_county['deaths']/cur_pop 
+               }
+
+            # We create the file for the county level & Dump the Data
+            tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county + ".json",  'w+')
+            json.dump(clean_data_county,tmp_json)
+
+ 
+      # We create the file for the state level & Dump the Data
+      tmp_json = open(US_STATES_DATA_PATH + os.sep + state + ".json",  'w+')
+      json.dump(clean_data_state,tmp_json)
+      tmp_json.close()  
+
+      # We create a file with all the countries name (for which we have data!)
+      # for the current state 
+      tmp_json = open(US_STATES_DATA_PATH + os.sep + state + "_counties.json",  'w+')
+      json.dump({"counties":all_counties_for_cur_state},tmp_json)
+      tmp_json.close()  
+
+      print(state + ' done')
+ 
 
 def main_menu():
 
@@ -171,8 +252,9 @@ def main_menu():
    print("Select Function")
    print("---------------")
    print("0) Exit") 
-   print("1) Update Data") 
-   print("2) Parse Data") 
+   print("1) Update International Data") 
+   print("2) Parse International Data") 
+   print("3) Clean Up US Data (use covid update first to get the latest data") 
    
    cmd = input("Run: ")
    cmd = int(cmd) 
@@ -184,6 +266,10 @@ def main_menu():
    elif cmd== 2:
       print("Parsing data.")
       parse_all_data()
+      print("\n  TASK DONE \n\n") 
+   elif cmd== 3:
+      print("Cleaning up US Data.")
+      clean_us_data()
       print("\n  TASK DONE \n\n") 
    elif cmd== 0:
       print("Exit.")

@@ -37,6 +37,8 @@
    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
    <link rel="manifest" href="./site.webmanifest">
    <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+
+
  
 </head>
 <body class="wait">
@@ -60,11 +62,12 @@
          <h2>International Comparison</h2>
    </div>
    <div id="main-content">
-         
-         <div class="box" id="lists">
-            
+      <div class="box">
+         <div class="tabs">
+            <ul></ul>
+            <div class="contents" id="lists"></div>
          </div>
-         
+      </div>
    </div>
 
    <div id="soc">
@@ -82,14 +85,23 @@
       coronafiles.us provides enhanced COVID-19 statistics and reports made from open source data <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
       <br/>contact: mike.hankey[@]gmail.com
 </div>
-
+ 
    <script src="./js/clean/framework_plugs.js"></script>
+   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"  crossorigin="anonymous"></script>
    <script src="./js/clean/share.js"></script>
    <script src="./js/clean/countries.js"></script>
    <script>
       var FILE_TYPES = ['new_cases_per_million','new_deaths_per_million','total_cases_per_million','total_deaths_per_million'];
       var TYPES_SLUG = ['ncpm','ndpm','tcpm','tdpm'];
+
+      
+
       $(function() {
+
+            $(".tabs").tabs({ 
+               show: { effect: "slide", direction: "left", duration: 200, easing: "easeOutBack" } ,
+               hide: { effect: "slide", direction: "right", duration: 200, easing: "easeInQuad" } 
+            });
          
             $.each(FILE_TYPES,function(i,v) {
                
@@ -97,12 +109,15 @@
                   "url": "../covid-19-intl-data/country/MAX_" + v  +".json",
                   "method": "GET",
                   "timeout": 0,
-               };
-
-                
+               }; 
                $.ajax(settings).done(function (response) {
                   var html = "";
-                  $('<div id="' + v +'"><h3>'+v.toLocaleUpperCase().replace(/_/g, ' ')+' on '  + response.date  +'</h3><table><thead><tr><th style="text-align:left">Rank &amp; Country</th><th>Value</th></thead><tbody></tbody></table></div>').appendTo($('#lists')); 
+                  var title = v.toLocaleUpperCase().replace(/_/g, ' ');
+
+                  // Add Tab Link
+                  $('.tabs ul').append('<li><a href="#'+v+'"><span>'+title+'</span></a></li>');
+ 
+                  $('<div id="' + v +'"><h3>'+ title +' on '  + response.date  +'</h3><table><thead><tr><th style="text-align:left">Rank &amp; Country</th><th>Value</th></thead><tbody></tbody></table></div>').appendTo($('#lists')); 
                   
                   // We display the list
                   $.each(response['countries'],function(a,v) {
