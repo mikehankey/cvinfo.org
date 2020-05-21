@@ -162,7 +162,6 @@
          if(country==0 || state == 0) {
             return false;
          }
-
  
          if(county != "0") {
             us_settings = {
@@ -177,6 +176,7 @@
                "method": "GET",
                "timeout": 0 
             }
+            state_name = $('#us_state_selector option:selected').text();
          }
 
          country_settings = {
@@ -218,7 +218,10 @@
          $('#us_state_selector').change(function() {
             var v = $(this).val();
             if(v!=="0") {
-               $('#us_county_selector').show();
+
+               if(v!='DC') {
+                   $('#us_county_selector').show();
+               }
                fillCountyList(v, function() {
                   getDataForCountry($('#us_state_selector').val(),$('#us_county_selector').val(),$('#country_selector').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); })
                });
