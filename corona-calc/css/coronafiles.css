@@ -28,6 +28,11 @@ body.wait {
    margin-top: 2rem;
 }
 
+.box.nsh {
+   box-shadow: 0 0 0 rgba(0,0,0,0) !important;
+   border:none medium;
+}
+
 a, a:visited {
    color:#000;
 }

@@ -102,13 +102,24 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
 
     
    $(domEl).html(
-      '<h3>' +  name1  +  ' <i>vs.</i> '+ name2 +' - ' + type  +'</h3>\
-      <p>On ' + formattedDate + '<br>\
-      <b style="color:'+color1+'">' + name1+ '</b>: \
-      <b style="color:'+color1+'">' + usFormatCommas(data1[data1.length-1]) + '</b> ' + type +' <span id="'+slug_type+"_"+slug_name1 +'"></span><br>\
-      <b style="color:'+color2+'">' + name2 + '</b>: \
-      <b style="color:'+color2+'">' + usFormatCommas(data2[data2.length-1]) + '</b> ' + type +' <span id="'+slug_type+"_"+slug_name2 +'"></span> \
-      </p>');
+      '<h3>' + type + ' on <b>' + formattedDate + '</b></h3>\
+      <div class="comp_box" >\
+         <div>\
+            <div class="cpb" style="background-color:'+ color1 +' ">\
+               <div class="cpbn">' + name1+ '</div>\
+               <div class="cpbnb">' + usFormatCommas(data1[data1.length-1])+ '</div>\
+               <div class="cpbt">' + type + '</div>\
+            </div>\
+            <span id="'+slug_type+"_"+slug_name1 +'"></span>\
+         </div>\
+         <div>\
+         <div class="cpb" style="background-color:'+ color2 +' ">\
+            <div class="cpbn">' + name2+ '</div>\
+            <div class="cpbnb">' + usFormatCommas(data2[data2.length-1])+ '</div>\
+            <div class="cpbt">' + type + '</div>\
+         </div>\
+         <span id="'+slug_type+"_"+slug_name2 +'"></span>\
+      </div>');
 
       // We get the related MAX_(type.replace(" ","_")).json
       // To have the ranking 
@@ -145,7 +156,8 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
       x: x_axis1,
       y: data1,
       name: name1 + " " + type,
-      type: "line+scatter", 
+      fill: 'tonexty',
+      type: 'scatter',
       marker: {color: color1},
    };
 
@@ -159,7 +171,7 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
    };
 
    var layout = { 
-      margin: {"t": 20, "b": 80, "l": 80, "r": 80},
+      margin: {"t": 20, "b": 80, "l": 50, "r": 20},
       showlegend: true,
       legend: { orientation: "h" },
       yaxis1: {   
