@@ -68,9 +68,10 @@ function prepareData(data) {
    var x_axis_new_cases  = []; 
    var y_axis_new_cases = [];
     
-   // New Cases Trend
-   var x_axis_new_cases_model_trend  = []; 
-   var y_axis_new_cases_model_trend = [];  
+   // New Cases MODELS Trend
+   // WARNING we can have several models at once
+   // So we return an array of JSON objects (on object per model)
+   var all_models  = [];  
 
    // Growth
    var x_axis_growth  = []; 
@@ -102,20 +103,30 @@ function prepareData(data) {
    // Models?
    if(data['model_data'] !== undefined) { 
       
-      //  MIT
-      if(data['model_data']['MIT'] !== undefined) { 
-         $.each(data['model_data']['MIT']['Day'], function(i,day) {
-            x_axis_new_cases_model_trend.push(new Date(day));
+      $.each(data['model_data'], function(i,v) {
+       
+         // We create the model JSON object
+         tmp_json = {'model': i, 'x_axis': [], 'y_axis': [] };
+
+         // We create the x_axis (days)
+         $.each(v['Day'], function(i,day) {
+            tmp_json.x_axis.push(new Date(day));
          });
 
-         $.each(data['model_data']['MIT']['Total_Detected'], function(i,total_detected) {
+        
+         // We create the y_axis (total_detected)
+         $.each(v['Total_Detected'], function(i,total_detected) {
             if(i!==0) {
-               y_axis_new_cases_model_trend.push(total_detected-data['model_data']['MIT']['Total_Detected'][i-1]);
-            } else {
-               y_axis_new_cases_model_trend.push(total_detected-data['model_data']);
-            }
-         }); 
-      }
+               tmp_json.y_axis.push(total_detected-v['Total_Detected'][i-1]);
+            } 
+            // We cannot have the total of new detection for the first day...
+            /*else {
+               tmp_json.y_axis.push(total_detected-v['model_data']);
+            }*/
+         });
+
+         all_models.push(tmp_json);
+      }) 
    }
      
 
@@ -160,7 +171,7 @@ function prepareData(data) {
       y_axis_new_deaths.push(val.new_deaths>0?val.new_deaths:0);
        
    });
-    
+ 
    return {
       'name'                  :  data.name,
       'pop'                   :  data.pop, 
@@ -172,7 +183,7 @@ function prepareData(data) {
       'new_cases'             :  [x_axis_new_cases,y_axis_new_cases],
       'tests'                 :  [x_axis_tests,y_axis_tests],
       'growth'                :  [x_axis_growth,y_axis_growth],
-      'MIT_model'             :  [x_axis_new_cases_model_trend,y_axis_new_cases_model_trend],
+      'models'                :  all_models,
       'death_growth'          :  [x_axis_deaths_growth,y_axis_deaths_growth],
       'growth_decay'          :  [x_axis_growth_decay,y_axis_growth_decay],
       'mortality'             :  [x_axis_mortality,y_axis_mortality],
@@ -228,7 +239,7 @@ function new_display_data(data,state,county) {
          name: all_data.name,
          graph_div: 'newcases_graph',
          graph_details_div: 'newcases_graph_details',
-         models: {    'MIT':  all_graph_data.MIT_model  },
+         models:  all_graph_data.models, 
          total :              all_graph_data['total_case'],     
          last_day_data:       all_graph_data['last_day_data'],         
          last_day_data_raw :  all_graph_data['last_day_number_data'],
@@ -339,9 +350,7 @@ function compute_new_graph_data(input_data) {
    var x_trend_7, y_trend_7;
    var x_poly, y_poly; // Poly regression (curve)
    
-   // MIT Model
-   var x_model  = []; 
-   var y_model = []; 
+ 
    var max_day = 30; // When we don't have a model, we compute the graphs until last_day + 'max_day' days
    var total_x = []; // If we have a model, it's the model X, if not it the last day of the current input_data set (x) + max_day
    var reg = {}, reg_7 = {}, reg_14 = {};
@@ -355,7 +364,6 @@ function compute_new_graph_data(input_data) {
    var phantom = input_data.phantom;
    var herd_thresh = input_data.herd_thresh;
    var toReturn = {};
-
  
 
    // Option is... optionnal!
@@ -366,22 +374,11 @@ function compute_new_graph_data(input_data) {
       }
    }
     
+   // We take care of the models
    if(input_data.models !== undefined) {
-      if(input_data.models['MIT'] !== undefined) {
-            // MIT Model input_data for projection for 2nd input_data set
-            $.each(input_data.models['MIT'][0], function(i,val) {
-               x_model.push(new Date(val));
-            });
-
-            total_x = x_model;
-            y_model = input_data.models['MIT'][1]; 
-            toDraw.x2 = x_model;
-            toDraw.y2 = y_model;
-            toDraw.title2 = "MIT Trend Model"; 
-      }
+      toDraw.models = input_data.models; 
    }
-   
-  
+    
    // If we don't have a model, we need to compute the total_x
    if(total_x.length==0) {
 
@@ -440,9 +437,7 @@ function compute_new_graph_data(input_data) {
    toDraw.title1 = input_data.title;
    toDraw.x1 = input_data.x;
    toDraw.y1 = input_data.y;
-
-
-    
+ 
    // Draw the Graph
    draw_graph(toDraw,input_data.option);  
 

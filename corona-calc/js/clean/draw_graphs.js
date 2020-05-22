@@ -48,6 +48,39 @@ function plot_pie(xd,lb,title,dv) {
  * @param {*} data 
  */
 function draw_graph(data,option) {
+
+   var all_models_data_sets = [];
+   var maxModelDateArray = []; // If we have models, what is the max date?
+   var maxDayModel = new Date(1979,01,01);
+   var all_models_colors = ['rgba(31,119,180,.8)','rgba(31,180,177,.8)','rgba(180,31,66,.8)','rgba(199,120,60,.8)']
+   var modelData;
+
+   // Do we have models?
+   if(data.models !== undefined && data.models.length>0) {
+      $.each(data.models,function(i, model) {
+
+         modelData = {
+            name: model.model + " model",
+            x: model.x_axis,
+            y: model.y_axis, 
+            type: "line",
+            mode: "lines",
+            xaxis: 'x2'
+         };
+
+         if(all_models_colors[i] !== undefined) {
+            modelData.line = {color: all_models_colors[i]};
+         }
+
+         all_models_data_sets.push(modelData); 
+         
+         maxModelDateArray.push(new Date(Math.max.apply(null,model.x_axis)));
+      });
+   }
+
+   maxDayModel = new Date(Math.max.apply(null,maxModelDateArray));
+ 
+    
    var maxDate1, minDate1, maxDate2, minDate2, min, max;
    var dataSet1,dataSet2,dataSet3,dataSet4,dataSet5;
  
@@ -55,12 +88,10 @@ function draw_graph(data,option) {
    maxDate1 = new Date(Math.max.apply(null,data.x1));
    minDate1 = new Date(Math.min.apply(null,data.x1));
    
-   if(data.x2 !== undefined) {
-      // We have models
-      maxDate2=new Date(Math.max.apply(null,data.x2));
-      minDate2=new Date(Math.min.apply(null,data.x2)); 
-      max = (maxDate1<maxDate2)?maxDate2:maxDate1;
-      min = (minDate1<minDate2)?minDate1:minDate2;
+   if(data.models !== undefined) {
+      // We have models 
+      max = (maxDate1<maxDayModel)?maxDayModel:maxDate1;
+      min = (minDate1<=maxDayModel)?minDate1:maxDayModel;
    } else {
       // We don't have models
       // We take max in data.x3 (one of the Trend)
@@ -91,19 +122,7 @@ function draw_graph(data,option) {
       dataSet1.mode =  'lines';
       dataSet1.line =  {shape: 'spline'};
    }
-
-   // MIT Prevision
-   if(data.x2 !== undefined) {
-      dataSet2 = {
-         x: data.x2,
-         y: data.y2,
-         name: data.title2,
-         type: "bar",
-         xaxis: 'x2',
-         marker: {  color: 'rgb(158,202,225)'  }
-      };  
-   }
-
+ 
    // Linear Trend 1
    dataSet3 = {
          x: data.x3,
@@ -175,9 +194,11 @@ function draw_graph(data,option) {
       layout.yaxis.range = [Math.min.apply(null,data.y1), Math.max.apply(null,data.y1)];
    }
 
-   if(data.x2 !== undefined) {
+   if(data.models !== undefined) {
       // With Model
-      all_set = [dataSet1,dataSet2,dataSet3,dataSet4,dataSet5];
+      
+      all_set = [dataSet1,dataSet3,dataSet4,dataSet5];
+      all_set = all_set.concat(all_models_data_sets);
    } else { 
       // Without Model
       all_set =  [dataSet1, dataSet3,dataSet4,dataSet5];
