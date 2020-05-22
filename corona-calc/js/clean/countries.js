@@ -192,7 +192,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
      
      
        
-      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Deaths Per Million","country_graph3",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Deaths Per Million","country_graph4",color1,color2)
       display_graph_top_info(
          rightDate,
          init_data1.name,
@@ -200,11 +200,11 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          init_data2.name,
          graph_data2.total_deaths_per_million[indexData2],
          "Total Deaths Per Million",
-         '#country_graph_title3',
+         '#country_graph_title4',
          color1,
          color2);
        
-      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Cases Per Million","country_graph4",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Cases Per Million","country_graph3",color1,color2)
       display_graph_top_info(
          rightDate,
          init_data1.name,
@@ -212,7 +212,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          init_data2.name,
          graph_data2.total_cases_per_million[indexData2],
          "Total Cases Per Million",
-         '#country_graph_title4',
+         '#country_graph_title3',
          color1,
          color2);
              
