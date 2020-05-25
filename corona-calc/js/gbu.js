@@ -76,12 +76,20 @@ function display_sum_info(result,state) {
    title_si_deaths = "New Deaths Per Day for " + state
    title_si_tests = "New Tests Per Day for " + state
    title_si_tests_pos_perc = "Positive % of Tests " + state
+   title_si_hospital = "Active Hospitalizations " + state
 
    document.getElementById("title_si_cases").innerHTML= title_si_cases;
    document.getElementById("title_si_deaths").innerHTML= title_si_deaths;
    document.getElementById("title_si_tests").innerHTML= title_si_tests;
    document.getElementById("title_si_tests_pos_perc").innerHTML= title_si_tests_pos_perc;
+   document.getElementById("title_si_hospital").innerHTML= title_si_hospital;
+
    plot_data_line(xd,yd,yd2,"days since first case","new cases per day",full_name, "sum_info_cases" ,"line",color,result['key_dates'][state_code]);
+
+   yd = result['sum_data']['avg']['hospital']
+   yd2 = result['sum_data']['stats']['hospital']
+   plot_data_line(xd,yd,yd2,"days since first case","Hospital Active",full_name, "sum_info_hospital" ,"line",color,result['key_dates'][state_code]);
+
 
 
    yd = result['sum_data']['avg']['deaths']
