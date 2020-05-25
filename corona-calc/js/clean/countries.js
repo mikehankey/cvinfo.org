@@ -91,9 +91,12 @@ function prepareData(data) {
  * Draw one single graph 
  */
 function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,domEl,color1,color2,layout) {
+   
+   
+   // Get the Max Date on Both (we don't care if don't have all the data for both data sets)
  
 
-    var set1 = {
+   var set1 = {
       x: x_axis1,
       y: data1,
       name: name1 + " " + type,
@@ -101,8 +104,7 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
       type: 'scatter',
       marker: {color: color1},
    };
-
-   
+ 
    var set2 = {
       x: x_axis2,
       y: data2,
@@ -117,7 +119,7 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
       legend: { orientation: "h" },
       yaxis1: {   
          title:type
-      }
+      } 
    };
 
    Plotly.newPlot(domEl, [set1,set2], layout);
@@ -162,7 +164,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
       var indexData2 = graph_data2.x_axis.indexOf(rightDate); 
 
       // We need the min of the two max!
-      draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Cases Per Million","country_graph1",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Cases Per Million","country_graph4",color1,color2)
       
       // Make we pass the right data to rightLastData
       display_graph_top_info(
@@ -172,13 +174,13 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          init_data2.name,
          graph_data2.new_cases_per_million[indexData2],
          "New Cases Per Million",
-         '#country_graph_title1',
+         '#country_graph_title4',
          color1,
          color2);
 
          
       // Before top graph
-      draw_country_vs_single(init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Deaths Per Million","country_graph2",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Deaths Per Million","country_graph3",color1,color2)
       display_graph_top_info(
          rightDate,
          init_data1.name,
@@ -186,13 +188,13 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          init_data2.name,
          graph_data2.new_deaths_per_million[indexData2],
          "New Deaths Per Million",
-         '#country_graph_title2',
+         '#country_graph_title3',
          color1,
          color2);
      
      
        
-      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Deaths Per Million","country_graph4",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Deaths Per Million","country_graph1",color1,color2)
       display_graph_top_info(
          rightDate,
          init_data1.name,
@@ -200,11 +202,11 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          init_data2.name,
          graph_data2.total_deaths_per_million[indexData2],
          "Total Deaths Per Million",
-         '#country_graph_title4',
+         '#country_graph_title1',
          color1,
          color2);
        
-      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Cases Per Million","country_graph3",color1,color2)
+      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Cases Per Million","country_graph2",color1,color2)
       display_graph_top_info(
          rightDate,
          init_data1.name,
@@ -212,7 +214,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          init_data2.name,
          graph_data2.total_cases_per_million[indexData2],
          "Total Cases Per Million",
-         '#country_graph_title3',
+         '#country_graph_title2',
          color1,
          color2);
              
