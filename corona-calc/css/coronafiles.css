@@ -180,7 +180,7 @@ a, a:visited {
  }
  
  .header .menu-btn:checked ~ .menu {
-   max-height: 240px;
+   max-height: 840px;
  }
  
  .header .menu-btn:checked ~ .menu-icon .navicon {
