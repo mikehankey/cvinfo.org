@@ -78,7 +78,12 @@
       text-overflow: ellipsis;
    }
    .cpbnb {
-      font-size: 1.2rem;
+      font-size: 1.35rem;
+      font-weight: bold;
+   }
+   .cpbnb span {
+      display: inline-block;
+      vertical-align: top;
    }
    .cpbt {
       font-size: .8rem;
@@ -147,7 +152,7 @@
             <div id="select_holder">
                <div>
                   <select id="us_state_selector">
-                     <option value="0">Select a US State</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option> 
+                     <option value="0">Select a State or the Entire USA</option><option value="US">United States</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option> 
                   </select> 
                   <select id="us_county_selector" style="display:none"></select> 
                </div>
@@ -247,25 +252,38 @@
 
          var us_settings,  country_settings, state_name = state;
 
+         console.log("STATE ", state);
+         console.log("COUNTY ", county);
+         console.log("COUNTRY ", country);
+
+
          if(country==0 || state == 0) {
             return false;
          }
  
-         if(county != "0") {
+         if(state == "US") {
+            us_settings = {
+               "url": "../covid-19-intl-data/country/United States.json",
+               "method": "GET",
+               "timeout": 0 
+            };
+            state_name = $('#us_state_selector option:selected').text();
+           
+         }  else if(county !== "0") {
             us_settings = {
                "url": "../covid-19-intl-data/US/" + state  + "/"+ county + ".json",
                "method": "GET",
                "timeout": 0 
-            }
+            };
             state_name = county + ", " + state
-         } else if(state != "0") {
+         } else if(state !== "0" && state!== "US") {
             us_settings = {
                "url": "../covid-19-intl-data/US/" +  state + ".json",
                "method": "GET",
                "timeout": 0 
-            }
+            };
             state_name = $('#us_state_selector option:selected').text();
-         }
+         }  
 
          country_settings = {
             "url": "../covid-19-intl-data/country/" +  country + ".json",
@@ -326,7 +344,7 @@
          // If we change the state
          $('#us_state_selector').change(function() {
             var v = $(this).val();
-            if(v!=="0") {
+            if(v!=="0" && v!=="US") {
 
                if(v!='DC') {
                    $('#us_county_selector').show();
@@ -334,9 +352,13 @@
                fillCountyList(v, function() {
                   getDataForCountry($('#us_state_selector').val(),$('#us_county_selector').val(),$('#country_selector').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); })
                });
+            } else if(v=="US") {
+               $('#us_county_selector').val(0).hide(); // No County (for the old men)
+               getDataForCountry($('#us_state_selector').val(),$('#us_county_selector').val(),$('#country_selector').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); })
+
             } else {
-                  // We hide the county selector
-                  $('#us_county_selector').hide();
+               // We hide the county selector
+               $('#us_county_selector').hide();
             }
          });
 

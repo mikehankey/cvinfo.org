@@ -131,7 +131,10 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
  * US Format Float
  */
 function usFormatCommas(x) {
-   return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+   var x = parseFloat(x).toFixed(3);
+   var toReturn  = x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+   toReturn = toReturn.split('.'); 
+   return [toReturn[0],toReturn[1]];
 }
 
 
@@ -228,16 +231,19 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
  */
 
 function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, color1, color2) {
-   /*
-   var slug_type  = type.toLowerCase().replace(/ /g, '_') ;
-   var slug_name1 = name1.toLowerCase().replace(/ /g, '_') ;
-   var slug_name2 = name2.toLowerCase().replace(/ /g, '_') ;
-   */
+   
    var formattedDate = last_date.toLocaleString("en-US", {
       day: "numeric",
       month: "short",
       year: "numeric" 
     });
+
+   var data1Det = usFormatCommas(data1);
+   var data2Det = usFormatCommas(data2);
+
+   if(data1Det[1] === undefined) { data1Det[1] = "000";  }
+   if(data1Det[2] === undefined) { data1Det[1] = "000";  }
+
  
    $(domEl).html(
       '<h3>' + type + ' on <b>' + formattedDate + '</b></h3>\
@@ -245,43 +251,17 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
          <div>\
             <div class="cpb" style="background-color:'+ color1 +' ">\
                <div class="cpbn">' + name1+ '</div>\
-               <div class="cpbnb">' + usFormatCommas(data1)+ '</div>\
+               <div class="cpbnb">' + data1Det[0] +'<span>.' +  data1Det[1] + '</span></div>\
                <div class="cpbt">' + type + '</div>\
             </div>\
          </div>\
          <div>\
          <div class="cpb" style="background-color:'+ color2 +' ">\
             <div class="cpbn">' + name2+ '</div>\
-            <div class="cpbnb">' + usFormatCommas(data2)+ '</div>\
+            <div class="cpbnb">' + data2Det[0] +'<span>.' +  data2Det[1] + '</span></div>\
             <div class="cpbt">' + type + '</div>\
          </div>\
       </div>');
 
-      // <span id="'+slug_type+"_"+slug_name1 +'"></span>\
-         /*<span id="'+slug_type+"_"+slug_name2 +'"></span>\
-
-      // We get the related MAX_(type.replace(" ","_")).json
-      // To have the ranking 
-      /*
-      var settings = {
-         "url": "../covid-19-intl-data/country/MAX_" + slug_type  +".json",
-         "method": "GET",
-         "timeout": 0,
-      };
- 
-      $.ajax(settings).done(function (response) {
-
-         // We find the rank of the country
-         $.each(response['countries'],function(i,v) {
-            if(v['name']== name1 && name1!= "World") {
-               $('#'+slug_type+"_"+slug_name1).html("(currently ranked <a href='./countries_rank.html#"+slug_type+"'>#" + v['rank']+'</a> worldwide)');
-            }
-            if(v['name']== name2 && name2!= "World") {
-               $('#'+slug_type+"_"+slug_name2).html("(currently ranked <a  href='./countries_rank.html#"+slug_type+"'>#" + v['rank']+'</a> worldwide)');
-            }
-         });
-        
-         
-      });
-      */
+      
 }
