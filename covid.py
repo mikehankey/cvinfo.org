@@ -901,18 +901,22 @@ def compare():
       sum_data[st]['avg']['deaths'] = []
       sum_data[st]['avg']['tests_pos'] = []
       sum_data[st]['avg']['tests_neg'] = []
+      sum_data[st]['avg']['hospital'] = []
       sum_data[st]['stats']['cases'] = []
       sum_data[st]['stats']['deaths'] = []
       sum_data[st]['stats']['tests_pos'] = []
       sum_data[st]['stats']['tests_neg'] = []
+      sum_data[st]['stats']['hospital'] = []
       stats = sd['state_stats']
       temp = []
       temp_deaths = []
       temp_tests_pos = []
       temp_tests_neg = []
+      temp_hosp = []
       max_val = 0
       for ss in stats:
          cases = ss['new_cases']
+         hospital= int(ss['hospital_now'])
          deaths = ss['new_deaths']
          tests_pos = ss['tests_new_pos']
          tests_neg = ss['tests_new_neg']
@@ -920,16 +924,21 @@ def compare():
          temp_deaths.append(deaths)
          temp_tests_pos.append(tests_pos)
          temp_tests_neg.append(tests_neg)
+         temp_hosp.append(int(hospital))
          if len(temp) < 7:
             avg = int(np.mean(temp))
             avg_deaths = int(np.mean(temp_deaths))
             avg_tests_pos = int(np.mean(temp_tests_pos))
             avg_tests_neg = int(np.mean(temp_tests_neg))
+            avg_hosp = int(np.mean(temp_hosp))
+            print("HOSP:", temp_hosp)
          else: 
             avg = int(np.mean(temp[-7:]))
             avg_deaths = int(np.mean(temp_deaths[-7:]))
             avg_tests_pos = int(np.mean(temp_tests_pos[-7:]))
             avg_tests_neg = int(np.mean(temp_tests_neg[-7:]))
+            print("HOSP:", temp_hosp[-7:])
+            avg_hosp = int(np.mean(temp_hosp[-7:]))
          #rel_data[st].append(avg)
          rel_data[st]['avg_cases'].append(avg)
          rel_data[st]['cases'].append(cases)
@@ -946,10 +955,12 @@ def compare():
          sum_data[st]['avg']['deaths'].append(avg_deaths)
          sum_data[st]['avg']['tests_pos'].append(avg_tests_pos)
          sum_data[st]['avg']['tests_neg'].append(avg_tests_neg)
+         sum_data[st]['avg']['hospital'].append(avg_hosp)
          sum_data[st]['stats']['cases'].append(cases)
          sum_data[st]['stats']['deaths'].append(deaths)
          sum_data[st]['stats']['tests_pos'].append(tests_pos)
          sum_data[st]['stats']['tests_neg'].append(tests_neg)
+         sum_data[st]['stats']['hospital'].append(hospital)
          if avg > max_val:
             max_val = avg
 
@@ -981,13 +992,47 @@ def compare():
    key_dates()
    herd_master()
    plot_herd()
-     
+    
+def county_pie(): 
+   state_names, state_codes = load_state_names()
+   del state_names['VI']
+   county_pie = {}
+   county_pie['_0']  = 0
+   county_pie['_5']  = 0
+   county_pie['5_10']  = 0
+   county_pie['10_100']  = 0
+   county_pie['100_1000']  = 0
+   county_pie['1000_']  = 0
+   for st in state_names: 
+      sd = load_json_file(JSON_PATH + "/" + st + ".json") 
+      cs = sd['county_stats']
+      for county in cs:
+         #print(county, cs[county]['county_stats'])
+         total_cases = cs[county]['county_stats'][-1]['cases']
+         total_cases_pm = cs[county]['county_stats'][-1]['cpm']
+         print(county, st, total_cases,total_cases_pm, round((total_cases_pm / 1000000)*100,4))
+         #total_cases = total_cases_pm
+         if total_cases == 0 :
+            county_pie['_0'] += 1
+         elif 0 < total_cases <= 5 :
+            county_pie['_5'] += 1
+         elif 5 < total_cases <= 10 :
+            county_pie['5_10'] += 1
+         elif 10 < total_cases <= 100 :
+            county_pie['10_100'] += 1
+         elif 100 < total_cases <= 1000 :
+            county_pie['100_1000'] += 1
+         elif total_cases > 1000:
+            county_pie['1000_'] += 1
+   for key in county_pie:
+      print(key, county_pie[key])
 
 def tests() :
    compare()
+   load_UWASH()
+   county_pie()
    county_alerts()
    #cdc()
-   exit()
    state_names, state_codes = load_state_names()
    for st in state_names: 
       if st == 'VI':
@@ -1059,7 +1104,6 @@ def tests() :
 
 
 def make_all_county_page(sort_field = None):
-
  
    fp = open("./templates/all-counties.html", "r")
    template = ""
@@ -1177,7 +1221,8 @@ def make_all_county_page(sort_field = None):
    template= template.replace("{PAGE_DESC}",page_desc)
   
 
-   html = table_header + rows + table_footer
+   raw_html = table_header + rows + table_footer
+   html = raw_html 
    html = template.replace("{COUNTY_TABLE}", html)
  
    if sort_field == 'cg_med':
@@ -1193,9 +1238,31 @@ def make_all_county_page(sort_field = None):
       html = html.replace("{active_all}",'active')
       html = html.replace("{DEFAUT_SORT_COL}",'6')
 
+
+   html2 = ""
+   fp = open("templates/counties-new.html","r")
+   for line in fp:
+      html2 += line
+
    fp = open(out_file, "w")
    fp.write(html)
    fp.close()
+
+   if sort_field is None: 
+      thtml = html2.replace("{COUNTY_TABLE}", raw_html)
+      fp = open("corona-calc/counties.html", "w")
+      fp.write(thtml)
+      fp.close()
+   if sort_field is "mortality":
+      thtml = html2.replace("{COUNTY_TABLE}", raw_html)
+      fp = open("corona-calc/counties-mortality.html", "w")
+      fp.write(raw_html)
+      fp.close()
+   if sort_field is "cg_med":
+      thtml = html2.replace("{COUNTY_TABLE}", raw_html)
+      fp = open("corona-calc/counties-growth.html", "w")
+      fp.write(raw_html)
+      fp.close()
 
 def publish_site():
    tcmd = "rsync -L --exclude-from='./exclude.txt' -rave 'ssh -i ~/.ssh/mikevm.pem' /home/ams/cvinfo.org/{WILD} ubuntu@ec2-35-165-208-121.us-west-2.compute.amazonaws.com:/home/ubuntu/cvinfo.org/{DEST}"
@@ -3556,6 +3623,37 @@ def analyze_data_for_state(this_state,state_data,state_pop):
       last_cases = cases
       last_deaths = deaths
    return(level2_data)
+
+def load_UWASH(): 
+   # load the summary data (mainly we want max beds per state here. 
+   max_beds = {}
+   icu_beds = {}
+   fp = open("data/UW_2020_05_19/Summary_stats_all_locs.csv", "r")
+
+   state_names, state_codes = load_state_names()
+
+   for line in fp:
+      print(line)
+      line = line.replace("\n", "")
+      location_name,peak_bed_day_mean,peak_bed_day_lower,peak_bed_day_upper,peak_icu_bed_day_mean,peak_icu_bed_day_lower,peak_icu_bed_day_upper,peak_vent_day_mean,peak_vent_day_lower,peak_vent_day_upper,all_bed_capacity,icu_bed_capacity,all_bed_usage,icu_bed_usage,available_all_nbr,available_icu_nbr,travel_limit_start_date,travel_limit_end_date,stay_home_start_date,stay_home_end_date,educational_fac_start_date,educational_fac_end_date,any_gathering_restrict_start_date,any_gathering_restrict_end_date,any_business_start_date,any_business_end_date,all_non_ess_business_start_date,all_non_ess_business_end_date = line.split(",")
+      #print(data)
+      lc = location_name.replace('"', '')
+      if lc in state_codes:
+         sc = state_codes[lc]
+         max_beds[sc] = available_all_nbr 
+         icu_beds[sc] = available_icu_nbr 
+         
+
+   for sc in max_beds:
+      js = load_json_file("json/" + sc + "-gbu.json")
+      js['summary_info'] = {}
+      js['summary_info']['max_beds'] = max_beds[sc]
+      js['summary_info']['icu_beds'] = icu_beds[sc]
+      save_json_file("json/" + sc + "-gbu.json", js)
+      print("BEDS:", sc, max_beds[sc], icu_beds[sc])
+   
+   
+
 
 
 def load_models():
