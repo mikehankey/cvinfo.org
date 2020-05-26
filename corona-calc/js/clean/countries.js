@@ -95,7 +95,7 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
    
    // Get the Max Date on Both (we don't care if don't have all the data for both data sets)
  
-
+   var domElRef;
    var set1 = {
       x: x_axis1,
       y: data1,
@@ -122,7 +122,16 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
       } 
    };
 
+   
    Plotly.newPlot(domEl, [set1,set2], layout);
+   domElRef = document.getElementById(domEl); 
+   /*
+   domElRef.on('plotly_hover', function(data){
+      console.log(data.points[0]['x'],data.points[0]['y'] );
+      console.log(data.points[1]['y'],data.points[1]['y'] );
+   });
+   */
+
 
 }
 
@@ -261,7 +270,5 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
             <div class="cpbnb">' + data2Det[0] +'<span>.' +  data2Det[1] + '</span></div>\
             <div class="cpbt">' + type + '</div>\
          </div>\
-      </div>');
-
-      
+      </div>'); 
 }
