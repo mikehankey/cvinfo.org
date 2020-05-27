@@ -145,19 +145,26 @@
    </header>
    <div id="header">
          <h1>US COVID-19</h1>
-         <h2>International Comparison</h2>
+         <h2>National &amp; International Comparison</h2>
    </div>
    <div id="main-content">
          <div id="state_select"  style="display:none">
             <div id="select_holder">
-               <div>
-                  <select id="us_state_selector">
-                     <option value="0">Select a State or the Entire USA</option><option value="US">United States</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option> 
+               <div class="comp" id="pa1">
+                  <select class="country_selector"></select>
+                  <select class="us_state_selector" style="display:none">
+                     <option value="US">All States</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option> 
                   </select> 
-                  <select id="us_county_selector" style="display:none"></select> 
+                  <select class="us_county_selector" style="display:none"></select> 
                </div>
                <div><i>vs.</i></div>
-               <div><select id="country_selector"></select></div>
+               <div class="comp" id="pa2">
+                  <select class="country_selector"></select>
+                  <select class="us_state_selector" style="display:none">
+                     <option value="US">All States</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option> 
+                  </select> 
+                  <select class="us_county_selector" style="display:none"></select> 
+               </div>
             </div>
          </div>
          <div class="box nsh">
@@ -199,10 +206,33 @@
    <script src="./js/clean/share.js"></script>
    <script src="./js/clean/countries.js"></script>
    <script>
-   
+      
+      var all_countries;
      
+
+      // Fill Country Select
+      function fillCountrySelect(response, callback, $parent, usFirst) {
+         var cs = "<option value='0'>Select a country</option>";
+         
+         if(usFirst) {
+            cs += "<option value='United States'>United States</option>";
+         }
+
+         $.each(response['countries'], function(i,v) {
+            if(v!=='International' && v!=='World')  {
+               if(usFirst && v!=='United States') {
+                  cs += "<option value='"+v+"'>"+v +"</option>";
+               } else {
+                  cs += "<option value='"+v+"'>"+v +"</option>";
+               }
+            }
+         });
+         $parent.find('.country_selector').html(cs); 
+         callback();
+      }
+
       // Fill The List of Countries
-      function fillCountryList(callback) {
+      function fillCountryList($parent, callback, usFirst) {
           
          var settings = {
             "url": "../covid-19-intl-data/all_countries.json",
@@ -210,23 +240,23 @@
             "timeout": 0,
          };
 
-         $.ajax(settings).done(function (response) {
-            
-            var cs = "<option value='0'>Select a country</option>";
-           
-            $.each(response['countries'], function(i,v) {
-               if(v!=='International' && v!=='World')  {
-                  cs += "<option value='"+v+"'>"+v +"</option>";
-               }
+         if(usFirst ===  undefined ) {
+            usFirst = false;
+         } 
+
+         if(all_countries ===  undefined) { 
+            $.ajax(settings).done(function (response) {
+               all_countries = response;
+               fillCountrySelect(all_countries, callback, $parent, usFirst);
             });
-            $('#country_selector').html(cs); 
-            callback();
-            
-         });
+         } else { 
+            fillCountrySelect(all_countries, callback, $parent, usFirst);
+         }
+ 
       }
 
       // Get list of counties for a given state
-      function fillCountyList(state,callback) {
+      function fillCountyList($parent,state,callback) {
          var settings = {
             "url": "../covid-19-intl-data/US/"+state+"_counties.json",
             "method": "GET",
@@ -243,72 +273,87 @@
                } 
             });
              
-            $('#us_county_selector').html(cs); 
+            $parent.find('.us_county_selector').html(cs).show(); 
             callback(); 
          });
       }
  
-      function getDataForCountry(state, county, country, callback) {
 
-         var us_settings,  country_settings, state_name = state; 
+      // Get JSON data based on state, county, country
+      function getJSONPath(country,state,county) {
+         var url = "", name = ""; 
 
-         if(country==0 || state == 0) {
-            return false;
-         }
- 
-         if(state == "US") {
-            us_settings = {
-               "url": "../covid-19-intl-data/country/United States.json",
-               "method": "GET",
-               "timeout": 0 
-            };
-            state_name = $('#us_state_selector option:selected').text();
+         if(country === "United States" && state === "US") {
+            // Country Level
+            url = "../covid-19-intl-data/country/United States.json";
+            name = "USA";
+
+         } else if(country == "United States" && state != "US") {
            
-         }  else if(county !== "0") {
-            us_settings = {
-               "url": "../covid-19-intl-data/US/" + state  + "/"+ county + ".json",
-               "method": "GET",
-               "timeout": 0 
-            };
-            state_name = county + ", " + state
-         } else if(state !== "0" && state!== "US") {
-            us_settings = {
-               "url": "../covid-19-intl-data/US/" +  state + ".json",
-               "method": "GET",
-               "timeout": 0 
-            };
-            state_name = $('#us_state_selector option:selected').text();
-         }  
-
-         country_settings = {
-            "url": "../covid-19-intl-data/country/" +  country + ".json",
-            "method": "GET",
-            "timeout": 0 
+            if(county === "0" || county === null)  {
+               // State Level
+               url = "../covid-19-intl-data/US/" +  state + ".json";
+               name = $('#pa1 .us_state_selector option[value=' + state + ']').text();
+            } else {
+               // County LEvel
+               url = "../covid-19-intl-data/US/" + state  + "/"+ county + ".json";
+               if (county.toLowerCase().indexOf("city") === -1) {   
+                  name = county + " County, " + state;  
+               } else {   
+                  name = county + ", " + state;   
+               } 
+  
+            }
+         } else {
+            url = "../covid-19-intl-data/country/" +  country + ".json";
+            name = country;
          }
-         
-         loading();
-       
-         $.ajax(us_settings).done(function (response1) {
+
+         return {'url':url, 'name': name}
+      }
  
-            // We prepare the data
-            var init_data1 = getInitDataCountry(response1, state_name);
-  
-            // Get data for graphs
-            var graph_data1 = prepareData(init_data1);
-            
-            $.ajax(country_settings).done(function (response2) { 
 
-               var init_data2 = getInitDataCountry(response2, country);
-  
+      function getDataForCountry(country1, state1, county1, country2, state2, county2,  callback) {
+
+         var settings1 = {  "method": "GET",  "timeout": 0, "url":""   };
+         var settings2 = {  "method": "GET",  "timeout": 0, "url":""   };
+         var name1,name2;
+
+
+         if(country1 !=="0" &&  country2 !== "0" ) {
+            var tmp = getJSONPath(country1,state1, county1);
+            settings1.url = tmp.url;
+            name1 = tmp.name;
+            tmp = getJSONPath(country2,state2, county2);
+            settings2.url = tmp.url;
+            name2 = tmp.name;
+            loading();
+       
+            $.ajax(settings1).done(function (response1) {
+
+               // We prepare the data
+               var init_data1 = getInitDataCountry(response1, name1);
+
                // Get data for graphs
-               var graph_data2 = prepareData(init_data2); 
-               callback(init_data1,graph_data1,init_data2,graph_data2);
+               var graph_data1 = prepareData(init_data1);
                
-               done();
-            
-            });
+               $.ajax(settings2).done(function (response2) { 
 
-         }); 
+                  var init_data2 = getInitDataCountry(response2, name2);
+
+                  // Get data for graphs
+                  var graph_data2 = prepareData(init_data2); 
+                  callback(init_data1,graph_data1,init_data2,graph_data2);
+                  
+                  done();
+               
+               });
+
+            }); 
+         }  
+          
+          
+        
       }
 
       function loading() {
@@ -330,42 +375,89 @@
 
       $(function() {
 
-         var default1 = "World", default2 = "United States";
-         
-     
-
+      
+         // Socials
          setShareLinks();
-
-         // If we change the state
-         $('#us_state_selector').change(function() {
-            var v = $(this).val();
-            if(v!=="0" && v!=="US") {
-
-               if(v!='DC') {
-                   $('#us_county_selector').show();
-               }
-               fillCountyList(v, function() {
-                  getDataForCountry($('#us_state_selector').val(),$('#us_county_selector').val(),$('#country_selector').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); })
-               });
-            } else if(v=="US") {
-               $('#us_county_selector').val(0).hide(); // No County (for the old men)
-               getDataForCountry($('#us_state_selector').val(),$('#us_county_selector').val(),$('#country_selector').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); })
-
+         
+         // Fill both country lists
+         fillCountryList($('#pa1'), 
+            function() { 
+               $('#state_select').show();
+               fillCountryList( $('#pa2'), 
+                  function() { 
+                     $('#state_select').show(); 
+                     $('body').removeClass('wait'); 
+                  }, 
+                  false)}, 
+               true);
+         
+         
+         // Country Selector
+         $('.country_selector').change(function() {
+            var $parent = $(this).closest(".comp");
+            var country = $(this).val(); 
+            
+            if(country == "United States") {
+               $parent.find('.us_state_selector').show().val('US'); // All states by default
             } else {
-               // We hide the county selector
-               $('#us_county_selector').hide();
+               $parent.find('.us_state_selector').hide();
+               $parent.find('.us_county_selector').hide();
+            }
+
+            getDataForCountry(
+                        $('#pa1 .country_selector').val(),
+                        $('#pa1 .us_state_selector').val(),
+                        $('#pa1 .us_county_selector').val(),
+                        $('#pa2 .country_selector').val(),
+                        $('#pa2 .us_state_selector').val(),
+                        $('#pa2 .us_county_selector').val(),
+                        function(a,b,c,d) { draw_country_graph(a,b,c,d); })
+
+         });
+
+         // US State Selector
+         $('.us_state_selector').change(function() {
+            var $parent = $(this).closest(".comp");
+            var state = $(this).val(); 
+
+            if(state != 'DC' && state != 'US') {
+               fillCountyList($parent, state, function() { 
+                  $parent.find('.us_county_selector').show();
+                  getDataForCountry(
+                        $('#pa1 .country_selector').val(),
+                        $('#pa1 .us_state_selector').val(),
+                        $('#pa1 .us_county_selector').val(),
+                        $('#pa2 .country_selector').val(),
+                        $('#pa2 .us_state_selector').val(),
+                        $('#pa2 .us_county_selector').val(),
+                        function(a,b,c,d) { draw_country_graph(a,b,c,d); })
+               });
+            } else {
+               $parent.find('.us_county_selector').hide();
+               getDataForCountry(
+                        $('#pa1 .country_selector').val(),
+                        $('#pa1 .us_state_selector').val(),
+                        $('#pa1 .us_county_selector').val(),
+                        $('#pa2 .country_selector').val(),
+                        $('#pa2 .us_state_selector').val(),
+                        $('#pa2 .us_county_selector').val(),
+                        function(a,b,c,d) { draw_country_graph(a,b,c,d); })
             }
          });
 
-         // If we change the country or county
-         $('#us_county_selector, #country_selector').change(function() { 
-            getDataForCountry($('#us_state_selector').val(),$('#us_county_selector').val(),$('#country_selector').val(),function(a,b,c,d) { draw_country_graph(a,b,c,d); })
+         // US County Selector
+         $('.us_county_selector').change(function() {
+            getDataForCountry(
+                        $('#pa1 .country_selector').val(),
+                        $('#pa1 .us_state_selector').val(),
+                        $('#pa1 .us_county_selector').val(),
+                        $('#pa2 .country_selector').val(),
+                        $('#pa2 .us_state_selector').val(),
+                        $('#pa2 .us_county_selector').val(),
+                        function(a,b,c,d) { draw_country_graph(a,b,c,d); })
          });
 
-         fillCountryList(function() { $('#state_select').show(); $('body').removeClass('wait');    });
-         
- 
-    
+          
       })
    </script>
 </body>
