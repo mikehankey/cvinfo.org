@@ -343,6 +343,7 @@
 
                   // Get data for graphs
                   var graph_data2 = prepareData(init_data2); 
+ 
                   callback(init_data1,graph_data1,init_data2,graph_data2);
                   
                   done();
@@ -388,7 +389,7 @@
                      $('#state_select').show(); 
                      $('body').removeClass('wait'); 
                   }, 
-                  false)}, 
+                  true)},  // US First too
                true);
          
          

@@ -167,14 +167,14 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
       var rightDateLastData = new Date(Math.min.apply(null, [maxDateData1,maxDateData2].map(function(e) {
          return new Date(e);
       }))); 
-
+ 
       // We need to find the related indexes  
       var rightDate  =  rightDateLastData.getFullYear() + "-" + ("0"+(rightDateLastData.getMonth()+1)).slice(-2)  +  "-" + ("0" + rightDateLastData.getDate()).slice(-2);
    
       // Find the index
       var indexData1 = graph_data1.x_axis.indexOf(rightDate);
       var indexData2 = graph_data2.x_axis.indexOf(rightDate); 
-
+ 
       // We need the min of the two max!
       draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Cases Per Million","country_graph4",color1,color2)
       
@@ -251,7 +251,7 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
    var data2Det = usFormatCommas(data2);
 
    if(data1Det[1] === undefined) { data1Det[1] = "000";  }
-   if(data1Det[2] === undefined) { data1Det[1] = "000";  }
+   if(data1Det[2] === undefined) { data1Det[2] = "000";  }
 
  
    $(domEl).html(
