@@ -320,7 +320,7 @@
          var name1,name2;
 
 
-         if(country1 !=="0" &&  country2 !== "0" ) {
+         if(country1 !=="0" &&  country2 !== "0" && !(country1 ==country2 && state1==state2 && county1==county2) ) {
             var tmp = getJSONPath(country1,state1, county1);
             settings1.url = tmp.url;
             name1 = tmp.name;

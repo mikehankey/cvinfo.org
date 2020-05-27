@@ -90,18 +90,18 @@ function prepareData(data) {
 /**
  * Draw one single graph 
  */
-function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,domEl,color1,color2,layout) {
-   
-   
+function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2,type,domEl,domElTitle,  indexData1,  indexData2,color1,color2 ,bars) {
+    
    // Get the Max Date on Both (we don't care if don't have all the data for both data sets)
  
    var domElRef;
+    
    var set1 = {
       x: x_axis1,
       y: data1,
       name: name1 + " " + type,
       fill: 'tonexty',
-      type: 'scatter',
+      type: (bars?'bar':"line+scatter"),
       marker: {color: color1},
    };
  
@@ -109,9 +109,13 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
       x: x_axis2,
       y: data2,
       name: name2 + " " + type,
-      type: "line+scatter", 
+      type: 'scatter', 
       marker: {color: color2},
-   };
+   }; 
+   
+   if(bars) {
+      set2.line = {shape:'vh'}; 
+   }
 
    var layout = { 
       margin: {"t": 20, "b": 80, "l": 50, "r": 20},
@@ -121,17 +125,80 @@ function draw_country_vs_single(name1,data1,name2,data2,x_axis1,x_axis2,type,dom
          title:type
       } 
    };
+ 
+   // Top Graph      
+   display_graph_top_info(
+         rightDate,
+         name1,
+         data1[indexData1],
+         name2,
+         data2[indexData2],
+         type,
+         domElTitle,
+         color1,
+         color2);
 
-   
+   // Update on Hover
    Plotly.newPlot(domEl, [set1,set2], layout);
    domElRef = document.getElementById(domEl); 
-   /*
+ 
+   // Hover
    domElRef.on('plotly_hover', function(data){
-      console.log(data.points[0]['x'],data.points[0]['y'] );
-      console.log(data.points[1]['y'],data.points[1]['y'] );
-   });
-   */
+ 
+      var info = data.points.map(function(d){
+         return {"date": d.x, "val":d.y };
+      });
+   
+      if(info != undefined && info[1] !== undefined && info[0] !== undefined) {
+         var data1Det, data2Det;
 
+         if(!bars) {
+            data1Det = usFormatCommas(info[0].val);
+            data2Det = usFormatCommas(info[1].val);
+         } else {
+            data1Det = usFormatCommas(info[1].val);
+            data2Det = usFormatCommas(info[0].val);
+         }
+         
+      
+         if(data1Det[1] === undefined) { data1Det[1] = "000";  }
+         if(data2Det[1] === undefined) { data2Det[1] = "000";  }
+   
+   
+         $(domElTitle).find('h3 b').html(info[0].date.toLocaleString("en-US", {
+            day: "numeric",
+            month: "short",
+            year: "numeric" 
+          }));
+        
+        
+         $(domElTitle).find('.c1 .cpbnb').html(data1Det[0] +  '<span  class="cpbnb-d">.' + data1Det[1] + '</span>' ); 
+         $(domElTitle).find('.c2 .cpbnb').html(data2Det[0] +  '<span  class="cpbnb-d">.' + data2Det[1] + '</span>' ); 
+      }
+
+     
+   }); 
+
+
+   // Reset on mouseout
+   $(domElRef).mouseout(function(){
+      
+      $(domElTitle).find('[data-org]').each(function() {
+         var $t = $(this);
+         if($t.attr('data-org') !== undefined) {
+            $t.html($t.attr('data-org'));
+         }
+         if($t.attr('data-org1') !== undefined) {
+            $t.html($t.attr('data-org1'));
+         }
+         if($t.attr('data-org2') !== undefined) {
+            $t.html($t.attr('data-org2'));
+         }
+      });
+
+    
+
+   });
 
 }
 
@@ -176,61 +243,76 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
       var indexData2 = graph_data2.x_axis.indexOf(rightDate); 
  
       // We need the min of the two max!
-      draw_country_vs_single(init_data1.name,graph_data1.new_cases_per_million,init_data2.name,graph_data2.new_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Cases Per Million","country_graph4",color1,color2)
-      
-      // Make we pass the right data to rightLastData
-      display_graph_top_info(
+      draw_comparison_graph(
          rightDate,
          init_data1.name,
-         graph_data1.new_cases_per_million[indexData1],
+         graph_data1.new_cases_per_million,
          init_data2.name,
-         graph_data2.new_cases_per_million[indexData2],
+         graph_data2.new_cases_per_million,
+         graph_data1.x_axis,
+         graph_data2.x_axis,
          "New Cases Per Million",
+         "country_graph4",
          '#country_graph_title4',
+         indexData1,
+         indexData2,
          color1,
-         color2);
-
-         
-      // Before top graph
-      draw_country_vs_single(init_data1.name,graph_data1.new_deaths_per_million,init_data2.name,graph_data2.new_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"New Deaths Per Million","country_graph3",color1,color2)
-      display_graph_top_info(
+         color2, 
+         true);
+      
+      draw_comparison_graph(
          rightDate,
          init_data1.name,
-         graph_data1.new_deaths_per_million[indexData1],
+         graph_data1.new_deaths_per_million,
          init_data2.name,
-         graph_data2.new_deaths_per_million[indexData2],
+         graph_data2.new_deaths_per_million,
+         graph_data1.x_axis,
+         graph_data2.x_axis,
          "New Deaths Per Million",
+         "country_graph3",
          '#country_graph_title3',
+         indexData1,
+         indexData2,
          color1,
-         color2);
-     
-     
-       
-      draw_country_vs_single(init_data1.name,graph_data1.total_deaths_per_million,init_data2.name,graph_data2.total_deaths_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Deaths Per Million","country_graph1",color1,color2)
-      display_graph_top_info(
+         color2, 
+         true);
+      
+      draw_comparison_graph(
          rightDate,
          init_data1.name,
-         graph_data1.total_deaths_per_million[indexData1],
+         graph_data1.total_deaths_per_million,
          init_data2.name,
-         graph_data2.total_deaths_per_million[indexData2],
+         graph_data2.total_deaths_per_million,
+         graph_data1.x_axis,
+         graph_data2.x_axis,
          "Total Deaths Per Million",
+         "country_graph1",
          '#country_graph_title1',
+         indexData1,
+         indexData2,
          color1,
-         color2);
+         color2, 
+         false);
+
        
-      draw_country_vs_single(init_data1.name,graph_data1.total_cases_per_million,init_data2.name,graph_data2.total_cases_per_million,graph_data1.x_axis,graph_data2.x_axis,"Total Cases Per Million","country_graph2",color1,color2)
-      display_graph_top_info(
+      draw_comparison_graph(
          rightDate,
          init_data1.name,
-         graph_data1.total_cases_per_million[indexData1],
+         graph_data1.total_cases_per_million,
          init_data2.name,
-         graph_data2.total_cases_per_million[indexData2],
+         graph_data2.total_cases_per_million,
+         graph_data1.x_axis,
+         graph_data2.x_axis,
          "Total Cases Per Million",
+         "country_graph2",
          '#country_graph_title2',
+         indexData1,
+         indexData2,
          color1,
-         color2);
-             
-         
+         color2, 
+         false); 
+    
+       
 }
 
 
@@ -251,23 +333,23 @@ function display_graph_top_info(last_date,name1,data1,name2,data2,type, domEl, c
    var data2Det = usFormatCommas(data2);
 
    if(data1Det[1] === undefined) { data1Det[1] = "000";  }
-   if(data1Det[2] === undefined) { data1Det[2] = "000";  }
+   if(data2Det[1] === undefined) { data2Det[1] = "000";  }
 
  
    $(domEl).html(
-      '<h3>' + type + ' on <b>' + formattedDate + '</b></h3>\
+      '<h3>' + type + ' on <b data-org="'+formattedDate+'">' + formattedDate + '</b></h3>\
       <div class="comp_box" >\
-         <div>\
+         <div class="c1">\
             <div class="cpb" style="background-color:'+ color1 +' ">\
                <div class="cpbn">' + name1+ '</div>\
-               <div class="cpbnb">' + data1Det[0] +'<span>.' +  data1Det[1] + '</span></div>\
+               <div class="cpbnb" data-org1="'+data1Det[0]+'" data-org2=".'+data1Det[1]+'">' + data1Det[0] +'<span  class="cpbnb-d">.' +  data1Det[1] + '</span></div>\
                <div class="cpbt">' + type + '</div>\
             </div>\
          </div>\
-         <div>\
-         <div class="cpb" style="background-color:'+ color2 +' ">\
+         <div class="c2">\
+            <div class="cpb" style="background-color:'+ color2+' ">\
             <div class="cpbn">' + name2+ '</div>\
-            <div class="cpbnb">' + data2Det[0] +'<span>.' +  data2Det[1] + '</span></div>\
+            <div class="cpbnb" data-org2="'+data2Det[0]+'" data-org2=".'+data2Det[1]+'">' + data2Det[0] +'<span  class="cpbnb-d">.' +  data2Det[1] + '</span></div>\
             <div class="cpbt">' + type + '</div>\
          </div>\
       </div>'); 
