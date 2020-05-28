@@ -171,11 +171,13 @@ function draw_graph(data,option) {
          x: data.avgx,
          y: data.avgy,
          name: data.avgTitle,
-         type: "line",
+         type: "scatter",
+         mode: "lines",
          xaxis: 'x2',
          line: {
             color: 'rgb(215,25,25)',
-         }
+            shape: 'line'
+         } 
       }
 
    }

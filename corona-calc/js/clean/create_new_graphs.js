@@ -72,6 +72,14 @@ function prepareData(data) {
    // New Cases Average
    var x_axis_new_cases_avg  = []; 
    var y_axis_new_cases_avg = [];
+
+    // New Deaths Average
+    var x_axis_new_deaths_avg  = []; 
+    var y_axis_new_deaths_avg = [];
+
+     // New Tests Average
+     var x_axis_new_tests_avg  = []; 
+     var y_axis_new_tests_avg = [];
     
    // New Cases MODELS Trend
    // WARNING we can have several models at once
@@ -135,8 +143,14 @@ function prepareData(data) {
    }
      
    var averageDuration = 7; // In Days
-   var tempValForAverage = [];
-   var tempValForAverageDuration = [];
+   var tempValForAverageCases = [];
+   var tempValForAverageDurationCases = [];
+
+   var tempValForAverageDeaths = [];
+   var tempValForAverageDurationDeaths = [];
+
+   var tempValForAverageTests = [];
+   var tempValForAverageDurationTests = [];
 
    $.each(data['stats'], function(i,val) { 
        
@@ -178,16 +192,35 @@ function prepareData(data) {
       // for now, we don't take them into account
       y_axis_new_deaths.push(val.new_deaths>0?val.new_deaths:0);
 
-       // AVERAGE NEW CASES
-       tempValForAverage.push(val.new_cases>0?val.new_cases:0);
-       if(tempValForAverage.length<averageDuration) {
-          tempValForAverageDuration = tempValForAverage;
-       } else {
-          tempValForAverageDuration = tempValForAverage.slice(tempValForAverage.length-averageDuration,tempValForAverage.length);
-       }
-         
-       y_axis_new_cases_avg.push((tempValForAverage.reduce((a, b) => a + b, 0) / tempValForAverage.length) || 0);
-       x_axis_new_cases_avg.push(curDate);
+      // AVERAGE NEW Cases
+      tempValForAverageCases.push(val.new_cases>0?val.new_cases:0);
+      if(tempValForAverageCases.length<averageDuration) {
+         tempValForAverageDurationCases = tempValForAverageCases;
+      } else {
+         tempValForAverageDurationCases = tempValForAverageCases.slice(tempValForAverageCases.length-averageDuration,tempValForAverageCases.length);
+      }
+      y_axis_new_cases_avg.push((tempValForAverageDurationCases.reduce((a, b) => a + b, 0) / tempValForAverageDurationCases.length) || 0);
+      x_axis_new_cases_avg.push(curDate);
+
+      // AVERAGE NEW DEATHS
+      tempValForAverageDeaths.push(val.new_deaths>0?val.new_deaths:0);
+      if(tempValForAverageDeaths.length<averageDuration) {
+         tempValForAverageDurationDeaths = tempValForAverageDeaths;
+      } else {
+         tempValForAverageDurationDeaths = tempValForAverageDeaths.slice(tempValForAverageDeaths.length-averageDuration,tempValForAverageDeaths.length);
+      }
+      y_axis_new_deaths_avg.push((tempValForAverageDurationDeaths.reduce((a, b) => a + b, 0) / tempValForAverageDurationDeaths.length) || 0);
+      x_axis_new_deaths_avg.push(curDate);
+
+      // AVERAGE NEW TESTS
+      tempValForAverageTests.push((val.tests_new_pos + val.tests_new_neg)>0?(val.tests_new_pos + val.tests_new_neg):0);
+      if(tempValForAverageTests.length<averageDuration) {
+         tempValForAverageDurationTests = tempValForAverageTests;
+      } else {
+         tempValForAverageDurationTests = tempValForAverageTests.slice(tempValForAverageTests.length-averageDuration,tempValForAverageTests.length);
+      }
+      y_axis_new_tests_avg.push((tempValForAverageDurationTests.reduce((a, b) => a + b, 0) / tempValForAverageDurationTests.length) || 0);
+      x_axis_new_tests_avg.push(curDate);
        
    });
 
@@ -208,7 +241,9 @@ function prepareData(data) {
       'growth_decay'          :  [x_axis_growth_decay,y_axis_growth_decay],
       'mortality'             :  [x_axis_mortality,y_axis_mortality],
       'deaths'                :  [x_axis_new_deaths,y_axis_new_deaths],
-      'avg_cases'             :  [x_axis_new_cases_avg,y_axis_new_cases_avg]
+      'avg_cases'             :  [x_axis_new_cases_avg,y_axis_new_cases_avg],
+      'avg_deaths'            :  [x_axis_new_deaths_avg,y_axis_new_deaths_avg],
+      'avg_tests'             :  [x_axis_new_tests_avg,y_axis_new_tests_avg]
    }
 }
 
@@ -301,7 +336,9 @@ function new_display_data(data,state,county) {
          name:all_data.name, 
          graph_div:'tests_graph', 
          graph_details_div:'tests_graph_details',
-         option: {  type: "bars", info: false}  
+         option: {  type: "bars", info: false},
+         average:    all_graph_data['avg_tests'],
+         average_duration: 7,
       });
    }  else {
       // We reset the DOM elements
@@ -349,7 +386,9 @@ function new_display_data(data,state,county) {
       title:"Deaths", 
       name:all_data.name, 
       graph_div:'deaths_graph', 
-      graph_details_div:'deaths_graph_details' 
+      graph_details_div:'deaths_graph_details',
+      average:    all_graph_data['avg_deaths'],
+      average_duration: 7,
    });  
      
    // And Now we can fill the summary
