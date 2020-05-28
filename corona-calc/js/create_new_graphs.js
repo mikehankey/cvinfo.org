@@ -68,6 +68,10 @@ function prepareData(data) {
    var x_axis_new_cases  = []; 
    var y_axis_new_cases = [];
     
+   // New Cases Average
+   var x_axis_new_cases_avg  = []; 
+   var y_axis_new_cases_avg = [];
+
    // New Cases Trend
    var x_axis_new_cases_model_trend  = []; 
    var y_axis_new_cases_model_trend = [];  
@@ -118,6 +122,10 @@ function prepareData(data) {
       }
    }
      
+   var totalCases = 0;
+   var averageDuration = 7; // In Days
+   var tempValForAverage = [];
+   var tempValForAverageDuration = [];
 
    $.each(data['stats'], function(i,val) { 
        
@@ -134,6 +142,18 @@ function prepareData(data) {
       // for now, we don't take them into account
       x_axis_new_cases.push(curDate);
       y_axis_new_cases.push(parseFloat(val.new_cases>0?val.new_cases:0));
+ 
+      // AVERAGE NEW CASES
+      tempValForAverage[] = val.new_cases>0?val.new_cases:0;
+      if(tempValForAverage.length<averageDuration) {
+         tempValForAverageDuration = tempValForAverage;
+      } else {
+         tempValForAverageDuration = tempValForAverage.slice(tempValForAverage.length-averageDuration,tempValForAverage.length);
+      }
+        
+      y_axis_new_cases_avg[] = (tempValForAverage.reduce((a, b) => a + b, 0) / tempValForAverage.length) || 0;
+      x_axis_new_cases_avg[] = curDate;
+      
 
       // TESTS PER DAY
       x_axis_tests.push(curDate);
@@ -161,7 +181,9 @@ function prepareData(data) {
        
    });
    
-
+   console.log("AVG CASES ");
+   console.log(y_axis_new_cases_avg);
+   console.log(x_axis_new_cases_avg);
    
 
    return {

@@ -57,6 +57,7 @@ function draw_graph(data,option) {
 
    // Do we have models?
    if(data.models !== undefined && data.models.length>0) {
+
       $.each(data.models,function(i, model) {
 
          modelData = {
@@ -75,14 +76,16 @@ function draw_graph(data,option) {
          all_models_data_sets.push(modelData); 
          
          maxModelDateArray.push(new Date(Math.max.apply(null,model.x_axis)));
+         maxDayModel = new Date(Math.max.apply(null,maxModelDateArray));
       });
+   } else {
+      maxDayModel =  new Date(Math.max.apply(null,data.x1));
    }
 
-   maxDayModel = new Date(Math.max.apply(null,maxModelDateArray));
  
     
    var maxDate1, minDate1, maxDate2, minDate2, min, max;
-   var dataSet1,dataSet2,dataSet3,dataSet4,dataSet5;
+   var dataSet1,dataSet2,dataSet3,dataSet4,dataSet5, dataSet6;
  
    // Get Range for X AXIS
    maxDate1 = new Date(Math.max.apply(null,data.x1));
@@ -112,7 +115,7 @@ function draw_graph(data,option) {
       y: data.y1,
       name: data.title1,
       type: "bar",
-      marker: {  color: 'rgb(31,119,180)'    }
+      marker: {  color: 'rgb(210,210,210)'    }
    };
  
 
@@ -162,6 +165,23 @@ function draw_graph(data,option) {
       }
    };  
 
+   // Averages?
+   if(data.avgx !== undefined && data.avgy !== undefined && data.avgx.length >0 ) {
+      dataSet6 = {
+         x: data.avgx,
+         y: data.avgy,
+         name: data.avgTitle,
+         type: "line",
+         xaxis: 'x2',
+         line: {
+            color: 'rgb(215,25,25)',
+         }
+      }
+
+   }
+
+
+
    var layout = { 
       xaxis: {   range: [min,max]   },
       xaxis2: {
@@ -196,12 +216,16 @@ function draw_graph(data,option) {
 
    if(data.models !== undefined) {
       // With Model
-      
       all_set = [dataSet1,dataSet3,dataSet4,dataSet5];
       all_set = all_set.concat(all_models_data_sets);
    } else { 
       // Without Model
       all_set =  [dataSet1, dataSet3,dataSet4,dataSet5];
+   }
+
+   // With Avg?
+   if(data.avgx !== undefined && data.avgy !== undefined && data.avgx.length >0 ) {
+      all_set = all_set.concat(dataSet6);
    }
 
    Plotly.newPlot(data.el, all_set, layout);

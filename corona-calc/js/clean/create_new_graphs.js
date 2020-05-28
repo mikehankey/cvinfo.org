@@ -67,6 +67,11 @@ function prepareData(data) {
    // New Cases
    var x_axis_new_cases  = []; 
    var y_axis_new_cases = [];
+
+       
+   // New Cases Average
+   var x_axis_new_cases_avg  = []; 
+   var y_axis_new_cases_avg = [];
     
    // New Cases MODELS Trend
    // WARNING we can have several models at once
@@ -129,6 +134,9 @@ function prepareData(data) {
       }) 
    }
      
+   var averageDuration = 7; // In Days
+   var tempValForAverage = [];
+   var tempValForAverageDuration = [];
 
    $.each(data['stats'], function(i,val) { 
        
@@ -169,9 +177,21 @@ function prepareData(data) {
       // We sometimes have negative values for deaths (I guess it's some corrections?)
       // for now, we don't take them into account
       y_axis_new_deaths.push(val.new_deaths>0?val.new_deaths:0);
+
+       // AVERAGE NEW CASES
+       tempValForAverage.push(val.new_cases>0?val.new_cases:0);
+       if(tempValForAverage.length<averageDuration) {
+          tempValForAverageDuration = tempValForAverage;
+       } else {
+          tempValForAverageDuration = tempValForAverage.slice(tempValForAverage.length-averageDuration,tempValForAverage.length);
+       }
+         
+       y_axis_new_cases_avg.push((tempValForAverage.reduce((a, b) => a + b, 0) / tempValForAverage.length) || 0);
+       x_axis_new_cases_avg.push(curDate);
        
    });
- 
+
+   
    return {
       'name'                  :  data.name,
       'pop'                   :  data.pop, 
@@ -188,6 +208,7 @@ function prepareData(data) {
       'growth_decay'          :  [x_axis_growth_decay,y_axis_growth_decay],
       'mortality'             :  [x_axis_mortality,y_axis_mortality],
       'deaths'                :  [x_axis_new_deaths,y_axis_new_deaths],
+      'avg_cases'             :  [x_axis_new_cases_avg,y_axis_new_cases_avg]
    }
 }
 
@@ -243,6 +264,8 @@ function new_display_data(data,state,county) {
          total :              all_graph_data['total_case'],     
          last_day_data:       all_graph_data['last_day_data'],         
          last_day_data_raw :  all_graph_data['last_day_number_data'],
+         average:    all_graph_data['avg_cases'],
+         average_duration: 7,
          phantom:      phantom,
          herd_thresh: herd_thresh
       }
@@ -349,8 +372,7 @@ function compute_new_graph_data(input_data) {
    var x_trend_14, y_trend_14;
    var x_trend_7, y_trend_7;
    var x_poly, y_poly; // Poly regression (curve)
-   
- 
+    
    var max_day = 30; // When we don't have a model, we compute the graphs until last_day + 'max_day' days
    var total_x = []; // If we have a model, it's the model X, if not it the last day of the current input_data set (x) + max_day
    var reg = {}, reg_7 = {}, reg_14 = {};
@@ -372,8 +394,7 @@ function compute_new_graph_data(input_data) {
          type: 'bars',
          info: true
       }
-   }
-    
+   } 
    // We take care of the models
    if(input_data.models !== undefined) {
       toDraw.models = input_data.models; 
@@ -425,7 +446,8 @@ function compute_new_graph_data(input_data) {
    y_poly = reg['y'];
    toDraw.x5 = x_poly;
    toDraw.y5 = y_poly;
-   toDraw.title5  = "Curve";    
+   toDraw.title5  = "Curve";     
+
     
    // Other Info to draw
    toDraw.title  = input_data.name + ", " + input_data.title;
@@ -437,7 +459,16 @@ function compute_new_graph_data(input_data) {
    toDraw.title1 = input_data.title;
    toDraw.x1 = input_data.x;
    toDraw.y1 = input_data.y;
+
+   // Averages?
+   if(input_data.average !== undefined) {
+      toDraw.avgTitle = input_data.average_duration +  " days average";
+      toDraw.avgx = input_data.average[0];
+      toDraw.avgy = input_data.average[1];
+   }
+  
  
+
    // Draw the Graph
    draw_graph(toDraw,input_data.option);  
 
