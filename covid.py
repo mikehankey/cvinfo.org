@@ -1128,13 +1128,14 @@ def make_all_county_page(sort_field = None):
    total_c = len(cl2)
 
    table_header = """
-   <div id="table">
-      <table id="states" class="tablesorter ">
+   <div class="box" id="table">
+      <div>
+      <table class="tablesorter-bootstrap tablesorter" style="width: 100%; max-width: 100%;">
             <thead>
                <tr>
-                  <th data-sorter="false">&nbsp;</th>
-                  <th>County</th>
-                  <th>State</th>
+                  <th  style="text-align:left" data-sorter="false">&nbsp;</th>
+                  <th style="text-align:left" >County</th>
+                  <th style="text-align:left" >State</th>
                   <th>Population</th>
                   <th>Cases</th>
                   <th>Deaths</th>
@@ -1149,9 +1150,9 @@ def make_all_county_page(sort_field = None):
 
    row_html = """
                   <tr data-state="{STATE_CODE}" id="{FIP}">
-                     <td><span class="cl {COLOR}"></span></td>
-                     <td>{STATE_CODE}</td>
-                     <td>{COUNTY}</td>
+                     <th style="text-align:left"><span class="cl {COLOR}"></span></th>
+                     <th style="text-align:left">{STATE_CODE}</th>
+                     <td  style="text-align:left">{COUNTY}</td>
                      <td>{COUNTY_POP}</td>
                      <td>{CASES}</td>
                      <td>{DEATHS}</td>
@@ -1166,6 +1167,7 @@ def make_all_county_page(sort_field = None):
    table_footer = """
             </tbody>
       </table>
+      </div>
    </div>
    """
    rows = ""
@@ -1215,6 +1217,8 @@ def make_all_county_page(sort_field = None):
             if int(dr['cases']) > 50:
                rows += row_html
          cc += 1
+
+ 
 
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
    template= template.replace("{VERSION}",CUR_VERSION)

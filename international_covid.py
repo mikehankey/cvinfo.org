@@ -2,8 +2,9 @@
 import os 
 import sys
 import csv, json
+import glob
 from datetime import datetime, timedelta
-from operator import itemgetter
+from operator import itemgetter 
 
 
 DATA_PATH = "." + os.sep + "covid-19-intl-data"
@@ -273,14 +274,11 @@ def clean_us_data():
                      'tcpm' : tcpm,  
                      'tdpm' : tdpm,  
                }
-
-            
-
+  
             # We create the file for the county level & Dump the Data
             tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county + ".json",  'w+')
-            json.dump(clean_data_county,tmp_json)
+            json.dump(clean_data_county,tmp_json) 
 
- 
       # We create the file for the state level & Dump the Data
       tmp_json = open(US_STATES_DATA_PATH + os.sep + state + ".json",  'w+')
       json.dump(clean_data_state,tmp_json)
@@ -294,6 +292,58 @@ def clean_us_data():
 
       print(state + ' done')
  
+# Create Ranks files per county  for all dates
+def create_rank_files_county():
+
+   
+   all_states_folders = glob.glob(US_STATES_DATA_PATH + os.sep + "*" + os.sep)
+
+   for _type in TYPES_SLUG:
+      
+      all_data = {}  # for current slug
+      c = 0
+
+      for state_folder in all_states_folders:
+
+         # Get state name
+         tmp = state_folder.split(os.sep)
+         state_name = tmp[len(tmp)-2]
+ 
+         all_county_files_for_current_state = glob.glob(state_folder + "*.json")
+
+         for county_json_file in all_county_files_for_current_state:
+ 
+            # Get County Name
+            county_json_file_name = os.path.basename(county_json_file)
+            county_name = os.path.splitext(county_json_file_name)[0]
+            county_name += '|'+state_name
+            #print(county_name + " ************")
+
+            # We open the county file
+            tmp_json = open(county_json_file,  'r')
+            county_data = json.load(tmp_json)
+
+            for day in county_data:
+
+               if(day not in all_data):
+                  all_data[day] = {}
+               if(county_name not in all_data[day]):
+                  all_data[day][county_name] = {}
+                
+               all_data[day][county_name] = county_data[day][_type]
+
+            #print(county_name +  " parsed")
+
+         print(state_name + " parsed")
+      
+      # Here we sort the data for the current slug
+      for day in all_data:
+         all_daily_data = sorted(all_data[day].items(), key=itemgetter(1))
+         print(day + "=> ")
+         print(str(len(all_daily_data)) +  " counties") 
+         
+      
+      sys.exit()
 
 def main_menu():
 
@@ -304,7 +354,8 @@ def main_menu():
    print("1) Update International Data") 
    print("2) Parse International Data") 
    print("3) Clean Up US Data (use covid update first to get the latest data)") 
-   print("4) DO IT ALL") 
+   print("4) DO ALL ABOVE (but exit :)")
+   print("5) Create Rank Files for Counties (long)") 
    
    cmd = input("Run: ")
    cmd = int(cmd) 
@@ -330,6 +381,10 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
       print("CLEANING UP US DATA.")
       clean_us_data()
+      print("\n>>>TASK DONE \n\n") 
+   elif cmd== 5:
+      print("CREATING RANK FILES.")
+      create_rank_files_county()
       print("\n>>>TASK DONE \n\n") 
    elif cmd== 0:
       print("Exit.")
