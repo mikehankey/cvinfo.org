@@ -15,13 +15,14 @@ TYPES_SLUG = ['ncpm','ndpm','tcpm','tdpm']
 ALL_COUNTRIES =  DATA_PATH + os.sep + "all_countries.json"  # File for the UI
 US_STATES_DATA_PATH = DATA_PATH + os.sep + "US"
 US_STATES_ORG_DATA_PATH = '.' + os.sep + 'json' 
+US_RANKS = US_STATES_DATA_PATH + os.sep + "ranks"
 
 # Get Data from 
 # https://github.com/owid/covid-19-data/blob/master/public/data/
 def update_data_sources():
    
   if not os.path.exists(DATA_PATH):
-   os.makedirs(DATA_PATH)
+   os.makedirs(DATA_PATH) 
 
   if not os.path.exists(DATA_PATH_PER_COUNTRY):
    os.makedirs(DATA_PATH_PER_COUNTRY)
@@ -299,67 +300,71 @@ def clean_us_data():
 # Create Ranks files per county  for all dates
 def create_rank_files_county():
 
+   # We create the folder for the ranks file
+   if not os.path.exists(US_RANKS):
+      os.makedirs(US_RANKS)
+
    all_states_folders = glob.glob(US_STATES_DATA_PATH + os.sep + "*" + os.sep)
 
    for _type in TYPES_SLUG:
       
       all_data = {}  # for current slug
 
-      state_counter = 0
+      state_counter = 1
 
       for state_folder in all_states_folders:
-
-         # Get state name
-         tmp = state_folder.split(os.sep)
-         state_name = tmp[len(tmp)-2]
  
-         all_county_files_for_current_state = glob.glob(state_folder + "*.json")
+         if(state_folder!='ranks'):
 
-         for county_json_file in all_county_files_for_current_state:
- 
-            # Get County Name
-            county_json_file_name = os.path.basename(county_json_file)
-            county_name = os.path.splitext(county_json_file_name)[0]
-            county_name += '|'+state_name
-            #print(county_name + " ************")
+            # Get state name
+            tmp = state_folder.split(os.sep)
+            state_name = tmp[len(tmp)-2]
+   
+            all_county_files_for_current_state = glob.glob(state_folder + "*.json")
 
-            # We open the county file
-            tmp_json = open(county_json_file,  'r')
-            county_data = json.load(tmp_json)
+            for county_json_file in all_county_files_for_current_state:
+   
+               # Get County Name
+               county_json_file_name = os.path.basename(county_json_file)
+               county_name = os.path.splitext(county_json_file_name)[0]
+               county_name += '|'+state_name
+               #print(county_name + " ************")
 
-            for day in county_data:
+               # We open the county file
+               tmp_json = open(county_json_file,  'r')
+               county_data = json.load(tmp_json)
 
-               if(day not in all_data):
-                  all_data[day] = {}
-               if(county_name not in all_data[day]):
-                  all_data[day][county_name] = {}
-                
-               all_data[day][county_name] = float(county_data[day][_type])
+               for day in county_data:
 
-            #print(county_name +  " parsed")
+                  if(day not in all_data):
+                     all_data[day] = {}
+                  if(county_name not in all_data[day]):
+                     all_data[day][county_name] = {}
+                  
+                  all_data[day][county_name] = float(county_data[day][_type])
 
-         print(state_name + " parsed")
+               #print(county_name +  " parsed")
+
+         print(state_name + " parsed  " + str(state_counter) + "/52")
          # Here we have
          # {'2020-03-29': {'Clarendon|SC': '257.356', 'Marion|SC': '0', 'Richland|SC': '44.213'
         
          #state_counter += 1
-         #if(state_counter>1):
+         #if(state_counter>3):
          #   break
-
+ 
 
       print("Sorting all the data...")
-
+ 
       # Here we sort the data for the current slug
       rank_data = {}
-
       day_counter = 0
+
+      all_data_for_the_day_for_rank = {}
+
       for day in all_data: 
          sorted_all_data_day =  sorted(all_data[day].items(), key=itemgetter(1), reverse=True)
-         
-         #print("FOR DAY " + day)
-         #print("LIST OF COUNTIES:")
-         #print(sorted_all_data_day)
-
+     
          cur_rank = 0
          prev_value = -999999999
 
@@ -377,67 +382,63 @@ def create_rank_files_county():
 
             county_name = tmp[0] 
             state_name  = tmp[1]
-            #print(" DAY ", day)
-            #print("STATE NAME ", state_name)
-            #print("COUNTyY NAME ", county_name)
-            #print("SLUG ", _type)
-            #print("VALUES ",_tuple )
-
-            # Create the directory if necessary
+ 
+            # Create the directory if necessary for the county stats
             cur_dir = US_STATES_DATA_PATH + os.sep + state_name + os.sep + county_name  
             if not os.path.exists(cur_dir):
                os.makedirs(cur_dir) 
 
             cur_file = cur_dir + os.sep + _type + ".json"
             
-            #print("**************************************")
-            #print("")
-            #print(county_name + ", " + state_name)
-
-            # Does it exists?
+            # Does the county file exists?
             if(os.path.isfile(cur_file)):
 
                #print(cur_file + " already exists")
                 
                # Open (+) the related JSON file
-               with open(cur_file, "w+", encoding='utf-8') as tmp_json_file:
+               with open(cur_file, "r+") as tmp_json_file:
 
-                  _str = tmp_json_file.read()
+                  _str = tmp_json_file.read() 
+ 
   
                   # We load the current data
                   if(_str is not ""):
-                     tmp_json_data = json.loads(_str) 
+                      tmp_json_data = json.loads(_str) 
                   else:
-                     tmp_json_data = {} 
+                     tmp_json_data = {}  
 
-                  #print("TMP JSON DATA")
-                  #print(tmp_json_data)
-                  
                   # We add the current data
-                  tmp_json_data[day] = {"r":_tuple[2],"v":_tuple[1]}  # rank & value
-
-                  #print("TMP JSON DATA UPDATED")
-                  #print(tmp_json_data) 
-
-                  tmp_json_file.write(json.dumps(tmp_json_data))
-                  #json.dumps(tmp_json_data, tmp_json_file)
+                  tmp_json_data[day] = {"r":_tuple[2],"v":_tuple[1]}  # rank & value 
+                  tmp_json_file.seek(0)
+                  tmp_json_file.write(json.dumps(tmp_json_data)) 
                   tmp_json_file.close()
+
 
  
-            else:
-               
-               #print(cur_file + " doesnt exist - we create it")
-
-
+            else: 
                # Open (+) the related JSON file
-               with open(cur_file, "a+", encoding='utf-8') as tmp_json_file:
-                  tmp_json_data = {day: {"r":_tuple[2],"v":_tuple[1] } }
+               with open(cur_file, "a+") as tmp_json_file:
+                  tmp_json_data = {day:{"r":_tuple[2],"v":_tuple[1]}}
                   json.dump(tmp_json_data, tmp_json_file)
-                  #print("We add ")
-                  #print(tmp_json_data)
-                  tmp_json_file.close()
+                  tmp_json_file.close()   
+ 
 
-               
+            if(_tuple[2] in all_data_for_the_day_for_rank):
+               all_data_for_the_day_for_rank[_tuple[2]].append({"c":county_name, "s":state_name, "v":_tuple[1]})
+            else:
+               all_data_for_the_day_for_rank[_tuple[2]] = []
+               all_data_for_the_day_for_rank[_tuple[2]].append({"c":county_name, "s":state_name, "v":_tuple[1]})
+ 
+ 
+         print(day + " done")
+
+         # We write all the data for the current day in the relate "rank" file   
+         cur_daily_file = US_RANKS + os.sep + day+"_"+_type 
+         # Write the "rank" file for the give date / slug
+         with open(cur_daily_file, "a+") as tmp_daily_json_file:   
+            json.dump(all_data_for_the_day_for_rank,tmp_daily_json_file) 
+            tmp_daily_json_file.close()
+            all_data_for_the_day_for_rank = {}
 
 def main_menu():
 
