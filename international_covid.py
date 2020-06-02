@@ -348,13 +348,13 @@ def create_rank_files_county():
 
                #print(county_name +  " parsed")
 
-         print(state_name + " parsed  " + str(state_counter) + "/52")
+            print(state_name + " parsed  " + str(state_counter) + "/52")
          # Here we have
          # {'2020-03-29': {'Clarendon|SC': '257.356', 'Marion|SC': '0', 'Richland|SC': '44.213'
         
          state_counter += 1
-         if(state_counter>1):
-            break
+         #if(state_counter>1):
+         #   break
  
 
       print("Sorting all the data...")
@@ -436,11 +436,24 @@ def create_rank_files_county():
          print(day + " done")
 
          # We write all the data for the current day in the relate "rank" file   
-         cur_daily_file = US_RANKS + os.sep + day+"_"+_type 
+         cur_daily_file_rank = US_RANKS + os.sep + day+"_"+_type + ".csv"
+
          # Write the "rank" file for the give date / slug
-         with open(cur_daily_file, "a+") as tmp_daily_json_file:   
-            json.dump(all_data_for_the_day_for_rank,tmp_daily_json_file) 
-            tmp_daily_json_file.close()
+         # WARNING IT'S A CSV HERE!
+         with open(cur_daily_file_rank, "a+") as cur_daily_file_rank_file:   
+            cur_daily_file_rank_file.seek(0)
+
+            # CSV Header
+            cur_daily_file_rank_file.write("fips,"+_type+"\n")
+
+            for d in all_data_for_the_day_for_rank:
+               # Get fips
+               tmpfips = all_data_for_the_day_for_rank[d][0]['c'].split('--')
+               if(tmpfips != ''):
+                  cur_daily_file_rank_file.write(tmpfips[1]+","+str(all_data_for_the_day_for_rank[d][0]['v'])+"\n")
+
+            cur_daily_file_rank_file.close()
+
             all_data_for_the_day_for_rank = {}
 
 def main_menu():
