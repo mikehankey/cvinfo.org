@@ -93,9 +93,19 @@ function prepareData(data) {
 function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2,type,domEl,domElTitle,  indexData1,  indexData2,color1,color2 ,bars) {
     
    // Get the Max Date on Both (we don't care if don't have all the data for both data sets)
- 
    var domElRef;
-    
+   
+
+   // Remove the fips from the county names
+   if(name1.indexOf("--")!=0) {
+      name1 = name1.substring(0,name1.indexOf("--")-1);
+   }
+
+   if(name2.indexOf("--")!=0) {
+      name2 = name2.substring(0,name2.indexOf("--")-1);
+   }
+
+
    var set1 = {
       x: x_axis1,
       y: data1,

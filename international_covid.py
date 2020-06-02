@@ -242,8 +242,7 @@ def clean_us_data():
       for county in state_data['county_stats']:
          clean_data_county = {}
          all_counties_for_cur_state.append({"name":county,"fips":state_data['county_stats'][county]['fips']})
- 
-
+  
          # We get the population where it is...
          # and build the related data set
          if(county in state_data['county_pop']):
@@ -280,7 +279,7 @@ def clean_us_data():
                }
   
             # We create the file for the county level & Dump the Data
-            tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county  +  ".json",  'w+')
+            tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county  +  "--" +  state_data['county_stats'][county]['fips'] + ".json",  'w+')
             json.dump(clean_data_county,tmp_json) 
 
       # We create the file for the state level & Dump the Data
@@ -329,10 +328,12 @@ def create_rank_files_county():
                # Get County Name
                county_json_file_name = os.path.basename(county_json_file)
                county_name = os.path.splitext(county_json_file_name)[0]
-               county_name += '|'+state_name
-               #print(county_name + " ************")
+               county_name += '|'+state_name 
 
-               # We open the county file
+               # Get County FIPS
+
+
+               # We open the county file to get the info
                tmp_json = open(county_json_file,  'r')
                county_data = json.load(tmp_json)
 
@@ -351,9 +352,9 @@ def create_rank_files_county():
          # Here we have
          # {'2020-03-29': {'Clarendon|SC': '257.356', 'Marion|SC': '0', 'Richland|SC': '44.213'
         
-         #state_counter += 1
-         #if(state_counter>3):
-         #   break
+         state_counter += 1
+         if(state_counter>1):
+            break
  
 
       print("Sorting all the data...")
