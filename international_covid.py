@@ -185,6 +185,7 @@ def clean_us_data():
       os.makedirs(US_STATES_DATA_PATH)
 
    for state in states:
+
       # We open the related JSON file created by covid.py
       tmp_json = open(US_STATES_ORG_DATA_PATH + os.sep + state + ".json",  'r')
       state_data = json.load(tmp_json)
@@ -240,12 +241,13 @@ def clean_us_data():
       # For each county
       for county in state_data['county_stats']:
          clean_data_county = {}
-         all_counties_for_cur_state.append(county)
+         all_counties_for_cur_state.append({"name":county,"fips":state_data['county_stats'][county]['fips']})
+ 
 
          # We get the population where it is...
          # and build the related data set
          if(county in state_data['county_pop']):
-            cur_pop = state_data['county_pop'][county]
+            cur_pop = state_data['county_pop'][county] 
              
             for daily_county in state_data['county_stats'][county]['county_stats']:
                 
@@ -278,7 +280,7 @@ def clean_us_data():
                }
   
             # We create the file for the county level & Dump the Data
-            tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county + ".json",  'w+')
+            tmp_json = open(US_STATES_DATA_PATH + os.sep + state + os.sep + county  +  ".json",  'w+')
             json.dump(clean_data_county,tmp_json) 
 
       # We create the file for the state level & Dump the Data
@@ -286,7 +288,7 @@ def clean_us_data():
       json.dump(clean_data_state,tmp_json)
       tmp_json.close()  
 
-      # We create a file with all the countries name (for which we have data!)
+      # We create a file with all the countries name and fips (for which we have data!)
       # for the current state 
       tmp_json = open(US_STATES_DATA_PATH + os.sep + state + "_counties.json",  'w+')
       json.dump({"counties":all_counties_for_cur_state},tmp_json)

@@ -269,7 +269,7 @@
             
             $.each(response['counties'].sort(), function(i,v) {
                if(v!="Unknown") {
-                  cs += "<option value='"+v+"'>"+v +"</option>";
+                  cs += "<option value='"+v["name"]+"'>"+v["name"] +"</option>";
                } 
             });
              
