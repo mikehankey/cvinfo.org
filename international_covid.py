@@ -192,6 +192,12 @@ def clean_us_data():
 
       clean_data_state = {}
 
+      if(state == "MD"):
+         print("STATE  " + state)
+         print("POP " + str(state_data['summary_info']['state_population']*1000000 ))
+ 
+      
+
       # We need to recompute the cpm & dpm with floats!
       cur_pop = state_data['summary_info']['state_population']*1000000 
        
@@ -203,8 +209,12 @@ def clean_us_data():
          date_time_object = datetime.strptime(real_date,'%Y%m%d')
          real_date = date_time_object.strftime('%Y-%m-%d')
 
+         if(state == "MD"): print(real_date)
+
          if(daily_state['new_cases']/cur_pop):
+           
             ncpm = str("%.3f" % round(daily_state['new_cases']*1000000/cur_pop, 3))
+           
          else:
             ncpm = "0"
          
@@ -214,7 +224,9 @@ def clean_us_data():
             ndpm = "0"
          
          if(daily_state['cases']/cur_pop):
+            if(state == "MD"): print("NEW CASES " + str(daily_state['new_cases']))
             tcpm = str("%.3f" % round(daily_state['cases']*1000000/cur_pop, 3))
+            if(state == "MD"): print("tcpm " + str(tcpm))
          else:
             tcpm = "0"
          
