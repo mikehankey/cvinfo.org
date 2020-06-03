@@ -314,8 +314,8 @@ def create_rank_files_county():
       state_counter = 1
 
       for state_folder in all_states_folders:
- 
-         if(state_folder!='ranks'):
+
+         if('ranks' not in state_folder  ):  # For one state ranks only:: and "MD" in state_folder
 
             # Get state name
             tmp = state_folder.split(os.sep)
@@ -329,10 +329,8 @@ def create_rank_files_county():
                county_json_file_name = os.path.basename(county_json_file)
                county_name = os.path.splitext(county_json_file_name)[0]
                county_name += '|'+state_name 
-
-               # Get County FIPS
-
-
+ 
+  
                # We open the county file to get the info
                tmp_json = open(county_json_file,  'r')
                county_data = json.load(tmp_json)

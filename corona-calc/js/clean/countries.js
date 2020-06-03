@@ -97,12 +97,12 @@ function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2
    
 
    // Remove the fips from the county names
-   if(name1.indexOf("--")!=0) {
-      name1 = name1.substring(0,name1.indexOf("--")-1);
+   if(name1.indexOf("--")!==-1) {
+      name1 = name1.substring(0,name1.indexOf("--"));
    }
 
-   if(name2.indexOf("--")!=0) {
-      name2 = name2.substring(0,name2.indexOf("--")-1);
+   if(name2.indexOf("--")!==-1) {
+      name2 = name2.substring(0,name2.indexOf("--"));
    }
 
 
