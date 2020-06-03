@@ -269,7 +269,7 @@
             
             $.each(response['counties'].sort(), function(i,v) {
                if(v!="Unknown") {
-                  cs += "<option value='"+v["name"]+"--"+v["fips"]+"'>"+v["name"] +"</option>";
+                  cs += '<option value="'+v["name"]+"--"+v["fips"]+'">'+v["name"]+'</option>';
                } 
             });
              
@@ -352,6 +352,25 @@
                });
 
             }); 
+         } else if(country1!=="0" && country2 =="0" && state1!="US") {
+            var tmp = getJSONPath(country1,state1,county1);
+            settings1.url = tmp.url;
+            name1 = tmp.name;
+            
+            loading();   
+
+            $.ajax(settings1).done(function (response1) {  
+               
+               var init_data1 = getInitDataCountry(response1, name1);
+              
+               // Get data for graphs
+               var graph_data1 = prepareData(init_data1);  
+               callback(init_data1,graph_data1,null,null);
+               
+               done();
+            
+            }) ; 
+       
          }  
           
           
