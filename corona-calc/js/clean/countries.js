@@ -222,10 +222,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
 
       var color1 = 'rgba(200, 0 , 0,.8)';
       var color2 = 'rgba(50, 0, 50,.8)';
-
-      console.log("draw_country_graph");
-     
-       
+  
       // Remove the fips from the county names
       if(init_data1.name.indexOf("--")!==-1) {
          if(init_data1.name.indexOf(",")!==-1) {
@@ -245,9 +242,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
                init_data2.name = init_data2.name.substring(0,init_data2.name.indexOf("--"));
             }
          }
-      }
-     
-
+      } 
 
       var maxDateData1 = new Date(Math.max.apply(null, graph_data1.x_axis.map(function(e) {
          return new Date(e);
@@ -287,8 +282,10 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
             total_deaths_per_million: [],
             total_cases_per_million: [],
             x_axis: [] 
-         }
+         };
+
       } 
+ 
  
       // We need the min of the two max!
       draw_comparison_graph(
@@ -300,8 +297,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "New Cases Per Million",
-         "country_graph4",
-         '#country_graph_title4',
+         "country_graph1",
+         '#country_graph_title1',
          indexData1,
          indexData2,
          color1,
@@ -317,8 +314,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "New Deaths Per Million",
-         "country_graph3",
-         '#country_graph_title3',
+         "country_graph2",
+         '#country_graph_title2',
          indexData1,
          indexData2,
          color1,
@@ -334,8 +331,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "Total Deaths Per Million",
-         "country_graph1",
-         '#country_graph_title1',
+         "country_graph4",
+         '#country_graph_title4',
          indexData1,
          indexData2,
          color1,
@@ -352,8 +349,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "Total Cases Per Million",
-         "country_graph2",
-         '#country_graph_title2',
+         "country_graph3",
+         '#country_graph_title3', 
          indexData1,
          indexData2,
          color1,
