@@ -17,8 +17,8 @@ function compare( a, b ) {
 function getInitDataCountry(data,country) {
    var toReturn;
    var country_stats = [], all_dates = [];
-   
- 
+    
+
    $.each(data,function(i,v) { 
       country_stats.push({
          'date':                    i,
@@ -31,7 +31,7 @@ function getInitDataCountry(data,country) {
    })
  
    // Sort country states per date
-   country_stats.sort( compare );
+   country_stats.sort(compare);
  
 
    // State Data
@@ -96,14 +96,7 @@ function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2
    var domElRef;
    
 
-   // Remove the fips from the county names
-   if(name1.indexOf("--")!==-1) {
-      name1 = name1.substring(0,name1.indexOf("--"));
-   }
 
-   if(name2.indexOf("--")!==-1) {
-      name2 = name2.substring(0,name2.indexOf("--"));
-   }
 
 
    var set1 = {
@@ -232,7 +225,29 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
 
       var color1 = 'rgba(200, 0 , 0,.8)';
       var color2 = 'rgba(50, 0, 50,.8)';
-   
+
+       
+      // Remove the fips from the county names
+      if(init_data1.name.indexOf("--")!==-1) {
+         if(init_data1.name.indexOf(",")!==-1) {
+            tmp =  init_data1.name.split(",") 
+            init_data1.name = tmp[0].substring(0,tmp[0].indexOf("--")) +', ' + tmp[1];
+         } else {
+            init_data1.name = init_data1.name.substring(0,init_data1.name.indexOf("--"));
+         }
+      } 
+
+      if(init_data2.name.indexOf("--")!==-1) {
+         if(init_data2.name.indexOf(",")!==-1) {
+            tmp =  init_data2.name.split(",") 
+            init_data2.name = tmp[0].substring(0,tmp[0].indexOf("--")) +', ' + tmp[1];
+         } else {
+            init_data2.name = init_data2.name.substring(0,init_data2.name.indexOf("--"));
+         }
+      }
+     
+
+
       var maxDateData1 = new Date(Math.max.apply(null, graph_data1.x_axis.map(function(e) {
          return new Date(e);
        })));
@@ -262,8 +277,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "New Cases Per Million",
-         "country_graph4",
-         '#country_graph_title4',
+         "country_graph3",
+         '#country_graph_title3',
          indexData1,
          indexData2,
          color1,
@@ -279,8 +294,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "New Deaths Per Million",
-         "country_graph3",
-         '#country_graph_title3',
+         "country_graph4",
+         '#country_graph_title4',
          indexData1,
          indexData2,
          color1,
@@ -296,8 +311,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "Total Deaths Per Million",
-         "country_graph1",
-         '#country_graph_title1',
+         "country_graph2",
+         '#country_graph_title2',
          indexData1,
          indexData2,
          color1,
@@ -314,8 +329,8 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
          graph_data1.x_axis,
          graph_data2.x_axis,
          "Total Cases Per Million",
-         "country_graph2",
-         '#country_graph_title2',
+         "country_graph1",
+         '#country_graph_title1',
          indexData1,
          indexData2,
          color1,
