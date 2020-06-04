@@ -106,7 +106,7 @@ def generate_gbu_graphs_and_main_page(groups):
 # Create State HTML Element with image
 def create_state_DOM_el(st) :
    return "<div class='graph_c'><h3 class='nmb'>"+US_STATES_ABBR[st]+"</h3><a href=''><img src='.."+GBU_IMAGE_RELATIVE+os.sep+st+".png' width='345'/></a></div>" 
-0
+
 
 if __name__ == "__main__":
    os.system("clear") 
