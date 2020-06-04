@@ -70,6 +70,10 @@ a, a:visited {
 .graph_c .js-plotly-plot {
    margin:0;
 }
+
+.graph_c h3.nmb {
+   margin-bottom:0;
+}
  
 
  

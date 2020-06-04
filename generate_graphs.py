@@ -13,7 +13,7 @@ US_STATES_ABBR = { 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arka
 # Generate a graph based on state, type (see TYPES_SLUG) & color
 def generate_graph_with_avg(state, _type, _color, folder):
 
-   print("Creating the graph for " + state)
+   
 
    # Get JSON Data for current state
    cur_json_file = open(US_STATES_DATA_PATH + os.sep + state + ".json", 'r')
@@ -63,7 +63,7 @@ def generate_graph_with_avg(state, _type, _color, folder):
       _color = "black"
       
    fig = go.Figure()
-   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.8)' ))
+   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
 
  
@@ -92,7 +92,8 @@ def generate_graph_with_avg(state, _type, _color, folder):
    #)
    
    fig.write_image(folder + os.sep + state + ".png") 
-   print(folder + os.sep + state + ".png  created")
+   #print(folder + os.sep + state + ".png  created")
+   print("Graph for " + state + ' (' +  _color + ') created')
        
 
 
