@@ -25,3 +25,5 @@ corona-calc.html
 *.csv
 /covid-19-intl-data/*
 corona-calc/flashcards/*
+corona-calc/main_gbu.html
+gbu_images/
