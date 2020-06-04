@@ -54,9 +54,7 @@ a, a:visited {
 .grapht h2 {
    margin-bottom:0;
    text-transform: uppercase;
-}
-
- 
+} 
 
 .box_graph  { 
    width: 100%;
@@ -66,6 +64,24 @@ a, a:visited {
    float: left; 
    margin: 0 10px;
 } 
+
+.graph_c img {
+   padding: 0 .85rem;
+   width: 100%;
+   max-width: 100%;
+}
+
+.graph_g {
+   float: left;
+   margin: 0 auto 1rem;
+   width: 33.333%;
+}
+
+.graph_g img  {   max-width: 100%;
+   width: 100%;
+   padding: 0 .85rem;
+}
+ 
 
 .graph_c .js-plotly-plot {
    margin:0;

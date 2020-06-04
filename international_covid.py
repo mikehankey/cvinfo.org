@@ -503,8 +503,7 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
    elif cmd== 0:
       print("Exit.")
-      sys.exit(0)
-      print("\n>>>TASK DONE \n\n") 
+      sys.exit(0) 
    else:
       print("\n*>>>ERROR: Command Not Found \n\n")
       

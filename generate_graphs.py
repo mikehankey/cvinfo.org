@@ -11,12 +11,14 @@ US_STATES_DATA_PATH = DATA_PATH + os.sep + "US"
 US_STATES_ABBR = { 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'DC': 'Washington DC', 'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming', }
  
 # Generate a graph based on state, type (see TYPES_SLUG) & color
-def generate_graph_with_avg(state, _type, _color, folder):
-
+def generate_graph_with_avg(state, _type, _color, folder, county):
    
-
    # Get JSON Data for current state
-   cur_json_file = open(US_STATES_DATA_PATH + os.sep + state + ".json", 'r')
+   if(county==''):
+      cur_json_file = open(US_STATES_DATA_PATH + os.sep + state + ".json", 'r')
+   else:
+      cur_json_file = open(county, 'r') # We pass the relative path to the json
+   
    data = json.load(cur_json_file)
 
    all_x = []
@@ -70,7 +72,7 @@ def generate_graph_with_avg(state, _type, _color, folder):
    fig.update_layout(
       width=350,
       height=350, 
-      margin=dict(l=30, r=20, t=5, b=20),
+      margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
       paper_bgcolor='rgba(255,255,255,1)',
       plot_bgcolor='rgba(255,255,255,1)',
       showlegend= False,
@@ -91,9 +93,20 @@ def generate_graph_with_avg(state, _type, _color, folder):
    #      )
    #)
    
-   fig.write_image(folder + os.sep + state + ".png") 
+  
+
+
    #print(folder + os.sep + state + ".png  created")
-   print("Graph for " + state + ' (' +  _color + ') created')
+   if(county ==""):
+      fig.write_image(folder + os.sep + state + ".png") 
+      print("Graph for " + state + ' (' +  _color + ') created')
+   else:
+      # Get county name
+      county_name = os.path.basename(county)
+      ind = county_name.index('--')
+      county_name = county_name[0:ind] 
+      fig.write_image(folder + os.sep + county_name + "_" +  state + ".png") 
+      print("County graph created ("+state+")")
        
 
 
