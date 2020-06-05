@@ -15,7 +15,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
    if(county==''):
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
    else:
-      cur_json_file = open(county, 'r') # We pass the relative path to the json
+      cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + "counties" + os.sep +  county + ".json", 'r')
    
    data = json.load(cur_json_file)
 
@@ -32,9 +32,15 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
 
    tempValForAvg = []
    tempValFormax_day = []
- 
+   
+   if(county==""):
+      all_data = data['stats']
+   else:
+      all_data = data
+
+
    # Get the DATA
-   for d in data['stats']:
+   for d in all_data:
      
       for day in d:
          all_x.append(day) 
@@ -100,12 +106,9 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       fig.write_image(folder + os.sep + state + ".png") 
       print("Graph for " + state + ' (' +  _color + ') created')
    else:
-      # Get county name
-      county_name = os.path.basename(county)
-      ind = county_name.index('--')
-      county_name = county_name[0:ind] 
-      fig.write_image(folder + os.sep + county_name + "_" +  state + ".png") 
-      print("County graph created ("+state+")")
+      fig.write_image(folder + os.sep + county + ".png") 
+      print("Graph for " + county + ", " + state + ' (' +  _color + ') created')
+ 
        
 
 

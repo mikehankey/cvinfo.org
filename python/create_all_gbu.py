@@ -36,9 +36,11 @@ def main_menu():
 
    elif cmd==4:
       print("CREATING ALL STATES GBU PAGE")
+      #print("**************************DEBUG MODE *************************")
+      #generate_gbu_graphs_and_state_page("MD",rank_counties("MD"))
       for st in US_STATES:
-         print(rank_counties(st))
-         #generate_gbu_graphs_and_state_page(st,rank_counties(st))
+         g = rank_counties(st)
+         generate_gbu_graphs_and_state_page(st,g)
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 0:

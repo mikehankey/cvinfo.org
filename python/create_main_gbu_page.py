@@ -85,7 +85,7 @@ def generate_gbu_graphs_and_main_page(groups):
       template = template.replace('{'+group.upper()+'}',domEl)
     
    # Save Template as main gbu page
-   main_gbu_page = open('../corona-calc/main_gbu.html','w+')
+   main_gbu_page = open('../corona-calc/states/index.html','w+')
    main_gbu_page.write(template)
    main_gbu_page.close()
 
