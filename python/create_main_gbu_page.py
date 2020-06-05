@@ -2,6 +2,7 @@ import json
 import sys
 import numpy as np
 from utils import *
+from generate_graphs import *
 
 
 # Create Groups of Good, Ugly & Bad States
@@ -45,6 +46,52 @@ def rank_states():
    return groups
 
 
+
+# Create State HTML Element with image
+def create_state_DOM_el(st) :
+   return '<div class="graph_g"><h3 class="nmb">'+US_STATES[st]+'</h3><a href="./gbu/'+st+'.html"><img src="./states'+os.sep+st+os.sep+st+'.png" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
+
+
+# Create Graphics for all states 
+# and insert them into the GBU template (main page)
+def generate_gbu_graphs_and_main_page(groups): 
+   color = ""
+
+   # Open Template
+   f_template =  open(GBU_STATE_TEMPLATE,  'r')
+   template = f_template.read() 
+   f_template.close() 
+  
+   for group in groups:
+
+      if(group == 'ugly'):
+         color = "r"
+      elif(group == 'bad'):
+         color = "o"
+      else:
+         color = "g"
+      
+      domEl = ""
+
+      for state in groups[group]:
+
+         # Generate the Image
+         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '')
+
+         # Get the DOM Element
+         domEl += create_state_DOM_el(state)
+
+      # Add to the template 
+      template = template.replace('{'+group.upper()+'}',domEl)
+    
+   # Save Template as main gbu page
+   main_gbu_page = open('../corona-calc/main_gbu.html','w+')
+   main_gbu_page.write(template)
+   main_gbu_page.close()
+
+   print("Main gbu page (main_gbu.html) created")
+
+
 if __name__ == "__main__":
    os.system("clear")
-   print(rank_states())
+   generate_gbu_graphs_and_main_page(rank_states())

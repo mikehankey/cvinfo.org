@@ -3,19 +3,17 @@ import os
 import sys
 import json
 import plotly.graph_objects as go
+
+from utils import PATH_TO_STATES_FOLDER
 from statistics import mean 
  
-TYPES_SLUG = ['ncpm','ndpm','tcpm','tdpm']
-DATA_PATH = "." + os.sep + "covid-19-intl-data"
-US_STATES_DATA_PATH = DATA_PATH + os.sep + "US"
-US_STATES_ABBR = { 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'DC': 'Washington DC', 'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming', }
- 
-# Generate a graph based on state, type (see TYPES_SLUG) & color
+  
+# Generate a graph based on state, type (like deaths, cases, etc.) & color
 def generate_graph_with_avg(state, _type, _color, folder, county):
    
    # Get JSON Data for current state
    if(county==''):
-      cur_json_file = open(US_STATES_DATA_PATH + os.sep + state + ".json", 'r')
+      cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
    else:
       cur_json_file = open(county, 'r') # We pass the relative path to the json
    
@@ -34,25 +32,27 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
 
    tempValForAvg = []
    tempValFormax_day = []
-   
+ 
    # Get the DATA
-   for d in data:
-      all_x.append(d) 
-      all_y.append(data[d][_type]) 
+   for d in data['stats']:
+     
+      for day in d:
+         all_x.append(day) 
+         all_y.append(d[day][_type]) 
+       
+         # Average
+         tempValForAvg.append(float(d[day][_type]))
 
-      # Average
-      tempValForAvg.append(data[d][_type])
+         if(len(tempValForAvg)<max_day):
+            tempValFormax_day = tempValForAvg 
+         else:
+            tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
 
-      if(len(tempValForAvg)<max_day):
-         tempValFormax_day = tempValForAvg;
-      else:
-         tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)];
+         # We have strings...
+         tempValFormax_day = [float(i) for i in tempValFormax_day]
 
-      # We have strings...
-      tempValFormax_day = [float(i) for i in tempValFormax_day]
-
-      all_x_avg.append(d)
-      all_y_avg.append(mean(tempValFormax_day))  
+         all_x_avg.append(day)
+         all_y_avg.append(mean(tempValFormax_day))  
 
 
    if(_color=="r"):
@@ -95,10 +95,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
    #      )
    #)
    
-  
-
-
-   #print(folder + os.sep + state + ".png  created")
+   
    if(county ==""):
       fig.write_image(folder + os.sep + state + ".png") 
       print("Graph for " + state + ' (' +  _color + ') created')

@@ -36,9 +36,12 @@ def create_states_data(state):
    with open(TMP_DATA_PATH + os.sep +  "daily.csv", mode='r') as csv_file:
       
       csv_reader = csv.DictReader(csv_file)
+      rows = list(csv_reader)
       line_count = 0
 
-      for row in csv_reader:
+      last_data = {}
+
+      for row in reversed(rows):
 
          if line_count != 0: 
  
@@ -48,7 +51,10 @@ def create_states_data(state):
                   all_stats_per_state[row["state"]] = {'stats' : []}
                elif(state == ''):
                   all_stats_per_state[row["state"]] = {'stats' : []}
-            
+
+               # Used to compute the daily data (as we only have totals here)
+               last_data[row["state"]] = {'deaths':0,'cases':0}
+
             # We put the current data in the state dict
             if((state!='' and row["state"] == state) or (state == '')):
 
@@ -57,8 +63,12 @@ def create_states_data(state):
                      'act_hosp'        : foz(row['hospitalizedCurrently']),
                      'test'            : foz(row['negative']) +  foz(row['pending']) +  foz(row['positive']),
                      'total_c'         : foz(row['positive']), 
-                     'total_d'         : foz(row['death']) 
+                     'total_d'         : foz(row['death']),
+                     'cases'           : foz(row['positive']) - int(last_data[row["state"]]['cases']),
+                     'deaths'          : foz(row['death'])    - int(last_data[row["state"]]['deaths'])
                }
+ 
+               last_data[row["state"]] = {'deaths':row_data['total_d'],'cases':row_data['total_c']}
 
                # Positive test %
                if(foz(row['negative']) +  foz(row['pending']) +  foz(row['positive'])>0):
@@ -74,28 +84,12 @@ def create_states_data(state):
                })
   
          line_count+=1
-
-   # We now create the JSON files for each state
-   # and we take this opportunity to compute the daily case & death values
+      
+   # We now create the JSON files for each state 
    for state in all_stats_per_state:
 
       state_folder = PATH_TO_STATES_FOLDER + os.sep + state 
-
-      state_deaths = 0
-      state_cases  = 0
-
-      # Compute daily deaths & cases
-      for day in all_stats_per_state[state]['stats']:
-          
-         for d in day:
-               
-            day[d]['deaths']  = day[d]['total_d'] - state_deaths
-            day[d]['cases']   = day[d]['total_c'] - state_cases
-
-            state_deaths   =  day[d]['deaths']
-            state_cases    =  day[d]['cases']
-
-  
+    
       # Create State Folder if doesnt exits
       if not os.path.exists(state_folder):
          os.makedirs(state_folder) 
@@ -110,16 +104,17 @@ def create_states_data(state):
 # Create JSON file for all counties
 def create_county_state_data():
    all_stats_per_county = {}
- 
-
+  
    # Open history file (https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv)
    # Headers:
    # date,county,state,fips,cases,deaths
    with open(TMP_DATA_PATH + os.sep +  "us-counties.csv", mode='r') as csv_file:
       csv_reader = csv.DictReader(csv_file)
+      rows = list(csv_reader)
       line_count = 0
+      last_data = {}
 
-      for row in csv_reader: 
+      for row in reversed(rows): 
 
          if line_count != 0:  
 
@@ -130,9 +125,7 @@ def create_county_state_data():
             if(cur_state is not None and row['county'] != 'Unknown'):
             
                cur_county = row['county']
-
-               # Add the fips to county name
-               # cur_county += '|' + row['fips']
+   
 
                # Does the state already exists in all_stats_per_county?
                if(cur_state not in all_stats_per_county):
@@ -142,11 +135,16 @@ def create_county_state_data():
                if(cur_county not in all_stats_per_county[cur_state]['stats']):
                   all_stats_per_county[cur_state]['stats'][cur_county] = []
 
+                  # Used to compute the daily data (as we only have totals here)
+                  last_data[cur_county+cur_state] = {'deaths':0,'cases':0}
+
                # Create data for the given date 
                row_data_for_date =  {
-                     'total_c'   : foz(row['cases']),
-                     'total_d'   : foz(row['deaths']),
+                     'total_c'   : foz(row['cases']) - int(last_data[cur_county+cur_state]['cases']),
+                     'total_d'   : foz(row['deaths']) - int(last_data[cur_county+cur_state]['deaths']),
                } 
+
+               last_data[cur_county+cur_state] = {'deaths':row_data_for_date['total_d'],'cases':row_data_for_date['total_c']}
 
                all_stats_per_county[cur_state]['stats'][cur_county].append({
                   row["date"] : row_data_for_date
@@ -160,9 +158,7 @@ def create_county_state_data():
    # {'WA': {'stats': {'Snohomish|53061': [{'2020-01-22': {'cases': 1.0, 'deaths': 0.0}}, {'2020-01-23': {'cases': 1.0, 'deaths': 0.0}}...
    # We now create a JSON per county (and we compute the daily cases & deaths at the same time)
    for state in all_stats_per_county:
-
-      print("Writing data for " + state + "'s counties")
-      
+ 
       for county in all_stats_per_county[state]['stats']:
          county_deaths = 0
          county_cases  = 0
@@ -179,7 +175,7 @@ def create_county_state_data():
    
          
          # We put all the JSON under the State folder / County
-         county_folder =  PATH_TO_STATES_FOLDER + os.sep + state + os.sep +  "counties" + os.sep +  county 
+         county_folder =  PATH_TO_STATES_FOLDER + os.sep + state + os.sep +  "counties"  
          
          # Create County Folder if doesnt exits
          if not os.path.exists(county_folder):
@@ -189,8 +185,9 @@ def create_county_state_data():
          with open(county_folder +  os.sep + county + ".json", mode='w+') as csv_file:
             json.dump(all_stats_per_county[state]['stats'][county],csv_file)
       
+      print( state + "'s counties done")
 
 if __name__ == "__main__":
    os.system("clear")
-   create_states_data('')
+   create_states_data('') 
    create_county_state_data()

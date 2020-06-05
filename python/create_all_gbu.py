@@ -11,6 +11,7 @@ def main_menu():
    print("0) Exit") 
    print("1) Update data source")  
    print("2) Clean all data")  
+   print("3) Create Main GBU Page")  
    
    cmd = input("Run: ")
    cmd = int(cmd) 
@@ -26,7 +27,7 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
    elif cmd==3:
       print("CREATING MAIN GBU PAGE")
-      create_main_gbu_page()
+      generate_gbu_graphs_and_main_page(rank_states())
       print("\n>>>TASK DONE \n\n") 
    elif cmd== 0:
       print("Exit.")
