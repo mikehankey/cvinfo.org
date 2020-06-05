@@ -28,5 +28,5 @@ corona-calc/flashcards/*
 corona-calc/main_gbu.html
 gbu_images/
 corona-calc/*_gbu.html
-python/_pycache
+python/__pycache__/
 corona-calc/states

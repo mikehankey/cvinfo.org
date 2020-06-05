@@ -1,6 +1,7 @@
 from create_json_data_files import *
 from update_data_src import * 
 from create_main_gbu_page import *
+from create_state_gbu_pages import *
  
  
 def main_menu():
@@ -12,6 +13,7 @@ def main_menu():
    print("1) Update data source")  
    print("2) Clean all data")  
    print("3) Create Main GBU Page")  
+   print("4) Create All States GBU Pages")  
    
    cmd = input("Run: ")
    cmd = int(cmd) 
@@ -20,15 +22,25 @@ def main_menu():
       print ("UPDATING DATA.")
       update_data_sources()
       print("\n>>>TASK DONE \n\n") 
+
    elif cmd== 2:
       print ("CLEANING DATA.")
       create_states_data('')
       create_county_state_data()
       print("\n>>>TASK DONE \n\n") 
+
    elif cmd==3:
       print("CREATING MAIN GBU PAGE")
       generate_gbu_graphs_and_main_page(rank_states())
       print("\n>>>TASK DONE \n\n") 
+
+   elif cmd==4:
+      print("CREATING ALL STATES GBU PAGE")
+      for st in US_STATES:
+         print(rank_counties(st))
+         #generate_gbu_graphs_and_state_page(st,rank_counties(st))
+      print("\n>>>TASK DONE \n\n") 
+
    elif cmd== 0:
       print("Exit.")
       sys.exit(0) 
