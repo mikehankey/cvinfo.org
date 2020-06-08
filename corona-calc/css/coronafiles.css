@@ -357,6 +357,43 @@ p.to {
 
 
 /* Form */
+#state_sum {
+   display: flex;
+   flex-flow: row wrap;
+   border-bottom: 1px solid rgba(255,255,255,.15);
+   padding: 1rem;
+   margin: 0;
+}
+
+#state_sum dt {
+   clear: both;
+   width: 150px;
+   color: #b1b1b1;
+   text-align: left;
+}
+#state_sum dd, #state_sum dt {
+   margin-bottom: .2rem;
+   float: left;
+}
+
+#state_sum dd {
+   font-weight: 700;
+}
+
+#state_sum .std {
+   flex-grow: 1;
+   margin-left: 2rem;
+}
+
+.flg {
+   width: 200px;
+   text-align: center
+}
+
+.flg img {
+   max-width: 100%;
+   border: 1px solid rgba(0,0,0,.1)
+}
 
 /* Loader */
 #state_select img {

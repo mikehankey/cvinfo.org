@@ -15,6 +15,7 @@ def main_menu():
    print("3) Clean all counties data")  
    print("4) Create Main GBU Page")  
    print("5) Create All States GBU Pages")  
+   print("6) Do it all")  
    
    cmd = input("Run: ")
    cmd = int(cmd) 
@@ -26,7 +27,9 @@ def main_menu():
 
    elif cmd== 2:
       print ("CLEANING STATES DATA.")
-      create_states_data('') 
+      print("**************************DEBUG MODE *************************")
+      create_states_data('WY') 
+      #create_states_data('') 
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 3:
@@ -48,7 +51,17 @@ def main_menu():
       #   generate_gbu_graphs_and_state_page(st,g)
       #print("\n>>>TASK DONE \n\n") 
 
-   
+   elif cmd==6:
+      print("CREATE ALL GBU PAGES")
+      update_data_sources()
+      create_states_data('') 
+      create_county_state_data('')
+      generate_gbu_graphs_and_main_page(rank_states())
+      for st in US_STATES:
+         g = rank_counties(st)
+         generate_gbu_graphs_and_state_page(st,g)
+      print("\n>>>TASK DONE \n\n") 
+
    elif cmd== 0:
       print("Exit.")
       sys.exit(0) 

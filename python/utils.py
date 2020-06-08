@@ -4,3 +4,13 @@ US_STATES = { 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas'
 PATH_TO_STATES_FOLDER = '..' +  os.sep + 'corona-calc' + os.sep + 'states'
 GBU_STATE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_state.html'
 GBU_MAIN_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu.html'
+
+
+
+def display_us_format(_float,prec):
+   _format =  '{:,.'+str(prec)+'f}'
+   return _format.format(_float)
+
+
+if __name__ == "__main__":
+   print(display_us_format(46854684864653.5665,2))

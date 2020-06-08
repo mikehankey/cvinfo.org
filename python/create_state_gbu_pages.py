@@ -32,7 +32,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
          county_name = os.path.basename(county).replace('.json','')
 
          # Generate the Image
-         ##print("Create Graph for " + county_name)
+         # print("Create Graph for " + county_name)
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state + os.sep + 'counties', county)
 
          # Get the DOM Element
@@ -46,13 +46,26 @@ def generate_gbu_graphs_and_state_page(state,groups):
          template = template.replace('{'+group.upper()+'_SHOW}','')
          template = template.replace('{'+group.upper()+'}',domEl)
 
-   
-   
+    
    # Add meta
    template = template.replace('{STATE_FULL}',US_STATES[state])
    template = template.replace('{STATE}',state) 
 
+   # Flag
+   template = template.replace('{STATE_l}',state.lower())  
 
+   # We open the related state .json for additional info
+   state_json_file = open('../corona-calc/states/'+state+'/'+state+'.json','r')
+   state_data = json.load(state_json_file)
+   state_json_file.close()
+
+   print("TOTAL CASES " +  str(state_data['sum']['cur_total_cases']))
+
+   template = template.replace('{LAST_UPDATE}',  str(state_data['sum']['last_update']))
+   template = template.replace('{TOTAL_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
+   template = template.replace('{TOTAL_CASES}',  display_us_format(state_data['sum']['cur_total_cases'], 0)) 
+   template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0) + ' (' +   display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% positive)')
+ 
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)

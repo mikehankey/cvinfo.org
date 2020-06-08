@@ -93,6 +93,23 @@ def create_states_data(state):
       # Create State Folder if doesnt exits
       if not os.path.exists(state_folder):
          os.makedirs(state_folder) 
+
+      # Since we are at the state level, we take the opportunity to add specific info
+      # for the state summary
+
+      # What is the latest date we have?
+      last_record = all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1]
+      for d in last_record:
+         last_update = d
+ 
+ 
+      all_stats_per_state[state]['sum'] = {
+         'last_update'        :  last_update,
+         'cur_total_deaths'   :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['total_d'],
+         'cur_total_cases'    :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['total_c'],
+         'cur_total_tests'    :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['test'],
+         'cur_hosp'           :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['act_hosp']
+      }
   
       # Create JSON File in folder
       with open(state_folder + os.sep +  state + ".json", mode='w+') as csv_file:
@@ -104,8 +121,7 @@ def create_states_data(state):
 # Create JSON file for all counties
 def create_county_state_data(_state):
    all_stats_per_county = {}
- 
-
+  
    print("Parsing counties data...")
   
    # Open history file (https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv)
