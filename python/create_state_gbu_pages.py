@@ -59,6 +59,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    state_data = json.load(state_json_file)
    state_json_file.close()
 
+   # Update template with basics
    template = template.replace('{LAST_UPDATE}',  str(state_data['sum']['last_update']))
    template = template.replace('{TOTAL_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
    template = template.replace('{TOTAL_CASES}',  display_us_format(state_data['sum']['cur_total_cases'], 0)) 
@@ -70,15 +71,16 @@ def generate_gbu_graphs_and_state_page(state,groups):
    generate_graph_with_avg(state, 'test_pos_p', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p') # Positive Tests
    generate_graph_with_avg(state, 'test', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test') # Total Test per day Tests
    generate_graph_with_avg(state, 'act_hosp', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp') # Active Hospi
-
-
+ 
    # Add Graphs to page
-   #template = template.replace('{TOTAL_DEATHS_GRAPH}', display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
-   #template = template.replace('{TOTAL_CASES}',  display_us_format(state_data['sum']['cur_total_cases'], 0)) 
-   #template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0))
-   #template = template.replace('{TOTAL_POS_TESTS}',  display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
-   
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day')
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day')
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations')
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day')
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests")
 
+   template = template.replace('{ALL_SUM_GRAPHS}', all_sum_graphs)
+ 
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)
@@ -154,3 +156,7 @@ def rank_counties(st):
 # Create County HTML Element with image
 def create_county_DOM_el(st,ct) :
    return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png" width="345" alt="'+ct+'"/></div>' 
+
+# Create Graph HTML Element with image (the graph, dumbass)
+def create_graph_DOM_el(_file,st,title) :
+   return '<div class="graph_g"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'" width="345" alt="'+title+'"/></div>' 

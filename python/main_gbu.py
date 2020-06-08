@@ -46,6 +46,7 @@ def main_menu():
       print("CREATING ALL STATES GBU PAGE")
       #print("**************************DEBUG MODE *************************")
       #generate_gbu_graphs_and_state_page("WY",rank_counties("WY"))
+      #sys.exit
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
