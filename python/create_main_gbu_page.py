@@ -49,7 +49,7 @@ def rank_states():
 
 # Create State HTML Element with image
 def create_state_DOM_el(st) :
-   return '<div class="graph_g"><h3 class="nmb">'+US_STATES[st]+'</h3><a href="./gbu/'+st+'.html"><img src="./states'+os.sep+st+os.sep+st+'.png" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
+   return '<div class="graph_g"><h3 class="nmb">'+US_STATES[st]+'</h3><a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
 
 
 # Create Graphics for all states 
@@ -58,7 +58,7 @@ def generate_gbu_graphs_and_main_page(groups):
    color = ""
 
    # Open Template
-   f_template =  open(GBU_STATE_TEMPLATE,  'r')
+   f_template =  open(GBU_MAIN_TEMPLATE,  'r')
    template = f_template.read() 
    f_template.close() 
   
@@ -89,7 +89,7 @@ def generate_gbu_graphs_and_main_page(groups):
    main_gbu_page.write(template)
    main_gbu_page.close()
 
-   print("Main gbu page (main_gbu.html) created")
+   print("Main gbu page (corona-calc/states/index.html) created")
 
 
 if __name__ == "__main__":

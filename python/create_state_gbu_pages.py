@@ -9,10 +9,9 @@ from generate_graphs import *
 def generate_gbu_graphs_and_state_page(state,groups): 
    
    # Open Template
-   f_template =  open(GBU_MAIN_TEMPLATE,  'r')
+   f_template =  open(GBU_STATE_TEMPLATE,  'r')
    template = f_template.read() 
    f_template.close()
-  
    
    for group in groups:
 
@@ -20,6 +19,8 @@ def generate_gbu_graphs_and_state_page(state,groups):
          color = "r"
       elif(group == 'bad'):
          color = "o"
+      elif(group == 'low_cases'):
+         color = "b"
       else:
          color = "g"
       
@@ -39,7 +40,12 @@ def generate_gbu_graphs_and_state_page(state,groups):
 
       # Add to the template 
       template = template.replace('{'+group.upper()+'}',domEl)
-    
+   
+   # Add meta
+   template = template.replace('{STATE_FULL}',US_STATES[state])
+   template = template.replace('{STATE}',state) 
+
+
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)
@@ -47,12 +53,14 @@ def generate_gbu_graphs_and_state_page(state,groups):
 
    print("State gbu page (../corona-calc/states/"+state+"/index.html) created")
 
+
+
 # Rank counties for a given state
 def rank_counties(st):
    
    print("Ranking  "  + US_STATES[st] + "'s counties")
 
-   groups = {'good': [], 'bad': [], 'ugly': []} 
+   groups = {'good': [], 'bad': [], 'ugly': [], 'low_cases': []} 
    tmp_cases = []
 
    # Glob the related directory 
@@ -61,25 +69,26 @@ def rank_counties(st):
    for county in all_countries_json_file:  
 
       # Open related json file under covid-19-intl-data
-      tmp_json = open(county,  'r')
+      tmp_json    = open(county,  'r')
       county_data = json.load(tmp_json)
       max_val = 0 
 
       # Get county name from path
       county_name = os.path.basename(county).replace('.json','')
 
-      for day in county_data: 
-         
-         for date in day:
+      #rint("COUNTY ", county_name)
 
+      for day in reversed(list(county_data)): 
+         
+         for date in reversed(list(day)): 
+            
+            #print(date + "  => " + str(day[date]['cases']))
             tmp_cases.append(float(day[date]['cases']))  
             
             if len(tmp_cases) < 7:
-            
-               avg = int(np.mean(tmp_cases))
+              avg = int(np.mean(tmp_cases))
             
             else: 
-              
                avg = int(np.mean(tmp_cases[-7:]))
             
             if avg > max_val:
@@ -89,17 +98,23 @@ def rank_counties(st):
          last_val_perc = avg / max_val 
       else:
          last_val_perc = 0
-
-      if last_val_perc >= .8 and avg > 5:
+ 
+      if max_val <= 5:
+         groups['low_cases'].append(county_name) 
+      elif last_val_perc >= .8 and avg > 5:
          groups['ugly'].append(county_name) 
       elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'].append(county_name) 
       else:
          groups['good'].append(county_name) 
+ 
    
+   #print(groups)
+   #sys.exit()
+
    return groups
 
 
 # Create County HTML Element with image
 def create_county_DOM_el(st,ct) :
-   return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./states'+os.sep+st+os.sep+st+'counties'+os.sep+ct+'.png" width="345" alt="'+ct+'"/></div>' 
+   return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png" width="345" alt="'+ct+'"/></div>' 
