@@ -80,7 +80,7 @@ def rank_counties(st):
    print("Ranking  "  + US_STATES[st] + "'s counties")
 
    groups = {'good': [], 'bad': [], 'ugly': [], 'low_cases': []} 
-   tmp_cases = []
+    
 
    # Glob the related directory 
    all_countries_json_file = glob.glob(PATH_TO_STATES_FOLDER + os.sep + st + os.sep + "counties"  + os.sep  + "*.json")
@@ -91,33 +91,39 @@ def rank_counties(st):
       tmp_json    = open(county,  'r')
       county_data = json.load(tmp_json)
       max_val = 0 
+      last_val_perc = 0
+      tmp_avg_cases = []
+      tmp_cases = []
 
       # Get county name from path
       county_name = os.path.basename(county).replace('.json','')
-
-      #rint("COUNTY ", county_name)
-
-      for day in reversed(list(county_data)): 
-         
+ 
+      for day in reversed(list(county_data)):  
          for date in reversed(list(day)): 
-            
-            #print(date + "  => " + str(day[date]['cases']))
+              
+
             tmp_cases.append(float(day[date]['cases']))  
             
             if len(tmp_cases) < 7:
-              avg = int(np.mean(tmp_cases))
-            
+               avg = int(np.mean(tmp_cases))
             else: 
                avg = int(np.mean(tmp_cases[-7:]))
-            
+
+            tmp_avg_cases.append(avg)
+ 
             if avg > max_val:
                max_val = avg
-      
+       
       if(max_val!=0):
          last_val_perc = avg / max_val 
       else:
-         last_val_perc = 0
- 
+         max_val = 0 
+
+      max_val = np.max(tmp_avg_cases)
+  
+       
+
+
       if max_val <= 5:
          groups['low_cases'].append(county_name) 
       elif last_val_perc >= .8 and avg > 5:
@@ -127,7 +133,7 @@ def rank_counties(st):
       else:
          groups['good'].append(county_name) 
  
-   
+     
    #print(groups)
    #sys.exit()
 

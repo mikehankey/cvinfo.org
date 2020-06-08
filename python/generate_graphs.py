@@ -69,7 +69,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       _color = "orange"
    else:
       _color = "black"
-      
+ 
    fig = go.Figure()
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
