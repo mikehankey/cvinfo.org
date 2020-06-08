@@ -9,6 +9,10 @@ body {
    background: url("../img/bg.png") no-repeat 0 0 #f0f0f0;
 }
 
+.hidden {
+   display: none!important;
+}
+
 body.wait {
    cursor: wait;
 } 

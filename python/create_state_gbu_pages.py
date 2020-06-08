@@ -39,7 +39,14 @@ def generate_gbu_graphs_and_state_page(state,groups):
          domEl += create_county_DOM_el(state,county_name)
 
       # Add to the template 
-      template = template.replace('{'+group.upper()+'}',domEl)
+      if(domEl==""):
+         # We hide the box
+         template = template.replace('{'+group.upper()+'_SHOW}','hidden')
+      else:
+         template = template.replace('{'+group.upper()+'_SHOW}','')
+         template = template.replace('{'+group.upper()+'}',domEl)
+
+   
    
    # Add meta
    template = template.replace('{STATE_FULL}',US_STATES[state])
