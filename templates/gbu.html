@@ -94,6 +94,14 @@
    <br/>contact: mike.hankey[@]gmail.com
 </div>
 
+
 <script src="../js/shared/framework_plugs.js"></script>   
+<script>
+      $(function() { 
+         $('#state_selector').change(function() {
+            window.location = '/states/'+ $('#state_selector').val()
+         });
+      })
+      </script>
 </body>
 </html>

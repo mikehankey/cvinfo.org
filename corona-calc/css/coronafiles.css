@@ -345,16 +345,12 @@ p.to {
    max-width: 900px;
    border-top: 1px solid #ccc; 
 }
-
-
+ 
 
 #inout {
    padding:1.5em .5em;
-   
 }
- 
-
-
+  
 
 /* Form */
 #state_sum {
@@ -368,7 +364,7 @@ p.to {
 #state_sum dt {
    clear: both;
    width: 150px;
-   color: #b1b1b1;
+   color: #585050;
    text-align: left;
 }
 #state_sum dd, #state_sum dt {
@@ -384,6 +380,18 @@ p.to {
    flex-grow: 1;
    margin-left: 2rem;
 }
+
+#state_sum .std {
+   flex-grow: 1;
+   margin-left: 2rem;
+   text-align:left;
+}
+
+#state_sum p {
+   margin-top: 0.2rem;
+   font-size: .9rem;
+}
+
 
 .flg {
    width: 200px;
@@ -999,6 +1007,24 @@ ul.share-buttons img {
       column-count: 1;
    } 
 
+
+   .flg {
+      display: none;
+   }
+
+   #state_sum .std  {
+      margin-left: 0;
+   }
+
+   .graph_g {
+      float: none;
+      margin: 0 auto 1rem;
+      width: auto;
+  }
+
+  .grapht {
+     padding:0 .5rem
+  }
 
 }
 

@@ -64,8 +64,10 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{LAST_UPDATE}',  str(state_data['sum']['last_update']))
    template = template.replace('{TOTAL_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
    template = template.replace('{TOTAL_CASES}',  display_us_format(state_data['sum']['cur_total_cases'], 0)) 
-   template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0) + ' (' +   display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% positive)')
+   template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0))
+   template = template.replace('{TOTAL_POS_TESTS}',  display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
  
+
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)

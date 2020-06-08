@@ -71,22 +71,20 @@
             <img src="../img/flags/{STATE_l}.png" alt="{STATE_FULL}"/>
          </div>
          <div class="std">
-            <h2>{STATE_FULL} Summary</h2>
+            <h2>{STATE_FULL} COVID-19 Summary</h2>
             <p>Last update: {LAST_UPDATE}</p> 
             <dl>
                   <dt>Total Deaths:</dt><dd>{TOTAL_DEATHS}</dd>
                   <dt>Total Cases:</dt><dd>{TOTAL_CASES}</dd>
-                  <dt>Total Tests:</dt><dd>{TOTAL_TESTS}</dd> 
-            </dl>
+                  <dt>Total Tests:</dt><dd>{TOTAL_TESTS}</dd>
+                  <dt>Pos. Tests:</dt><dd>{TOTAL_POS_TESTS}</dd>  
+            </dl> 
          </div>
       </div>
-   </div>
-
-
-
+   </div> 
    <div class="box clearfix {WINNING_SHOW}">
       <div class="grapht">
-         <h2 class="good_t">Winning</h2> 
+         <h2 class="good_t">Winning Counties</h2> 
          <p>Current value is less than 40% of the highest peak value OR latest new cases is less than 5 per day.</p>
       </div>
       <div id="bad" class=" box_graph clearfix">{GOOD}</div> 
@@ -94,7 +92,7 @@
    
    <div class="box clearfix {BAD_SHOW}">
          <div class="grapht">
-            <h2 class="bad_t">Improving</h2> 
+            <h2 class="bad_t">Improving Counties</h2> 
             <p>Current value is between 40-80% of the highest peak value.</p>
          </div>
          <div id="bad" class=" box_graph clearfix">{BAD}</div> 
@@ -102,7 +100,7 @@
    
    <div class="box clearfix {UGLY_SHOW}">
          <div class="grapht">
-            <h2 class="ugly_t">Losing</h2> 
+            <h2 class="ugly_t">Losing Counties</h2> 
             <p>Current value is greater than 80% of the highest peak value.</p>
          </div>
          <div id="ugly" class=" box_graph clearfix">{UGLY}</div> 
@@ -111,8 +109,8 @@
  
    <div class="box clearfix {LOW_CASES_SHOW}">
       <div class="grapht">
-         <h2 class="low_cases_t">Barelly Impacted</h2> 
-         <p>   The following counties have had less than 5 new cases reported in a single day, they have not been affected by the virus very much so far.
+         <h2 class="low_cases_t">Barelly Impacted Counties</h2> 
+         <p>The following counties have had less than 5 new cases reported in a single day, they have not been affected by the virus very much so far.
          </p>
       </div>
       <div id="low_cases" class=" box_graph clearfix">{LOW_CASES}</div> 
@@ -123,7 +121,16 @@
    <br/>contact: mike.hankey[@]gmail.com
 </div>
 
-<script>var cur_st = '{STATE}';</script>
+
 <script src="../js/shared/framework_plugs.js"></script>   
+<script>
+      var cur_st = '{STATE}';
+      $(function() {
+         $('#state_selector').val(cur_st);
+         $('#state_selector').change(function() {
+            window.location = '/states/'+ $('#state_selector').val()
+         });
+      })
+   </script>
 </body>
 </html>
