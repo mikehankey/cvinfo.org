@@ -44,14 +44,12 @@ def main_menu():
 
    elif cmd==5:
       print("CREATING ALL STATES GBU PAGE")
-      print("**************************DEBUG MODE WY *************************")
-      generate_gbu_graphs_and_state_page("WY",rank_counties("WY"))
-      
-      
-      #for st in US_STATES:
-      #   g = rank_counties(st)
-      #   generate_gbu_graphs_and_state_page(st,g)
-      #print("\n>>>TASK DONE \n\n") 
+      #print("**************************DEBUG MODE *************************")
+      #generate_gbu_graphs_and_state_page("WY",rank_counties("WY"))
+      for st in US_STATES:
+         g = rank_counties(st)
+         generate_gbu_graphs_and_state_page(st,g)
+      print("\n>>>TASK DONE \n\n") 
 
    elif cmd==6:
       print("CREATE ALL GBU PAGES")
