@@ -65,6 +65,20 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0))
    template = template.replace('{TOTAL_POS_TESTS}',  display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
   
+   # Create Summary Graphs
+   generate_graph_with_avg(state, 'deaths', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths')    # New Deaths per Day
+   generate_graph_with_avg(state, 'test_pos_p', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p') # Positive Tests
+   generate_graph_with_avg(state, 'test', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test') # Total Test per day Tests
+   generate_graph_with_avg(state, 'act_hosp', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp') # Active Hospi
+
+
+   # Add Graphs to page
+   #template = template.replace('{TOTAL_DEATHS_GRAPH}', display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
+   #template = template.replace('{TOTAL_CASES}',  display_us_format(state_data['sum']['cur_total_cases'], 0)) 
+   #template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0))
+   #template = template.replace('{TOTAL_POS_TESTS}',  display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
+   
+
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)
@@ -119,10 +133,7 @@ def rank_counties(st):
       else:
          max_val = 0 
 
-      max_val = np.max(tmp_avg_cases)
-  
-       
-
+      max_val = np.max(tmp_avg_cases) 
 
       if max_val <= 5:
          groups['low_cases'].append(county_name) 
