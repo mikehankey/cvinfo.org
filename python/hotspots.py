@@ -128,10 +128,38 @@ def create_hotspot_page(hotspots):
    hotspots_page.close()
 
 
+def create_alert_page(alerts):
+   print("Crating Alert Page")
+
+   alerts = sorted(alerts, key=lambda k: k['last_n_c'], reverse=True)
+
+   # Open Template
+   f_template =  open(ALERTS_TEMPLATE,  'r')
+   template = f_template.read() 
+   f_template.close()
+
+   # How many alerts 
+   template = template.replace('{HOW_MANY_ALERT}', str(len(alerts)))
+
+   # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
+   all_alert_graphs = ''
+   
+   for county in alerts:
+      all_alert_graphs +=  create_alertgraph_DOM_el(county['last_n_c'], '.' + os.sep + county['state']  + os.sep + 'counties' + os.sep + county['county']  + '.png', county['county']  + ', ' + county['state'], county['delta7'],county['delta14'], county['county'], county['state'])
+ 
+   # Add all graphs
+   template = template.replace('{ALERTS_GRAPHS}', all_alert_graphs)
+
+   # Save Template as hotspots page
+   hotspots_page = open('../corona-calc/states/alerts.html','w+')
+   hotspots_page.write(template)
+   hotspots_page.close()
+
 def create_hotspotgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state):
-   return '<div class="graph_g"><h3 class="nmb">'+title+'</h3><h4>&Delta;7-Day:'+ str(delta7) +' &Delta;14-Day:'+ str(delta14) +'<br><small>Last cases number '+ str(last_cases) +'</small></h4><img  src="./'+ state + '/counties'+os.sep+county+'.png" width="345" alt="'+county+'"/></div>' 
+   return '<div class="graph_g"><h3 class="nmb">'+title+'</h3><h4>&Delta;7-Day:'+ str(delta7) +' &Delta;14-Day:'+ str(delta14) +'<br><small>Last cases number '+ str(display_us_format(last_cases,0)) +'</small></h4><img  src="./'+ state + '/counties'+os.sep+county+'.png" width="345" alt="'+county+'"/></div>' 
 
-
+def create_alertgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state):
+   return create_hotspotgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state)
 
 def main_menu():
 
@@ -141,7 +169,7 @@ def main_menu():
    print("0) Exit") 
    print("1) Update data source")   
    print("2) Clean all counties data")  
-   print("3) Create Hotspot Page")   
+   print("3) Create Hotspots & Alerts Page")   
    print("6) Do it all")  
    
    cmd = input("Run: ")
@@ -161,6 +189,7 @@ def main_menu():
       print ("CREATING HOSTPOT & ALERTS PAGE") 
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
+      create_alert_page(alerts)
       print("\n>>>TASK DONE \n\n") 
 
 

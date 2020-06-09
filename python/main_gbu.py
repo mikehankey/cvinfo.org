@@ -58,13 +58,14 @@ def main_menu():
 
 
    elif cmd==6:
-      print("CREATING HOTSPOTS PAGE")
+      print("CREATING HOTSPOTS & ALERTS PAGE")
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
+      create_alert_page(alerts)
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd==7:
-      print("CREATE ALL GBU PAGES")
+      print("CREATE ALL GBU PAGES & ALERTS & HOTSPOTS")
       start_time = time.time()
       update_data_sources()
       create_states_data('') 
@@ -73,6 +74,9 @@ def main_menu():
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
+      hotspots,alerts = get_hotspots_and_alerts()
+      create_hotspot_page(hotspots)
+      create_alert_page(alerts)
       print("Execution time: %s seconds" % (time.time() - start_time))
       print("\n>>>TASK DONE \n\n") 
 

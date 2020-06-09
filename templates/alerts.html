@@ -11,23 +11,23 @@
    <meta name="theme-color" content="#f0f0f0">
    <base href="/states/">
    <meta property="fb:app_id" content="542306269804125"/>
-   <meta property="og:title" content="CoronaFiles.us - COVID-19 COUNTY HOTSPOTS - Counties with 100+ New Cases Per Day"/>
+   <meta property="og:title" content="CoronaFiles.us - COVID-19 COUNTY ALERTS - Outbreaks happening now!"/>
    <meta property="og:type" content="website"/>
-   <meta property="og:url" content="https://coronafiles.us/hotspots.html"/>
+   <meta property="og:url" content="https://coronafiles.us/alerts.html"/>
    <meta property="og:site_name" content="CoronaFiles.us"/>
    <meta property="og:description" content="COVID-19 Forecasting and Stats Visualizer"/>
    <meta property="og:locale" content="en_US"/>
-   <meta property="og:image" content="https://coronafiles.us/img/coronafiles_hotspots_fb.jpg">
+   <meta property="og:image" content="https://coronafiles.us/img/coronafiles_alerts_fb.jpg">
    <meta property="og:image:width" content="1200"/>
    <meta property="og:image:height" content="630"/>
-   <meta property="og:image:alt" content="CoronaFiles.us - COVID-19 COUNTY HOTSPOTS - Counties with 100+ New Cases Per Day"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - COVID-19 COUNTY ALERTS - Outbreaks happening now!"/>
 
    <meta name="author" content="Mike Hankey">
-   <meta name="description" content="COVID-19 HOT SPOTS - Counties with 100+ New Cases Per Day!">
+   <meta name="description" content="COVID-19 COUNTY ALERTS - Outbreaks happening now!">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta name="keywords" content="corona virus, covid 19, forecast, prediction, predicted outcome, calculator, county alerts, outbreaks">
 
-   <title>COVID-19 COUNTY HOTSPOTS - Counties with more than 100 New Cases Per Day</title>
+   <title>COVID-19 COUNTY ALERTS - Outbreaks happening now!</title>
 
    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
@@ -48,8 +48,8 @@
    <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
    <ul class="menu">
          <li><a href="../states/index.html">Compare</a></li>
-         <li><a class="active" href="../states/hotspots.html">Hotspots</a></li>
-         <li><a href="../states/alerts.html">Alerts</a></li>
+         <li><a href="../states/hotspots.html">Hotspots</a></li>
+         <li><a class="active" href="../states/alerts.html">Alerts</a></li>
          <li><a href="../herd_immunity_calculator.html">Herd Immunity</a></li>
          <li><a href="../countries_vs_us.html">Intl. Comparison</a></li>
          <li><a href="../forecast.html">Forecast</a></li>
@@ -58,17 +58,18 @@
 </header>
 
 <div id="header">
-   <h1>United States - COVID-19 US County Hotspots</h1>
-   <p>Here we see the rolling 7-day average for new cases per state. States are grouped into categories based on the current day's value compared to the highest historical peak value. </p>
-</div>
+   <h1>United States - COVID-19 US County Alerts</h1>
+   <p>Here we see US Counties where the current 7-day average for new cases has spiked compared to 7 days ago.<br>
+      <b>Rapid increase in new cases quickly could be a sign of an outbreak or unmanaged spread.</b></p></div>
 <div id="main-content">
       
    <div class="box clearfix">
       <div class="grapht">
-         <h2 class="ugly_t">COUNTY HOTSPOTS</h2> 
-         <p>The following counties are adding more than 100 new COVID-19 cases per day.<br/><b>{HOW_MANY_HOTSPOT} counties matching criteria.</b></p>
+         <h2 class="ugly_t">COUNTY Alerts</h2> 
+         <p>The following counties have <b>more than 10 cases per day</b> and their <b>7 day average has increased more than 1.2 times</b>
+             since last week.<br/><b>{HOW_MANY_ALERT} counties matching criteria.</b></p>
       </div>
-      {HOTSPOTS_GRAPHS}
+      {ALERTS_GRAPHS}
    </div>
     
 </div>

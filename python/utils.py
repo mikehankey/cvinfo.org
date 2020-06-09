@@ -6,7 +6,7 @@ GBU_STATE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_state.html'
 GBU_MAIN_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu.html'
 
 HOTSPOTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'hotspots.html'
-
+ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts.html'
 
 def display_us_format(_float,prec):
    _format =  '{:,.'+str(prec)+'f}'
