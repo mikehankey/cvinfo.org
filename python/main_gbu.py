@@ -3,6 +3,7 @@ from create_json_data_files import *
 from update_data_src import * 
 from create_main_gbu_page import *
 from create_state_gbu_pages import *
+from hotspots import *
  
  
 def main_menu():
@@ -16,7 +17,8 @@ def main_menu():
    print("3) Clean all counties data")  
    print("4) Create Main GBU Page")  
    print("5) Create All States GBU Pages")  
-   print("6) Do it all")  
+   print("6) Create Hotspots & Alerts")
+   print("7) Do it all")  
    
    cmd = input("Run: ")
    cmd = int(cmd) 
@@ -54,7 +56,14 @@ def main_menu():
          generate_gbu_graphs_and_state_page(st,g)
       print("\n>>>TASK DONE \n\n") 
 
+
    elif cmd==6:
+      print("CREATING HOTSPOTS PAGE")
+      hotspots,alerts = get_hotspots_and_alerts()
+      create_hotspot_page(hotspots)
+      print("\n>>>TASK DONE \n\n") 
+
+   elif cmd==7:
       print("CREATE ALL GBU PAGES")
       start_time = time.time()
       update_data_sources()

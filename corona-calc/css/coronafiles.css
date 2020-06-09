@@ -77,6 +77,12 @@ a, a:visited {
    margin-bottom: 0!important;
 }
 
+.graph_g h4 {
+   font-weight: normal;
+   font-size: .9rem;
+   margin: .2rem 0 .35rem;
+}
+
 .graph_c img {
    padding: 0 2.85rem;
    width: 100%;

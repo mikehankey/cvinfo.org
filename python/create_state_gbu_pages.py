@@ -107,7 +107,7 @@ def rank_counties(st):
    print("Ranking  "  + US_STATES[st] + "'s counties")
 
    groups = {'good': [], 'bad': [], 'ugly': [], 'low_cases': []} 
-     
+    
    # Glob the related directory 
    all_countries_json_file = glob.glob(PATH_TO_STATES_FOLDER + os.sep + st + os.sep + "counties"  + os.sep  + "*.json")
    
@@ -126,8 +126,7 @@ def rank_counties(st):
  
       for day in reversed(list(county_data)):  
          for date in reversed(list(day)): 
-              
-
+               
             tmp_cases.append(float(day[date]['cases']))  
             
             if len(tmp_cases) < 7:
