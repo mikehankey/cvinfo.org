@@ -27,6 +27,12 @@ def create_states_data(state):
    
    all_stats_per_state = {}
 
+   # We open us_states_pop.csv to get the state population
+   with open(TMP_DATA_PATH + os.sep +  "us_states_pop.csv", mode='r') as csv_state_file:
+      csv_state_file_reader = csv.DictReader(csv_state_file)
+      state_population_rows = list(csv_state_file_reader)
+      csv_state_file.close()
+    
    # Open daily file 
    # Daily headers:
    # date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,
@@ -42,47 +48,51 @@ def create_states_data(state):
       last_data = {}
 
       for row in reversed(rows):
-
-         if line_count != 0: 
  
-            # Does the state already exists in all_stats_per_state?
-            if(row["state"] not in all_stats_per_state):
-               if(state != '' and row["state"] == state):
-                  all_stats_per_state[row["state"]] = {'stats' : []}
-               elif(state == ''):
-                  all_stats_per_state[row["state"]] = {'stats' : []}
+         # Does the state already exists in all_stats_per_state?
+         if(row["state"] not in all_stats_per_state):
+            if(state != '' and row["state"] == state):
+               all_stats_per_state[row["state"]] = {'stats' : []}
+            elif(state == ''):
+               all_stats_per_state[row["state"]] = {'stats' : []}
 
-               # Used to compute the daily data (as we only have totals here)
-               last_data[row["state"]] = {'deaths':0,'cases':0}
+            # Used to compute the daily data (as we only have totals here)
+            last_data[row["state"]] = {'deaths':0,'cases':0,'test':0}
 
-            # We put the current data in the state dict
-            if((state!='' and row["state"] == state) or (state == '')):
+         # We put the current data in the state dict
+         if((state!='' and row["state"] == state) or (state == '')):
 
-               # Create Row date
-               row_data =  {
-                     'act_hosp'        : foz(row['hospitalizedCurrently']),
-                     'test'            : foz(row['negative']) +  foz(row['pending']) +  foz(row['positive']),
-                     'total_c'         : foz(row['positive']), 
-                     'total_d'         : foz(row['death']),
-                     'cases'           : foz(row['positive']) - int(last_data[row["state"]]['cases']),
-                     'deaths'          : foz(row['death'])    - int(last_data[row["state"]]['deaths'])
-               }
- 
-               last_data[row["state"]] = {'deaths':row_data['total_d'],'cases':row_data['total_c']}
+            total_test = (foz(row['negative']) +  foz(row['positive'])) #+  foz(row['pending']) 
 
-               # Positive test %
-               if(foz(row['negative']) +  foz(row['pending']) +  foz(row['positive'])>0):
-                  row_data['test_pos_p'] = round(foz(row['positive']) / (foz(row['negative']) +  foz(row['pending']) +  foz(row['positive'])),3)
-               else:
-                  row_data['test_pos_p'] = 0
+            # Create Row date
+            row_data =  {
+                  'act_hosp'        : foz(row['hospitalizedCurrently']),
+                  
+                  'total_c'         : foz(row['positive']), 
+                  'cases'           : foz(row['positive']) - int(last_data[row["state"]]['cases']),
+                  
+                  'total_d'         : foz(row['death']),
+                  'deaths'          : foz(row['death'])    - int(last_data[row["state"]]['deaths']),
+                  
+                  'total_t'         : total_test,
+                  'test'            : total_test - int(last_data[row["state"]]['test']),
+            }
 
-               # We transform the date YYYYMMDD to a real date YYYY
-               date =  row["date"][0:4]+'-'+row["date"][4:6]+'-'+row["date"][6:8]
+            last_data[row["state"]] = {'deaths':row_data['total_d'],'cases':row_data['total_c'], 'test': row_data['total_t']}
 
-               all_stats_per_state[row["state"]]['stats'].append({
-                  date : row_data
-               })
-  
+            # Positive test %
+            if(foz(row['negative'])   +  foz(row['positive'])>0):
+               row_data['test_pos_p'] = round(foz(row['positive']) / (foz(row['negative'])   +  foz(row['positive']))*100,3)
+            else:
+               row_data['test_pos_p'] = 0
+
+            # We transform the date YYYYMMDD to a real date YYYY
+            date =  row["date"][0:4]+'-'+row["date"][4:6]+'-'+row["date"][6:8]
+
+            all_stats_per_state[row["state"]]['stats'].append({
+               date : row_data
+            })
+
          line_count+=1
       
    # We now create the JSON files for each state 
@@ -101,15 +111,21 @@ def create_states_data(state):
       last_record = all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1]
       for d in last_record:
          last_update = d
- 
- 
+
+      # We search the population
+      cur_pop = 0
+      for state_data in state_population_rows:
+         if(state_data['state']==state):
+            cur_pop = state_data['pop']
+
       all_stats_per_state[state]['sum'] = {
          'last_update'        :  last_update,
          'cur_total_deaths'   :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['total_d'],
          'cur_total_cases'    :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['total_c'],
          'cur_total_tests'    :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['test'],
-         'cur_hosp'           :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['act_hosp']
-      }
+         'cur_hosp'           :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['act_hosp'],
+         'pop'                :  int(cur_pop)
+      } 
   
       # Create JSON File in folder
       with open(state_folder + os.sep +  state + ".json", mode='w+') as csv_file:
@@ -117,6 +133,7 @@ def create_states_data(state):
       
       print(state + ".json updated")
  
+      csv_state_file.close()
 
 # Create JSON file for all counties
 def create_county_state_data(_state):
@@ -204,5 +221,5 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    os.system("clear")
-   create_states_data('') 
+   create_states_data('WY') 
    create_county_state_data('')

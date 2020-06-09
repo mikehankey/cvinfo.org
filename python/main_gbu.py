@@ -1,3 +1,4 @@
+import time
 from create_json_data_files import *
 from update_data_src import * 
 from create_main_gbu_page import *
@@ -28,7 +29,7 @@ def main_menu():
    elif cmd== 2:
       print ("CLEANING STATES DATA.")
       #print("**************************DEBUG MODE *************************")
-      #create_states_data('WY') 
+      #create_states_data('CA') 
       create_states_data('') 
       print("\n>>>TASK DONE \n\n") 
 
@@ -44,9 +45,10 @@ def main_menu():
 
    elif cmd==5:
       print("CREATING ALL STATES GBU PAGE")
+      print("Warning: the Main Gbu Page needs to be created first in order to have updated version of the state summary graphs")
       #print("**************************DEBUG MODE *************************")
-      #generate_gbu_graphs_and_state_page("WY",rank_counties("WY"))
-      #sys.exit
+      #generate_gbu_graphs_and_state_page("CA",rank_counties("CA"))
+      #sys.exit()
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
@@ -54,6 +56,7 @@ def main_menu():
 
    elif cmd==6:
       print("CREATE ALL GBU PAGES")
+      start_time = time.time()
       update_data_sources()
       create_states_data('') 
       create_county_state_data('')
@@ -61,6 +64,7 @@ def main_menu():
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
+      print("Execution time: %s seconds" % (time.time() - start_time))
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 0:

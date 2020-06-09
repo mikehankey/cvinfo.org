@@ -60,26 +60,34 @@ def generate_gbu_graphs_and_state_page(state,groups):
    state_json_file.close()
 
    # Update template with basics
-   template = template.replace('{LAST_UPDATE}',  str(state_data['sum']['last_update']))
-   template = template.replace('{TOTAL_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
-   template = template.replace('{TOTAL_CASES}',  display_us_format(state_data['sum']['cur_total_cases'], 0)) 
-   template = template.replace('{TOTAL_TESTS}',  display_us_format(state_data['sum']['cur_total_tests'], 0))
-   template = template.replace('{TOTAL_POS_TESTS}',  display_us_format(float(  float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
-  
-   # Create Summary Graphs
-   generate_graph_with_avg(state, 'deaths', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths')    # New Deaths per Day
-   generate_graph_with_avg(state, 'test_pos_p', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p') # Positive Tests
-   generate_graph_with_avg(state, 'test', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test') # Total Test per day Tests
-   generate_graph_with_avg(state, 'act_hosp', 'b', PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp') # Active Hospi
+   template = template.replace('{LAST_UPDATE}',       str(state_data['sum']['last_update']))
+   template = template.replace('{POPULATION}',        display_us_format(state_data['sum']['pop'],0))
+   template = template.replace('{TOTAL_DEATHS}',      display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
+   template = template.replace('{TOTAL_CASES}',       display_us_format(state_data['sum']['cur_total_cases'], 0)) 
+   template = template.replace('{TOTAL_TESTS}',       display_us_format(state_data['sum']['cur_total_tests'], 0))
+   template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
+   
+   # Get Latest Day data
+   last_data = state_data['stats'][len(state_data['stats'])-1] 
+   for d in last_data: 
+      template = template.replace('{LAST_DAY_DEATHS}', display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['deaths'], 0)) 
+      template = template.replace('{LAST_DAY_CASES}' , display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['cases'], 0)) 
+   
+   # PPM Values
+   template = template.replace('{PPM_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths']/state_data['sum']['pop']*1000000, 2)) 
+   template = template.replace('{PPM_CASES}', display_us_format(state_data['sum']['cur_total_cases']/state_data['sum']['pop']*1000000, 2)) 
  
-   # Add Graphs to page
+
+   # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
    all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day')
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day')
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations')
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day')
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests")
+   template = template.replace('{ALL_SUM_TOP_GRAPHS}', all_sum_graphs)
 
-   template = template.replace('{ALL_SUM_GRAPHS}', all_sum_graphs)
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day')
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations')
+   template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
+ 
  
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')

@@ -3,9 +3,10 @@ import os
 import sys
 import json
 import plotly.graph_objects as go
+import numpy as np
 
 from utils import PATH_TO_STATES_FOLDER
-from statistics import mean 
+ 
  
   
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
@@ -39,10 +40,9 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       all_data = data['stats']
    else:
       all_data = data
-
-
+ 
    # Get the DATA
-   for d in all_data:
+   for d in reversed(all_data):
      
       for day in d:
          all_x.append(day) 
@@ -51,16 +51,16 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
          # Average
          tempValForAvg.append(float(d[day][_type]))
 
-         if(len(tempValForAvg)<max_day):
+         if(len(tempValForAvg) <  max_day):
             tempValFormax_day = tempValForAvg 
          else:
             tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
-
+  
          # We have strings...
          tempValFormax_day = [float(i) for i in tempValFormax_day]
 
          all_x_avg.append(day)
-         all_y_avg.append(mean(tempValFormax_day))  
+         all_y_avg.append(np.mean(tempValFormax_day))  
 
 
    if(_color=="r"):

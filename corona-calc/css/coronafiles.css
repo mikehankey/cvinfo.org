@@ -68,16 +68,17 @@ a, a:visited {
    float: left; 
    margin: 0 10px;
 } 
-
-.graph_c h3 {
+ 
+.graph_c h3, .graph_g h3 {
    max-width: 345px;
    overflow: hidden;
    text-overflow: ellipsis;
    white-space: nowrap;
+   margin-bottom: 0!important;
 }
 
 .graph_c img {
-   padding: 0 .85rem;
+   padding: 0 2.85rem;
    width: 100%;
    max-width: 100%;
 }
@@ -90,7 +91,9 @@ a, a:visited {
 
 .graph_g img  {   max-width: 100%;
    width: 100%;
-   padding: 0 .85rem;
+   padding:0 2.85rem;
+   
+   
 }
  
 
@@ -360,12 +363,12 @@ p.to {
   
 
 /* Form */
-#state_sum {
+#state_sum { 
    display: flex;
    flex-flow: row wrap;
-   border-bottom: 1px solid rgba(255,255,255,.15);
-   padding: 1rem;
-   margin: 0;
+   border-bottom: 1px solid rgba(0,0,0,.15);
+   padding: 0 0 1rem 0;
+   margin: 1rem 1rem 0 1rem;
 }
 
 #state_sum dt {
@@ -375,7 +378,7 @@ p.to {
    text-align: left;
 }
 #state_sum dd, #state_sum dt {
-   margin-bottom: .2rem;
+   margin-bottom: .5rem;
    float: left;
 }
 
@@ -397,6 +400,13 @@ p.to {
 #state_sum p {
    margin-top: 0.2rem;
    font-size: .9rem;
+}
+
+.state_graphs  {
+   display: flex;
+   -webkit-box-pack: center!important;
+   -ms-flex-pack: center!important;
+   justify-content: center!important; 
 }
 
 
@@ -1003,8 +1013,7 @@ ul.share-buttons img {
 
    #recalc_form button {
       margin-bottom: .5rem;
-   }
-
+   } 
 
    .group {
       display: block;
@@ -1012,8 +1021,7 @@ ul.share-buttons img {
 
    .adp {
       column-count: 1;
-   } 
-
+   }  
 
    .flg {
       display: none;
@@ -1027,12 +1035,11 @@ ul.share-buttons img {
       float: none;
       margin: 0 auto 1rem;
       width: auto;
+      padding:0 .5rem;
   }
 
   .grapht {
      padding:0 .5rem
   }
 
-}
-
-
+} 
