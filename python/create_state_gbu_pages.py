@@ -65,8 +65,11 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{TOTAL_DEATHS}',      display_us_format(state_data['sum']['cur_total_deaths'], 0)) 
    template = template.replace('{TOTAL_CASES}',       display_us_format(state_data['sum']['cur_total_cases'], 0)) 
    template = template.replace('{TOTAL_TESTS}',       display_us_format(state_data['sum']['cur_total_tests'], 0))
-   template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
-   
+   if(float(state_data['sum']['cur_total_tests']) !=0):
+      template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
+   else:
+      template = template.replace('{TOTAL_POS_TESTS}',  'n/a')
+
    # Get Latest Day data
    last_data = state_data['stats'][len(state_data['stats'])-1] 
    for d in last_data: 
@@ -75,7 +78,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    
    # PPM Values
    template = template.replace('{PPM_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths']/state_data['sum']['pop']*1000000, 2)) 
-   template = template.replace('{PPM_CASES}', display_us_format(state_data['sum']['cur_total_cases']/state_data['sum']['pop']*1000000, 2)) 
+   template = template.replace('{PPM_CASES}',  display_us_format(state_data['sum']['cur_total_cases']/state_data['sum']['pop']*1000000, 2)) 
  
 
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
@@ -104,8 +107,7 @@ def rank_counties(st):
    print("Ranking  "  + US_STATES[st] + "'s counties")
 
    groups = {'good': [], 'bad': [], 'ugly': [], 'low_cases': []} 
-    
-
+     
    # Glob the related directory 
    all_countries_json_file = glob.glob(PATH_TO_STATES_FOLDER + os.sep + st + os.sep + "counties"  + os.sep  + "*.json")
    
