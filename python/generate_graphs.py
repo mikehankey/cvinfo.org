@@ -18,7 +18,6 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + "counties" + os.sep +  county + ".json", 'r')
    else:
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
-  
    
    data = json.load(cur_json_file)
 
@@ -36,7 +35,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
    tempValForAvg = []
    tempValFormax_day = []
    
-   if(county=="" or 'for_a_state'  in county):
+   if(county=="" or 'for_a_state' in county):
       all_data = data['stats']
    else:
       all_data = data
@@ -93,17 +92,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
         'xanchor': 'center', 
         'yanchor': 'top' 
       }  
-   )
-
-   # Add State as title
-   #fig.update_layout(
-   #      title =  dict(
-   #         text =US_STATES_ABBR[state],
-   #         font =   dict( 
-   #                  color = 'black')
-   #      )
-   #)
-   
+   ) 
    
    if(county ==""):
       fig.write_image(folder + os.sep + state + ".png") 
