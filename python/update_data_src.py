@@ -1,4 +1,5 @@
 import os
+from utils import TMP_DATA_PATH
 
 # Update DATA SOURCES for coronafiles.us 
 SOURCES = {
@@ -9,8 +10,7 @@ SOURCES = {
    # https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"  # Latest Day Only
 }
  
-# REPO FOR LOCAL TMP DATA
-TMP_DATA_PATH = "." + os.sep + "tmp_json_data"
+
  
 # Update All Data Sources
 def update_data_sources():
