@@ -13,8 +13,8 @@ def rank_states():
    
    print("Ranking the states...")
 
-   groups = {'good': [], 'bad': [], 'ugly': []} 
-   tmp_cases = []
+   groups = {'good': [], 'bad': [], 'ugly': [] } 
+  
 
    for st in US_STATES:  
 
@@ -22,29 +22,34 @@ def rank_states():
       tmp_json = open(PATH_TO_STATES_FOLDER + os.sep + st + os.sep + st + ".json",  'r')
       state_data = json.load(tmp_json)
       max_val = 0
-
+      all_avg = []
+      tmp_cases = []
+ 
       for day in state_data['stats']:
-
+ 
          for date in day:
           
             tmp_cases.append(float(day[date]['cases']))  
          
-            if len(tmp_cases) < 7:
-               avg = int(np.mean(tmp_cases))
+            if len(tmp_cases) <= 7:
+               avg = int(np.mean(tmp_cases)) 
             else: 
-               avg = int(np.mean(tmp_cases[-7:]))
-            
+               avg = int(np.mean(tmp_cases[-7:])) 
+              
             if avg > max_val:
                max_val = avg
 
-      last_val_perc = avg / max_val 
+            all_avg.append(avg)
+ 
+      last_val_perc = avg / max_val
+ 
       if last_val_perc >= .8 and avg > 5:
          groups['ugly'].append(st) 
       elif .4 < last_val_perc < .8 and avg > 5:
          groups['bad'].append(st) 
       else:
          groups['good'].append(st) 
-   
+ 
    return groups
 
 
