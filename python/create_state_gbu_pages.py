@@ -15,7 +15,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    f_template.close()
 
    # Random Number for non-cached images
-   rand = random.randint(1,100000001)
+   rand = str(random.randint(1,100000001))
    
    for group in groups:
 
