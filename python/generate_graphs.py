@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 
-from utils import PATH_TO_STATES_FOLDER 
+from utils import PATH_TO_STATES_FOLDER, display_us_format 
   
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
 def generate_graph_with_avg(state, _type, _color, folder, county):
@@ -91,12 +91,6 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       paper_bgcolor='rgba(255,255,255,1)',
       plot_bgcolor='rgba(255,255,255,1)',
       showlegend= False,
-      title={ 
-        'y':1,
-        'x':0.5,
-        'xanchor': 'center', 
-        'yanchor': 'top' 
-      }  
    )  
    
    if(county ==""):
@@ -122,5 +116,5 @@ def main_menu():
 
 if __name__ == "__main__":
    os.system("clear")
-   #main_menu()
-   generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA" + os.sep + "counties" + os.sep, 'Los Angeles')
+   main_menu()
+   #generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA" + os.sep + "counties" + os.sep, 'Los Angeles')

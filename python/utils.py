@@ -5,8 +5,11 @@ PATH_TO_STATES_FOLDER = '..' +  os.sep + 'corona-calc' + os.sep + 'states'
 GBU_STATE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_state.html'
 GBU_MAIN_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu.html'
 
-HOTSPOTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'hotspots.html'
+HOTSPOTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'hotspots.html' 
+
 ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts.html'
+ALERTS_TEMPLATE_DELTA = '..' + os.sep + 'templates' + os.sep + 'alerts-d.html'
+ 
 
 def display_us_format(_float,prec):
    _format =  '{:,.'+str(prec)+'f}'

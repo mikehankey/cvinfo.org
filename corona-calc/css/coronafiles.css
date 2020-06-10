@@ -397,6 +397,10 @@ p.to {
    margin-left: 2rem;
 }
 
+#state_sum .std dl {
+   column-count: 2
+}
+
 #state_sum .std {
    flex-grow: 1;
    margin-left: 2rem;
@@ -1048,4 +1052,12 @@ ul.share-buttons img {
      padding:0 .5rem
   }
 
+  .state_graphs  {
+      display: block;
+   }
+
+   
+   #state_sum .std dl {
+      column-count: 1
+   }
 } 

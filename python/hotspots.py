@@ -129,17 +129,23 @@ def create_hotspot_page(hotspots):
 
 
 def create_alert_page(alerts):
-   print("Crating Alert Page")
+   print("Creating Alert Pages")
 
    alerts = sorted(alerts, key=lambda k: k['last_n_c'], reverse=True)
 
-   # Open Template
+   # Open Templates
    f_template =  open(ALERTS_TEMPLATE,  'r')
    template = f_template.read() 
    f_template.close()
 
+   # Open Template Ranked by Delta 7
+   f_template =  open(ALERTS_TEMPLATE_DELTA,  'r')
+   template_delta = f_template.read() 
+   f_template.close()
+
    # How many alerts 
    template = template.replace('{HOW_MANY_ALERT}', str(len(alerts)))
+   template_delta = template_delta.replace('{HOW_MANY_ALERT}', str(len(alerts)))
 
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
    all_alert_graphs = ''
@@ -150,10 +156,24 @@ def create_alert_page(alerts):
    # Add all graphs
    template = template.replace('{ALERTS_GRAPHS}', all_alert_graphs)
 
-   # Save Template as hotspots page
-   hotspots_page = open('../corona-calc/states/alerts.html','w+')
-   hotspots_page.write(template)
-   hotspots_page.close()
+   # We rank by Delta-7 
+   alerts = sorted(alerts, key=lambda k: k['delta7'], reverse=False) 
+   all_alert_graphs = ''
+   for county in alerts:
+      all_alert_graphs +=  create_alertgraph_DOM_el(county['last_n_c'], '.' + os.sep + county['state']  + os.sep + 'counties' + os.sep + county['county']  + '.png', county['county']  + ', ' + county['state'], county['delta7'],county['delta14'], county['county'], county['state'])
+   
+   # Add all graphs
+   template_delta = template_delta.replace('{ALERTS_GRAPHS}', all_alert_graphs)
+
+
+   # Save Template as alerts page
+   alert_page = open('../corona-calc/states/alerts.html','w+')
+   alert_page.write(template)
+   alert_page.close()
+
+   alert_page = open('../corona-calc/states/alerts-sc.html','w+')
+   alert_page.write(template_delta)
+   alert_page.close()
 
 def create_hotspotgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state):
    return '<div class="graph_g"><h3 class="nmb">'+title+'</h3><h4>&Delta;7-Day:'+ str(delta7) +' &Delta;14-Day:'+ str(delta14) +'<br><small>Last cases number '+ str(display_us_format(last_cases,0)) +'</small></h4><img  src="./'+ state + '/counties'+os.sep+county+'.png" width="345" alt="'+county+'"/></div>' 
@@ -170,8 +190,7 @@ def main_menu():
    print("1) Update data source")   
    print("2) Clean all counties data")  
    print("3) Create Hotspots & Alerts Page")   
-   print("6) Do it all")  
-   
+    
    cmd = input("Run: ")
    cmd = int(cmd) 
  

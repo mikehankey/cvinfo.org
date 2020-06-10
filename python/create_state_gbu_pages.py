@@ -70,7 +70,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{TOTAL_CASES}',       display_us_format(state_data['sum']['cur_total_cases'], 0)) 
    template = template.replace('{TOTAL_TESTS}',       display_us_format(state_data['sum']['cur_total_tests'], 0))
    if(float(state_data['sum']['cur_total_tests']) !=0):
-      template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests']) *100), 2)    + '% ')
+      template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests'])), 2)    + '% ')
    else:
       template = template.replace('{TOTAL_POS_TESTS}',  'n/a')
 
