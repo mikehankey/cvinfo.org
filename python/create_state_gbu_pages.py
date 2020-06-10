@@ -2,6 +2,7 @@ import json
 import sys
 import glob
 import numpy as np
+import random
 from utils import *
 from generate_graphs import *
 
@@ -12,6 +13,9 @@ def generate_gbu_graphs_and_state_page(state,groups):
    f_template =  open(GBU_STATE_TEMPLATE,  'r')
    template = f_template.read() 
    f_template.close()
+
+   # Random Number for non-cached images
+   rand = random.randint(1,100000001)
    
    for group in groups:
 
@@ -36,7 +40,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state + os.sep + 'counties', county)
 
          # Get the DOM Element
-         domEl += create_county_DOM_el(state,county_name)
+         domEl += create_county_DOM_el(state,county_name,rand)
 
       # Add to the template 
       if(domEl==""):
@@ -82,13 +86,13 @@ def generate_gbu_graphs_and_state_page(state,groups):
  
 
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
-   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day')
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day')
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests")
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day',rand)
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day',rand)
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests",rand)
    template = template.replace('{ALL_SUM_TOP_GRAPHS}', all_sum_graphs)
 
-   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day')
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations')
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand)
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand)
    template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
  
  
@@ -163,9 +167,9 @@ def rank_counties(st):
 
 
 # Create County HTML Element with image
-def create_county_DOM_el(st,ct) :
-   return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png" width="345" alt="'+ct+'"/></div>' 
+def create_county_DOM_el(st,ct,rand) :
+   return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></div>' 
 
 # Create Graph HTML Element with image (the graph, dumbass)
-def create_graph_DOM_el(_file,st,title) :
-   return '<div class="graph_g"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'" width="345" alt="'+title+'"/></div>' 
+def create_graph_DOM_el(_file,st,title,rand) :
+   return '<div class="graph_g"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/></div>' 

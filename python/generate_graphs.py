@@ -3,11 +3,10 @@ import os
 import sys
 import json
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
 
-from utils import PATH_TO_STATES_FOLDER
- 
- 
+from utils import PATH_TO_STATES_FOLDER 
   
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
 def generate_graph_with_avg(state, _type, _color, folder, county):
@@ -40,24 +39,28 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       all_data = data['stats']
    else:
       all_data = data
-
-    
+      # We sort the data by inverse date for counties
+      all_data = list(reversed(all_data))
  
-   # Get the DATA
+ 
+  
+   # Get the DATA & Compute the max_day average
    for d in all_data:
      
       for day in d:
+
+         # Org Data
          all_x.append(day) 
          all_y.append(d[day][_type]) 
        
-         # Average
+         # For average of _type
          tempValForAvg.append(float(d[day][_type]))
 
          if(len(tempValForAvg) <  max_day):
             tempValFormax_day = tempValForAvg 
-         else:
+         else: 
             tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
-  
+            
          # We have strings...
          tempValFormax_day = [float(i) for i in tempValFormax_day]
 
@@ -73,11 +76,11 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       _color = "orange"
    else:
       _color = "black"
- 
+    
    fig = go.Figure()
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
-   
+    
    fig.update_xaxes(rangemode="nonnegative")
    fig.update_yaxes(rangemode="nonnegative")
  
@@ -94,7 +97,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
         'xanchor': 'center', 
         'yanchor': 'top' 
       }  
-   ) 
+   )  
    
    if(county ==""):
       fig.write_image(folder + os.sep + state + ".png") 
@@ -106,9 +109,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
    else:
       fig.write_image(folder + os.sep + county + ".png") 
       print("Graph for " + county + ", " + state + ' (' +  _color + ') created')
- 
-       
-
+  
 
 def main_menu():
    print("---------------")
@@ -121,4 +122,5 @@ def main_menu():
 
 if __name__ == "__main__":
    os.system("clear")
-   main_menu()
+   #main_menu()
+   generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA" + os.sep + "counties" + os.sep, 'Los Angeles')

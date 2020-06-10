@@ -1,8 +1,10 @@
 import json
 import sys
 import numpy as np
+import random
 from utils import *
 from generate_graphs import *
+
 
 
 # Create Groups of Good, Ugly & Bad States
@@ -47,11 +49,6 @@ def rank_states():
 
 
 
-# Create State HTML Element with image
-def create_state_DOM_el(st) :
-   return '<div class="graph_g"><h3 class="nmb">'+US_STATES[st]+'</h3><a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
-
-
 # Create Graphics for all states 
 # and insert them into the GBU template (main page)
 def generate_gbu_graphs_and_main_page(groups): 
@@ -61,6 +58,9 @@ def generate_gbu_graphs_and_main_page(groups):
    f_template =  open(GBU_MAIN_TEMPLATE,  'r')
    template = f_template.read() 
    f_template.close() 
+
+   # Random Number for non-cached images
+   rand = random.randint(1,100000001)
   
    for group in groups:
 
@@ -85,7 +85,7 @@ def generate_gbu_graphs_and_main_page(groups):
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
 
          # Get the DOM Element
-         domEl += create_state_DOM_el(state)
+         domEl += create_state_DOM_el(state,str(rand))
 
       # Add to the template 
       template = template.replace('{'+group.upper()+'}',domEl)
@@ -97,6 +97,12 @@ def generate_gbu_graphs_and_main_page(groups):
 
    print("Main gbu page (corona-calc/states/index.html) created")
 
+ 
+
+# Create State HTML Element with image
+def create_state_DOM_el(st,rand) :
+   return '<div class="graph_g"><h3 class="nmb">'+US_STATES[st]+'</h3><a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
+ 
 
 if __name__ == "__main__":
    os.system("clear")
