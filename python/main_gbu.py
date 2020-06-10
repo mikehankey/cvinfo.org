@@ -21,7 +21,12 @@ def main_menu():
    print("7) Do it all")  
    
    cmd = input("Run: ")
-   cmd = int(cmd) 
+
+   try:
+      cmd = int(cmd) 
+   except ValueError:
+      print("\n>>>Unrecognized command \n\n") 
+      main_menu()
 
    if cmd == 1:
       print ("UPDATING DATA.")
