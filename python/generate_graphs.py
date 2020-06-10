@@ -40,9 +40,11 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       all_data = data['stats']
    else:
       all_data = data
+
+    
  
    # Get the DATA
-   for d in reversed(all_data):
+   for d in all_data:
      
       for day in d:
          all_x.append(day) 
@@ -113,9 +115,9 @@ def main_menu():
    print(" Enter the attributes of the graph ")
    print("---------------") 
    state = input("State Code (ex: AK): ") 
-   _type = input("Type ('ncpm','ndpm','tcpm' or 'tdpm'):")
    _color = input("Color ('r' for red ,'g' for green, 'o' for orange, 'b' for black):")
-   generate_graph_with_avg(state,_type, _color)
+   generate_graph_with_avg(state, 'cases', _color, PATH_TO_STATES_FOLDER + os.sep + state, '')
+
 
 if __name__ == "__main__":
    os.system("clear")
