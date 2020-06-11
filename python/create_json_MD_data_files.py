@@ -3,7 +3,8 @@ import csv
 import sys
 import json 
 import os
-from utils import  TMP_DATA_PATH, MD_LOCAL_CSV_FILE
+import glob 
+from utils import  TMP_DATA_PATH, MD_LOCAL_CSV_FILE, PATH_TO_STATES_FOLDER, MD_ZIP_CODES
 
 
 # Transform the funky dates in the csv to real date
@@ -29,6 +30,14 @@ def transform_date(d):
  
 
 
+# Get County Name, City, etc. based on a zip 
+# (based on the data in MD_ZIP_REL_DATA.csv )
+def get_zip_info(zip_code,all_zip_rel_data_rows):
+   for r in all_zip_rel_data_rows:
+      if(r['zip']==zip_code):
+         return r
+
+
 # Create JSON files for all states (or just a given state)
 def create_json_MD_data_files():
    
@@ -38,35 +47,68 @@ def create_json_MD_data_files():
       zip_rows = list(csv_state_file_reader)
       csv_state_file.close()
 
+   # We open MD_ZIP_REL_DATA.csv to get the proper county related to the zip
+   with open(TMP_DATA_PATH + os.sep + MD_ZIP_CODES + ".csv", mode='r') as csv_zip_rel_file:
+      csv_zip_rel_file_reader = csv.DictReader(csv_zip_rel_file)
+      all_zip_rel_data_rows = list(csv_zip_rel_file_reader)
+      csv_zip_rel_file.close()
+
+   
+   # Glob the Maryland Counties to match with the counties name in the source file
+   # (these are the counties for which we have data)
+   all_county_paths = glob.glob(PATH_TO_STATES_FOLDER + os.sep + "MD" +  os.sep + 'counties' +  os.sep + '*.json')
+   all_county_names = []
+
+   # We get the Names
+   for cp in all_county_paths:
+      name = os.path.basename(cp)
+      all_county_names.append(name[:len(name)-5])  # we remove ".json"
+  
    # We need to clean up the data as the way the csv has been created is insane
    row_counter = 0
 
-   all_zips  = []
-   all_dates = []
+   all_zips  = [] 
+   all_funky_dates = [] # for ref in the org csv
 
+   # We get all the dates (because the csv is crazy-made)
    for row in zip_rows:
-
-      # The dates with the weirdest format ever
-      # ex: F4_28_2020 of 04/28/2020
-      # or: total06_08_2020 for 06/08/2020
-      cur_zip_code = row['ZIP_CODE'] 
-
-      # For the given zip... what do we have
-      for key in row:
-
-            print("ROW[key] "   +  row[key])
-               
-
-            # We get all the dates
-            if(row_counter == 0): 
-               
-               if("OBJECTID" not in key and "ZIP_CODE" not in key):
-                  all_dates.append(transform_date(key))
-               
-            else:
-               print("KEY "  +  key)
-                
-                  
+      if(row_counter==0):
+         for funky_date in row:
+            if("OBJECTID" not in funky_date and "ZIP_CODE" not in funky_date):
+               all_funky_dates.append(funky_date)
       row_counter+=1
+   
+   row_counter = 0
+   for row in zip_rows:
+      if(row_counter!=0):
+         #print("ZIP: " + row['ZIP_CODE'])
 
-   print(all_dates)
+         zip_cur_data = []
+
+         for f_date in all_funky_dates:
+            #print(transform_date(f_date) + " => " + row[f_date])
+            if(row[f_date]!=''):
+               zip_cur_data.append({
+                  transform_date(f_date): 
+                    { 'cases': int(row[f_date])}
+               })
+         
+         # We create a file for the current zip  
+         # Under /states/MD/counties/[county_name]/[zips]
+
+         # We find the related county name in all_county_names
+         # In data: all_cur_zip_info['County Name'].title()
+         # In all_county_names
+         for county_name in all_county_names:
+            all_cur_zip_info =  get_zip_info(row['ZIP_CODE'],all_zip_rel_data_rows)
+
+            if all_cur_zip_info is not None :
+               # replace("'s",'s') for Prince George's
+               if county_name.replace("'s",'s').lower() == all_cur_zip_info['County Name'].lower(): 
+                  
+                  print("FOUND  " + county_name + " == " +  all_cur_zip_info['County Name'])
+          
+                  
+      row_counter+=1 
+
+   

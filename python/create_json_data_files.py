@@ -221,5 +221,5 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    os.system("clear")
-   create_states_data('WY') 
+   create_states_data('') 
    create_county_state_data('')
