@@ -12,9 +12,7 @@ from utils import PATH_TO_STATES_FOLDER, display_us_format
 def generate_graph_with_avg(state, _type, _color, folder, county):
    
    # Get JSON Data for current state
-   if(county==''):
-      cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
-   elif(county != '' and 'for_a_state' not in county):
+   if(county != '' and 'for_a_state' not in county):
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + "counties" + os.sep +  county + ".json", 'r')
    else:
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
@@ -92,7 +90,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       plot_bgcolor='rgba(255,255,255,1)',
       showlegend= False,
    )  
-   
+ 
    if(county ==""):
       fig.write_image(folder + os.sep + state + ".png") 
       print("Graph for " + state + ' (' +  _color + ') created')
@@ -116,5 +114,5 @@ def main_menu():
 
 if __name__ == "__main__":
    os.system("clear")
-   main_menu()
-   #generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA" + os.sep + "counties" + os.sep, 'Los Angeles')
+   #main_menu()
+   generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')

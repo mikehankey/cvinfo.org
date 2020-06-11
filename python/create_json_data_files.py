@@ -62,29 +62,33 @@ def create_states_data(state):
          # We put the current data in the state dict
          if((state!='' and row["state"] == state) or (state == '')):
 
-            total_test = (foz(row['negative']) +  foz(row['positive'])) #+  foz(row['pending']) 
-
-            # Create Row date
+            # Create Row date to save in json
             row_data =  {
                   'act_hosp'        : foz(row['hospitalizedCurrently']),
-                  
                   'total_c'         : foz(row['positive']), 
                   'cases'           : foz(row['positive']) - int(last_data[row["state"]]['cases']),
-                  
                   'total_d'         : foz(row['death']),
                   'deaths'          : foz(row['death'])    - int(last_data[row["state"]]['deaths']),
-                  
-                  'total_t'         : total_test,
-                  'test'            : total_test - int(last_data[row["state"]]['test']),
+                  'total_t'         : foz(row['totalTestResults']),
+                  'test'            : foz(row['totalTestResults'])- int(last_data[row["state"]]['test']),
             }
 
-            last_data[row["state"]] = {'deaths':row_data['total_d'],'cases':row_data['total_c'], 'test': row_data['total_t']}
+            last_data[row["state"]] = {
+               'deaths': row_data['total_d'],
+               'cases' : row_data['total_c'],
+               'test'  : row_data['total_t']
+            }
+  
+            # Positive test %  
+            if(foz(row['totalTestResultsIncrease'])>0):
+               row_data['test_pos_p'] = round( (foz(row_data['cases'])*100) / foz(row['totalTestResultsIncrease']), 3 )
 
-            # Positive test %
-            if(foz(row['negative'])   +  foz(row['positive'])>0):
-               row_data['test_pos_p'] = round(foz(row['positive']) / (foz(row['negative'])   +  foz(row['positive']))*100,3)
+               if(int(row_data['test_pos_p'])>70):
+                  print(row["date"])
+                  sys.exit()
             else:
                row_data['test_pos_p'] = 0
+ 
 
             # We transform the date YYYYMMDD to a real date YYYY
             date =  row["date"][0:4]+'-'+row["date"][4:6]+'-'+row["date"][6:8]
@@ -221,5 +225,5 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    os.system("clear")
-   create_states_data('') 
-   create_county_state_data('')
+   create_states_data('FL') 
+   #create_county_state_data('')

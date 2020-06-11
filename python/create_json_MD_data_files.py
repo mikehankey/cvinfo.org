@@ -59,7 +59,7 @@ def create_json_MD_data_files():
    all_county_paths = glob.glob(PATH_TO_STATES_FOLDER + os.sep + "MD" +  os.sep + 'counties' +  os.sep + '*.json')
    all_county_names = []
 
-   # We get the Names
+   # We get the County Names
    for cp in all_county_paths:
       name = os.path.basename(cp)
       all_county_names.append(name[:len(name)-5])  # we remove ".json"
@@ -97,17 +97,16 @@ def create_json_MD_data_files():
          # Under /states/MD/counties/[county_name]/[zips]
 
          # We find the related county name in all_county_names
-         # In data: all_cur_zip_info['County Name'].title()
-         # In all_county_names
+         # In data: all_cur_zip_info['County Name'] 
          for county_name in all_county_names:
             all_cur_zip_info =  get_zip_info(row['ZIP_CODE'],all_zip_rel_data_rows)
 
             if all_cur_zip_info is not None :
                # replace("'s",'s') for Prince George's
                if county_name.replace("'s",'s').lower() == all_cur_zip_info['County Name'].lower(): 
-                  
                   print("FOUND  " + county_name + " == " +  all_cur_zip_info['County Name'])
-          
+               else:
+                  print("**************** NOT FOUND " + county_name)
                   
       row_counter+=1 
 
