@@ -26,7 +26,7 @@ def transform_date(d):
       if(int(part)<10 and '0' not in part):
          all_parts[index] = '0'+part
    
-   return all_parts[2] + '-' + all_parts[1] + '-' + all_parts[0]
+   return all_parts[2] + '-' + all_parts[0] + '-' + all_parts[1]
  
 
 
@@ -84,29 +84,51 @@ def create_json_MD_data_files():
          #print("ZIP: " + row['ZIP_CODE'])
 
          zip_cur_data = []
+         last_cases = 0
 
          for f_date in all_funky_dates:
-            #print(transform_date(f_date) + " => " + row[f_date])
+
             if(row[f_date]!=''):
                zip_cur_data.append({
                   transform_date(f_date): 
-                    { 'cases': int(row[f_date])}
+                    { 'cases': int(row[f_date]) - last_cases}
                })
-         
+
+               last_cases = int(row[f_date]) 
+          
+        
          # We create a file for the current zip  
          # Under /states/MD/counties/[county_name]/[zips]
 
          # We find the related county name in all_county_names
          # In data: all_cur_zip_info['County Name'] 
-         for county_name in all_county_names:
-            all_cur_zip_info =  get_zip_info(row['ZIP_CODE'],all_zip_rel_data_rows)
-
-            if all_cur_zip_info is not None :
+         all_cur_zip_info =  get_zip_info(row['ZIP_CODE'],all_zip_rel_data_rows)
+         if all_cur_zip_info is not None :
+         
+            for county_name in all_county_names:
                # replace("'s",'s') for Prince George's
                if county_name.replace("'s",'s').lower() == all_cur_zip_info['County Name'].lower(): 
-                  print("FOUND  " + county_name + " == " +  all_cur_zip_info['County Name'])
-               else:
-                  print("**************** NOT FOUND " + county_name)
+                  #print("FOUND  " + county_name + " == " +  all_cur_zip_info['County Name'])
+
+                  # We create the directory /states/[STATES]/counties/[COUNTY_NAME]/
+                  zip_folder = PATH_TO_STATES_FOLDER + os.sep + 'MD' + os.sep  + 'counties' + os.sep + county_name + os.sep
+                  if not os.path.exists(zip_folder): 
+                     os.makedirs(zip_folder) 
+
+                  # We create the related json file for the current zip
+                  zip_file_data = {
+                     'stats': zip_cur_data,
+                     'info': {
+                        'zip'     : all_cur_zip_info['zip'],
+                        'zip_name': all_cur_zip_info['Zipcode name'].title(),
+                        'city'    : all_cur_zip_info['City'].title() 
+                     }
+                  }
+                  # Create JSON File in folder
+                  with open(zip_folder +  all_cur_zip_info['zip'] + ".json", mode='w+') as csv_file:
+                     json.dump(zip_file_data,csv_file)
+                  
+                  print(row['ZIP_CODE'] + " done")
                   
       row_counter+=1 
 

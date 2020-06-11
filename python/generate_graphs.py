@@ -7,6 +7,79 @@ import plotly.express as px
 import numpy as np
 
 from utils import PATH_TO_STATES_FOLDER, display_us_format 
+
+
+# Generate a graph (cases) for Maryland Zip Code
+# Here we pass all the data
+def generate_MD_zip_graph_with_avg(data,name,folder,_color):
+   
+   
+
+   if(len(data['stats'])>0):
+      all_x = []
+      all_y = []
+      all_x_avg = []
+      all_y_avg = []
+
+      # 7 days average
+      first_val = -1
+      total_day = 0
+      max_day = 7 # Avergage based on max_day days
+
+      _type = "cases"
+
+      tempValForAvg = []
+      tempValFormax_day = []
+
+      for d in data['stats']:
+         for day in d:
+            # Org Data
+            all_x.append(day) 
+            all_y.append(d[day][_type]) 
+         
+            # For average of _type
+            tempValForAvg.append(float(d[day][_type]))
+
+            if(len(tempValForAvg) <  max_day):
+               tempValFormax_day = tempValForAvg 
+            else: 
+               tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
+               
+            # We have strings...
+            tempValFormax_day = [float(i) for i in tempValFormax_day]
+
+            all_x_avg.append(day)
+            all_y_avg.append(np.mean(tempValFormax_day))  
+
+      if(_color=="r"):
+         _color = "red"
+      elif(_color=="g"):
+         _color = "green"
+      elif(_color=="o"):
+         _color = "orange"
+      else:
+         _color = "black"
+
+      print("Generating graph for zip: " + name + " color: " + _color)
+ 
+      fig = go.Figure()
+      fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
+      fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
+
+      fig.update_xaxes(rangemode="nonnegative")
+      fig.update_yaxes(rangemode="nonnegative")
+   
+      fig.update_layout(
+         width=350,
+         height=350, 
+         margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
+         paper_bgcolor='rgba(255,255,255,1)',
+         plot_bgcolor='rgba(255,255,255,1)',
+         showlegend= False,
+      )  
+ 
+      fig.write_image(folder + name + ".png") 
+         
   
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
 def generate_graph_with_avg(state, _type, _color, folder, county):
@@ -39,8 +112,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       all_data = data
       # We sort the data by inverse date for counties
       all_data = list(reversed(all_data))
- 
- 
+  
   
    # Get the DATA & Compute the max_day average
    for d in all_data:

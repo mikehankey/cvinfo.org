@@ -159,10 +159,6 @@ def rank_counties(st):
       else:
          groups['good'].append(county_name) 
  
-     
-   #print(groups)
-   #sys.exit()
-
    return groups
 
 
