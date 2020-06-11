@@ -82,10 +82,6 @@ def create_states_data(state):
             # Positive test %  
             if(foz(row['totalTestResultsIncrease'])>0):
                row_data['test_pos_p'] = round( (foz(row_data['cases'])*100) / foz(row['totalTestResultsIncrease']), 3 )
-
-               if(int(row_data['test_pos_p'])>70):
-                  print(row["date"])
-                  sys.exit()
             else:
                row_data['test_pos_p'] = 0
  
