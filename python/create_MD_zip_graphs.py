@@ -23,8 +23,7 @@ def rank_zips(all_zips):
 
       # Get zip name from path
       zip_name = os.path.basename(zip_file).replace('.json','')
- 
-
+  
       if(len(zip_data['stats'])>0):
          for day in reversed(list(zip_data['stats'])):  
             for date in reversed(list(day)): 
@@ -80,8 +79,7 @@ def create_MD_zip_graphs():
 
       county_name = os.path.basename(county)
       
-      print(county)
- 
+      print(county) 
 
       for group in county_groups:
  
@@ -94,7 +92,7 @@ def create_MD_zip_graphs():
             folder = os.path.dirname(os.path.abspath(zip_file)) + os.sep
             name = os.path.basename(zip_file).replace('.json','')
          
-         
+
             # We generate the graph
             if(group=='good'): 
                generate_MD_zip_graph_with_avg(zip_content,name,folder,'g')
