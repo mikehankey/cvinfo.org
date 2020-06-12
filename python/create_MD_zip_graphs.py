@@ -130,7 +130,7 @@ def create_MD_zip_graphs_and_pages():
                zip_row += "<td><b>" + str(total_cases) +"</b></td>"
 
                # Add the Graph
-               zip_row += "<td><img src='./MD/counties/" + county_name + os.sep + zip_content['info']['zip']+".png'/ style='width: 100%; height: auto;max-width: 100%;'/></td>"
+               zip_row += '<td><img src="./MD/counties/' + county_name + os.sep + zip_content['info']['zip']+'.png" style="width: 100%; height: auto;max-width: 100%;"/></td>'
 
                # Last seven days record
                total_7 = -1
