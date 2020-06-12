@@ -70,7 +70,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
       fig.update_yaxes(rangemode="nonnegative")
    
       fig.update_layout(
-         width=350,
+         width=250,
          height= 50, 
          margin=dict(l=0,r=0,t=0,b=0), #dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
          paper_bgcolor='rgba(255,255,255,1)',
