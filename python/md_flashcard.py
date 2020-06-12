@@ -12,6 +12,7 @@ def main_menu():
    print("1) Update data MD source")   
    print("2) Create JSON files per ZIP code")   
    print("3) Create Graphs per ZIP code & County Pages")   
+   print("4) Do it all")   
    cmd = input("Run: ")
 
    try:
@@ -29,6 +30,14 @@ def main_menu():
       create_json_MD_data_files()
       print("\n>>>TASK DONE \n\n") 
    elif cmd == 3:
+      print ("CREATING MD ZIP GRAPHS & PAGES.")
+      create_MD_zip_graphs_and_pages()
+      print("\n>>>TASK DONE \n\n") 
+   elif cmd == 4:
+      print ("UPDATING MD ZIP DATA.")
+      update_MD_data_sources()
+      print ("CREATING MD JSON FILES.")
+      create_json_MD_data_files()
       print ("CREATING MD ZIP GRAPHS & PAGES.")
       create_MD_zip_graphs_and_pages()
       print("\n>>>TASK DONE \n\n") 
