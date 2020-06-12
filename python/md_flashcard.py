@@ -11,7 +11,7 @@ def main_menu():
    print("0) Exit") 
    print("1) Update data MD source")   
    print("2) Create JSON files per ZIP code")   
-   print("3) Create Graphs per ZIP code")   
+   print("3) Create Graphs per ZIP code & County Pages")   
    cmd = input("Run: ")
 
    try:
@@ -29,8 +29,8 @@ def main_menu():
       create_json_MD_data_files()
       print("\n>>>TASK DONE \n\n") 
    elif cmd == 3:
-      print ("CREATING MD ZIP GRAPHS.")
-      create_MD_zip_graphs()
+      print ("CREATING MD ZIP GRAPHS & PAGES.")
+      create_MD_zip_graphs_and_pages()
       print("\n>>>TASK DONE \n\n") 
 
    main_menu()

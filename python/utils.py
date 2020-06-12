@@ -17,6 +17,7 @@ ALERTS_TEMPLATE_DELTA = '..' + os.sep + 'templates' + os.sep + 'alerts-d.html'
 ############# FOR MD ONLY
 MD_LOCAL_CSV_FILE = "MD_ZIP_DATA"
 MD_ZIP_CODES      = "MD_ZIP_REL_DATA"
+MD_ZIPS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_MD_zip.html'
 
 
 def display_us_format(_float,prec):

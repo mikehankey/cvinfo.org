@@ -25,8 +25,8 @@ def rank_zips(all_zips):
       zip_name = os.path.basename(zip_file).replace('.json','')
   
       if(len(zip_data['stats'])>0):
-         for day in reversed(list(zip_data['stats'])):  
-            for date in reversed(list(day)): 
+         for day in  list(zip_data['stats']):  
+            for date in  list(day): 
                
                tmp_cases.append(float(day[date]['cases']))  
                
@@ -62,9 +62,9 @@ def rank_zips(all_zips):
    return groups
 
 
-def create_MD_zip_graphs():
+def create_MD_zip_graphs_and_pages():
    
-   # Initial Directory
+   # Initial Directory 
    county_folder = PATH_TO_STATES_FOLDER + os.sep + "MD" + os.sep + "counties" + os.sep 
 
    # All counties directories
@@ -76,10 +76,13 @@ def create_MD_zip_graphs():
       zips_files_for_cur_county = glob.glob(county + '*.json')
        # We rank all the zips (to know the color of the graph)
       county_groups = rank_zips(zips_files_for_cur_county)
+ 
+      # Open related template 
+      f_template =  open(MD_ZIPS_TEMPLATE,  'r')
+      template = f_template.read() 
+      f_template.close()
 
-      county_name = os.path.basename(county)
-      
-      print(county) 
+      template = template.replace('{COUNTY_FULL}',os.path.basename(county))
 
       for group in county_groups:
  
@@ -91,8 +94,7 @@ def create_MD_zip_graphs():
  
             folder = os.path.dirname(os.path.abspath(zip_file)) + os.sep
             name = os.path.basename(zip_file).replace('.json','')
-         
-
+          
             # We generate the graph
             if(group=='good'): 
                generate_MD_zip_graph_with_avg(zip_content,name,folder,'g')
@@ -102,10 +104,20 @@ def create_MD_zip_graphs():
                generate_MD_zip_graph_with_avg(zip_content,name,folder,'r')
             elif(group=='low_cases'):
                generate_MD_zip_graph_with_avg(zip_content,name,folder,'b')
-            
             # WARNING: WE DON'T DO ANYTHING FOR THE ZIPS FOR WHICH WE DON'T HAVE DATA
  
          
+            # Add the info to the template
+            print(zip_content['info']['zip_name'])
+            print(zip_content['info']['zip'])
+
+            # Last seven days record
+            if(len(zip_content['stats'])>7):
+               print(zip_content['stats'][:7])   # Last Seven
+
+            # Previous seven days record
+            if(len(zip_content['stats'])>14):
+               print(zip_content['stats'][len(zip_content['stats'])-15:len(zip_content['stats'])-8])
       
         
           
