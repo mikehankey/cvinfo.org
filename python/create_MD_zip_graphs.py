@@ -72,9 +72,7 @@ def create_MD_zip_graphs_and_pages():
    all_counties_dir = glob.glob(county_folder + '*' + os.sep)
 
    for county in all_counties_dir:
-
  
-      
       # Get All the zips .json file from the current county directory
       zips_files_for_cur_county = glob.glob(county + '*.json')
 
