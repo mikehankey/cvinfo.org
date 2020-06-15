@@ -2,6 +2,7 @@ import os
 import glob
 import json
 import sys
+import random
 
 from operator import itemgetter
 from utils import *
@@ -71,6 +72,9 @@ def create_MD_zip_graphs_and_pages():
    # All counties directories
    all_counties_dir = glob.glob(county_folder + '*' + os.sep)
 
+   # Random Number for non-cached images
+   rand = str(random.randint(1,100000001))
+
    for county in all_counties_dir:
  
       # Get All the zips .json file from the current county directory
@@ -88,10 +92,12 @@ def create_MD_zip_graphs_and_pages():
       county_name = os.path.basename(os.path.normpath(county))
 
       template = template.replace('{COUNTY_FULL}',county_name)
- 
-      zip_row = "" # All Table rows
+  
       all_rows= []
+      allDomEl = []
 
+      allDomPerGroup = {'good':[],'bad':[],'ugly':[],'low_cases':[]}
+ 
       for group in county_groups:
  
          for zip_file in county_groups[group]: 
@@ -101,7 +107,7 @@ def create_MD_zip_graphs_and_pages():
                zip_content = json.load(json_file)
  
             folder = os.path.dirname(os.path.abspath(zip_file)) + os.sep
-            name = os.path.basename(zip_file).replace('.json','')
+            name   = os.path.basename(zip_file).replace('.json','')
           
             # We generate the graph
             if(group=='good'): 
@@ -113,75 +119,37 @@ def create_MD_zip_graphs_and_pages():
             elif(group=='low_cases'):
                generate_MD_zip_graph_with_avg(zip_content,name,folder,'b')
             # WARNING: WE DON'T DO ANYTHING FOR THE ZIPS FOR WHICH WE DON'T HAVE DATA
- 
-            if(group!='no_data' and len(zip_content['stats'])>7):
 
-               # We create the row in the table for the template
-               zip_row += "<tr><td style='white-space:no-wrap; text-align:left'> " + zip_content['info']['zip'] + "</td><td>" + zip_content['info']['zip_name'] + "</td>"
+            # Compute total case
+            if(group!='no_data'):
 
                # Compute the total cases
                total_cases = 0 
                for day in zip_content['stats']:
                   for d in day: 
                      total_cases += int(day[d]['cases'])
+ 
+               allDomPerGroup[group].append({
+                  'html'         : create_zip_DOM_el(zip_content['info']['zip'],zip_content['info']['zip_name'].replace(', Md',', MD'),county_name,total_cases,rand),
+                  'total_cases'  : total_cases
+               })
+  
+         # We sort allDomEl by total cases
+         if(group!='no_data'):
+            allDomEl = sorted(allDomPerGroup[group], key=itemgetter('total_cases'), reverse=True) 
+ 
+         # Add to the template 
+         if(len(allDomEl)==0):
+            # We hide the box
+            template = template.replace('{'+group.upper()+'_SHOW}','hidden')
+         else:
+            allHtml = ''
+            for html in allDomEl:
+               allHtml += html['html']
                
-               zip_row += "<td><b>" + str(total_cases) +"</b></td>"
-
-               # Add the Graph
-               zip_row += '<td><img src="./MD/counties/' + county_name + os.sep + zip_content['info']['zip']+'.png" style="width: 100%; height: auto;max-width: 100%;"/></td>'
-
-               # Last seven days record
-               total_7 = -1
-               if(len(zip_content['stats'])>7): 
-                  tmp7 = zip_content['stats'][len(zip_content['stats'])-8:len(zip_content['stats'])-1]   # Last Seven Days Period
-                  for day in tmp7:
-                     for d in day:
-                        total_7 += int(day[d]['cases'])
-                  if(total_7==-1):
-                     total_7 = 0
-                  zip_row += "<td>"+str(total_7)+"</td>"
-               else:
-                  zip_row += "<td>n/a</td>"
-
-                 
-               # Previous seven days record
-               total_14 = -1
-               if(len(zip_content['stats'])>14):
-                  tmp14 = zip_content['stats'][len(zip_content['stats'])-15:len(zip_content['stats'])-8]  # Previous Last Seven Days Period
-                  for day in tmp14:
-                     for d in day:
-                        total_14+= int(day[d]['cases'])
-                  
-                  if(total_14==-1):
-                     total_14 = 0
-                  zip_row += "<td>"+str(total_14)+"</td>"
-               else:
-                  zip_row += "<td><td>n/a</td>"
-
-
-               if(total_7 != -1 and total_14 != -1 ):
-                  if(total_7>total_14):   
-                     zip_row += "<td><b class='ugly_t' style='font-size:1.2rem'>&#8663;</b></td>"
-                  elif(total_7<total_14):    
-                     zip_row += "<td><b class='good_t' style='font-size:1.2rem'>&#8664;</b></td>"
-                  else:
-                     zip_row += "<td><td>&nbsp;</td>"
-
-               zip_row += "</tr>"
-
-               all_rows.append({'total':total_cases,'html':zip_row})
-               zip_row = ""
-      
-
-      all_rows = sorted(all_rows, key=itemgetter('total'), reverse=True)
-
-      real_html = ""
-      # Rebuild html
-      for row in all_rows:
-         real_html+= row['html']
-
-
-      template = template.replace('{ALL_ZIPS}',real_html)
+            template = template.replace('{'+group.upper()+'_SHOW}','')
+            template = template.replace('{'+group.upper()+'}',allHtml)
+   
 
       print(county_name  + " > done")
 
@@ -191,4 +159,6 @@ def create_MD_zip_graphs_and_pages():
       county_page.close()  
             
             
-     
+# Create Graph HTML Element with image (the graph, dumbass)
+def create_zip_DOM_el(_zip,city_name,county_name,total_case,rand):
+   return '<div class="graph_g"><h3 class="nmb">'+  city_name +'<br>zip: '+str(_zip)+'</h3><p>Total Cases:'+str(total_case)+'</p><img  src="./MD/counties/' + county_name + os.sep + str(_zip)+'.png?v='+rand+'" width="345" alt="'+str(_zip)+'"/></div>' 

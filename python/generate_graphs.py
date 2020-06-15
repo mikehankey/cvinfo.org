@@ -6,15 +6,14 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 
+from datetime import *
 from utils import PATH_TO_STATES_FOLDER, display_us_format 
 
 
 # Generate a graph (cases) for Maryland Zip Code
 # Here we pass all the data
 def generate_MD_zip_graph_with_avg(data,name,folder,_color):
-   
-   
-
+    
    if(len(data['stats'])>0):
       all_x = []
       all_y = []
@@ -33,23 +32,31 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
 
       for d in data['stats']:
          for day in d:
-            # Org Data
-            all_x.append(day) 
-            all_y.append(d[day][_type]) 
-         
-            # For average of _type
-            tempValForAvg.append(float(d[day][_type]))
+            
+            # Warning - it looks like in Maryland, the put a lot of cases on the first day in the stats
+            # so we ignore the data in the graphs to have something legible
+            d_day = day.split('-')
+            b1 = date(int(d_day[0]), int(d_day[1]), int(d_day[2]))
 
-            if(len(tempValForAvg) <  max_day):
-               tempValFormax_day = tempValForAvg 
-            else: 
-               tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
-               
-            # We have strings...
-            tempValFormax_day = [float(i) for i in tempValFormax_day]
+            if(b1 > date(2020, 4, 15)):
 
-            all_x_avg.append(day)
-            all_y_avg.append(np.mean(tempValFormax_day))  
+               # Org Data
+               all_x.append(day) 
+               all_y.append(d[day][_type]) 
+            
+               # For average of _type
+               tempValForAvg.append(float(d[day][_type]))
+
+               if(len(tempValForAvg) <  max_day):
+                  tempValFormax_day = tempValForAvg 
+               else: 
+                  tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
+                  
+               # We have strings...
+               tempValFormax_day = [float(i) for i in tempValFormax_day]
+
+               all_x_avg.append(day)
+               all_y_avg.append(np.mean(tempValFormax_day))  
 
       if(_color=="r"):
          _color = "red"
@@ -70,19 +77,15 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
       fig.update_yaxes(rangemode="nonnegative")
    
       fig.update_layout(
-         width=250,
-         height= 50, 
-         margin=dict(l=0,r=0,t=0,b=0), #dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
+         width=350,
+         height=350, 
+         margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
          paper_bgcolor='rgba(255,255,255,1)',
          plot_bgcolor='rgba(255,255,255,1)',
-         showlegend= False,
-         xaxis= {    'visible': False, 
-                     'showticklabels': False}, 
-         yaxis= { 
-                     'visible': False, 
-                     'showticklabels': False}
+         showlegend= False        
       )  
- 
+
+      #print(folder + name + " > created")
       fig.write_image(folder + name + ".png") 
          
   
