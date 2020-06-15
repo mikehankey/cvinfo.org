@@ -1,4 +1,3 @@
-import time
 from create_json_data_files import *
 from update_data_src import * 
 from create_main_gbu_page import *
@@ -71,7 +70,7 @@ def main_menu():
 
    elif cmd==7:
       print("CREATE ALL GBU PAGES & ALERTS & HOTSPOTS")
-      start_time = time.time()
+       
       update_data_sources()
       create_states_data('') 
       create_county_state_data('')
@@ -82,7 +81,7 @@ def main_menu():
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
       create_alert_page(alerts)
-      print("Execution time: %s seconds" % (time.time() - start_time))
+     
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 0:

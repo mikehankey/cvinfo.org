@@ -189,7 +189,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
             x1=end_lockdown_date,
             y1=np.max(all_y),
             fillcolor="LightSalmon",
-            opacity=0.2,
+            opacity=0.1,
             layer="below",
             line_width=0,
          )
@@ -203,7 +203,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
             x1=all_x[len(all_x)-1],
             y1=np.max(all_y),
             fillcolor="LightSalmon",
-            opacity=0.2,
+            opacity=0.1,
             layer="below",
             line_width=0, 
          )
