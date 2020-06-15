@@ -29,8 +29,8 @@ def generate_gbu_graphs_and_state_page(state,groups):
          color = "g"
       
       domEl = "" 
-
-      for county in groups[group]:
+  
+      for county in sorted(groups[group]):
  
          # Get county name
          county_name = os.path.basename(county).replace('.json','')

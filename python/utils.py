@@ -13,6 +13,10 @@ HOTSPOTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'hotspots.html'
 
 ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts.html'
 ALERTS_TEMPLATE_DELTA = '..' + os.sep + 'templates' + os.sep + 'alerts-d.html'
+
+
+# KEY DATES (lockdown)
+KEY_DATES =   TMP_DATA_PATH + os.sep + 'key-dates.csv'
  
 ############# FOR MD ONLY
 MD_LOCAL_CSV_FILE = "MD_ZIP_DATA"

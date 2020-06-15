@@ -54,6 +54,18 @@ def rank_states():
 
 
 
+# Get the place of "DC" (for "Washington DC")
+# in a list - otherwise, it doesn't sort well...
+def sort_width_dc(all_groups):
+   # Warning: we need to move DC
+   if('DC' in all_groups):
+      tmp_group = all_groups
+      tmp_group = [g.replace('DC', 'WAS') for g in tmp_group]
+      tmp_group = sorted(tmp_group)
+      index_of_dc = tmp_group.index("WAS")
+      all_groups.insert(index_of_dc, 'DC')
+   return all_groups
+
 # Create Graphics for all states 
 # and insert them into the GBU template (main page)
 def generate_gbu_graphs_and_main_page(groups): 
@@ -78,7 +90,9 @@ def generate_gbu_graphs_and_main_page(groups):
       
       domEl = ""
 
-      for state in groups[group]:
+      all_groups =  sort_width_dc(sorted(groups[group]))
+
+      for state in all_groups:
 
          # Generate the Main Graph
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '')

@@ -2,12 +2,13 @@
 import os
 import sys
 import json
+import csv
 import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 
 from datetime import *
-from utils import PATH_TO_STATES_FOLDER, display_us_format 
+from utils import PATH_TO_STATES_FOLDER, display_us_format, KEY_DATES
 
 
 # Generate a graph (cases) for Maryland Zip Code
@@ -113,7 +114,23 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
 
    tempValForAvg = []
    tempValFormax_day = []
-   
+
+   # Do we have a period in key-dates.txt
+   # for the current state?
+   key_dates = open(KEY_DATES,'r')
+   csv_reader = csv.DictReader(key_dates)
+   rows = list(csv_reader) 
+   start_lockdown_date  = -1
+   end_lockdown_date    = -1
+
+   for key_date_row in rows:
+      if(key_date_row['state']==state):
+         start_lockdown_date = key_date_row['start']  
+         
+         if(key_date_row['end'] is not None):
+            end_lockdown_date = key_date_row['end']
+         
+
    if(county=="" or 'for_a_state' in county):
       all_data = data['stats']
    else:
@@ -159,9 +176,43 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
     
+   
+   # Add lockdown perdio
+   if(start_lockdown_date!=-1 and start_lockdown_date is not None ):
+
+      if(end_lockdown_date!=-1 and end_lockdown_date is not None):
+ 
+         fig.add_shape(
+            type="rect",
+            x0=start_lockdown_date,
+            y0=0,
+            x1=end_lockdown_date,
+            y1=np.max(all_y),
+            fillcolor="LightSalmon",
+            opacity=0.2,
+            layer="below",
+            line_width=0,
+         )
+ 
+      elif(start_lockdown_date is not None):
+           
+         fig.add_shape( 
+            type="rect",
+            x0=start_lockdown_date,
+            y0=0,
+            x1=all_x[len(all_x)-1],
+            y1=np.max(all_y),
+            fillcolor="LightSalmon",
+            opacity=0.2,
+            layer="below",
+            line_width=0, 
+         )
+ 
+
    fig.update_xaxes(rangemode="nonnegative")
    fig.update_yaxes(rangemode="nonnegative")
  
+
    fig.update_layout(
       width=350,
       height=350, 
@@ -195,4 +246,5 @@ def main_menu():
 if __name__ == "__main__":
    os.system("clear")
    #main_menu()
-   generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
+   #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
+   generate_graph_with_avg("NH", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "NH"  + os.sep , '')
