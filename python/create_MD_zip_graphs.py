@@ -161,4 +161,4 @@ def create_MD_zip_graphs_and_pages():
             
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_zip_DOM_el(_zip,city_name,county_name,total_case,rand):
-   return '<div class="graph_g"><h3 class="nmb">'+  city_name +'<br>zip: '+str(_zip)+'</h3><p>Total Cases:'+str(total_case)+'</p><img  src="./MD/counties/' + county_name + os.sep + str(_zip)+'.png?v='+rand+'" width="345" alt="'+str(_zip)+'"/></div>' 
+   return '<div class="graph_g"><h3 class="nmb">zip: '+str(_zip)+'<br>'+  city_name +'</h3><p>Total Cases:'+str(total_case)+'</p><img  src="./MD/counties/' + county_name + os.sep + str(_zip)+'.png?v='+rand+'" width="345" alt="'+str(_zip)+'"/></div>' 
