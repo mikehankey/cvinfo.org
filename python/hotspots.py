@@ -157,7 +157,7 @@ def create_alert_page(alerts):
    template = template.replace('{ALERTS_GRAPHS}', all_alert_graphs)
 
    # We rank by Delta-7 
-   alerts = sorted(alerts, key=lambda k: k['delta7'], reverse=False) 
+   alerts = sorted(alerts, key=lambda k: k['delta7'], reverse=True) 
    all_alert_graphs = ''
    for county in alerts:
       all_alert_graphs +=  create_alertgraph_DOM_el(county['last_n_c'], '.' + os.sep + county['state']  + os.sep + 'counties' + os.sep + county['county']  + '.png', county['county']  + ', ' + county['state'], county['delta7'],county['delta14'], county['county'], county['state'])
