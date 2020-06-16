@@ -37,7 +37,7 @@ def prepare_data():
          # Get the indexes for the info we need
          if(r_counter == 0):
             index_of_date              = row.index('date')
-            index_of_date_we_need      = row.index('positive')
+            index_of_date_we_need      = row.index('positiveIncrease') #row.index('positive')
             index_of_state             = row.index('state')
 
          # Get the info we need to generate the csv file
@@ -89,7 +89,18 @@ def prepare_data():
 
 prepare_data()
   
-df = pd.read_csv("./tmp_json_data/barchar_race.csv",index_col='date', parse_dates=[0])
-print(df)
-html = bcr.bar_chart_race(df)
+df = pd.read_csv("./tmp_json_data/barchar_race.csv",index_col='date', parse_dates=[0]) 
+html = bcr.bar_chart_race(df=df, n_bars=10,orientation='h', sort='desc',title='COVID-19 Cases by State',
+    title_size='',
+    bar_label_size=7,
+    tick_label_size=7,
+    shared_fontdict={'family' : 'Helvetica', 'color' : '.1'},scale='linear',
+    bar_kwargs={'alpha': .7},
+    filter_column_colors=False,
+    bar_size=.95,
+    period_label={'x': .99, 'y': .25, 'ha': 'right', 'va': 'center'},
+    period_fmt='%B %d, %Y',
+    period_summary_func=lambda v, r: {'x': .99, 'y': .18,
+         's': f'Total Cases: {v.nlargest(6).sum():,.0f}',
+         'ha': 'right', 'size': 8 },)
 print(html.data)

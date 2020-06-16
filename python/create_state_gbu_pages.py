@@ -164,7 +164,11 @@ def rank_counties(st):
 
 # Create County HTML Element with image
 def create_county_DOM_el(st,ct,rand) :
-   return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></div>' 
+   if(st == 'MD'):
+      link =  '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><a href="./'+ st + '/counties'+os.sep + ct + '/"><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></a></div>' 
+      return link
+   else:
+      return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></div>' 
 
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_graph_DOM_el(_file,st,title,rand) :
