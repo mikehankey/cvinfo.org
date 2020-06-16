@@ -94,13 +94,14 @@ html = bcr.bar_chart_race(df=df, n_bars=10,orientation='h', sort='desc',title='C
     title_size='',
     bar_label_size=7,
     tick_label_size=7,
-    shared_fontdict={'family' : 'Helvetica', 'color' : '.1'},scale='linear',
+    shared_fontdict={'color' : '.1'},
+    scale='linear',
     bar_kwargs={'alpha': .7},
-    filter_column_colors=False,
+    filter_column_colors=True,
     bar_size=.95,
     period_label={'x': .99, 'y': .25, 'ha': 'right', 'va': 'center'},
     period_fmt='%B %d, %Y',
     period_summary_func=lambda v, r: {'x': .99, 'y': .18,
-         's': f'Total Cases: {v.nlargest(6).sum():,.0f}',
+         's': f'Total Daily New Cases: {v.nlargest(6).sum():,.0f}',
          'ha': 'right', 'size': 8 },)
 print(html.data)

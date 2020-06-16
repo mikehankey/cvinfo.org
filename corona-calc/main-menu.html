@@ -54,7 +54,7 @@
    </header>
 
    <div id="header">
-      <h1>Welcome to CoronaFiles.us</h1>
+      <h1>CoronaFiles.us</h1>
    </div>
    <div id="main-content" class="tonly">
 <p>
@@ -84,27 +84,5 @@ We have made these tools to help visualize and understand the progression of the
    </div>
 
    <script src="./js/clean/framework_plugs.js"></script>
-   <script src="./js/shared/tablesorter.js"></script>
-   <script>
-      $(function() {
-         $(".tablesorter").tablesorter();
-
-
-         $(".tablesorter").bind("sortStart",function(e, table) {
-            Swal.fire({  
-               title: '<div class="lds-hourglass"></div>',
-               html: "<b>Sorting...</b>",
-               showConfirmButton: false,
-               toast: true 
-            });
-         })
-         .bind("sortEnd",function(e, table) {
-             $('.swal2-container').remove();
-         });
-
-         
-      });
-   </script>
 </body>
-</html>
-
+</html> 
