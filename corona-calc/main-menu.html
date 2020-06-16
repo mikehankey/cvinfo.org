@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-164814690-1"></script>
+   <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}  gtag('js', new Date()); gtag('config', 'UA-164814690-1');</script>
+
+   <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+   <title>CoronaFiles.us COVID-19 Data tools and reports for understanding how your state or county is doing with corona virus</title>
+
+   <meta name="author" content="Mike Hankey">
+   <meta name="description" content="About CoronaFiles, Forecasting and Stats Visualizer for your State and county">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+   <link href="./css/coronafiles.css?as3d" rel="stylesheet">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/css/theme.bootstrap_4.min.css" rel="stylesheet">
+
+
+   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+   <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+   <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+   <link rel="manifest" href="./site.webmanifest">
+   <link rel="mask-icon" href="./safari-pinned-tab.svg" color="#5bbad5">
+   <meta name="msapplication-TileColor" content="#da532c">
+   <meta name="theme-color" content="#f0f0f0">
+
+   <meta property="fb:app_id" content="542306269804125"/>
+   <meta property="og:title" content="CoronaFiles.us - COVID-19 Forecasting and Stats Visualizer for your State and county"/>
+   <meta property="og:type" content="website"/>
+   <meta property="og:url" content="https://coronafiles.us/about.html"/>
+   <meta property="og:site_name" content="CoronaFiles"/>
+   <meta property="og:description" content="COVID-19 Data Tools"/>
+   <meta property="og:image" content="https://coronafiles.us/img/coronafile_fb.jpg"/>
+   <meta property="og:image:width" content="1200"/>
+   <meta property="og:image:height" content="630"/>
+   <meta property="og:image:alt" content="CoronaFiles.us - When could Corona Virus End"/>
+   <style>
+   .cpb {
+      margin: 0 .25rem;
+      color:#fff;
+      border-radius: 5px;
+      padding: .25rem;
+      width: 20rem;
+   }
+   .comp_box span {
+      font-size: .8rem;
+      display: block;
+      margin-top: .2rem;
+   }
+   .cpb a {
+      color:#fff!important;
+   }
+   .cpbn {
+      font-weight: bold;
+      font-size: 1.5rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+   }
+   .cpbnb {
+      font-size: 1.35rem;
+      font-weight: bold;
+   }
+   .cpbnb span {
+      display: inline-block;
+      vertical-align: top;
+   }
+   .cpbt {
+      font-size: .8rem;
+   } 
+   .lds-hourglass {
+   display: block;
+   position: relative;
+   width: 80px;
+   height: 80px;
+   }
+   .lds-hourglass:after {
+   content: " ";
+   display: block;
+   border-radius: 50%;
+   width: 0;
+   height: 0;
+   margin: 8px;
+   box-sizing: border-box;
+   border: 32px solid #a80e0e;
+   border-color: #a80e0e transparent #a80e0e transparent;
+   animation: lds-hourglass 1.2s infinite;
+   }
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+}
+</style>
+</head>
+<body>
+
+   <header class="header clearfix">
+      <a href="/" class="logo"><img src="./img/logo.png"/> <span>CoronaFiles.us</span></a>
+      <input class="menu-btn" type="checkbox" id="menu-btn" />
+      <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+      <ul class="menu">
+            <li><a href="/states/">Compare</a></li>
+            <li><a href="/states/hotspots.html">Hotspots</a></li>
+            <li><a href="/states/alerts.html">Alerts</a></li>
+            <li><a href="./herd_immunity_calculator.html">Herd Immunity</a></li>
+            <li><a href="./countries_vs_us.html">Intl. Comparison</a></li>
+            <li><a href="./forecast.html">Forecast</a></li>
+            <li class="active" ><a href="./about.html">About</a></li>
+       </ul>
+   </header>
+
+   <div id="header">
+      <h1>Welcome to CoronaFiles.us</h1>
+   </div>
+   <div id="main-content" class="tonly">
+<p>
+We have made these tools to help visualize and understand the progression of the COVID-19 pandemic in the United States. Tools are designed to report US Corona Virus data at a local level (state and county). To get started click a link for the tool you want to explore. 
+</p>
+<h2><a href="/states/alerts.html">Alerts</a></h2>
+<p>Counties across the United States that are experiencing more than 40% new case growth in the last 7-days. Use this tool to spot early outbreaks or counties where the virus is spreading fastest.</p>
+<h2><a href="/states/hotspots.html">Hotspots</a></h2>
+<p>US Counties with the largest new case volume per day (Counties with > 100 new cases per day)</p>
+<h2><a href="/states/">Compare – Good Bad and Ugly</a></h2>
+<p>How do US states compare with each other? Which states are winning, loosing or treading water? Click state to see how counties in that state are performing. 
+</p>
+<h2><a href="/herd_immunity_calculator.html">Herd Immunity Calculator</a></h2>
+<p>What is the cost of herd immunity in time and lives? Use this calculator to estimate the impact of herd immunity on a state or county. </p>
+<h2><a href="/countries_vs_us.html">International Comparison</a></h2>
+<p>Wondering how Sweden compares with the United States, New York or your county? Use this tool to compare cases per million and deaths per million between any two countries in the world. </p>
+<h2><a href="/forecast.html">Forecast</a></h2>
+<p>When and how will corona virus end? Find out how your state or county is doing? This tool uses a linear projection to determine if the virus spread can be stopped or if herd immunity will set in. </p>
+<h2><a href="/about.html">About</a></h2>
+<p>Who made this site and why? Where does the data come from? For more information on this project please see our about page. </p>
+
+
+
+   <div id="footer">
+         coronafiles.us provides enhanced COVID-19 statistics and reports made from these open source data projects: <a href="https://covidtracking.com/">Covid Tracking</a> and <a href="https://github.com/nytimes/covid-19-data">Covid 19 Data</a>
+         <br/>contact: mike.hankey[@]gmail.com
+   </div>
+
+   <script src="./js/clean/framework_plugs.js"></script>
+   <script src="./js/shared/tablesorter.js"></script>
+   <script>
+      $(function() {
+         $(".tablesorter").tablesorter();
+
+
+         $(".tablesorter").bind("sortStart",function(e, table) {
+            Swal.fire({  
+               title: '<div class="lds-hourglass"></div>',
+               html: "<b>Sorting...</b>",
+               showConfirmButton: false,
+               toast: true 
+            });
+         })
+         .bind("sortEnd",function(e, table) {
+             $('.swal2-container').remove();
+         });
+
+         
+      });
+   </script>
+</body>
+</html>
+
