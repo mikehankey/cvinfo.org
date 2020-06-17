@@ -70,7 +70,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{TOTAL_CASES}',       display_us_format(state_data['sum']['cur_total_cases'], 0)) 
    template = template.replace('{TOTAL_TESTS}',       display_us_format(state_data['sum']['cur_total_tests'], 0))
    if(float(state_data['sum']['cur_total_tests']) !=0):
-      template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests'])), 2)    + '% ')
+      template = template.replace('{TOTAL_POS_TESTS}',   display_us_format(float(float(state_data['sum']['cur_total_cases'])  / float(state_data['sum']['cur_total_tests'])*100), 2)    + '% ')
    else:
       template = template.replace('{TOTAL_POS_TESTS}',  'n/a')
 
@@ -79,12 +79,13 @@ def generate_gbu_graphs_and_state_page(state,groups):
    for d in last_data: 
       template = template.replace('{LAST_DAY_DEATHS}', display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['deaths'], 0)) 
       template = template.replace('{LAST_DAY_CASES}' , display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['cases'], 0)) 
-   
+      template = template.replace('{LAST_POS_TESTS}' , display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['test_pos_p'], 2)  + '% ') 
+ 
+
    # PPM Values
    template = template.replace('{PPM_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths']/state_data['sum']['pop']*1000000, 2)) 
    template = template.replace('{PPM_CASES}',  display_us_format(state_data['sum']['cur_total_cases']/state_data['sum']['pop']*1000000, 2)) 
- 
-
+  
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
    all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day',rand)
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day',rand)

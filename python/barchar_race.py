@@ -7,8 +7,9 @@ import bar_chart_race as bcr
 import pandas as pd
 import csv
 import os, sys
+import numpy as np
 
-
+import datetime
 from utils import *  
  
 def prepare_data():
@@ -23,6 +24,9 @@ def prepare_data():
 
    data_for_csv = {}
 
+   tmp_data_for_csv = {}  # For 7 day average
+   max_day          = 7 # Average based on max_day days
+   tempValFormax_day = []
 
    # First we create the panda dataframe 
    # for all states 
@@ -45,18 +49,41 @@ def prepare_data():
             tmp_date = row[index_of_date]
 
             # Transform date format
-            date =  tmp_date[0:4]+'-'+tmp_date[4:6]+'-'+tmp_date[6:8]
+            _date =  tmp_date[0:4]+'-'+tmp_date[4:6]+'-'+tmp_date[6:8]
 
-            if(date not in data_for_csv):
-               data_for_csv[date] = {}
+            d_day = _date.split('-')
+            b1 = datetime.date(int(d_day[0]),int(d_day[1]),int(d_day[2])) 
 
-            # We only take into account the states defined in US_STATES
-            if(row[index_of_state] in US_STATES ):
-               data_for_csv[date][US_STATES[row[index_of_state]]] = row[index_of_date_we_need]
-   
+            # A minimum date (otherwise, we don't have enough data)
+            if(b1 > datetime.date(2020, 3, 2)):
+
+               if(_date not in data_for_csv):
+                  data_for_csv[_date] = {}
+                  tmp_data_for_csv[_date] = {}
+
+               # We only take into account the states defined in US_STATES
+               if(row[index_of_state] in US_STATES ):
+
+                  # NO 7-AVG
+                  #data_for_csv[_date][US_STATES[row[index_of_state]]] = row[index_of_date_we_need]
+ 
+                  # 7-DAY AVG
+                  if(US_STATES[row[index_of_state]] not in  tmp_data_for_csv):
+                     tmp_data_for_csv[US_STATES[row[index_of_state]]] = [row[index_of_date_we_need]]
+                  else:
+                     tmp_data_for_csv[US_STATES[row[index_of_state]]].append(row[index_of_date_we_need])
+
+                  if(len(tmp_data_for_csv[US_STATES[row[index_of_state]]]) <  max_day):
+                     tempValFormax_day = tmp_data_for_csv[US_STATES[row[index_of_state]]]
+                  else: 
+                     tempValFormax_day =  tmp_data_for_csv[US_STATES[row[index_of_state]]][len( tmp_data_for_csv[US_STATES[row[index_of_state]]])-max_day:len( tmp_data_for_csv[US_STATES[row[index_of_state]]])] 
+                     
+                   
+                  tempValFormax_day = [float(i) for i in tempValFormax_day]
+                  data_for_csv[_date][US_STATES[row[index_of_state]]] = np.mean(tempValFormax_day)
          
          r_counter+=1
-
+ 
 
    # We now create the csv file from data_for_csv
    with open(TMP_DATA_PATH + os.sep + 'barchar_race.csv', 'w+') as csvfile:
@@ -72,13 +99,13 @@ def prepare_data():
       csvfile.write("\n")
 
       # Write all the other lines
-      for date in sorted(data_for_csv):
-         row_to_write = [date] 
+      for _date in sorted(data_for_csv):
+         row_to_write = [_date] 
          for state in new_csv_headers:
             
             if(state!='date'):
-               if(state in data_for_csv[date]):
-                  row_to_write.append(str(float(data_for_csv[date][state])))
+               if(state in data_for_csv[_date]):
+                  row_to_write.append(str(float(data_for_csv[_date][state])))
                else:
                   row_to_write.append('')
 
@@ -87,10 +114,14 @@ def prepare_data():
 
     
 
-prepare_data()
-  
+prepare_data() 
 df = pd.read_csv("./tmp_json_data/barchar_race.csv",index_col='date', parse_dates=[0]) 
-html = bcr.bar_chart_race(df=df, n_bars=10,orientation='h', sort='desc',title='COVID-19 Cases by State',
+html = bcr.bar_chart_race(
+    df=df, 
+    n_bars=10,
+    orientation='h', 
+    sort='desc',
+    title='COVID-19 Day-7 Average Cases by State',
     title_size='',
     bar_label_size=7,
     tick_label_size=7,
@@ -99,9 +130,10 @@ html = bcr.bar_chart_race(df=df, n_bars=10,orientation='h', sort='desc',title='C
     bar_kwargs={'alpha': .7},
     filter_column_colors=True,
     bar_size=.95,
+    period_length=1500,
     period_label={'x': .99, 'y': .25, 'ha': 'right', 'va': 'center'},
     period_fmt='%B %d, %Y',
     period_summary_func=lambda v, r: {'x': .99, 'y': .18,
-         's': f'Total Daily New Cases: {v.nlargest(6).sum():,.0f}',
+         's': f'Day-7 Average Cases: {v.nlargest(6).sum():,.0f}',
          'ha': 'right', 'size': 8 },)
 print(html.data)

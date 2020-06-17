@@ -57,12 +57,14 @@ def rank_states():
 # Get the place of "DC" (for "Washington DC")
 # in a list - otherwise, it doesn't sort well...
 def sort_width_dc(all_groups):
+
    # Warning: we need to move DC
    if('DC' in all_groups):
       tmp_group = all_groups
       tmp_group = [g.replace('DC', 'WAS') for g in tmp_group]
       tmp_group = sorted(tmp_group)
       index_of_dc = tmp_group.index("WAS")
+      all_groups.remove('DC')
       all_groups.insert(index_of_dc, 'DC')
    return all_groups
 

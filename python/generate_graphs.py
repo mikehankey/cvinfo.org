@@ -24,7 +24,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
       # 7 days average
       first_val = -1
       total_day = 0
-      max_day = 7 # Avergage based on max_day days
+      max_day = 7 # Average based on max_day days
 
       _type = "cases"
 
