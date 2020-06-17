@@ -8,11 +8,16 @@ import pandas as pd
 import csv
 import os, sys
 import numpy as np
+import matplotlib.pyplot as plt
 
 import datetime
 from utils import *  
+
+
+# debug only
+only_states= ['MI','NJ','NY']
  
-def prepare_data():
+def prepare_data(_type,_7avg):
    # Prepare the CSV structure
    new_csv_headers = ['date'] 
    for st in US_STATES: 
@@ -32,6 +37,7 @@ def prepare_data():
    # for all states 
    # date,state1,state2...
    # 2020-03-07,45,456
+   print("Parsing the data")
    with open(TMP_DATA_PATH + os.sep + 'daily.csv', newline='') as csvfile:
       rows = csv.reader(csvfile)
       r_counter = 0
@@ -41,7 +47,7 @@ def prepare_data():
          # Get the indexes for the info we need
          if(r_counter == 0):
             index_of_date              = row.index('date')
-            index_of_date_we_need      = row.index('positiveIncrease') #row.index('positive')
+            index_of_date_we_need      = row.index(_type) #row.index('positive')
             index_of_state             = row.index('state')
 
          # Get the info we need to generate the csv file
@@ -62,30 +68,41 @@ def prepare_data():
                   tmp_data_for_csv[_date] = {}
 
                # We only take into account the states defined in US_STATES
+               # For debug: and (index_of_state in only_states)
                if(row[index_of_state] in US_STATES ):
-
-                  # NO 7-AVG
-                  #data_for_csv[_date][US_STATES[row[index_of_state]]] = row[index_of_date_we_need]
  
-                  # 7-DAY AVG
-                  if(US_STATES[row[index_of_state]] not in  tmp_data_for_csv):
-                     tmp_data_for_csv[US_STATES[row[index_of_state]]] = [row[index_of_date_we_need]]
-                  else:
-                     tmp_data_for_csv[US_STATES[row[index_of_state]]].append(row[index_of_date_we_need])
+                  if(_7avg is True):
 
-                  if(len(tmp_data_for_csv[US_STATES[row[index_of_state]]]) <  max_day):
-                     tempValFormax_day = tmp_data_for_csv[US_STATES[row[index_of_state]]]
-                  else: 
-                     tempValFormax_day =  tmp_data_for_csv[US_STATES[row[index_of_state]]][len( tmp_data_for_csv[US_STATES[row[index_of_state]]])-max_day:len( tmp_data_for_csv[US_STATES[row[index_of_state]]])] 
+                     # 7-DAY AVG
+                     if(US_STATES[row[index_of_state]] not in  tmp_data_for_csv):
+                        if(row[index_of_date_we_need]!=''):
+                           tmp_data_for_csv[US_STATES[row[index_of_state]]] = [row[index_of_date_we_need]]
+                        else:
+                           tmp_data_for_csv[US_STATES[row[index_of_state]]] = ['0']
+                     else:
+                        if(row[index_of_date_we_need]!=''):
+                           tmp_data_for_csv[US_STATES[row[index_of_state]]].append(row[index_of_date_we_need])
+                        else:
+                           tmp_data_for_csv[US_STATES[row[index_of_state]]].append('0')
+
+                     if(len(tmp_data_for_csv[US_STATES[row[index_of_state]]]) <  max_day):
+                        tempValFormax_day =  tmp_data_for_csv[US_STATES[row[index_of_state]]]
+                     else: 
+                        tempValFormax_day =  tmp_data_for_csv[US_STATES[row[index_of_state]]][len(tmp_data_for_csv[US_STATES[row[index_of_state]]])-max_day:len(tmp_data_for_csv[US_STATES[row[index_of_state]]])] 
                      
-                   
-                  tempValFormax_day = [float(i) for i in tempValFormax_day]
-                  data_for_csv[_date][US_STATES[row[index_of_state]]] = np.mean(tempValFormax_day)
+                     
+                     # We have strings, we need floats 
+                     tempValFormax_day = [float(i) for i in tempValFormax_day]
+                     data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day),2)
+                  else:
+                     # RAW Data
+                     data_for_csv[_date][US_STATES[row[index_of_state]]] = row[index_of_date_we_need]
          
          r_counter+=1
  
 
    # We now create the csv file from data_for_csv
+   print("Creating cleaned SVG file")
    with open(TMP_DATA_PATH + os.sep + 'barchar_race.csv', 'w+') as csvfile:
       
       row_to_write = []
@@ -112,28 +129,77 @@ def prepare_data():
          csvfile.write(','.join(row_to_write))
          csvfile.write("\n")
 
-    
 
-prepare_data() 
-df = pd.read_csv("./tmp_json_data/barchar_race.csv",index_col='date', parse_dates=[0]) 
-html = bcr.bar_chart_race(
-    df=df, 
-    n_bars=10,
-    orientation='h', 
-    sort='desc',
-    title='COVID-19 Day-7 Average Cases by State',
-    title_size='',
-    bar_label_size=7,
-    tick_label_size=7,
-    shared_fontdict={'color' : '.1'},
-    scale='linear',
-    bar_kwargs={'alpha': .7},
-    filter_column_colors=True,
-    bar_size=.95,
-    period_length=1500,
-    period_label={'x': .99, 'y': .25, 'ha': 'right', 'va': 'center'},
-    period_fmt='%B %d, %Y',
-    period_summary_func=lambda v, r: {'x': .99, 'y': .18,
-         's': f'Day-7 Average Cases: {v.nlargest(6).sum():,.0f}',
-         'ha': 'right', 'size': 8 },)
-print(html.data)
+def create_video():    
+ 
+   title = "COVID-19 Day-7 Average Deaths by State"
+   counter_title = "Day-7 Average Deaths"
+   out_file_name = "covid19_7deaths.mp4"
+   max_state_to_show = 10
+  
+   dpi = 120
+   
+   video_size_w_in_px = 1920
+   video_size_h_in_px = 1080
+
+   video_size_w = video_size_w_in_px/dpi  # In inch!
+   video_size_h = video_size_h_in_px/dpi  # In inch!
+ 
+   print("CREATING VIDEO")
+
+   # Get the data from the csv created with prepare_data
+   df = pd.read_csv("./tmp_json_data/barchar_race.csv",index_col='date', parse_dates=[0]) 
+
+   # Create custom figure
+   fig, ax = plt.subplots(figsize=(video_size_w, video_size_h), dpi=dpi)
+   fig.suptitle(title, fontsize=30,ha='left',va='bottom',fontweight='bold',y=0.91, x=0.13) 
+   ax.yaxis.set_tick_params(labelsize = 15)
+
+   ax.spines['top'].set_visible(False)
+   ax.spines['right'].set_visible(False)
+   ax.spines['left'].set_color('#cccccc') 
+   ax.spines['bottom'].set_color('#cccccc')
+   ax.set_facecolor((1, 1, 1, .3))   
+
+   bcr.bar_chart_race(
+      fig=fig,
+      df=df, 
+      cmap= ['#f9cdac', '#f3aca2', '#ee8b97', '#e96a8d', '#db5087', '#b8428c', '#973490', '#742796', '#5e1f88', '#4d1a70', '#3d1459', '#2d0f41'],
+      n_bars=max_state_to_show,
+      orientation='h', 
+      sort='desc',
+      filename=out_file_name,
+      title=title, 
+      bar_label_size  = 18,   # Numbers next to bars 
+      shared_fontdict = { 'color' : '.1', 'size': 130 },
+      scale='linear',
+      bar_kwargs={
+         'alpha': 0.7, 
+         'lw': 0},
+      filter_column_colors=True,
+      bar_size=.95,
+      period_length=1000,
+      period_label={
+         'x': .97, 
+         'y': .25, 
+         'ha': 'right', 
+         'va': 'center',
+         'size': 22,
+         'fontweight':'bold'},
+      period_fmt='%B %d, %Y',
+      period_summary_func=lambda v, 
+         r: {
+            'x': .97, 
+            'y': .18,
+            's' : f'{counter_title}: {v.nlargest(6).sum():,.0f}',
+            'ha': 'right', 
+            'size': 20
+         }
+   )
+
+   print(out_file_name  + " created")
+
+ 
+
+prepare_data('death',True)
+create_video()
