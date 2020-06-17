@@ -59,7 +59,9 @@ def rank_zips(all_zips):
             groups['good'].append(zip_file) 
       else:
          groups['no_data'].append(zip_file) 
+   
   
+
    return groups
 
 
@@ -78,6 +80,8 @@ def create_MD_zip_graphs_and_pages():
  
       # Get All the zips .json file from the current county directory
       zips_files_for_cur_county = glob.glob(county + '*.json')
+      
+      
 
        # We rank all the zips (to know the color of the graph)
       county_groups = rank_zips(zips_files_for_cur_county)
