@@ -26,7 +26,7 @@ def rank_zips(all_zips):
       # Get zip name from path
       zip_name = os.path.basename(zip_file).replace('.json','')
       
-      if(len(zip_data['stats'])>2):
+      if(zip_data['stats']):
          for day in  list(zip_data['stats']):  
             for date in  list(day): 
                
@@ -80,8 +80,6 @@ def create_MD_zip_graphs_and_pages():
  
       # Get All the zips .json file from the current county directory
       zips_files_for_cur_county = glob.glob(county + '*.json')
-      
-      
 
        # We rank all the zips (to know the color of the graph)
       county_groups = rank_zips(zips_files_for_cur_county)

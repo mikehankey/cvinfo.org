@@ -80,7 +80,7 @@ def create_json_MD_data_files():
    
    row_counter = 0
    for row in zip_rows:
-      if(row_counter!=0):
+      
          #print("ZIP: " + row['ZIP_CODE'])
 
          zip_cur_data = []
@@ -88,14 +88,16 @@ def create_json_MD_data_files():
 
          for f_date in all_funky_dates:
 
-            if(row[f_date]!=''):
-               zip_cur_data.append({
-                  transform_date(f_date): 
-                    { 'cases': int(row[f_date]) - last_cases}
-               })
+            if(row[f_date]==''):
+               row[f_date] = 0 
 
-               last_cases = int(row[f_date]) 
-          
+            zip_cur_data.append({
+               transform_date(f_date): 
+                  { 'cases': int(row[f_date]) - last_cases}
+            })
+
+            last_cases = int(row[f_date]) 
+               
         
          # We create a file for the current zip  
          # Under /states/MD/counties/[county_name]/[zips]
@@ -103,6 +105,8 @@ def create_json_MD_data_files():
          # We find the related county name in all_county_names
          # In data: all_cur_zip_info['County Name'] 
          all_cur_zip_info =  get_zip_info(row['ZIP_CODE'],all_zip_rel_data_rows)
+
+
          if all_cur_zip_info is not None :
          
             for county_name in all_county_names:
@@ -126,12 +130,13 @@ def create_json_MD_data_files():
                         'city'    : all_cur_zip_info['City'].title() 
                      }
                   }
+ 
                   # Create JSON File in folder
                   with open(zip_folder +  all_cur_zip_info['zip'] + ".json", mode='w+') as csv_file:
                      json.dump(zip_file_data,csv_file)
                   
                   print(row['ZIP_CODE'] + " done")
                   
-      row_counter+=1 
+       
 
    
