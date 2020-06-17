@@ -2,6 +2,7 @@
 ## WARNING :
 ##pip install bar_chart_race
 ##pip install pandas
+## see https://www.dexplo.org/bar_chart_race/
 
 import bar_chart_race as bcr
 import pandas as pd
@@ -9,6 +10,8 @@ import csv
 import os, sys
 import numpy as np
 import matplotlib.pyplot as plt
+
+from matplotlib import ticker 
 
 import datetime
 from utils import *  
@@ -98,12 +101,12 @@ def prepare_data(_type,_7avg,per_pop):
                          # 7-DAY AVG PPM
                         if(US_STATES[row[index_of_state]] not in tmp_data_for_csv):
                            if(row[index_of_date_we_need]!=''):
-                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = [float(row[index_of_date_we_need])/float(popDict[row[index_of_state]])]
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = [float(row[index_of_date_we_need])*1000000/float(popDict[row[index_of_state]])]
                            else:
                               tmp_data_for_csv[US_STATES[row[index_of_state]]] = ['0']
                         else:
                            if(row[index_of_date_we_need]!=''):
-                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append(float(row[index_of_date_we_need])/float(popDict[row[index_of_state]]))
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append(float(row[index_of_date_we_need])*1000000/float(popDict[row[index_of_state]]))
                            else:
                               tmp_data_for_csv[US_STATES[row[index_of_state]]].append('0')
 
@@ -118,7 +121,7 @@ def prepare_data(_type,_7avg,per_pop):
                      if(per_pop is False):
                         data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day),2)
                      else:
-                        data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day)*1000000,2)
+                        data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day),6)
                   else:
                      # RAW Data
                      data_for_csv[_date][US_STATES[row[index_of_state]]] = row[index_of_date_we_need]
@@ -155,11 +158,8 @@ def prepare_data(_type,_7avg,per_pop):
          csvfile.write("\n")
 
 
-def create_video():    
- 
-   title = "COVID-19 Day-7 Average Deaths by State"
-   counter_title = "Day-7 Average Deaths"
-   out_file_name = "covid19_7deaths.mp4"
+def create_video(title,counter_title,out_file_name):    
+  
    max_state_to_show = 10
   
    dpi = 120
@@ -179,6 +179,7 @@ def create_video():
    fig, ax = plt.subplots(figsize=(video_size_w, video_size_h), dpi=dpi)
    fig.suptitle(title, fontsize=30,ha='left',va='bottom',fontweight='bold',y=0.91, x=0.13) 
    ax.yaxis.set_tick_params(labelsize = 15)
+   ax.yaxis.set_major_formatter(ticker.StrMethodFormatter('{y:,.2f}'))
 
    ax.spines['top'].set_visible(False)
    ax.spines['right'].set_visible(False)
@@ -202,7 +203,7 @@ def create_video():
          'alpha': 0.7, 
          'lw': 0},
       filter_column_colors=True,
-      bar_size=.95,
+      bar_size=.95, 
       period_length=1000,
       period_label={
          'x': .97, 
@@ -216,7 +217,7 @@ def create_video():
          r: {
             'x': .97, 
             'y': .18,
-            's' : f'{counter_title}: {v.nlargest(6).sum():,.0f}',
+            's' : f'{counter_title}: {v.nlargest(6).sum():,.2f}',
             'ha': 'right', 
             'size': 20
          }
@@ -227,4 +228,7 @@ def create_video():
  
 
 prepare_data('deathIncrease',True,True)
-create_video()
+title = "COVID-19 Day-7 Average Deaths per Million by State"
+counter_title = "Day-7 Average Deaths per Million"
+out_file_name = "covid19_7deaths_ppm.mp4"
+create_video(title,counter_title,out_file_name)

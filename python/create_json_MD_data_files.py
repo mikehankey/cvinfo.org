@@ -107,9 +107,11 @@ def create_json_MD_data_files():
          
             for county_name in all_county_names:
                # replace("'s",'s') for Prince George's
-               if county_name.replace("'s",'s').lower() == all_cur_zip_info['County Name'].lower(): 
+               # replace ST MARYS by St Mary's
+ 
+                  
+               if county_name.replace("'s",'s').lower() == all_cur_zip_info['County Name'].lower() or  county_name.replace("St. Mary's","SAINT MARYS") == all_cur_zip_info['County Name']: 
                   #print("FOUND  " + county_name + " == " +  all_cur_zip_info['County Name'])
-
                   # We create the directory /states/[STATES]/counties/[COUNTY_NAME]/
                   zip_folder = PATH_TO_STATES_FOLDER + os.sep + 'MD' + os.sep  + 'counties' + os.sep + county_name + os.sep
                   if not os.path.exists(zip_folder): 
