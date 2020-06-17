@@ -25,8 +25,8 @@ def rank_zips(all_zips):
 
       # Get zip name from path
       zip_name = os.path.basename(zip_file).replace('.json','')
-  
-      if(len(zip_data['stats'])>0):
+      
+      if(len(zip_data['stats'])>2):
          for day in  list(zip_data['stats']):  
             for date in  list(day): 
                
@@ -49,7 +49,7 @@ def rank_zips(all_zips):
 
          max_val = np.max(tmp_avg_cases) 
 
-         if max_val <= 5:
+         if max_val <= 5 or len(tmp_avg_cases)<2:
             groups['low_cases'].append(zip_file) 
          elif last_val_perc >= .8 and avg > 5:
             groups['ugly'].append(zip_file) 
@@ -59,8 +59,7 @@ def rank_zips(all_zips):
             groups['good'].append(zip_file) 
       else:
          groups['no_data'].append(zip_file) 
-
-
+  
    return groups
 
 

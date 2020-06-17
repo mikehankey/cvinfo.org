@@ -17,11 +17,19 @@ from utils import *
 # debug only
 only_states= ['MI','NJ','NY']
  
-def prepare_data(_type,_7avg):
+def prepare_data(_type,_7avg,per_pop):
    # Prepare the CSV structure
    new_csv_headers = ['date'] 
    for st in US_STATES: 
       new_csv_headers.append(US_STATES[st])
+
+
+   # per_pop = we need the population of each state
+   if(per_pop==True):
+      with open(TMP_DATA_PATH + os.sep + 'us_states_pop.csv', newline='') as csvPopfile:
+         pop_rows = csv.reader(csvPopfile)
+         popDict = {rows[0]:rows[1] for rows in pop_rows}
+         
 
    index_of_date = 0
    index_of_date_we_need = 0
@@ -72,28 +80,45 @@ def prepare_data(_type,_7avg):
                if(row[index_of_state] in US_STATES ):
  
                   if(_7avg is True):
+                     
+                     if(per_pop is False):
+                        # 7-DAY AVG
+                        if(US_STATES[row[index_of_state]] not in  tmp_data_for_csv):
+                           if(row[index_of_date_we_need]!=''):
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = [row[index_of_date_we_need]]
+                           else:
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = ['0']
+                        else:
+                           if(row[index_of_date_we_need]!=''):
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append(row[index_of_date_we_need])
+                           else:
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append('0')
 
-                     # 7-DAY AVG
-                     if(US_STATES[row[index_of_state]] not in  tmp_data_for_csv):
-                        if(row[index_of_date_we_need]!=''):
-                           tmp_data_for_csv[US_STATES[row[index_of_state]]] = [row[index_of_date_we_need]]
-                        else:
-                           tmp_data_for_csv[US_STATES[row[index_of_state]]] = ['0']
                      else:
-                        if(row[index_of_date_we_need]!=''):
-                           tmp_data_for_csv[US_STATES[row[index_of_state]]].append(row[index_of_date_we_need])
+                         # 7-DAY AVG PPM
+                        if(US_STATES[row[index_of_state]] not in tmp_data_for_csv):
+                           if(row[index_of_date_we_need]!=''):
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = [float(row[index_of_date_we_need])/float(popDict[row[index_of_state]])]
+                           else:
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = ['0']
                         else:
-                           tmp_data_for_csv[US_STATES[row[index_of_state]]].append('0')
+                           if(row[index_of_date_we_need]!=''):
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append(float(row[index_of_date_we_need])/float(popDict[row[index_of_state]]))
+                           else:
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append('0')
 
                      if(len(tmp_data_for_csv[US_STATES[row[index_of_state]]]) <  max_day):
                         tempValFormax_day =  tmp_data_for_csv[US_STATES[row[index_of_state]]]
                      else: 
                         tempValFormax_day =  tmp_data_for_csv[US_STATES[row[index_of_state]]][len(tmp_data_for_csv[US_STATES[row[index_of_state]]])-max_day:len(tmp_data_for_csv[US_STATES[row[index_of_state]]])] 
-                     
-                     
+           
                      # We have strings, we need floats 
                      tempValFormax_day = [float(i) for i in tempValFormax_day]
-                     data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day),2)
+
+                     if(per_pop is False):
+                        data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day),2)
+                     else:
+                        data_for_csv[_date][US_STATES[row[index_of_state]]] = round(np.mean(tempValFormax_day)*1000000,2)
                   else:
                      # RAW Data
                      data_for_csv[_date][US_STATES[row[index_of_state]]] = row[index_of_date_we_need]
@@ -201,5 +226,5 @@ def create_video():
 
  
 
-prepare_data('death',True)
+prepare_data('deathIncrease',True,True)
 create_video()
