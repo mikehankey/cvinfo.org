@@ -30,10 +30,12 @@ def rank_zips(all_zips):
       # funky date system is not removing the first day for MD properly, 
       # thus throwing off the max date so that the grouping fails
       if(zip_data['stats']):
+         
          # set row counter to find first row
          dc = 0
          for day in  list(zip_data['stats']):  
             for date in  list(day): 
+
                # zero out 1st day in record set
                if dc == 0:
                   day[date]['cases'] = 0 
@@ -69,9 +71,7 @@ def rank_zips(all_zips):
             groups['good'].append(zip_file) 
       else:
          groups['no_data'].append(zip_file) 
-   
-  
-
+    
    return groups
 
 
