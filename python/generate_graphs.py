@@ -39,7 +39,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
             d_day = day.split('-')
             b1 = date(int(d_day[0]), int(d_day[1]), int(d_day[2]))
 
-            if(b1 > date(2020, 4, 15)):
+            if(b1 > date(2020, 4, 12)):
 
                # Org Data
                all_x.append(day) 
@@ -74,6 +74,24 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
       fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
       fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
 
+      # Add line to every 1s & 15th of all months
+      for d in all_x:
+         if(d.endswith('15') or d.endswith('01')):
+            fig.add_shape(
+               type="line",
+               x0=d,
+               y0=0,
+               x1=d,
+               y1=np.max(all_y),
+               opacity=0.4,
+               line=dict(
+                  color="rgba(0,0,0,.5)",
+                  width=2,
+                  dash="dot",
+               )
+            )
+
+
       fig.update_xaxes(rangemode="nonnegative")
       fig.update_yaxes(rangemode="nonnegative")
    
@@ -91,6 +109,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
          
   
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
+# For states & county
 def generate_graph_with_avg(state, _type, _color, folder, county):
    
    # Get JSON Data for current state
@@ -175,9 +194,27 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
    fig = go.Figure()
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
-    
    
-   # Add lockdown perdio
+
+   # Add line to every 1s & 15th of all months
+   for date in all_x:
+      if(date.endswith('15') or date.endswith('01')):
+         fig.add_shape(
+            type="line",
+            x0=date,
+            y0=0,
+            x1=date,
+            y1=np.max(all_y),
+            opacity=0.4,
+            line=dict(
+                color="rgba(0,0,0,.5)",
+                width=2,
+                dash="dot",
+            )
+         )
+
+
+   # Add lockdown period
    if(start_lockdown_date!=-1 and start_lockdown_date is not None ):
 
       if(end_lockdown_date!=-1 and end_lockdown_date is not None):
