@@ -112,8 +112,11 @@ def generate_gbu_graphs_and_state_page(state,groups):
       md_counties_select += "</select>"
       template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
 
+      template = template.replace('{INSTRUCTION}',"<p>Click county graph to see zip codes graphs for that county</p>")
+
    else:
       template = template.replace('{MD_COUNTY_SELECT}', '')
+      template = template.replace('{INSTRUCTION}',"")
  
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
