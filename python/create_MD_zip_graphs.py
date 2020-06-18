@@ -104,7 +104,8 @@ def create_MD_zip_graphs_and_pages():
       # Get county name from full path (it's the last folder) 
       county_name = os.path.basename(os.path.normpath(county))
 
-      template = template.replace('{COUNTY_FULL}',county_name.title())
+      county_full = county_name.title().replace("'S","'s")
+      template = template.replace('{COUNTY_FULL}',county_full)
  
       all_rows= []
       allDomEl = []
