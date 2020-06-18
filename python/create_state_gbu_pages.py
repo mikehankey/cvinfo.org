@@ -104,7 +104,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
       # Create the select 
       md_counties_select = "<select id='md_county_selector' disabled><option value='ALL'>All counties</option>"
  
-      for county in all_MD_counties:
+      for county in sorted(all_MD_counties):
          # Get Name of the county from path
          count_name = os.path.basename(os.path.dirname(county))
          md_counties_select+= "<option val='"+count_name+"'>"+count_name+"</option>"
