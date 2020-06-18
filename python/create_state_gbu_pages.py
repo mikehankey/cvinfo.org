@@ -1,6 +1,7 @@
 import json
 import sys
 import glob
+import os
 import numpy as np
 import random
 from utils import *
@@ -80,8 +81,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
       template = template.replace('{LAST_DAY_DEATHS}', display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['deaths'], 0)) 
       template = template.replace('{LAST_DAY_CASES}' , display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['cases'], 0)) 
       template = template.replace('{LAST_POS_TESTS}' , display_us_format(state_data['stats'][len(state_data['stats'])-1][d]['test_pos_p'], 2)  + '% ') 
- 
-
+  
    # PPM Values
    template = template.replace('{PPM_DEATHS}', display_us_format(state_data['sum']['cur_total_deaths']/state_data['sum']['pop']*1000000, 2)) 
    template = template.replace('{PPM_CASES}',  display_us_format(state_data['sum']['cur_total_cases']/state_data['sum']['pop']*1000000, 2)) 
@@ -95,7 +95,25 @@ def generate_gbu_graphs_and_state_page(state,groups):
    all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand)
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand)
    template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
+   
+   # Specific for MD: county selector
+   if(state=="MD"):
+      # Get the list of counties for which we have zip data
+      all_MD_counties = glob.glob(PATH_TO_STATES_FOLDER + os.sep + 'MD' + os.sep + "counties"  + os.sep  + "*" + os.sep)
+
+      # Create the select 
+      md_counties_select = "<select id='md_county_selector'><option value='ALL'>All counties</option>"
  
+      for county in all_MD_counties:
+         # Get Name of the county from path
+         count_name = os.path.basename(os.path.dirname(county))
+         md_counties_select+= "<option val='"+count_name+"'>"+count_name+"</option>"
+      
+      md_counties_select += "</select>"
+      template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
+
+   else:
+      template = template.replace('{MD_COUNTY_SELECT}', '')
  
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
@@ -115,7 +133,7 @@ def rank_counties(st):
     
    # Glob the related directory 
    all_countries_json_file = glob.glob(PATH_TO_STATES_FOLDER + os.sep + st + os.sep + "counties"  + os.sep  + "*.json")
-   
+ 
    for county in all_countries_json_file:  
 
       # Open related json file under covid-19-intl-data
@@ -174,3 +192,6 @@ def create_county_DOM_el(st,ct,rand) :
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_graph_DOM_el(_file,st,title,rand) :
    return '<div class="graph_g"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/></div>' 
+
+if __name__ == "__main__":
+   generate_gbu_graphs_and_state_page("MD",rank_counties("MD"))

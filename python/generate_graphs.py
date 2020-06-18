@@ -34,7 +34,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
       for d in data['stats']:
          for day in d:
             
-            # Warning - it looks like in Maryland, the put a lot of cases on the first day in the stats
+            # Warning - it looks like in Maryland, they put a lot of cases on the first day in the stats
             # so we ignore the data in the graphs to have something legible
             d_day = day.split('-')
             b1 = date(int(d_day[0]), int(d_day[1]), int(d_day[2]))
