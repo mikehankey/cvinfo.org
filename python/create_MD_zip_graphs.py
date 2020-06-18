@@ -25,11 +25,21 @@ def rank_zips(all_zips):
 
       # Get zip name from path
       zip_name = os.path.basename(zip_file).replace('.json','')
-      
+
+      # 1st day of MD data is fucked up and has to be muted 
+      # funky date system is not removing the first day for MD properly, 
+      # thus throwing off the max date so that the grouping fails
       if(zip_data['stats']):
+         # set row counter to find first row
+         dc = 0
          for day in  list(zip_data['stats']):  
             for date in  list(day): 
-               
+               # zero out 1st day in record set
+               if dc == 0:
+                  day[date]['cases'] = 0 
+               # increment row counter
+               dc += 1
+
                tmp_cases.append(float(day[date]['cases']))  
                
                if len(tmp_cases) < 7:
@@ -49,11 +59,11 @@ def rank_zips(all_zips):
 
          max_val = np.max(tmp_avg_cases) 
 
-         if max_val <= 5 or len(tmp_avg_cases)<2:
+         if max_val <= 1 or len(tmp_avg_cases)<1:
             groups['low_cases'].append(zip_file) 
-         elif last_val_perc >= .8 and avg > 5:
+         elif last_val_perc >= .8 and avg > 1:
             groups['ugly'].append(zip_file) 
-         elif .4 < last_val_perc < .8 and avg > 5:
+         elif .4 < last_val_perc < .8 and avg > 1:
             groups['bad'].append(zip_file) 
          else:
             groups['good'].append(zip_file) 
