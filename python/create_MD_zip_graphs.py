@@ -93,7 +93,7 @@ def create_MD_zip_graphs_and_pages():
       county_name = os.path.basename(os.path.normpath(county))
 
       template = template.replace('{COUNTY_FULL}',county_name.title())
-  
+ 
       all_rows= []
       allDomEl = []
 
@@ -152,14 +152,37 @@ def create_MD_zip_graphs_and_pages():
             template = template.replace('{'+group.upper()+'}',allHtml)
    
 
-      print(county_name  + " > done")
 
-      # Save Template as alerts page
-      county_page = open(county + os.sep + "index.html",'w+')
-      county_page.write(template)
-      county_page.close()  
+         # Specific for MD: county selector
+         
+         # Get the list of counties for which we have zip data
+         all_MD_counties = glob.glob(PATH_TO_STATES_FOLDER + os.sep + 'MD' + os.sep + "counties"  + os.sep  + "*" + os.sep)
+
+         # Create the select 
+         md_counties_select = "<select id='md_county_selector'><option value='ALL'>All counties</option>"
+
+         for county in all_MD_counties:
+            # Get Name of the county from path
+            count_name = os.path.basename(os.path.dirname(county))
+            md_counties_select+= "<option val='"+count_name+"'>"+count_name+"</option>"
+         
+         md_counties_select += "</select>"
+         #template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
+      
+         print(county_name  + " > done")
+
+         # Save Template as alerts page
+         county_page = open(county + os.sep + "index.html",'w+')
+         county_page.write(template)
+         county_page.close()  
+
+         print(county + os.sep + "index.html")
             
             
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_zip_DOM_el(_zip,city_name,county_name,total_case,rand): 
    return '<div class="graph_g"><h3 class="nmb">Zip: '+str(_zip)+'<br>'+  city_name +'</h3><p>Total Cases:'+display_us_format(total_case,0)+'</p><img  src="./MD/counties/' + county_name + os.sep + str(_zip)+'.png?v='+rand+'" width="345" alt="'+str(_zip)+'"/></div>' 
+
+
+if __name__ == "__main__":
+   create_MD_zip_graphs_and_pages()

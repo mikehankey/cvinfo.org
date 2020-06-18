@@ -224,7 +224,7 @@ def create_video(title,counter_title,out_file_name):
    )
 
    # Concatenare with Intro video 
-   ffmpegCommand = ' ffmpeg -i "/var/www/projects/COVID/Git/cvinfo.org/python/vid/coronafiles.us.intro.mp4" -i "/var/www/projects/COVID/Git/cvinfo.org/python/"'+out_file_name+' -filter_complex "[0:v] [0:a] [1:v] [1:a] [2:v] [2:a]  concat=n=3:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" /var/www/projects/COVID/Git/cvinfo.org/python/'+out_file_name
+   ffmpegCommand = 'ffmpeg -i "/var/www/projects/COVID/Git/cvinfo.org/python/vid/coronafiles.us.intro.mp4" -i "/var/www/projects/COVID/Git/cvinfo.org/python/"'+out_file_name+' -filter_complex "[0:v] [0:a] [1:v] [1:a] [2:v] [2:a]  concat=n=3:v=1:a=1 [v] [a]" -map "[v]" -map "[a]" /var/www/projects/COVID/Git/cvinfo.org/python/'+out_file_name
    process = subprocess.Popen(ffmpegCommand.split(), stdout=subprocess.PIPE)
    output, error = process.communicate()
  
