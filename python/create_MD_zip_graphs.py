@@ -171,7 +171,7 @@ def create_MD_zip_graphs_and_pages():
       # Create the select 
       md_counties_select = "<select id='md_county_selector' disabled><option value='ALL'>All counties</option>"
 
-      for c in all_MD_counties:
+      for c in sorted(all_MD_counties):
          # Get Name of the county from path
          count_name = os.path.basename(os.path.dirname(c))
          md_counties_select+= "<option val='"+count_name+"'>"+count_name+"</option>"
