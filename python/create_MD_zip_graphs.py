@@ -77,6 +77,8 @@ def create_MD_zip_graphs_and_pages():
    rand = str(random.randint(1,100000001))
 
    for county in all_counties_dir:
+
+      print("COUNTY " + county)
  
       # Get All the zips .json file from the current county directory
       zips_files_for_cur_county = glob.glob(county + '*.json')
@@ -150,34 +152,27 @@ def create_MD_zip_graphs_and_pages():
                
             template = template.replace('{'+group.upper()+'_SHOW}','')
             template = template.replace('{'+group.upper()+'}',allHtml)
-   
 
 
-         # Specific for MD: county selector
-         
-         # Get the list of counties for which we have zip data
-         all_MD_counties = glob.glob(PATH_TO_STATES_FOLDER + os.sep + 'MD' + os.sep + "counties"  + os.sep  + "*" + os.sep)
+      # Get the list of counties for which we have zip data
+      all_MD_counties = glob.glob(PATH_TO_STATES_FOLDER + os.sep + 'MD' + os.sep + "counties"  + os.sep  + "*" + os.sep)
 
-         # Create the select 
-         md_counties_select = "<select id='md_county_selector'><option value='ALL'>All counties</option>"
+      # Create the select 
+      md_counties_select = "<select id='md_county_selector'><option value='ALL'>All counties</option>"
 
-         for county in all_MD_counties:
-            # Get Name of the county from path
-            count_name = os.path.basename(os.path.dirname(county))
-            md_counties_select+= "<option val='"+count_name+"'>"+count_name+"</option>"
-         
-         md_counties_select += "</select>"
-         #template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
+      for c in all_MD_counties:
+         # Get Name of the county from path
+         count_name = os.path.basename(os.path.dirname(c))
+         md_counties_select+= "<option val='"+count_name+"'>"+count_name+"</option>"
       
-         print(county_name  + " > done")
+      md_counties_select += "</select>"
+      template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
 
-         # Save Template as alerts page
-         county_page = open(county + os.sep + "index.html",'w+')
-         county_page.write(template)
-         county_page.close()  
-
-         print(county + os.sep + "index.html")
-            
+      # Save Template  
+      county_page = open(county + os.sep + "index.html",'w+')
+      county_page.write(template)
+      county_page.close()  
+      print(county_name  + " > done") 
             
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_zip_DOM_el(_zip,city_name,county_name,total_case,rand): 

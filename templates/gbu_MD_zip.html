@@ -122,6 +122,7 @@
             if(v!='ALL')  window.location = '/states/'+ $('#state_selector').val()
             else          window.location = '/states/'
          });
+         $('#md_county_selector').val(cur_county);
          $('#md_county_selector').change(function() {
             var v = $('#md_county_selector').val();
            
