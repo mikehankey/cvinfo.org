@@ -67,7 +67,7 @@
    <div id="county_select">{MD_COUNTY_SELECT}</div> 
 
    <div class="box clearfix"> 
-      <h2 style="margin:.5rem 0">{COUNTY_FULL}'s Zip Code Areas -  COVID-19</h2>
+      <h2 style="margin:.5rem 0">{COUNTY_FULL} Zip Code Areas -  COVID-19</h2>
    </div> 
 
    <div class="box clearfix {GOOD_SHOW}">
@@ -122,6 +122,9 @@
             if(v!='ALL')  window.location = '/states/'+ $('#state_selector').val()
             else          window.location = '/states/'
          });
+         if(cur_county=="Prince George'S"){
+            cur_county = "Prince George's"
+         }
          $('#md_county_selector').val(cur_county);
          $('#md_county_selector').change(function() {
             var v = $('#md_county_selector').val();
