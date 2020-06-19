@@ -22,6 +22,8 @@ KEY_DATES =   TMP_DATA_PATH + os.sep + 'key-dates.csv'
 MD_LOCAL_CSV_FILE = "MD_ZIP_DATA"
 MD_ZIP_CODES      = "MD_ZIP_REL_DATA"
 MD_ZIPS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_MD_zip.html'
+MD_ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts_MD.html'
+MD_MOST_ACTIVE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'most_active_MD.html'
 
 
 def display_us_format(_float,prec):
