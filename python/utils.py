@@ -1,5 +1,4 @@
-import os
-
+import os 
 
 # REPO FOR LOCAL TMP DATA
 TMP_DATA_PATH = "." + os.sep + "tmp_json_data"
@@ -26,10 +25,10 @@ MD_ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts_MD.html'
 MD_MOST_ACTIVE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'most_active_MD.html'
 
 
-def display_us_format(_float,prec):
+def display_us_format(_float,prec): 
    _format =  '{:,.'+str(prec)+'f}'
    return _format.format(_float)
 
-
+ 
 if __name__ == "__main__":
    print(display_us_format(46854684864653.5665,2))

@@ -864,7 +864,22 @@ ul.share-buttons img {
    white-space: nowrap;
 }
 
+#MD_button a.btn {
+   font-weight: normal;
+   font-size: .9rem;
+   margin: .5rem;
+}
 
+#MD_button a.btn.active, #MD_button a.btn.active:hover { 
+   background: #f0f0f0;
+   color: #111;
+}
+ 
+
+#MD_button a.btn:hover {
+   background: #999;
+   color:#fff;
+}
 
 @media (max-width: 48em) {
 

@@ -113,10 +113,12 @@ def generate_gbu_graphs_and_state_page(state,groups):
       template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
 
       template = template.replace('{INSTRUCTION}',"<p>Click county graph to see zip codes graphs for that county</p>")
-
+      template = template.replace('{MD_BUTTONS}',' <div id="MD_button"><a href="./MD/alerts.html" class="btn ">Zip Area Alerts</a><a href="./MD/most_active.html" class="btn">Most Active Zip Areas</a></div>')
+ 
    else:
       template = template.replace('{MD_COUNTY_SELECT}', '')
       template = template.replace('{INSTRUCTION}',"")
+      template = template.replace('{MD_BUTTONS}',"")
  
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
