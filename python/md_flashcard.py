@@ -37,7 +37,7 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
    elif cmd == 4:
       print ("CREATING MD WATCHLISTS")
-      create_MD_watchlists_pages()
+      create_MD_watchlists()
       print("\n>>>TASK DONE \n\n")
    elif cmd == 5:
       print ("UPDATING MD ZIP DATA.")
@@ -47,7 +47,7 @@ def main_menu():
       print ("CREATING MD ZIP GRAPHS & PAGES.")
       create_MD_zip_graphs_and_pages()
       print ("CREATING MD WATCHLISTS")
-      create_MD_watchlists_pages()
+      create_MD_watchlists()
       print("\n>>>TASK DONE \n\n") 
 
    main_menu()
