@@ -181,6 +181,8 @@ def create_MD_zip_graphs_and_pages():
       
       md_counties_select += "</select>"
       template = template.replace('{MD_COUNTY_SELECT}', md_counties_select)
+      template = template.replace('{MD_BUTTONS}',' <div id="MD_button"><a href="./MD/alerts.html" class="btn ">Zip Area Alerts</a><a href="./MD/most_active.html" class="btn">Most Active Zip Areas</a></div>')
+ 
 
       # Save Template  
       county_page = open(county + os.sep + "index.html",'w+')
