@@ -116,6 +116,9 @@
       var cur_st = 'MD';
       var cur_county = "{COUNTY_FULL}";
       $(function() {
+         if(cur_county=='Baltimore City'){
+            cur_county = 'Baltimore city'
+         }
          $('#state_selector').removeAttr('disabled');
          $('#md_county_selector').removeAttr('disabled');
          $('#state_selector').val(cur_st);

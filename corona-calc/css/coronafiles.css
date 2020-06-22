@@ -873,6 +873,9 @@ ul.share-buttons img {
 #MD_button a.btn.active, #MD_button a.btn.active:hover { 
    background: #f0f0f0;
    color: #111;
+   -webkit-box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.75);
+   -moz-box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.75);
+   box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.75);
 }
  
 
