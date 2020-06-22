@@ -1027,7 +1027,80 @@ def county_pie():
    for key in county_pie:
       print(key, county_pie[key])
 
+def mortality_all():
+   print("MORT")
+   state_names, state_codes = load_state_names()
+   del state_names['VI']
+   del state_names['WA']
+   mort = {}
+   for st in state_names: 
+      mort[st] = {}
+      mort[st]['days'] = []
+      mort[st]['mort'] = []
+      
+      js = load_json_file("json/" + st + ".json")
+      c = 0
+      for sr in js['state_stats']:
+         mort[st]['days'].append(c)
+         if sr['mortality'] > 20:
+            mort[st]['mort'].append(20)
+         else:
+            mort[st]['mort'].append(sr['mortality'])
+         c += 1
+ 
+   print(mort)
+
+   fig = plt.figure()
+   axes = plt.gca()
+   for st in mort: 
+      outfile = ""
+      plt.plot(mort[st]['days'], mort[st]['mort'], '-', label="Case Mortality", color='blue')
+      lab = "test percent positive"
+      title = st + " Mortality"
+      plt.title(title, fontsize=16)
+      plt.ylabel("Mortality")
+      plt.xlabel("Date")
+      if outfile != "":
+         #plt.savefig(outfile)
+         print("Saved: ", outfile)
+   plt.show()
+
+def protests():
+   state = "CA"
+   county = "Stanislaus"
+   js = load_json_file("json/" + state + ".json")
+   cs = js['county_stats'][county]['county_stats']
+   temp = []
+   avgs = []
+   cases = []
+   days = []
+   for row in cs:
+      date = row['day']
+      new_cases = row['new_cases']
+      temp.append(new_cases)
+      if len(temp) <= 7:
+         avg = np.mean(temp)
+      else:
+         avg = np.mean(temp[-7:])
+      days.append(date)
+      cases.append(new_cases)
+      avgs.append(avg)
+   for i in range(0, len(avgs)):
+      print(days[i], cases[i], avgs[i]) 
+
+   # now, starting at the last day, step through each day and 
+   # figure out how long in days it took for the avg new cases to double
+
+   total = len(avgs) - 1
+   for i in range(0, len(avgs)):
+      id = total - i
+      print(days[id], cases[id], avgs[id]) 
+
 def tests() :
+#   protests()
+#   exit()
+   mortality_all()
+#   exit()
    compare()
    load_UWASH()
    county_pie()
@@ -1128,14 +1201,13 @@ def make_all_county_page(sort_field = None):
    total_c = len(cl2)
 
    table_header = """
-   <div class="box" id="table">
-      <div>
-      <table class="tablesorter-bootstrap tablesorter" style="width: 100%; max-width: 100%;">
+   <div id="table">
+      <table id="states" class="tablesorter ">
             <thead>
                <tr>
-                  <th  style="text-align:left" data-sorter="false">&nbsp;</th>
-                  <th style="text-align:left" >County</th>
-                  <th style="text-align:left" >State</th>
+                  <th data-sorter="false">&nbsp;</th>
+                  <th>County</th>
+                  <th>State</th>
                   <th>Population</th>
                   <th>Cases</th>
                   <th>Deaths</th>
@@ -1150,9 +1222,9 @@ def make_all_county_page(sort_field = None):
 
    row_html = """
                   <tr data-state="{STATE_CODE}" id="{FIP}">
-                     <th style="text-align:left"><span class="cl {COLOR}"></span></th>
-                     <th style="text-align:left">{STATE_CODE}</th>
-                     <td  style="text-align:left">{COUNTY}</td>
+                     <td><span class="cl {COLOR}"></span></td>
+                     <td>{STATE_CODE}</td>
+                     <td>{COUNTY}</td>
                      <td>{COUNTY_POP}</td>
                      <td>{CASES}</td>
                      <td>{DEATHS}</td>
@@ -1167,7 +1239,6 @@ def make_all_county_page(sort_field = None):
    table_footer = """
             </tbody>
       </table>
-      </div>
    </div>
    """
    rows = ""
@@ -1217,8 +1288,6 @@ def make_all_county_page(sort_field = None):
             if int(dr['cases']) > 50:
                rows += row_html
          cc += 1
-
- 
 
    template= template.replace("{LAST_UPDATE}",str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
    template= template.replace("{VERSION}",CUR_VERSION)
@@ -3144,7 +3213,7 @@ def plot_level2(level2_data, plot_type='cd', plot_title = "", xa_label = "", ya_
 
 def make_all_level2_data():
    state_data,state_pop = load_state_data()
-   print(state_data)
+   print("SD:", state_data)
    state_names, state_codes = load_state_names()
    county_pops = load_county_pop(state_codes)
    acdata = load_county_data()
@@ -3191,7 +3260,10 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
    for data in level2_data:
       stat_obj = {}
       (state_code,pop,date,zero_day,cases,deaths,new_cases,new_deaths,tests,tpm,cpm,dpm,case_increase,death_increase,mortality,case_growth,death_growth,cg_avg,dg_avg,cg_med,dg_med,cg_med_decay,dg_med_decay,hospital_now,icu_now,vent_now,recovered,tests_total_pos,tests_total_neg,tests_new_pos,tests_new_neg) = data 
-      print("TESTS:", state_code, date, tests_total_pos, tests_total_neg, tests_new_pos, tests_new_neg)
+      print("VENT NOW:", vent_now)
+      if str(vent_now) == "NaN":
+         vent_now = 0
+      #print("TESTS:", state_code, date, tests_total_pos, tests_total_neg, tests_new_pos, tests_new_neg)
       if case_increase < 0:
          case_increase = 0
       if death_increase < 0:
@@ -3245,6 +3317,8 @@ def make_level2_data(this_state_code, state_data, state_pop,state_names,county_p
          all_usa_data[date]['mortality'] += mortality
          all_usa_data[date]['hospital_now'] += int(hospital_now)
          all_usa_data[date]['icu_now'] += int(icu_now)
+         if vent_now == "":
+            vent_now = 0
          all_usa_data[date]['vent_now'] += int(vent_now)
          all_usa_data[date]['recovered'] += int(recovered)
          all_usa_data[date]['tests_total_pos'] += int(tests_total_pos)
@@ -3790,14 +3864,14 @@ def load_state_data():
    for line in fp:
       line = line.replace("\n", "")
       fields = line.split(",")
-      #print(len(fields))
-#date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease
-      date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,dataQualityGrade,lastUpdateEt,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease = fields
 
-      print(len(fields))
-      print("TESTS:", state, date, totalTestResults, negativeIncrease, positiveIncrease, totalTestResultsIncrease)
-      if len(fields) == 27 and lc > 0:
-         #print(fields[14], fields[15])
+      #date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,dataQualityGrade,lastUpdateEt,hash,dateChecked,death,hospitalized,total,totalTestResults,posNeg,fips,deathIncrease,hospitalizedIncrease,negativeIncrease,positiveIncrease,totalTestResultsIncrease = fields
+      print(len(fields)) 
+    #  date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,dataQualityGrade,lastUpdateEt,dateModified,checkTimeEt,death,hospitalized,dateChecked,fips,positiveIncrease,negativeIncrease,total,totalTestResults,totalTestResultsIncrease,posNeg,deathIncrease,hospitalizedIncrease,hash,commercialScore,negativeRegularScore,negativeScore,positiveScore,score,grade = fields
+      date,state,positive,negative,pending,hospitalizedCurrently,hospitalizedCumulative,inIcuCurrently,inIcuCumulative,onVentilatorCurrently,onVentilatorCumulative,recovered,dataQualityGrade,lastUpdateEt,dateModified,checkTimeEt,death,hospitalized,dateChecked,totalTestsViral,positiveTestsViral,negativeTestsViral,positiveCasesViral,fips,positiveIncrease,negativeIncrease,total,totalTestResults,totalTestResultsIncrease,posNeg,deathIncrease,hospitalizedIncrease,hash,commercialScore,negativeRegularScore,negativeScore,positiveScore,score,grade = fields
+
+
+      if len(fields) == 39 and lc > 0:
          date = fields[0]
          state = fields[1]
          
@@ -3849,16 +3923,22 @@ def load_state_data():
             if "," in str(cases):
                cases = cases.replace(",", "")
             cases = int(cases)
-         state_data[state].append([date,cases,deaths,0,0,tests,hospital_now,icu_now,vent_now,recovered,0,0,tests_new_neg,tests_new_pos])
 
+         print("SD:", state)
+         state_data[state].append([date,cases,deaths,0,0,tests,hospital_now,icu_now,vent_now,recovered,0,0,tests_new_neg,tests_new_pos])
+         if state == "MD":
+            print("DEBUG: CASES/DEATHS:", cases, deaths)
 
 
       lc += 1
-
+   print("DONE")
+   #exit()
    #for st in state_data:
    #   print("LATEST STATE DATA: ", st, state_data[st][0])
       #for day in state_data[st]:
       #   print("LATEST STATE DATA: ", st, day)
+
+
    return(state_data, state_pop)
 
 def load_us_cities():
