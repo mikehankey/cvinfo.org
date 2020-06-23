@@ -46,8 +46,9 @@ body.wait {
 }
 
 .box .ins {
-   padding:1rem;
+   padding: 1rem;
    text-align: left;
+   line-height: 1.5;
 }
 
 a, a:visited {
@@ -297,13 +298,13 @@ a, a:visited {
 }
 
 .good_t {
-   color:green;
+   color:green!important;
 }
 .bad_t {
-   color:orange;
+   color:orange!important;
 }
 .ugly_t {
-   color:#c30202;
+   color:#c30202!important;
 }
 
 

@@ -214,9 +214,12 @@ def generate_gbu_graphs_and_main_page(groups):
 def create_state_DOM_el(st,all_state_details,rand) :
    return '<div class="graph_g">\
             <h3 class="nmb">'+US_STATES[st]+'<small>&Delta;14: '+ str(all_state_details['delta14']) +' -  &Delta;7: '+ str(all_state_details['delta7']) +'</small></h3>\
-            <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
+            <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+            <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +'  Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
  
 
 if __name__ == "__main__":
    os.system("clear")
    generate_gbu_graphs_and_main_page(rank_states())
+
+ 
