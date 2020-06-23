@@ -134,15 +134,23 @@ def generate_gbu_graphs_and_main_page(groups):
          # Generate the Main Graph
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '')
 
-         # Generate Graph Detail
-         # Larger version with 3d trendline 
-         generate_large_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state)
+         # Generate the Main Graph larger version
+         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '', True)
 
          # Create the Summary Graphs for all the sub pages for the state
          generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths')           # New Deaths per Day
          generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p')   # Positive Tests
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test')               # New Test per day  
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
+
+         # Create the Summary Graphs larger version
+         generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths', True)           # New Deaths per Day
+         generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p', True)   # Positive Tests
+         generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test', True)               # New Test per day  
+         generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp', True)       # Active Hospi
+
+         # Create the one specific for Mike
+         generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state)
 
          # Get Extra Data to display (above the graphs)
          all_state_details = get_state_extra_info(state)
@@ -157,8 +165,7 @@ def generate_gbu_graphs_and_main_page(groups):
    # Update the last update value on the template
    # by the last update of the last state
    template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
-   
-
+    
    # Save Template as main gbu page
    main_gbu_page = open('../corona-calc/states/index.html','w+')
    main_gbu_page.write(template)

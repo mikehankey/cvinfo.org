@@ -89,17 +89,22 @@ def generate_gbu_graphs_and_state_page(state,groups):
   
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
    all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day',rand, True)
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day',rand)
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests",rand)
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day',rand, True)
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests",rand, True)
    template = template.replace('{ALL_SUM_TOP_GRAPHS}', all_sum_graphs)
 
-   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand)
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand)
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand, True)
+   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand, True)
    template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
    
 
    # Large Graph
-   template = template.replace('{LARGE_TOP_GRAPHS}', create_large_graph_DOM_el('.' + os.sep + state + os.sep + state + '_lg.png',state,'New Cases per Day',rand))
+   all_large_graphs =  create_large_graph_DOM_el('.' + os.sep + state + os.sep + state + '_lg.png',state,'New Cases per Day',rand)
+   all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'test_lg.png',state,'New Tests per Day',rand)
+   all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p_lg.png',state,"% of positive Tests",rand)
+   all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths_lg.png',state,"New Deaths per Day",rand)
+   all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp_lg.png',state,"Active Hospitalizations",rand)
+   template = template.replace('{LARGE_TOP_GRAPHS}', all_large_graphs)
 
    # Specific for MD: county selector
    if(state=="MD"):

@@ -259,7 +259,7 @@ a, a:visited {
  }
 
  .hidemob {
-   display:block;
+   display:none;
 }
  .large {
    display:block;
@@ -268,12 +268,6 @@ a, a:visited {
   
  @media (min-width: 48em) {
 
-   .large {
-      display:none;
-   }.hidemob {
-      display: none;
-   }
-   
 
    .header li {
      float: left;
@@ -445,6 +439,10 @@ p.to {
    -webkit-box-pack: center!important;
    -ms-flex-pack: center!important;
    justify-content: center!important; 
+}
+
+.state_graphs.large {
+   display: block;
 }
 
 
@@ -909,7 +907,14 @@ ul.share-buttons img {
 }
 
 @media (max-width: 48em) {
-
+   
+   .large {
+      display:none!important;
+   }
+   .hidemob {
+      display: block!important;
+   }
+   
 
    .graph_c {
       float: none;
