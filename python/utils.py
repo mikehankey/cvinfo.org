@@ -1,4 +1,6 @@
 import os 
+import json
+import numpy as np
 
 # REPO FOR LOCAL TMP DATA
 TMP_DATA_PATH = "." + os.sep + "tmp_json_data"
@@ -29,6 +31,52 @@ def display_us_format(_float,prec):
    _format =  '{:,.'+str(prec)+'f}'
    return _format.format(_float)
 
+
+# Get X day average cases data for a state
+def get_avg_data(max_day,state):
+
+   # Open the related json
+   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + '.json')
+   data = json.load(json_ftmp)
+   json_ftmp.close()
+ 
+   # X days average
+   first_val = -1
+   total_day = 0  
+   tempValForAvg = []
+   tempValFormax_day = []
+
+   all_x_avg = []
+   all_y_avg = []
+
+   for d in data['stats']:
+      for day in d:
+ 
+         # For average of _type
+         tempValForAvg.append(float(d[day]["cases"]))
+
+         if(len(tempValForAvg) <  max_day):
+            tempValFormax_day = tempValForAvg 
+         else: 
+            tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
+               
+         # We have strings...
+         tempValFormax_day = [float(i) for i in tempValFormax_day]
+ 
+         all_x_avg.append(day)
+         all_y_avg.append(np.mean(tempValFormax_day))   
+   
+
+   cur_new_cases     = all_y_avg[-1] 
+   max_day = 0 - max_day
+   last_new_cases    = all_y_avg[max_day] 
+   
+   if last_new_cases  > 0:
+      delta = cur_new_cases / last_new_cases
+   else:
+      delta = 0 
+
+   return all_x_avg, all_y_avg, delta
  
 if __name__ == "__main__":
    print(display_us_format(46854684864653.5665,2))

@@ -8,8 +8,7 @@ import plotly.express as px
 import numpy as np
 
 from datetime import *
-from utils import PATH_TO_STATES_FOLDER, display_us_format, KEY_DATES
-
+from utils import PATH_TO_STATES_FOLDER, display_us_format, KEY_DATES, get_avg_data 
 
 # Generate a graph (cases) for Maryland Zip Code
 # Here we pass all the data
@@ -192,9 +191,16 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
       _color = "black"
     
    fig = go.Figure()
-   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)' ))
+   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)'))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
    
+
+   # 3day avg line
+   #day3_avg_Dates, day3_avg_Values, delta3 = get_avg_data(3,state)
+   #fig.add_trace(go.Scatter(x=day3_avg_Dates, y=day3_avg_Values,  line=dict(
+   #             color= 'rgba(0,0,0,.5)',
+    #            width=1 , dash="dot"
+   #)))
 
    # Add line to every 1s & 15th of all months
    for date in all_x:
@@ -208,8 +214,8 @@ def generate_graph_with_avg(state, _type, _color, folder, county):
             opacity=0.4,
             line=dict(
                 color="rgba(0,0,0,.5)",
-                width=2,
-                dash="dot",
+                width=1,
+
             )
          )
 
@@ -284,4 +290,4 @@ if __name__ == "__main__":
    os.system("clear")
    #main_menu()
    #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
-   generate_graph_with_avg("NH", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "NH"  + os.sep , '')
+   generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , '')
