@@ -265,7 +265,7 @@ def generate_large_graph_test_and_cases(state, _color, folder):
    fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=False)
    fig.update_yaxes(title_text="<b>Tests</b>", secondary_y=True)
 
-   fig.write_image(folder + os.sep + state + "_lg.png") 
+   fig.write_image(folder + os.sep + state + "_blg.png") 
 
 
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
