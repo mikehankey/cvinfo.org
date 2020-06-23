@@ -30,4 +30,7 @@ gbu_images/
 corona-calc/*_gbu.html
 python/__pycache__/
 corona-calc/states
+corona-calc/json
+corona-calc/json/**/*.json
+corona-calc/json/*.json
 data/key-dates.txt

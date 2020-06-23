@@ -68,6 +68,63 @@ def sort_width_dc(all_groups):
       all_groups.insert(index_of_dc, 'DC')
    return all_groups
 
+
+
+# Get X day average cases data for a state
+def get_avg_data(max_day,state):
+
+   # Open the related json
+   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state)
+   data = json.load(json_ftmp)
+   json_ftmp.close()
+
+   
+   # X days average
+   first_val = -1
+   total_day = 0  
+   tempValForAvg = []
+   tempValFormax_day = []
+
+   for d in data['stats']:
+      for day in d:
+ 
+         # For average of _type
+         tempValForAvg.append(float(d[day]["cases"]))
+
+         if(len(tempValForAvg) <  max_day):
+            tempValFormax_day = tempValForAvg 
+         else: 
+            tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
+               
+         # We have strings...
+         tempValFormax_day = [float(i) for i in tempValFormax_day]
+ 
+         all_x_avg.append(day)
+         all_y_avg.append(np.mean(tempValFormax_day))   
+
+   return all_x_avg, all_y_avg
+
+
+# Get Extra info for a given state
+def get_state_extra_info(state):
+ 
+   # Get the 7-day average data for the current state
+   day7_avg_Dates, day7_avg_Values = get_avg_data(7,state)
+
+   # Get the 14-day average data for the current state
+   day14_avg_Dates, day14_avg_Values = get_avg_data(14,state) 
+ 
+   last_avg7_cases = 0  
+
+   last_update    =  data['sum']['last_update']
+   total_death    =  data['sum']['cur_total_deaths']
+   total_case     =  data['sum']['cur_total_cases']
+   last_new_case  =  data['stats'][len(data['stats'])-1]['cases']
+   last_new_death =  data['stats'][len(data['stats'])-1]['death'] 
+
+   return last_case_total, last_avg7_cases, total_death, total_case, delta7, delta14
+
+
 # Create Graphics for all states 
 # and insert them into the GBU template (main page)
 def generate_gbu_graphs_and_main_page(groups): 
@@ -104,6 +161,9 @@ def generate_gbu_graphs_and_main_page(groups):
          generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p')   # Positive Tests
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test')               # New Test per day  
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
+
+         # Get Extra Data to display (above the graphs)
+         last_case_total, last_avg7_cases, total_death, total_case, delta7, delta14 = get_state_extra_info(state)
 
          # Get the DOM Element
          domEl += create_state_DOM_el(state,str(rand))

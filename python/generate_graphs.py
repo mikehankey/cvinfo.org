@@ -85,8 +85,8 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
                y1=np.max(all_y),
                opacity=0.4,
                line=dict(
-                  color="rgba(0,0,0,.5)",
-                  width=2,
+                  color="rgba(0,0,0,.7)",
+                  width=1,
                   dash="dot",
                )
             )
