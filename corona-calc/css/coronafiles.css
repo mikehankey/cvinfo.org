@@ -45,6 +45,11 @@ body.wait {
    transition: opacity .2s;
 }
 
+.box .ins {
+   padding:1rem;
+   text-align: left;
+}
+
 a, a:visited {
    color:#000;
 }

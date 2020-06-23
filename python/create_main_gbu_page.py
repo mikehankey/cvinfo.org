@@ -213,7 +213,7 @@ def generate_gbu_graphs_and_main_page(groups):
 # Create State HTML Element with image
 def create_state_DOM_el(st,all_state_details,rand) :
    return '<div class="graph_g">\
-            <h3 class="nmb">'+US_STATES[st]+'<small>&Delta;14: '+ str(all_state_details['delta14']) +'-  &Delta;7: '+ str(all_state_details['delta7']) +'</small></h3>\
+            <h3 class="nmb">'+US_STATES[st]+'<small>&Delta;14: '+ str(all_state_details['delta14']) +' -  &Delta;7: '+ str(all_state_details['delta7']) +'</small></h3>\
             <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
  
 
