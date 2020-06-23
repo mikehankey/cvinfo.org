@@ -74,16 +74,18 @@ def sort_width_dc(all_groups):
 def get_avg_data(max_day,state):
 
    # Open the related json
-   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state)
+   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + '.json')
    data = json.load(json_ftmp)
    json_ftmp.close()
-
-   
+ 
    # X days average
    first_val = -1
    total_day = 0  
    tempValForAvg = []
    tempValFormax_day = []
+
+   all_x_avg = []
+   all_y_avg = []
 
    for d in data['stats']:
       for day in d:
@@ -101,28 +103,50 @@ def get_avg_data(max_day,state):
  
          all_x_avg.append(day)
          all_y_avg.append(np.mean(tempValFormax_day))   
+   
 
-   return all_x_avg, all_y_avg
+   cur_new_cases     = all_y_avg[-1] 
+   max_day = 0 - max_day
+   last_new_cases    = all_y_avg[max_day] 
+   
+   if last_new_cases  > 0:
+      delta = cur_new_cases / last_new_cases
+   else:
+      delta = 0 
+
+   return all_x_avg, all_y_avg, delta
 
 
 # Get Extra info for a given state
 def get_state_extra_info(state):
  
    # Get the 7-day average data for the current state
-   day7_avg_Dates, day7_avg_Values = get_avg_data(7,state)
+   day7_avg_Dates, day7_avg_Values, delta7 = get_avg_data(7,state) 
 
    # Get the 14-day average data for the current state
-   day14_avg_Dates, day14_avg_Values = get_avg_data(14,state) 
+   day14_avg_Dates, day14_avg_Values, delta14 = get_avg_data(14,state) 
  
-   last_avg7_cases = 0  
 
+   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + '.json')
+   data = json.load(json_ftmp)
+   json_ftmp.close()
+   
    last_update    =  data['sum']['last_update']
    total_death    =  data['sum']['cur_total_deaths']
    total_case     =  data['sum']['cur_total_cases']
-   last_new_case  =  data['stats'][len(data['stats'])-1]['cases']
-   last_new_death =  data['stats'][len(data['stats'])-1]['death'] 
 
-   return last_case_total, last_avg7_cases, total_death, total_case, delta7, delta14
+   for d in data['stats'][len(data['stats'])-1]:
+      last_new_cases  =  data['stats'][len(data['stats'])-1][d]['cases']
+      last_new_deaths =  data['stats'][len(data['stats'])-1][d]['deaths'] 
+
+   
+   return {'last_update':  last_update, 
+           'total_death': total_death,
+           'total_case': total_case, 
+           'last_new_cases': last_new_cases, 
+           'last_new_deaths':last_new_deaths,
+           'delta7': round(delta7,2) ,
+           'delta14':  round(delta14,2) }
 
 
 # Create Graphics for all states 
@@ -163,14 +187,20 @@ def generate_gbu_graphs_and_main_page(groups):
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
 
          # Get Extra Data to display (above the graphs)
-         last_case_total, last_avg7_cases, total_death, total_case, delta7, delta14 = get_state_extra_info(state)
+         all_state_details = get_state_extra_info(state)
 
          # Get the DOM Element
-         domEl += create_state_DOM_el(state,str(rand))
+         domEl += create_state_DOM_el(state,all_state_details,str(rand))
 
       # Add to the template 
       template = template.replace('{'+group.upper()+'}',domEl)
-    
+
+
+   # Update the last update value on the template
+   # by the last update of the last state
+   template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
+   
+
    # Save Template as main gbu page
    main_gbu_page = open('../corona-calc/states/index.html','w+')
    main_gbu_page.write(template)
@@ -181,8 +211,10 @@ def generate_gbu_graphs_and_main_page(groups):
  
 
 # Create State HTML Element with image
-def create_state_DOM_el(st,rand) :
-   return '<div class="graph_g"><h3 class="nmb">'+US_STATES[st]+'</h3><a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
+def create_state_DOM_el(st,all_state_details,rand) :
+   return '<div class="graph_g">\
+            <h3 class="nmb">'+US_STATES[st]+'<small>&Delta;14: '+ str(all_state_details['delta14']) +'-  &Delta;7: '+ str(all_state_details['delta7']) +'</small></h3>\
+            <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a></div>' 
  
 
 if __name__ == "__main__":

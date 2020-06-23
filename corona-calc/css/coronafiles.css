@@ -81,6 +81,13 @@ a, a:visited {
    max-width: 365px;
 }
 
+.graph_g h3 small {
+   display: block;
+   font-weight: normal;
+   font-size: .85rem;
+   margin-top: .2rem;
+}
+
 .graph_g h4 {
    font-weight: normal;
    font-size: .9rem;
