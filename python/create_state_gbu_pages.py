@@ -39,6 +39,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
          # Generate the Image
          # print("Create Graph for " + county_name)
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state + os.sep + 'counties', county)
+ 
 
          # Get the DOM Element
          domEl += create_county_DOM_el(state,county_name,rand)
@@ -87,7 +88,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{PPM_CASES}',  display_us_format(state_data['sum']['cur_total_cases']/state_data['sum']['pop']*1000000, 2)) 
   
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
-   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day',rand)
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + state + '.png',state,'New Cases per Day',rand, True)
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test.png',state,'New Tests per Day',rand)
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests",rand)
    template = template.replace('{ALL_SUM_TOP_GRAPHS}', all_sum_graphs)
@@ -96,6 +97,10 @@ def generate_gbu_graphs_and_state_page(state,groups):
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand)
    template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
    
+
+   # Large Graph
+   template = template.replace('{LARGE_TOP_GRAPHS}', create_large_graph_DOM_el('.' + os.sep + state + os.sep + state + '_lg.png',state,'New Cases per Day',rand))
+
    # Specific for MD: county selector
    if(state=="MD"):
       # Get the list of counties for which we have zip data
@@ -195,8 +200,17 @@ def create_county_DOM_el(st,ct,rand) :
       return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></div>' 
 
 # Create Graph HTML Element with image (the graph, dumbass)
-def create_graph_DOM_el(_file,st,title,rand) :
-   return '<div class="graph_g"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/></div>' 
+def create_graph_DOM_el(_file,st,title,rand,hide_mobile=False) :
+   cl = "graph_g"
+   if(hide_mobile is True):
+      cl += " hidemob"
+   return '<div class="'+cl+'"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/></div>' 
+
+# Create Large Graph HTML Element with image
+def create_large_graph_DOM_el(_file,st,title,rand) :
+   return '<div class="graph_lg"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'"  alt="'+title+'"/></div>' 
+
+
 
 if __name__ == "__main__":
    generate_gbu_graphs_and_state_page("MD",rank_counties("MD"))

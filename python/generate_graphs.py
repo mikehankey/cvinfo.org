@@ -106,7 +106,136 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
       #print(folder + name + " > created")
       fig.write_image(folder + name + ".png") 
          
-  
+
+# Generate Large Graph for the State Detail page
+# with 3day average line value
+def generate_large_graph_with_avg(state, _type, _color, folder):
+   
+   # Daily Data
+   cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
+   data = json.load(cur_json_file)
+
+   all_x = []
+   all_y = []
+
+   for d in data['stats']:
+     
+      for day in d:
+
+         # Org Data
+         all_x.append(day) 
+         all_y.append(d[day][_type]) 
+
+   # Get 3Day average data 
+   all_x_avg3, all_y_avg3, delta3 = get_avg_data(3,state)
+
+   # Get 7Day average data 
+   all_x_avg7, all_y_avg7, delta7 = get_avg_data(7,state)
+
+   if(_color=="r"):
+      _color = "red"
+      _3dcolor = "rgba(255,0,0,0.5)"
+   elif(_color=="g"):
+      _color = "green"
+      _3dcolor = "rgba(34,139,34,0.5)"
+   elif(_color=="o"):
+      _color = "orange"
+      _3dcolor = "rgba(255,165,0,0.5)"
+   else:
+      _color = "black"
+      _3dcolor = "rgba(0,0,0,0.5)"
+   
+   fig = go.Figure()
+   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)'))
+   fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color))
+   fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3,  line=dict(
+               color= _3dcolor,
+               width=1 
+               #, dash="dot"
+   )))
+
+   # Add line to every 1s & 15th of all months
+   for date in all_x:
+      if(date.endswith('15') or date.endswith('01')):
+         fig.add_shape(
+            type="line",
+            x0=date,
+            y0=0,
+            x1=date,
+            y1=np.max(all_y),
+            layer="below",
+            opacity=0.4,
+            line=dict(
+               color="rgba(0,0,0,.5)",
+               width=1,
+
+            )
+         )
+
+
+   # Do we have a period in key-dates.txt
+   # for the current state?
+   key_dates = open(KEY_DATES,'r')
+   csv_reader = csv.DictReader(key_dates)
+   rows = list(csv_reader) 
+   start_lockdown_date  = -1
+   end_lockdown_date    = -1
+
+   for key_date_row in rows:
+      if(key_date_row['state']==state):
+         start_lockdown_date = key_date_row['start']  
+         
+         if(key_date_row['end'] is not None):
+            end_lockdown_date = key_date_row['end']
+
+   # Add lockdown period
+   if(start_lockdown_date!=-1 and start_lockdown_date is not None ):
+
+      if(end_lockdown_date!=-1 and end_lockdown_date is not None):
+
+         fig.add_shape(
+            type="rect",
+            x0=start_lockdown_date,
+            y0=0,
+            x1=end_lockdown_date,
+            y1=np.max(all_y),
+            fillcolor="LightSalmon",
+            opacity=0.1,
+            layer="below",
+            line_width=0,
+         )
+
+      elif(start_lockdown_date is not None):
+         
+         fig.add_shape( 
+            type="rect",
+            x0=start_lockdown_date,
+            y0=0,
+            x1=all_x[len(all_x)-1],
+            y1=np.max(all_y),
+            fillcolor="LightSalmon",
+            opacity=0.1,
+            layer="below",
+            line_width=0, 
+         )
+
+
+   fig.update_xaxes(rangemode="nonnegative")
+   fig.update_yaxes(rangemode="nonnegative")
+
+
+   fig.update_layout(
+      width=1000,
+      height=350, 
+      margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
+      paper_bgcolor='rgba(255,255,255,1)',
+      plot_bgcolor='rgba(255,255,255,1)',
+      showlegend= False,
+   )  
+
+   fig.write_image(folder + os.sep + state + "_lg.png") 
+
+
 # Generate a graph based on state, type (like deaths, cases, etc.) & color
 # For states & county
 def generate_graph_with_avg(state, _type, _color, folder, county):
@@ -290,4 +419,5 @@ if __name__ == "__main__":
    os.system("clear")
    #main_menu()
    #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
-   generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , '')
+   #generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , '')
+   generate_large_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)
