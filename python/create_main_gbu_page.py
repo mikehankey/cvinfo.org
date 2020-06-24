@@ -75,10 +75,10 @@ def sort_width_dc(all_groups):
 def get_state_extra_info(state):
  
    # Get the 7-day average data for the current state
-   day7_avg_Dates, day7_avg_Values, delta7 = get_avg_data(7,state) 
+   day7_avg_Dates, day7_avg_Values, delta7 = get_avg_data(7,state,'cases') 
 
    # Get the 14-day average data for the current state
-   day14_avg_Dates, day14_avg_Values, delta14 = get_avg_data(14,state) 
+   day14_avg_Dates, day14_avg_Values, delta14 = get_avg_data(14,state,'cases') 
  
 
    json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + '.json')
@@ -142,13 +142,16 @@ def generate_gbu_graphs_and_main_page(groups):
          generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p')   # Positive Tests
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test')               # New Test per day  
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
+         generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality')     # Mortality (WARNING: computed not in JSON)
+
 
          # Create the Summary Graphs larger version
          generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths', True)           # New Deaths per Day
          generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p', True)   # Positive Tests
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test', True)               # New Test per day  
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp', True)       # Active Hospi
-
+         generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality', True)     # Mortality (WARNING: computed not in JSON)
+ 
          # Create the one specific for Mike
          generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state)
 

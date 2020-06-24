@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 792 792">
+  <title>forecast</title>
+  <circle cx="396" cy="396" r="361" style="fill: none;stroke: #000;stroke-linecap: round;stroke-linejoin: round;stroke-width: 70px"/>
+  <path d="M621,557.6A141,141,0,0,1,383,406.4c41.8-65.7,265.5-154.7,265.5-154.7S662.8,491.9,621,557.6Z" transform="translate(-106.1 -86.5)" style="fill: none;stroke: #870f0f;stroke-linecap: round;stroke-linejoin: round;stroke-width: 40px"/>
+  <circle cx="502.1" cy="482.5" r="59" transform="translate(-280.6 560.8) rotate(-57.6)" style="fill: #870f0f"/>
+</svg>

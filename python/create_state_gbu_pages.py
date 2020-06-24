@@ -39,8 +39,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
          # Generate the Image
          # print("Create Graph for " + county_name)
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state + os.sep + 'counties', county)
- 
-
+  
          # Get the DOM Element
          domEl += create_county_DOM_el(state,county_name,rand)
 
@@ -93,13 +92,13 @@ def generate_gbu_graphs_and_state_page(state,groups):
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests",rand, True)
    template = template.replace('{ALL_SUM_TOP_GRAPHS}', all_sum_graphs)
 
-   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand, True)
-   all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand, True)
+   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand, True)
+   all_sum_graphs += create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand, True)
    template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
    
 
    # Large Graph
-   all_large_graphs =  create_large_graph_DOM_el('.' + os.sep + state + os.sep + state + '_lg.png',state,'New Cases per Day',rand)
+   all_large_graphs =   create_large_graph_DOM_el('.' + os.sep + state + os.sep + state + '_lg.png',state,'New Cases per Day',rand)
    all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'test_lg.png',state,'New Tests per Day',rand)
    all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p_lg.png',state,"% of positive Tests",rand)
    all_large_graphs +=  create_large_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths_lg.png',state,"New Deaths per Day",rand)

@@ -9,7 +9,7 @@ import numpy as np
 
 from plotly.subplots import make_subplots
 from datetime import *
-from utils import PATH_TO_STATES_FOLDER, display_us_format, KEY_DATES, get_avg_data, US_STATES
+from utils import *
 
 # Generate a graph (cases) for Maryland Zip Code
 # Here we pass all the data
@@ -135,11 +135,11 @@ def generate_large_graph_test_and_cases(state, _color, folder):
          all_y_test.append(d[day]['test']) 
 
    # Get 3Day average data 
-   all_x_avg3, all_y_avg3, delta3 = get_avg_data(3,state)
+   all_x_avg3, all_y_avg3, delta3 = get_avg_data(3,state,'cases')
 
    # Get 7Day average data 
-   all_x_avg7, all_y_avg7, delta7 = get_avg_data(7,state)
-
+   all_x_avg7, all_y_avg7, delta7 = get_avg_data(7,state,'cases')
+ 
    if(_color=="r"):
       _color = "red"
       _3dcolor = "rgba(255,0,0,0.5)"
@@ -268,32 +268,18 @@ def generate_large_graph_test_and_cases(state, _color, folder):
    fig.write_image(folder + os.sep + state + "_blg.png") 
 
 
-# Generate a graph based on state, type (like deaths, cases, etc.) & color
+# Generate a graph based on state, type (like deaths, cases, mortality etc.) & color
 # For states & county
 def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
    
-   # Get JSON Data for current state
+   # Get JSON Data for current state or county
    if(county != '' and 'for_a_state' not in county):
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + "counties" + os.sep +  county + ".json", 'r')
    else:
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
    
    data = json.load(cur_json_file)
-
-   all_x = []
-   all_y = []
-
-   all_x_avg = []
-   all_y_avg = []
-
-   # 7 days average
-   first_val = -1
-   total_day = 0
-   max_day = 7 # Avergage based on max_day days
-
-   tempValForAvg = []
-   tempValFormax_day = []
-
+ 
    # Do we have a period in key-dates.txt
    # for the current state?
    key_dates = open(KEY_DATES,'r')
@@ -316,32 +302,55 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
       all_data = data
       # We sort the data by inverse date for counties
       all_data = list(reversed(all_data))
-  
-  
-   # Get the DATA & Compute the max_day average
-   for d in all_data:
-     
-      for day in d:
+   
+   # All Data
+   all_x = []
+   all_y = []
 
-         # Org Data
-         all_x.append(day) 
-         all_y.append(d[day][_type]) 
-       
+
+   if(_type != 'mortality'):
+      # 7day Average Data
+      all_x_avg, all_y_avg, delta = get_X_day_avg(7,all_data,_type)
+     
+      for d in all_data:
+         for day in d:
+            # Org Data
+            all_x.append(day) 
+            all_y.append(d[day][_type]) 
+
+   else:
+ 
+
+      # We compute the Mortality rate
+      # (total_dead/total_cases) *100 
+      for d in all_data:
+         for day in d: 
+            all_x.append(day)
+            if(d[day]['total_c']>0):
+               all_y.append(d[day]['total_d']*100/d[day]['total_c'])
+            else:
+               all_y.append(0)
+
+      # Compute the 7d avg for mortality
+      tempValForAvg = []
+      tempValFormax_day = []
+      all_x_avg = []
+      all_y_avg = []
+      max_day = 7
+
+      for c,y in enumerate(all_y): 
+
          # For average of _type
-         tempValForAvg.append(float(d[day][_type]))
+         tempValForAvg.append(y)
 
          if(len(tempValForAvg) <  max_day):
             tempValFormax_day = tempValForAvg 
          else: 
             tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
-            
-         # We have strings...
-         tempValFormax_day = [float(i) for i in tempValFormax_day]
-
-         all_x_avg.append(day)
-         all_y_avg.append(np.mean(tempValFormax_day))  
-
-
+                 
+         all_x_avg.append(all_x[c])
+         all_y_avg.append(np.mean(tempValFormax_day))   
+ 
    if(_color=="r"):
       _color = "red"
    elif(_color=="g"):
@@ -355,14 +364,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)'))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
    
-
-   # 3day avg line
-   #day3_avg_Dates, day3_avg_Values, delta3 = get_avg_data(3,state)
-   #fig.add_trace(go.Scatter(x=day3_avg_Dates, y=day3_avg_Values,  line=dict(
-   #             color= 'rgba(0,0,0,.5)',
-    #            width=1 , dash="dot"
-   #)))
-
+ 
    # Add line to every 1s & 15th of all months
    for date in all_x:
       if(date.endswith('15') or date.endswith('01')):
@@ -428,17 +430,18 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
  
    if(county ==""):
       fig.write_image(folder + os.sep + state + ".png") 
-      print("Graph for " + state + ' (' +  _color + ') created')
+      print("Graph for " + state + ' Cases (' +  _color + ') created')
    elif('for_a_state' in county):
       tmp = county.split('|')[1]
       fig.write_image(folder + os.sep + tmp + ".png") 
       print("Graph for " + state + '  ' +  tmp + '  created')
    else:
       fig.write_image(folder + os.sep + county + ".png") 
-      print("Graph for " + county + ", " + state + ' (' +  _color + ') created')
+      print("Graph for " + county + ", " + state + ' Cases (' +  _color + ') created')
   
 
    if(large is True):
+      # We also save the larger version of the graph
       fig.update_layout(
          width=1000,
          height=350, 
@@ -448,16 +451,20 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
          showlegend= False,
       )  
 
-   if(county ==""):
-      fig.write_image(folder + os.sep + state + "_lg.png") 
-      print("Graph for " + state + ' (' +  _color + ') Larger Version created')
-   elif('for_a_state' in county):
-      tmp = county.split('|')[1]
-      fig.write_image(folder + os.sep + tmp + "_lg.png") 
-      print("Graph for " + state + '  ' +  tmp + ' Larger Version created')
-   else:
-      fig.write_image(folder + os.sep + county + "_lg.png") 
-      print("Graph for " + county + ", " + state + ' (' +  _color + ') Larger Version created')
+      if(county ==""):
+         fig.write_image(folder + os.sep + state + "_lg.png") 
+         print("Graph for " + state + ' Cases (' +  _color + ') Larger Version created')
+      elif('for_a_state' in county):
+         tmp = county.split('|')[1]
+         fig.write_image(folder + os.sep + tmp + "_lg.png") 
+         print("Graph for " + state + '  ' +  tmp + ' Larger Version created')
+      else:
+         fig.write_image(folder + os.sep + county + "_lg.png") 
+         print("Graph for " + county + ", " + state + ' Cases (' +  _color + ') Larger Version created')
+
+
+
+
 
 def main_menu():
    print("---------------")
@@ -472,5 +479,7 @@ if __name__ == "__main__":
    os.system("clear")
    #main_menu()
    #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
-   #generate_graph_with_avg("CA", 'cases', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , '')
-   generate_large_graph_with_avg("CA",  "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)
+   generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy')
+   generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
+
+   #generate_large_graph_with_avg("CA",  "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)

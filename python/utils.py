@@ -27,19 +27,17 @@ MD_ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts_MD.html'
 MD_MOST_ACTIVE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'most_active_MD.html'
 
 
+###############
+LARGE_NUMBER = 99999999999999999
+
+
 def display_us_format(_float,prec): 
    _format =  '{:,.'+str(prec)+'f}'
    return _format.format(_float)
 
 
-# Get X day average cases data for a state
-def get_avg_data(max_day,state):
-
-   # Open the related json
-   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + '.json')
-   data = json.load(json_ftmp)
-   json_ftmp.close()
- 
+# Compute X day average on set of data
+def get_X_day_avg(max_day,data,_type):
    # X days average
    first_val = -1
    total_day = 0  
@@ -49,11 +47,11 @@ def get_avg_data(max_day,state):
    all_x_avg = []
    all_y_avg = []
 
-   for d in data['stats']:
+   for d in data:
       for day in d:
  
          # For average of _type
-         tempValForAvg.append(float(d[day]["cases"]))
+         tempValForAvg.append(float(d[day][_type]))
 
          if(len(tempValForAvg) <  max_day):
             tempValFormax_day = tempValForAvg 
@@ -69,14 +67,31 @@ def get_avg_data(max_day,state):
 
    cur_new_cases     = all_y_avg[-1] 
    max_day = 0 - max_day
-   last_new_cases    = all_y_avg[max_day] 
+
+   # For barely impacted counties
+   try:
+      last_new_cases = all_y_avg[max_day] 
+   except IndexError:
+      last_new_cases = 0
+ 
    
    if last_new_cases  > 0:
       delta = cur_new_cases / last_new_cases
    else:
-      delta = 0 
-
+      delta = 0
+   
    return all_x_avg, all_y_avg, delta
+
+
+# Get X day average cases data for a state
+def get_avg_data(max_day,state,_type):
+
+   # Open the related json
+   json_ftmp = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + '.json')
+   data = json.load(json_ftmp)
+   json_ftmp.close()
+ 
+   return get_X_day_avg(max_day, data['stats'],_type) 
  
 if __name__ == "__main__":
    print(display_us_format(46854684864653.5665,2))
