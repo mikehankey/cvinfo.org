@@ -92,7 +92,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    all_sum_graphs+= create_graph_DOM_el('.' + os.sep + state + os.sep + 'test_pos_p.png',state,"% of positive Tests",rand, True)
    template = template.replace('{ALL_SUM_TOP_GRAPHS}', all_sum_graphs)
 
-   all_sum_graphs = create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand, True)
+   all_sum_graphs  = create_graph_DOM_el('.' + os.sep + state + os.sep + 'act_hosp.png',state,'Active Hospitalizations',rand, True)
    all_sum_graphs += create_graph_DOM_el('.' + os.sep + state + os.sep + 'deaths.png',state,'New Deaths per Day',rand, True)
    all_sum_graphs += create_graph_DOM_el('.' + os.sep + state + os.sep + 'mortality.png',state,'Case Fatality Rate',rand, True)
    template = template.replace('{ALL_SUM_SEC_GRAPHS}', all_sum_graphs)
@@ -209,11 +209,19 @@ def create_graph_DOM_el(_file,st,title,rand,hide_mobile=False) :
    cl = "graph_g"
    if(hide_mobile is True):
       cl += " hidemob"
-   return '<div class="'+cl+'"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/></div>' 
+   if(title == 'Case Fatality Rate'):
+      p = '<p style="margin: 1rem 2rem;text-align: left;">The case fatality rate shown above represents total deaths divided by total cases to date. Technically, cases that have not completed should not be included since their outcomes are currently unknown. We have no effective way to do this with current data, so we show CFR through the current day. The true CFR will be slightly higher. States with recent increases in new cases, will naturally drive down the current CFR rate, until these cases come to term.'
+   else: 
+      p = ''
+   return '<div class="'+cl+'"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/>'+p+'</div>' 
 
 # Create Large Graph HTML Element with image
 def create_large_graph_DOM_el(_file,st,title,rand) :
-   return '<div class="graph_lg"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'"  alt="'+title+'"/></div>' 
+   if(title == 'Case Fatality Rate'):
+      p = '<p style="margin: 1rem 2rem;text-align: left;">The case fatality rate shown above represents total deaths divided by total cases to date. Technically, cases that have not completed should not be included since their outcomes are currently unknown. We have no effective way to do this with current data, so we show CFR through the current day. The true CFR will be slightly higher. States with recent increases in new cases, will naturally drive down the current CFR rate, until these cases come to term.'
+   else: 
+      p = ''
+   return '<div class="graph_lg"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'"  alt="'+title+'"/>'+p+'</div>' 
 
 
 

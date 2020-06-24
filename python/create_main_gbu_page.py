@@ -9,7 +9,7 @@ from generate_graphs import *
 
 # Create Groups of Good, Ugly & Bad States
 # for main GBU page
-def rank_states():
+def rank_states(_type):
    
    print("Ranking the states...")
 
@@ -29,7 +29,7 @@ def rank_states():
  
          for date in day:
           
-            tmp_cases.append(float(day[date]['cases']))  
+            tmp_cases.append(float(day[date][_type]))  
          
             if len(tmp_cases) <= 7:
                avg = int(np.mean(tmp_cases)) 
@@ -129,23 +129,18 @@ def generate_gbu_graphs_and_main_page(groups):
 
       all_groups =  sort_width_dc(sorted(groups[group]))
 
-      for state in all_groups:
-
-         # Generate the Main Graph
-         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '')
-
-         # Generate the Main Graph larger version
-         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '', True)
+      for state in all_groups: 
 
          # Create the Summary Graphs for all the sub pages for the state
+         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '') # DISPLAY ON THE DEFAULT GBU PAGE
          generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths')           # New Deaths per Day
          generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p')   # Positive Tests
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test')               # New Test per day  
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
          generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality')     # Mortality (WARNING: computed not in JSON)
-
-
+ 
          # Create the Summary Graphs larger version
+         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '', True)
          generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths', True)           # New Deaths per Day
          generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p', True)   # Positive Tests
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test', True)               # New Test per day  
@@ -189,6 +184,6 @@ def create_state_DOM_el(st,all_state_details,rand) :
  
 if __name__ == "__main__":
    os.system("clear")
-   generate_gbu_graphs_and_main_page(rank_states())
+   generate_gbu_graphs_and_main_page(rank_states('cases'))
 
  
