@@ -15,9 +15,10 @@ def main_menu():
    print("2) Clean all states data")  
    print("3) Clean all counties data")  
    print("4) Create Main GBU Page")  
-   print("5) Create All States GBU Pages")  
-   print("6) Create Hotspots & Alerts")
-   print("7) Do it all")  
+   print("5) Create Other Main GBU Page (showing Case Fatality, Hospi, Tests, Deaths)")
+   print("6) Create All States GBU Pages")  
+   print("7) Create Hotspots & Alerts")
+   print("8) Do it all")  
    
    cmd = input("Run: ")
 
@@ -45,11 +46,20 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
          
    elif cmd==4:
-      print("CREATING MAIN GBU PAGE")
-      generate_gbu_graphs_and_main_page(rank_states('cases'))
+      print("CREATING MAIN GBU PAGES")
+      states_ranked_by_cases = rank_states('cases')
+      generate_gbu_graphs_and_main_page(states_ranked_by_cases)
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd==5:
+      print("CREATING ALL OTHER MAIN GBU PAGES (showing Case Fatality, Hospi, Tests, Deaths)")
+      states_ranked_by_cases = rank_states('cases')
+      create_gbu_main_page('hospi',states_ranked_by_cases)
+      create_gbu_main_page('test',states_ranked_by_cases)
+      create_gbu_main_page('death',states_ranked_by_cases)
+      
+      print("\n>>>TASK DONE \n\n") 
+   elif cmd==6:
       print("CREATING ALL STATES GBU PAGE")
       print("Warning: the Main Gbu Page needs to be created first in order to have updated version of the state summary graphs")
       #print("**************************DEBUG MODE *************************")
@@ -61,20 +71,25 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
 
 
-   elif cmd==6:
+   elif cmd==7:
       print("CREATING HOTSPOTS & ALERTS PAGE")
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
       create_alert_page(alerts)
       print("\n>>>TASK DONE \n\n") 
 
-   elif cmd==7:
+   elif cmd==8:
       print("CREATE ALL GBU PAGES & ALERTS & HOTSPOTS")
        
       update_data_sources()
       create_states_data('') 
       create_county_state_data('')
-      generate_gbu_graphs_and_main_page(rank_states('cases'))
+      states_ranked_by_cases = rank_states('cases')
+      generate_gbu_graphs_and_main_page()
+      create_gbu_main_page('hospi',states_ranked_by_cases)
+      create_gbu_main_page('test',states_ranked_by_cases)
+      create_gbu_main_page('death',states_ranked_by_cases)
+
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)

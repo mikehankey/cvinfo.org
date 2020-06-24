@@ -88,19 +88,87 @@ def get_state_extra_info(state):
    last_update    =  data['sum']['last_update']
    total_death    =  data['sum']['cur_total_deaths']
    total_case     =  data['sum']['cur_total_cases']
+   total_hospi    =  data['sum']['cur_hosp']
+   total_test     =  data['sum']['cur_total_tests']
+    
 
    for d in data['stats'][len(data['stats'])-1]:
       last_new_cases  =  data['stats'][len(data['stats'])-1][d]['cases']
       last_new_deaths =  data['stats'][len(data['stats'])-1][d]['deaths'] 
+      last_new_hospi =   data['stats'][len(data['stats'])-1][d]['act_hosp'] 
+      last_new_test  =   data['stats'][len(data['stats'])-1][d]['test'] 
 
    
    return {'last_update':  last_update, 
            'total_death': total_death,
            'total_case': total_case, 
+           'total_test': total_test,
            'last_new_cases': last_new_cases, 
            'last_new_deaths':last_new_deaths,
+           'last_new_hospi': last_new_hospi,
+           'last_new_test': last_new_test,
+           'total_hospi': total_hospi,
            'delta7': round(delta7,2) ,
            'delta14':  round(delta14,2) }
+
+
+# Create a specific GBU page (in addition of cases)
+# for hospi, case fatality, tests, deaths
+def  create_gbu_main_page(_type,groups):
+   if(_type=='hospi'):
+      template_file = GBU_MAIN_HOSPI_TEMPLATE
+      f = '../corona-calc/states/gbu_hospitalizations.html'
+
+   elif(_type=='test'):
+      template_file = GBU_MAIN_TESTS_TEMPLATE
+      f = '../corona-calc/states/gbu_testing.html' 
+   
+   elif(_type=='death'):
+      template_file = GBU_MAIN_DEATH_TEMPLATE
+      f = '../corona-calc/states/gbu_death.html' 
+
+   # Page to build
+   main_gbu_page = open(f,'w+')
+
+   # Open Template
+   f_template =  open(template_file,  'r')
+   template = f_template.read() 
+   f_template.close() 
+
+   # Random Number for non-cached images
+   rand = random.randint(1,100000001)
+   
+   template = template.replace('{RAND_CSS}',str(rand)) 
+
+   for group in groups:
+
+      if(group == 'ugly'):
+         color = "r"
+      elif(group == 'bad'):
+         color = "o"
+      else:
+         color = "g"
+      
+      domEl = ""
+
+      all_groups =  sort_width_dc(sorted(groups[group]))
+
+      for state in all_groups: 
+         # Get Extra Data to display (above the graphs)
+         all_state_details = get_state_extra_info(state)
+
+         # Get the DOM Element
+         domEl += create_state_type_DOM_el(state,all_state_details,str(rand),_type)
+         # Add to the template 
+   
+      template = template.replace('{'+group.upper()+'}',domEl)
+      template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
+
+   # Save Template as main gbu page
+   main_gbu_page.write(template)
+   main_gbu_page.close()
+
+   print(f + " created")
 
 
 # Create Graphics for all states 
@@ -184,7 +252,29 @@ def create_state_DOM_el(st,all_state_details,rand) :
             <small>New cases on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_cases'],0)  + '</small>\
             <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
             <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
- 
+
+# Create State HTML Element when not cases
+def create_state_type_DOM_el(st,all_state_details,rand,_type):
+   if _type=="hospi" :
+      return '<div class="graph_g">\
+               <h3 class="nmb">'+US_STATES[st]+'</h3>\
+               <small>New hospi. on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_hospi'],0)  + '</small>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'act_hosp.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Hospi.: '+ display_us_format(all_state_details['total_hospi'],0) +'</small></div>' 
+   elif _type=="test" :
+      return '<div class="graph_g">\
+               <h3 class="nmb">'+US_STATES[st]+'</h3>\
+               <small>New Tests on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_test'],0)  + '</small>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'test.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Tests: '+ display_us_format(all_state_details['total_test'],0) +'</small></div>' 
+   elif _type=="death" :
+      return '<div class="graph_g">\
+               <h3 class="nmb">'+US_STATES[st]+'</h3>\
+               <small>New Deaths on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_deaths'],0)  + '</small>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'test.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
+
+
 if __name__ == "__main__":
    os.system("clear")
    generate_gbu_graphs_and_main_page(rank_states('cases'))
