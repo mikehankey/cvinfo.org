@@ -155,7 +155,7 @@ def create_alert_page(alerts):
 
    rand = random.randint(1,100000001)
    template = template.replace('{RAND_CSS}',str(rand)) 
-   template_delta = template_delta.replace('{RAND_CSS}',rand) 
+   template_delta = template_delta.replace('{RAND_CSS}',str(rand))
 
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
    all_alert_graphs = ''
