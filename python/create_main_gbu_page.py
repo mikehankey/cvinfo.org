@@ -273,7 +273,8 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New hospi. on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_hospi'],0)  + '</small>\
                <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'act_hosp.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
-               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Hospi.: '+ display_us_format(all_state_details['total_hospi'],0) +'</small></div>' 
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0)   +'</small></div>' 
+               #- Total Hospi.: '+ display_us_format(all_state_details['total_hospi'],0)
    elif _type=="test" :
       return '<div class="graph_g">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
@@ -289,10 +290,10 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
    elif _type=="case_fatality" :
       return '<div class="graph_g">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
-               <small>Case Fatality Rate on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_fatality'],2)  + '%</small>\
+               <small>Case Fatality Rate on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['total_average_fatality'],2)  + '%</small>\
                <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'mortality.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
-               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Average CFR: '+ display_us_format(all_state_details['total_average_fatality'],2) +'%</small></div>' 
-
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +'</small></div>' 
+               #+' - Average CFR: '+ display_us_format(all_state_details['last_new_fatality'],2) +'%
 
 if __name__ == "__main__":
    os.system("clear")
