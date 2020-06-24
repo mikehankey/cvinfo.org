@@ -127,6 +127,10 @@ def  create_gbu_main_page(_type,groups):
       template_file = GBU_MAIN_DEATH_TEMPLATE
       f = '../corona-calc/states/gbu_death.html' 
 
+   elif(_type=='case_fatality'):
+      template_file = GBU_MAIN_CASE_FATALITY_TEMPLATE
+      f = '../corona-calc/states/gbu_case_fatality.html'
+
    # Page to build
    main_gbu_page = open(f,'w+')
 
@@ -271,7 +275,13 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
       return '<div class="graph_g">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New Deaths on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_deaths'],0)  + '</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'test.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'deaths.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
+   elif _type=="case_fatality" :
+      return '<div class="graph_g">\
+               <h3 class="nmb">'+US_STATES[st]+'</h3>\
+               <small>New Deaths on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_deaths'],0)  + '</small>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'mortality.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
 
 

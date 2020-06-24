@@ -58,7 +58,7 @@
 </header>
 
 <div id="header">
-   <h1>United States - Corona Virus New Cases Compared</h1>
+   <h1>United States - Corona Virus Case Fatality Compared</h1>
   
 </div> 
 <div id="main-content">
@@ -68,8 +68,8 @@
 
    <div class="box">
          <div class="ins">
-            Below, states are grouped into categories (<a href="#good_box" class="good_t"><b>Winning</b></a>, <a href="#bad_box" class="bad_t"><b>Improving</b></a> 
-            and  <a href="#ugly_box" class="ugly_t"><b>Losing</b></a>) 
+            Below, states are grouped into categories (<a href="#good_box" class="good_t">Winning</a>, <a href="#bad_box" class="bad_t"> Improving</a> 
+            and  <a href="#ugly_box" class="ugly_t">Losing</a>) 
             based on the current day's number of cases compared to the highest historical peak value. 
             In the graphs below, the bars represent the number of cases per day and the line represents the 7-day average cases. 
             The shaded area is the lockdown period of the state.
@@ -78,15 +78,10 @@
             If &Delta; < 1, new cases are decreasing.<br/>
             Click the state graphs to see graphs for all counties in that state.
          </div>
+         <div>
+             Fatality rate shown above represents total deaths divided by total cases to date. Technically, cases that have not completed should not be included since their outcomes are currently unknown. We have no effective way to do this with current data, so we show CFR through the current day. The true CFR will be slightly higher. States with recent increases in new cases, will naturally drive down the current CFR rate, until these cases come to term.
+         </div>
    </div> 
-
-   <p>
-      <a class="btn disabled" style="font-weight:nomal">New Cases</a>
-      <a href="./gbu_hospitalizations.html" style="font-weight:nomal" class="btn">Hospitalizations</a>
-      <a href="./gbu_case_fatality.html" style="font-weight:nomal" class="btn">Case Fatality</a>
-      <a href="./gbu_deaths.html" style="font-weight:nomal" class="btn">Deaths</a>
-      <a href="./gbu_tests.html" style="font-weight:nomal" class="btn">Testing</a>
-   </p>
    
    <p>Last update: {LAST_UPDATE}</p>
 

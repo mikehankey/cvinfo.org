@@ -57,6 +57,7 @@ def main_menu():
       create_gbu_main_page('hospi',states_ranked_by_cases)
       create_gbu_main_page('test',states_ranked_by_cases)
       create_gbu_main_page('death',states_ranked_by_cases)
+      create_gbu_main_page('case_fatality',states_ranked_by_cases)
       
       print("\n>>>TASK DONE \n\n") 
    elif cmd==6:
@@ -85,7 +86,7 @@ def main_menu():
       create_states_data('') 
       create_county_state_data('')
       states_ranked_by_cases = rank_states('cases')
-      generate_gbu_graphs_and_main_page()
+      generate_gbu_graphs_and_main_page(states_ranked_by_cases)
       create_gbu_main_page('hospi',states_ranked_by_cases)
       create_gbu_main_page('test',states_ranked_by_cases)
       create_gbu_main_page('death',states_ranked_by_cases)

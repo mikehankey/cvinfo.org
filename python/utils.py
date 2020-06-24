@@ -13,6 +13,7 @@ GBU_MAIN_TEMPLATE       = '..' + os.sep + 'templates' + os.sep + 'gbu.html'
 GBU_MAIN_HOSPI_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_hospitalizations.html'
 GBU_MAIN_TESTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_tests.html'
 GBU_MAIN_DEATH_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_deaths.html'
+GBU_MAIN_CASE_FATALITY_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_case_fatality.html'
 
 GBU_STATE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_state.html'
 
