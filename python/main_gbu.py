@@ -46,7 +46,7 @@ def main_menu():
          
    elif cmd==4:
       print("CREATING MAIN GBU PAGE")
-      generate_gbu_graphs_and_main_page(rank_states())
+      generate_gbu_graphs_and_main_page(rank_states('cases'))
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd==5:
@@ -74,7 +74,7 @@ def main_menu():
       update_data_sources()
       create_states_data('') 
       create_county_state_data('')
-      generate_gbu_graphs_and_main_page(rank_states())
+      generate_gbu_graphs_and_main_page(rank_states('cases'))
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
