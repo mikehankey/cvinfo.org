@@ -109,6 +109,7 @@ def create_MD_zip_graphs_and_pages():
 
       county_full = county_name.title().replace("'S","'s")
       template = template.replace('{COUNTY_FULL}',county_full)
+      template = template.replace('{COUNTY_FULL}',county_full)
  
       all_rows= []
       allDomEl = []

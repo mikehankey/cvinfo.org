@@ -319,8 +319,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
             all_y.append(d[day][_type]) 
 
    else:
- 
-
+  
       # We compute the Mortality rate
       # (total_dead/total_cases) *100 
       for d in all_data:

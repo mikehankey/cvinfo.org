@@ -164,6 +164,9 @@ def generate_gbu_graphs_and_main_page(groups):
    # by the last update of the last state
    template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
     
+   template = template.replace('{RAND_CSS}',str(rand)) 
+
+
    # Save Template as main gbu page
    main_gbu_page = open('../corona-calc/states/index.html','w+')
    main_gbu_page.write(template)

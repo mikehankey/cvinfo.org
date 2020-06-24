@@ -152,7 +152,8 @@ def create_most_alert_page(all_alerts_json_files):
 
    alerts_template = alerts_template.replace('{WHISHLIST}',alert_html)
    alerts_template = alerts_template.replace('{MD_COUNTY_SELECT}',MD_select)  
-   
+   alerts_template = alerts_template.replace('{RAND_CSS}',str(rand)) 
+
    # Save the MD most active page
    alert_page = open(PATH_TO_STATES_FOLDER + os.sep + "MD" + os.sep + "alerts.html",'w+')
    alert_page.write(alerts_template)
@@ -181,7 +182,8 @@ def create_most_active_page(all_most_active):
 
    most_active_template = most_active_template.replace('{WHISHLIST}',most_active_html)
    most_active_template = most_active_template.replace('{MD_COUNTY_SELECT}',MD_select)  
- 
+   most_active_template = most_active_template.replace('{RAND_CSS}',str(rand))
+
    # Save the MD most active page
    most_active__page = open(PATH_TO_STATES_FOLDER + os.sep + "MD" + os.sep + "most_active.html",'w+')
    most_active__page.write(most_active_template)

@@ -1,6 +1,7 @@
 import glob
 import os
 import numpy as np
+import random
 from create_json_data_files import *
 from update_data_src import * 
 from create_main_gbu_page import *
@@ -110,6 +111,11 @@ def create_hotspot_page(hotspots):
    template = f_template.read() 
    f_template.close()
 
+   # Random Number for non-cached css
+   rand = random.randint(1,100000001)
+   template = template.replace('{RAND_CSS}',str(rand)) 
+
+
    # How many hotspots 
    template = template.replace('{HOW_MANY_HOTSPOT}', str(len(hotspots)))
 
@@ -146,6 +152,10 @@ def create_alert_page(alerts):
    # How many alerts 
    template = template.replace('{HOW_MANY_ALERT}', str(len(alerts)))
    template_delta = template_delta.replace('{HOW_MANY_ALERT}', str(len(alerts)))
+
+   rand = random.randint(1,100000001)
+   template = template.replace('{RAND_CSS}',str(rand)) 
+   template_delta = template_delta.replace('{RAND_CSS}',rand) 
 
    # Add Graphs to page (warning the graphs are created while creating the state page as we need the color associated to the state :( )
    all_alert_graphs = ''

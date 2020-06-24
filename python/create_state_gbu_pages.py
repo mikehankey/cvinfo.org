@@ -55,6 +55,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    # Add meta
    template = template.replace('{STATE_FULL}',US_STATES[state])
    template = template.replace('{STATE}',state) 
+   template = template.replace('{RAND_CSS}',str(rand)) 
 
    # Flag
    template = template.replace('{STATE_l}',state.lower())  
