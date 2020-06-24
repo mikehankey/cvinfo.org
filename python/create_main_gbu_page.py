@@ -91,15 +91,20 @@ def get_state_extra_info(state):
    total_hospi    =  data['sum']['cur_hosp']
    total_test     =  data['sum']['cur_total_tests']
 
-   total_average_fatality = float(total_death)*100/float(total_case)
+   if(total_case>0):
+      total_average_fatality = float(total_death)*100/float(total_case)
+   else:
+      total_average_fatality = 0
 
    for d in data['stats'][len(data['stats'])-1]:
       last_new_cases    =  data['stats'][len(data['stats'])-1][d]['cases']
       last_new_deaths   =  data['stats'][len(data['stats'])-1][d]['deaths'] 
       last_new_hospi    =  data['stats'][len(data['stats'])-1][d]['act_hosp'] 
       last_new_test     =  data['stats'][len(data['stats'])-1][d]['test'] 
-      last_new_fatality =  float(data['stats'][len(data['stats'])-1][d]['deaths'])*100/float(data['stats'][len(data['stats'])-1][d]['cases'])
-       
+      if(data['stats'][len(data['stats'])-1][d]['cases']>0):
+         last_new_fatality = float(data['stats'][len(data['stats'])-1][d]['deaths'])*100/float(data['stats'][len(data['stats'])-1][d]['cases'])
+      else:
+         last_new_fatality = 0
    
    return {'last_update':  last_update, 
            'total_death': total_death,
@@ -284,9 +289,9 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
    elif _type=="case_fatality" :
       return '<div class="graph_g">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
-               <small>Case Fatality Rate on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_fatality'],0)  + '</small>\
+               <small>Case Fatality Rate on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_fatality'],2)  + '%</small>\
                <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'mortality.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
-               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Average CFR: '+ display_us_format(all_state_details['total_average_fatality'],0) +'</small></div>' 
+               <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Average CFR: '+ display_us_format(all_state_details['total_average_fatality'],2) +'%</small></div>' 
 
 
 if __name__ == "__main__":
