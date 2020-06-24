@@ -85,11 +85,13 @@ def main_menu():
       update_data_sources()
       create_states_data('') 
       create_county_state_data('')
+      
       states_ranked_by_cases = rank_states('cases')
       generate_gbu_graphs_and_main_page(states_ranked_by_cases)
       create_gbu_main_page('hospi',states_ranked_by_cases)
       create_gbu_main_page('test',states_ranked_by_cases)
       create_gbu_main_page('death',states_ranked_by_cases)
+      create_gbu_main_page('case_fatality',states_ranked_by_cases)
 
       for st in US_STATES:
          g = rank_counties(st)

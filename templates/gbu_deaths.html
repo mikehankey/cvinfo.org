@@ -58,8 +58,8 @@
 </header>
 
 <div id="header">
-   <h1>United States - Corona Virus Testing Compared</h1>
-  
+      <h1>United States - Corona Virus New Cases Compared</h1>
+      <h2>Showing Deaths per Day graphs</h2>
 </div> 
 <div id="main-content">
    
@@ -68,18 +68,22 @@
 
    <div class="box">
          <div class="ins">
-            Below, states are grouped into categories (<a href="#good_box" class="good_t">Winning</a>, <a href="#bad_box" class="bad_t"> Improving</a> 
-            and  <a href="#ugly_box" class="ugly_t">Losing</a>) 
-            based on the current day's number of cases compared to the highest historical peak value. 
-            In the graphs below, the bars represent the number of cases per day and the line represents the 7-day average cases. 
+            Below, states are grouped into categories (<a href="#good_box" class="good_t"><b>Winning</b></a>, <a href="#bad_box" class="bad_t"><b>Improving</b></a> 
+            and  <a href="#ugly_box" class="ugly_t"><b>Losing</b></a>) 
+            based on the current day's <b>number of cases</b> compared to the highest historical peak value. 
+            <br>In the graphs below, the bars represent the number of <b>hospitalizations</b> per day and the line represents the 7-day average <b>deaths</b>. 
             The shaded area is the lockdown period of the state.
             &Delta;7 and &Delta;14 are the changes to the rolling average for the last 7 and 14 days. 
-            The higher the &Delta; is, the faster new cases are growing.
-            If &Delta; < 1, new cases are decreasing.<br/>
             Click the state graphs to see graphs for all counties in that state.
          </div>
    </div> 
-   
+   <p class="large">
+         <a href="./" style="font-weight:nomal" class="btn">New Cases</a>
+         <a href="./gbu_hospitalizations.html" style="font-weight:nomal" class="btn ">Hospitalizations</a>
+         <a href="./gbu_case_fatality.html" style="font-weight:nomal" class="btn">Case Fatality</a>
+         <a href="./gbu_death.html" style="font-weight:nomal" class="btn disabled">Deaths</a>
+         <a href="./gbu_testing.html" style="font-weight:nomal" class="btn ">Testing</a>
+   </p>
    <p>Last update: {LAST_UPDATE}</p>
 
    <div id="good_box" class="box clearfix">
