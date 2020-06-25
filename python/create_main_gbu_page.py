@@ -229,10 +229,10 @@ def generate_gbu_graphs_and_main_page(groups):
          generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality', True)     # Mortality (WARNING: computed not in JSON)
 
          # Create the one specific for Mike
-         generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state,True)
+         generate_dual_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state,True)
 
          # Create the dual axis cases/tests small form for the gbu_testing page
-         generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state)
+         generate_dual_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state)
  
          # Get Extra Data to display (above the graphs)
          all_state_details = get_state_extra_info(state)

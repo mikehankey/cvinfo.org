@@ -94,15 +94,22 @@ function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2
     
    // Get the Max Date on Both (we don't care if don't have all the data for both data sets)
    var domElRef; 
-
-
+   
+   // Hide negative value
+   $.each(data1,function(i,v) {
+      if(v<0) data1[i]=0;
+   })
+   $.each(data2,function(i,v) {
+      if(v<0) data2[i]=0;
+   })
+   
    var set1 = {
       x: x_axis1,
       y: data1,
       name: name1 + " " + type,
       fill: 'tonexty',
       type: (bars?'bar':"line+scatter"),
-      marker: {color: color1},
+      marker: {color: color1} 
    };
  
    var set2 = {
@@ -110,22 +117,21 @@ function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2
       y: data2,
       name: name2 + " " + type,
       type: 'scatter', 
-      marker: {color: color2},
+      marker: {color: color2} 
    }; 
    
    if(bars) {
       set2.line = {shape:'vh'}; 
    }
 
-   var layout = { 
+   var layout = {  
       margin: {"t": 20, "b": 80, "l": 50, "r": 20},
       showlegend: true,
       legend: { orientation: "h" },
-      yaxis1: {   
-         title:type
-      } 
+      yaxis1: { title:type }
    };
- 
+       
+
    // Top Graph      
    display_graph_top_info(
          rightDate,

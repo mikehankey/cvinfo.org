@@ -111,7 +111,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
 # Generate Large Graph for the State Detail page
 # with 3day average line value, new cases & tests
 # WARNING THIS IS THE DUAL AXIS VERSION WITH CASES & TESTS
-def generate_large_graph_test_and_cases(state, _color, folder, large = False):
+def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
    
    # Daily Data
    cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
@@ -156,14 +156,33 @@ def generate_large_graph_test_and_cases(state, _color, folder, large = False):
    
    # Create Fig with secondary ax
    fig = make_subplots(specs=[[{"secondary_y": True}]])
+ 
+   fig.update_xaxes(rangemode="nonnegative")
+   fig.update_yaxes(rangemode="nonnegative")
+   
 
-   # Add Primary 
-   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases"))
-   fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color, name="Day-7 Avg. New Cases"))
+   # We had the # of tests on a secondary y-axis
+   if(large is True):
+      # With put the raw data
+      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="Tests",  line=dict(  color= "purple",  width=2 )))   
+   else:
+      # Get 7Day average data for Tests (so we have a smoother line)
+      all_x_test, all_y_test, deltaX = get_avg_data(7,state,'test')
+      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "rgba(136,16,136,.5)",  width= 2 )))   
+
+    # Add Secondary 
+   fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color, name="Day-7 Avg. New Cases",  line=dict(  color=  _color,  width=2 )),  secondary_y=True )
+   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases"),  secondary_y=True )
    
    if(large is True):
-      fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3, name="Day-3 Avg. New Cases",  line=dict(  color= _3dcolor,  width=1  ))  )
+      fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3, name="Day-3 Avg. New Cases",  line=dict(  color= _3dcolor,  width=2  )),  secondary_y=True)
    
+
+   # Get MAX Y for drawing the 1st & 15th lines
+   # + the lockdown period 
+   max_y = np.max([np.max(all_y),np.max(all_y_test)])
+
+
    # Add line to every 1s & 15th of all months
    for date in all_x:
       if(date.endswith('15') or date.endswith('01')):
@@ -172,16 +191,15 @@ def generate_large_graph_test_and_cases(state, _color, folder, large = False):
             x0=date,
             y0=0,
             x1=date,
-            y1=np.max(all_y),
-            layer="below",
+            y1=max_y, 
             opacity=0.4,
             line=dict(
                color="rgba(0,0,0,.5)",
                width=1,
-
-            )
+            ),
+             layer="below"
          )
-
+ 
 
    # Do we have a period in key-dates.txt
    # for the current state?
@@ -208,11 +226,11 @@ def generate_large_graph_test_and_cases(state, _color, folder, large = False):
             x0=start_lockdown_date,
             y0=0,
             x1=end_lockdown_date,
-            y1=np.max(all_y),
+            y1=max_y,
             fillcolor="LightSalmon",
-            opacity=0.1,
-            layer="below",
+            opacity=0.1, 
             line_width=0,
+            layer="below"
          )
 
       elif(start_lockdown_date is not None):
@@ -222,46 +240,33 @@ def generate_large_graph_test_and_cases(state, _color, folder, large = False):
             x0=start_lockdown_date,
             y0=0,
             x1=all_x[len(all_x)-1],
-            y1=np.max(all_y),
+            y1=max_y,
             fillcolor="LightSalmon",
-            opacity=0.1,
-            layer="below",
+            opacity=0.1, 
             line_width=0, 
+            layer="below"
          )
-
-
-   fig.update_xaxes(rangemode="nonnegative")
-   fig.update_yaxes(rangemode="nonnegative")
-  
-   # We had the # of tests on a secondary y-axis
-   if(large is True):
-      # With put the raw data
-      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="Tests",  line=dict(  color= "purple",  width=1 )),  secondary_y=True,  )   
-   else:
-      # Get 7Day average data for Tests (so we have a smoother line)
-      all_x_test, all_y_test, deltaX = get_avg_data(7,state,'test')
-      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "rgba(136,16,136,.5)",  width=1 )),  secondary_y=True,  )   
 
 
    if(large is True):
       fig.update_layout(
          width=1000,
          height=450, 
-         title = US_STATES[state] + " New Cases and Tests",
+         title = US_STATES[state] + " Tests and New Cases",
          margin=dict(l=30, r=20, t=45, b=30),   # Top Title
          paper_bgcolor='rgba(255,255,255,1)',
          plot_bgcolor='rgba(255,255,255,1)',
          showlegend= True,
          yaxis1=dict(
-            title="Cases",
-            titlefont=dict(
-               color=_color
-            ) 
-         ),
-         yaxis2=dict(
             title="Tests",
             titlefont=dict(
                color="purple"
+            ) 
+         ),
+          yaxis2=dict(
+            title="Cases",
+            titlefont=dict(
+               color=_color
             ) 
          ),
          legend_orientation="h"
@@ -274,11 +279,11 @@ def generate_large_graph_test_and_cases(state, _color, folder, large = False):
          paper_bgcolor='rgba(255,255,255,1)',
          plot_bgcolor='rgba(255,255,255,1)',
          showlegend= False,
-         yaxis1=dict(
+         yaxis2=dict(
             title="Cases",
             titlefont=dict(   color=_color   ) 
          ),
-         yaxis2=dict(
+         yaxis1=dict(
             title="7-Day Avg Tests",
             titlefont=dict(   color="purple"  ) 
          ),
@@ -504,7 +509,9 @@ if __name__ == "__main__":
    os.system("clear")
    #main_menu()
    #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
-   generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy')
-   generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
+   #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy')
+   #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
 
    #generate_large_graph_with_avg("CA",  "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)
+   #generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, True)
+   generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, False)

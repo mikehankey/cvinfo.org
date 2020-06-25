@@ -34,3 +34,4 @@ corona-calc/json
 corona-calc/json/**/*.json
 corona-calc/json/*.json
 data/key-dates.txt
+corona-calc/covid-19-intl-data/
