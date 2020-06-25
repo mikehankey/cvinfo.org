@@ -160,6 +160,8 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
    fig.update_xaxes(rangemode="nonnegative")
    fig.update_yaxes(rangemode="nonnegative")
    
+   # Add the cases bars
+   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases" ),  secondary_y=True )
 
    # We had the # of tests on a secondary y-axis
    if(large is True):
@@ -168,11 +170,11 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
    else:
       # Get 7Day average data for Tests (so we have a smoother line)
       all_x_test, all_y_test, deltaX = get_avg_data(7,state,'test')
-      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "purple",  width= 2 )))   
+      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "purple",  width= 1 )))   
 
    # Add Cases on Secondary 
    fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color, name="Day-7 Avg. New Cases",  line=dict(  color=  _color,  width=2 )),  secondary_y=True )
-   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases"),  secondary_y=True )
+  
    
    if(large is True):
       fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3, name="Day-3 Avg. New Cases",  line=dict(  color= _3dcolor,  width=2  )),  secondary_y=True)
@@ -256,12 +258,12 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
          paper_bgcolor='rgba(255,255,255,1)',
          plot_bgcolor='rgba(255,255,255,1)',
          showlegend= True,
-         yaxis1=dict(
+         yaxis2=dict(  showgrid=False,
              titlefont=dict(
                color=_color
-            ) 
+            )
          ),
-          yaxis2=dict(
+          yaxis1=dict(  showgrid=False,
              titlefont=dict(
                color="purple"
             ) 
@@ -281,16 +283,18 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
          plot_bgcolor='rgba(255,255,255,1)',
          showlegend= False,
          yaxis2=dict(
+            showgrid=False,
             titlefont=dict(   color=_color   ) 
          ),
          yaxis1=dict( 
+            showgrid=False,
             titlefont=dict(   color="purple"  ) 
          ),
          legend_orientation="h"
       )  
 
          
-      fig.update_yaxes(title_text="<b>3D Avg. Tests</b>", secondary_y=False)
+      fig.update_yaxes(title_text="<b>7D Avg. Tests</b>", secondary_y=False)
       fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=True)
 
  
