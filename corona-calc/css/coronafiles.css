@@ -112,6 +112,18 @@ a, a:visited {
    width: 33.333%;
 }
 
+.graph_g.ft {
+   width:50%;
+}
+
+.graph_g.ft h3 {
+   max-width: 100%;
+}
+
+.graph_g.ft img {
+   padding: .5rem 3rem;
+}
+
 .graph_g img  {   max-width: 100%;
    width: 100%;
    padding:0  2.45rem;

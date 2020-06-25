@@ -111,7 +111,7 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
 # Generate Large Graph for the State Detail page
 # with 3day average line value, new cases & tests
 # WARNING THIS IS THE DUAL AXIS VERSION WITH CASES & TESTS
-def generate_large_graph_test_and_cases(state, _color, folder):
+def generate_large_graph_test_and_cases(state, _color, folder, large = False):
    
    # Daily Data
    cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
@@ -134,8 +134,9 @@ def generate_large_graph_test_and_cases(state, _color, folder):
          all_x_test.append(day) 
          all_y_test.append(d[day]['test']) 
 
-   # Get 3Day average data 
-   all_x_avg3, all_y_avg3, delta3 = get_avg_data(3,state,'cases')
+   # Get 3Day average data (only on large version)
+   if(large is True):
+      all_x_avg3, all_y_avg3, delta3 = get_avg_data(3,state,'cases')
 
    # Get 7Day average data 
    all_x_avg7, all_y_avg7, delta7 = get_avg_data(7,state,'cases')
@@ -153,15 +154,16 @@ def generate_large_graph_test_and_cases(state, _color, folder):
       _color = "black"
       _3dcolor = "rgba(0,0,0,0.5)"
    
+   # Create Fig with secondary ax
    fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-    # Add Secondary 
-     
+   # Add Primary 
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases"))
    fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color, name="Day-7 Avg. New Cases"))
-   fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3, name="Day-3 Avg. New Cases",  line=dict(  color= _3dcolor,  width=1  ))  )
-    #, dash="dot"
-
+   
+   if(large is True):
+      fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3, name="Day-3 Avg. New Cases",  line=dict(  color= _3dcolor,  width=1  ))  )
+   
    # Add line to every 1s & 15th of all months
    for date in all_x:
       if(date.endswith('15') or date.endswith('01')):
@@ -230,43 +232,67 @@ def generate_large_graph_test_and_cases(state, _color, folder):
 
    fig.update_xaxes(rangemode="nonnegative")
    fig.update_yaxes(rangemode="nonnegative")
- 
   
    # We had the # of tests on a secondary y-axis
-   fig.add_trace( 
-    go.Scatter(x=all_x_test, y=all_y_test, name="Tests",  line=dict(  color= "purple",  width=1 )), 
-    secondary_y=True,
-   )   
+   if(large is True):
+      # With put the raw data
+      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="Tests",  line=dict(  color= "purple",  width=1 )),  secondary_y=True,  )   
+   else:
+      # Get 7Day average data for Tests (so we have a smoother line)
+      all_x_test, all_y_test, deltaX = get_avg_data(7,state,'test')
+      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "rgba(136,16,136,.5)",  width=1 )),  secondary_y=True,  )   
 
-   fig.update_layout(
-      width=1000,
-      height=450, 
-      title = US_STATES[state] + " New Cases and Tests",
-      margin=dict(l=30, r=20, t=45, b=30),   # Top 0 with no title
-      paper_bgcolor='rgba(255,255,255,1)',
-      plot_bgcolor='rgba(255,255,255,1)',
-      showlegend= True,
-      yaxis1=dict(
-        title="Cases",
-        titlefont=dict(
-            color=_color
-        ) 
-      ),
-      yaxis2=dict(
-        title="Tests",
-        titlefont=dict(
-            color="purple"
-        ) 
-      ),
-      legend_orientation="h"
-   )  
+
+   if(large is True):
+      fig.update_layout(
+         width=1000,
+         height=450, 
+         title = US_STATES[state] + " New Cases and Tests",
+         margin=dict(l=30, r=20, t=45, b=30),   # Top Title
+         paper_bgcolor='rgba(255,255,255,1)',
+         plot_bgcolor='rgba(255,255,255,1)',
+         showlegend= True,
+         yaxis1=dict(
+            title="Cases",
+            titlefont=dict(
+               color=_color
+            ) 
+         ),
+         yaxis2=dict(
+            title="Tests",
+            titlefont=dict(
+               color="purple"
+            ) 
+         ),
+         legend_orientation="h"
+      )  
+   else:
+      fig.update_layout(
+         width=455,
+         height=290, 
+         margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
+         paper_bgcolor='rgba(255,255,255,1)',
+         plot_bgcolor='rgba(255,255,255,1)',
+         showlegend= False,
+         yaxis1=dict(
+            title="Cases",
+            titlefont=dict(   color=_color   ) 
+         ),
+         yaxis2=dict(
+            title="7-Day Avg Tests",
+            titlefont=dict(   color="purple"  ) 
+         ),
+         legend_orientation="h"
+      )  
 
 
    fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=False)
    fig.update_yaxes(title_text="<b>Tests</b>", secondary_y=True)
 
-   fig.write_image(folder + os.sep + state + "_blg.png") 
-
+   if(large is True):
+      fig.write_image(folder + os.sep + state + "_blg.png") 
+   else:
+      fig.write_image(folder + os.sep + state + "_tac.png")  # Tac for test & cases
 
 # Generate a graph based on state, type (like deaths, cases, mortality etc.) & color
 # For states & county

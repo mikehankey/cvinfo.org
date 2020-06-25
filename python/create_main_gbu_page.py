@@ -227,10 +227,13 @@ def generate_gbu_graphs_and_main_page(groups):
          generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test', True)               # New Test per day  
          generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp', True)       # Active Hospi
          generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality', True)     # Mortality (WARNING: computed not in JSON)
- 
-         # Create the one specific for Mike
-         generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state)
 
+         # Create the one specific for Mike
+         generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state,True)
+
+         # Create the dual axis cases/tests small form for the gbu_testing page
+         generate_large_graph_test_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state)
+ 
          # Get Extra Data to display (above the graphs)
          all_state_details = get_state_extra_info(state)
 
@@ -276,10 +279,10 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0)   +'</small></div>' 
                #- Total Hospi.: '+ display_us_format(all_state_details['total_hospi'],0)
    elif _type=="test" :
-      return '<div class="graph_g">\
+      return '<div class="graph_g ft">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New Tests on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_test'],0)  + '</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'test.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_tac.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Tests: '+ display_us_format(all_state_details['total_test'],0) +'</small></div>' 
    elif _type=="death" :
       return '<div class="graph_g">\
@@ -295,7 +298,7 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +'</small></div>' 
                #+' - Average CFR: '+ display_us_format(all_state_details['last_new_fatality'],2) +'%
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
    os.system("clear")
    generate_gbu_graphs_and_main_page(rank_states('cases'))
 
