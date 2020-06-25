@@ -168,9 +168,9 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
    else:
       # Get 7Day average data for Tests (so we have a smoother line)
       all_x_test, all_y_test, deltaX = get_avg_data(7,state,'test')
-      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "rgba(136,16,136,.5)",  width= 2 )))   
+      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "purple",  width= 2 )))   
 
-    # Add Secondary 
+   # Add Cases on Secondary 
    fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color, name="Day-7 Avg. New Cases",  line=dict(  color=  _color,  width=2 )),  secondary_y=True )
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases"),  secondary_y=True )
    
@@ -181,8 +181,7 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
    # Get MAX Y for drawing the 1st & 15th lines
    # + the lockdown period 
    max_y = np.max([np.max(all_y),np.max(all_y_test)])
-
-
+ 
    # Add line to every 1s & 15th of all months
    for date in all_x:
       if(date.endswith('15') or date.endswith('01')):
@@ -258,19 +257,21 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
          plot_bgcolor='rgba(255,255,255,1)',
          showlegend= True,
          yaxis1=dict(
-            title="Tests",
-            titlefont=dict(
-               color="purple"
+             titlefont=dict(
+               color=_color
             ) 
          ),
           yaxis2=dict(
-            title="Cases",
-            titlefont=dict(
-               color=_color
+             titlefont=dict(
+               color="purple"
             ) 
          ),
          legend_orientation="h"
       )  
+
+      fig.update_yaxes(title_text="<b>Tests</b>", secondary_y=False)
+      fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=True)
+
    else:
       fig.update_layout(
          width=455,
@@ -280,19 +281,19 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
          plot_bgcolor='rgba(255,255,255,1)',
          showlegend= False,
          yaxis2=dict(
-            title="Cases",
             titlefont=dict(   color=_color   ) 
          ),
-         yaxis1=dict(
-            title="7-Day Avg Tests",
+         yaxis1=dict( 
             titlefont=dict(   color="purple"  ) 
          ),
          legend_orientation="h"
       )  
 
+         
+      fig.update_yaxes(title_text="<b>3D Avg. Tests</b>", secondary_y=False)
+      fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=True)
 
-   fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=False)
-   fig.update_yaxes(title_text="<b>Tests</b>", secondary_y=True)
+ 
 
    if(large is True):
       fig.write_image(folder + os.sep + state + "_blg.png") 
@@ -513,5 +514,5 @@ if __name__ == "__main__":
    #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
 
    #generate_large_graph_with_avg("CA",  "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)
-   #generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, True)
+   generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, True)
    generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, False)
