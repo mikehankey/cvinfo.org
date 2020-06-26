@@ -18,22 +18,21 @@ from utils import *
 
 
 # debug only
-only_states= ['MI','NJ','NY']
+only_states= ['MI','NJ','NY','CA','MD']
  
 def prepare_data(_type,_7avg,per_pop):
+
    # Prepare the CSV structure
    new_csv_headers = ['date'] 
    for st in US_STATES: 
       new_csv_headers.append(US_STATES[st])
-
 
    # per_pop = we need the population of each state
    if(per_pop==True):
       with open(TMP_DATA_PATH + os.sep + 'us_states_pop.csv', newline='') as csvPopfile:
          pop_rows = csv.reader(csvPopfile)
          popDict = {rows[0]:rows[1] for rows in pop_rows}
-         
-
+          
    index_of_date = 0
    index_of_date_we_need = 0
    index_of_state = 0
@@ -79,7 +78,7 @@ def prepare_data(_type,_7avg,per_pop):
                   tmp_data_for_csv[_date] = {}
 
                # We only take into account the states defined in US_STATES
-               # For debug: and (index_of_state in only_states)
+               # For debug: )
                if(row[index_of_state] in US_STATES ):
  
                   if(_7avg is True):
@@ -101,12 +100,12 @@ def prepare_data(_type,_7avg,per_pop):
                          # 7-DAY AVG PPM
                         if(US_STATES[row[index_of_state]] not in tmp_data_for_csv):
                            if(row[index_of_date_we_need]!=''):
-                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = [float(row[index_of_date_we_need])*1000000/float(popDict[row[index_of_state]])]
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]] = [float(row[index_of_date_we_need])*100000/float(popDict[row[index_of_state]])]
                            else:
                               tmp_data_for_csv[US_STATES[row[index_of_state]]] = ['0']
                         else:
                            if(row[index_of_date_we_need]!=''):
-                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append(float(row[index_of_date_we_need])*1000000/float(popDict[row[index_of_state]]))
+                              tmp_data_for_csv[US_STATES[row[index_of_state]]].append(float(row[index_of_date_we_need])*100000/float(popDict[row[index_of_state]]))
                            else:
                               tmp_data_for_csv[US_STATES[row[index_of_state]]].append('0')
 
@@ -130,7 +129,7 @@ def prepare_data(_type,_7avg,per_pop):
  
 
    # We now create the csv file from data_for_csv
-   print("Creating cleaned SVG file")
+   print("Creating cleaned CSV file")
    with open(TMP_DATA_PATH + os.sep + 'barchar_race.csv', 'w+') as csvfile:
       
       row_to_write = []
@@ -160,12 +159,15 @@ def prepare_data(_type,_7avg,per_pop):
 
 def create_video(title,counter_title,out_file_name):    
   
-   max_state_to_show = 10
+   max_state_to_show = 3
   
-   dpi = 120
+   dpi = 50
    
-   video_size_w_in_px = 1920
-   video_size_h_in_px = 1080
+   #video_size_w_in_px = 1920
+   #video_size_h_in_px = 1080
+
+   video_size_w_in_px = 960
+   video_size_h_in_px = 540
 
    video_size_w = video_size_w_in_px/dpi  # In inch!
    video_size_h = video_size_h_in_px/dpi  # In inch!
@@ -196,7 +198,7 @@ def create_video(title,counter_title,out_file_name):
       sort='desc',
       filename=out_file_name,
       title=title, 
-      bar_label_size  = 18,   # Numbers next to bars 
+      bar_label_size  = 18,   # Numbers next to bars  
       shared_fontdict = { 'color' : '.1', 'size': 130 },
       scale='linear',
       bar_kwargs={
@@ -230,7 +232,7 @@ def create_video(title,counter_title,out_file_name):
  
 
 prepare_data('deathIncrease',True,True)
-title = "COVID-19 Day-7 Average Deaths per Million by State"
-counter_title = "Day-7 Average Deaths per Million"
+title = "COVID-19 Day-7 Average Deaths per 100,000 by State"
+counter_title = "Day-7 Average Deaths per 100,000"
 out_file_name = "covid19_7deaths_ppm.mp4"
 create_video(title,counter_title,out_file_name)
