@@ -98,5 +98,8 @@ def prepare_data(_type,_7avg,per_pop):
       #print(str(len(row)))
  
 if __name__ == "__main__":  
+   # python new_barchart_race.py  > ./tmp_json_data/race_deaths_per_10000.csv
    #prepare_data('death',True,True)
+   
+   # python new_barchart_race.py  > ./tmp_json_data/race_cases_per_10000.csv
    prepare_data('positive',True,True)
