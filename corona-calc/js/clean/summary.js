@@ -76,7 +76,7 @@ function fill_top_table(data,phantom) {
 
 
 // Create Main Top Sentence, compute herd immunity if necessary and fill the top of the page
-function create_top_page(data,   phantom, herd_tresh) {
+function create_top_page(data, phantom, herd_tresh) {
    var top_sentence = "";  
      
    if(data.trend_7['reach']!=-1 && data.trend_14['reach']!=-1) {

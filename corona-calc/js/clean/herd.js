@@ -232,8 +232,7 @@ function compute_data_for_herd(state,county,name_to_display) {
    // In case we reach a % of impacted > 100%, we can take the previous data of the loop 
    // to give an answer
    var previous_data = {}; 
-
-
+ 
    // Validate start data
    if(!validate_start_data(
       [  { name: "Herd Immunity Threshold", cur: start_data.herd_immunity_threshold, max: 100, min: 0 },
@@ -243,9 +242,7 @@ function compute_data_for_herd(state,county,name_to_display) {
    )) {
       return false;
    };
-
-
-
+ 
    // Test if the current non-tracked factor is too high and we go beyond the current total population
    if(    start_data.non_tracked_infected > start_data.pop 
       || (start_data.non_tracked_infected+start_data.total_infected)>start_data.pop 
@@ -256,8 +253,7 @@ function compute_data_for_herd(state,county,name_to_display) {
       max_non_tracked_factor_2 = (( start_data.herd_immunity_threshold*pop/100)- start_data.total_infected  -start_data.deads)/start_data.total_infected;
 
       max_non_tracked_factor_1 = Math.min(max_non_tracked_factor_1,max_non_tracked_factor_2);
-
-
+ 
       Swal.fire({
          icon: 'info',
          title: 'Unrealistic Data',
@@ -336,7 +332,6 @@ function compute_data_for_herd(state,county,name_to_display) {
    }
 
    display_top_results(state,county,how_many_days_until_herd,start_data,end_data,name_to_display, graph_data_y);
-
  
  
 }

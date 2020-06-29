@@ -284,8 +284,7 @@ function new_display_data(data,state,county) {
    // based on form on the page
    var phantom = 1/parseFloat($('#calc_phantom').val());
    var herd_thresh =  parseFloat($('#herd_thresh').val());
-  
- 
+   
    // Graph for New Cases
    // Warning: here we get the date for the summary
    // this way we don't have to compute the same stuff twice
@@ -374,7 +373,7 @@ function new_display_data(data,state,county) {
    compute_new_graph_data({
       x:all_graph_data.mortality[0],
       y:all_graph_data.mortality[1],
-      title:"% of Mortality among positive tested people", 
+      title:"Case Fatality Rate", 
       name:all_data.name, 
       graph_div:'mortality_graph', 
       graph_details_div:'mortality_details',
@@ -507,9 +506,7 @@ function compute_new_graph_data(input_data) {
       toDraw.avgx = input_data.average[0];
       toDraw.avgy = input_data.average[1];
    }
-  
- 
-
+   
    // Draw the Graph
    draw_graph(toDraw,input_data.option);  
 
