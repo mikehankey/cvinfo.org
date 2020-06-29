@@ -44,9 +44,7 @@ def display_us_format(_float,prec):
 
 # Compute X day average on set of data
 def get_X_day_avg(max_day,data,_type):
-   # X days average
-   first_val = -1
-   total_day = 0  
+   # X days average 
    tempValForAvg = []
    tempValFormax_day = []
 

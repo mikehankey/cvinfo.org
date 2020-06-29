@@ -21,7 +21,9 @@ function getInitData(data,county) {
       }; 
  
       // Do we have State Model Data ?
-      if( data['model_data'] !== undefined) {
+      if( data['model_data'] !== undefined && 
+         ((data['model_data']['MIT']['Day'].length)>0 ||
+         (data['model_data']['LA']['Day'].length)>0)) {
          toReturn.model_data =  data['model_data'];
       }
 
