@@ -9,9 +9,11 @@ from utils import *
 
 def clean_date_format(tmp_date):
    # Transform date format
+ 
    _date =  tmp_date[0:4]+'-'+tmp_date[4:6]+'-'+tmp_date[6:8]
-   d_day = _date.split('-')
-   return  str(datetime.date(int(d_day[0]),int(d_day[1]),int(d_day[2])))
+   d_day = _date.split('-') 
+   d = datetime.date(int(d_day[0]),int(d_day[1]),int(d_day[2]))
+   return d.strftime("%m-%d-%Y")
 
 
 def prepare_data(_type,_7avg,per_pop):
@@ -92,6 +94,56 @@ def prepare_data(_type,_7avg,per_pop):
       all_other_rows.append(cur_row)
 
 
+   # For death we need the daily value!
+   # We replace all_val_for_state by non_cumulative data
+   if(_type=="death"):
+      for row in all_other_rows:
+         state = row[0]
+         all_val_for_state = row[1:]
+
+         first_val = all_val_for_state[0]
+         for i,v in enumerate(all_val_for_state):
+            if(v!=0):
+               v = v - all_val_for_state[i-1]
+            else:
+               v = v
+
+
+
+   max_day = 7
+
+
+   # We compute the 7-day avg for every row
+   for row in all_other_rows:
+      tempValForAvg = []
+      tempValFormax_day = []
+
+      all_x_avg = []
+      all_y_avg = []
+
+      new_vals_for_row = []
+
+      for index, v in enumerate(row):
+
+         if(index!=0):
+
+            # For average of _type
+            tempValForAvg.append(float(v))
+
+            if(len(tempValForAvg) <  max_day):
+               tempValFormax_day = tempValForAvg 
+            else: 
+               tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
+                  
+            # We have strings...
+            tempValFormax_day = [float(i) for i in tempValFormax_day]
+   
+            
+            new_vals_for_row.append(np.mean(tempValFormax_day))   
+
+      row = [row[0]] + new_vals_for_row
+
+
    print(','.join(first_row))             
    for row in all_other_rows:
       print(','.join(row))  
@@ -102,4 +154,12 @@ if __name__ == "__main__":
    #prepare_data('death',True,True)
    
    # python new_barchart_race.py  > ./tmp_json_data/race_cases_per_10000.csv
-   prepare_data('positive',True,True)
+   #prepare_data('positive',True,True)
+
+
+   #python new_barchart_race.py  > ./tmp_json_data/race_7DAVG_daily_cases_per_10000.csv
+   #prepare_data('positiveIncrease',True,True)
+
+
+   #python new_barchart_race.py  > ./tmp_json_data/race_daily_deaths_per_10000.csv
+   prepare_data('death',True,True)

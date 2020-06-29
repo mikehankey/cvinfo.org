@@ -111,36 +111,33 @@ def generate_MD_zip_graph_with_avg(data,name,folder,_color):
 # Generate Large Graph for the State Detail page
 # with 3day average line value, new cases & tests
 # WARNING THIS IS THE DUAL AXIS VERSION WITH CASES & TESTS
-def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
-   
-   # Daily Data
+def generate_dual_graph_X_and_cases(state, _color, folder, dataset1, dataset2, output_ext, large = False):
+ 
+   # Daily Data Source File
    cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
    data = json.load(cur_json_file)
 
-   all_x = []
-   all_y = []
+   # Structure for datasets1
+   all_x1 = []
+   all_y1 = []
 
-   all_x_test=[]
-   all_y_test=[]
+   all_x2=[]
+   all_y2=[]
 
+   # Get raw data
    for d in data['stats']:
      
       for day in d:
 
-         # Org Data
-         all_x.append(day) 
-         all_y.append(d[day]['cases']) 
+         # Dataset1
+         all_x1.append(day) 
+         all_y1.append(d[day][dataset1['_type']]) 
 
-         all_x_test.append(day) 
-         all_y_test.append(d[day]['test']) 
+         # Dataset2
+         all_x2.append(day) 
+         all_y2.append(d[day][dataset2['_type']]) 
 
-   # Get 3Day average data (only on large version)
-   if(large is True):
-      all_x_avg3, all_y_avg3, delta3 = get_avg_data(3,state,'cases')
 
-   # Get 7Day average data 
-   all_x_avg7, all_y_avg7, delta7 = get_avg_data(7,state,'cases')
- 
    if(_color=="r"):
       _color = "red"
       _3dcolor = "rgba(255,0,0,0.5)"
@@ -153,39 +150,77 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
    else:
       _color = "black"
       _3dcolor = "rgba(0,0,0,0.5)"
-   
-   # Create Fig with secondary ax
+
+
+    # Create Fig with secondary ax
    fig = make_subplots(specs=[[{"secondary_y": True}]])
  
    fig.update_xaxes(rangemode="nonnegative")
    fig.update_yaxes(rangemode="nonnegative")
    
-   # Add the cases bars
-   fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)', name="New Cases" ),  secondary_y=True )
+   # Add the bars (always dataset2)
+   fig.add_trace(go.Bar(x=all_x2, y=all_y2, marker_color='rgba(158,158,158,.4)', name= dataset2['name'] ),  secondary_y=True )
+   
 
-   # We had the # of tests on a secondary y-axis
-   if(large is True):
-      # With put the raw data
-      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="Tests",  line=dict(  color= "purple",  width=2 )))   
+   # AVGs in dataset1
+   maxY_avg_dataset1 = [0]
+   if('avg' in dataset1): 
+      line_width = len(dataset1['avg'])
+      if(line_width==1):
+         line_width = 2
+      for avg in dataset1['avg']:
+         avgx, avgy, delta =  get_avg_data(avg,state,dataset1['_type'])
+         fig.add_trace(go.Scatter(x=avgx, y=avgy, name= str(avg) +"-Day Avg " + dataset1['name'],  line=dict(color="purple",width=line_width)))  
+         maxY_avg_dataset1.append(np.max(avgy))
+         if('raw_line' in dataset1):
+            if(dataset1['raw_line'] is False):
+               line_width -= 1  
+
+
+   # AVGs in dataset2
+   maxY_avg_dataset2 = [0]
+   if('avg' in dataset2): 
+      line_width = len(dataset2['avg'])
+      if(line_width==1):
+         line_width = 2
+      for avg in dataset2['avg']:
+         avgx, avgy, delta =  get_avg_data(avg,state,dataset2['_type'])
+         fig.add_trace(go.Scatter(x=avgx, y=avgy, name= str(avg) +"-Day Avg " + dataset2['name'],  line=dict(color= _color,width=line_width)),secondary_y=True)  
+         maxY_avg_dataset2.append(np.max(avgy))
+         if('raw_line' in dataset2):
+            if(dataset2['raw_line'] is False):
+               line_width -= 1  
+
+   
+   # Dataset1
+   if('raw_line' in dataset1):
+      if(dataset1['raw_line'] is True):
+         fig.add_trace(go.Scatter(x=all_x1, y=all_y1, name= dataset1['name'],  line=dict(color="purple",width=2)))  
+         maxY_avg_dataset1 = [np.max(all_y1)]
    else:
-      # Get 7Day average data for Tests (so we have a smoother line)
-      all_x_test, all_y_test, deltaX = get_avg_data(7,state,'test')
-      fig.add_trace(go.Scatter(x=all_x_test, y=all_y_test, name="7-Day Avg Tests",  line=dict(  color= "purple",  width= 1 )))   
-
-   # Add Cases on Secondary 
-   fig.add_trace(go.Scatter(x=all_x_avg7, y=all_y_avg7, marker_color=_color, name="Day-7 Avg. New Cases",  line=dict(  color=  _color,  width=2 )),  secondary_y=True )
+      maxY_avg_dataset1 = [0]
+   
+   # Dataset2
+   if('raw_line' in dataset2):
+      if(dataset2['raw_line'] is True):
+         fig.add_trace(go.Scatter(x=all_x2, y=all_y2, name= dataset2['name'],  line=dict(color=_color,width=2)),secondary_y=True)  
+         maxY_avg_dataset2 = [np.max(all_y2)]
+   else:
+      maxY_avg_dataset2 = [0]
   
-   
-   if(large is True):
-      fig.add_trace(go.Scatter(x=all_x_avg3, y=all_y_avg3, name="Day-3 Avg. New Cases",  line=dict(  color= _3dcolor,  width=2  )),  secondary_y=True)
-   
-
    # Get MAX Y for drawing the 1st & 15th lines
    # + the lockdown period 
-   max_y = np.max([np.max(all_y),np.max(all_y_test)])
- 
+   if(len(maxY_avg_dataset2)==1 and len(maxY_avg_dataset1)==1):
+      max_y = np.max(all_y1)
+   elif(len(maxY_avg_dataset2)==1 and len(maxY_avg_dataset1)!=1):
+      max_y = np.max(maxY_avg_dataset1)
+   elif(len(maxY_avg_dataset1)==1 and len(maxY_avg_dataset2)!=1):
+      max_y = np.max(all_y1)
+   else:
+      max_y = np.max(maxY_avg_dataset1)
+
    # Add line to every 1s & 15th of all months
-   for date in all_x:
+   for date in all_x1:
       if(date.endswith('15') or date.endswith('01')):
          fig.add_shape(
             type="line",
@@ -198,7 +233,7 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
                color="rgba(0,0,0,.5)",
                width=1,
             ),
-             layer="below"
+            layer="below" 
          )
  
 
@@ -240,7 +275,7 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
             type="rect",
             x0=start_lockdown_date,
             y0=0,
-            x1=all_x[len(all_x)-1],
+            x1=all_x1[len(all_x1)-1],
             y1=max_y,
             fillcolor="LightSalmon",
             opacity=0.1, 
@@ -250,6 +285,7 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
 
 
    if(large is True):
+
       fig.update_layout(
          width=1000,
          height=450, 
@@ -263,18 +299,18 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
                color=_color
             )
          ),
-          yaxis1=dict(  showgrid=False,
+          yaxis1=dict(  
+             showgrid=False,
              titlefont=dict(
                color="purple"
             ) 
          ),
          legend_orientation="h"
       )  
-
-      fig.update_yaxes(title_text="<b>Tests</b>", secondary_y=False)
-      fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=True)
-
+ 
+   
    else:
+
       fig.update_layout(
          width=455,
          height=290, 
@@ -288,22 +324,22 @@ def generate_dual_graph_test_and_cases(state, _color, folder, large = False):
          ),
          yaxis1=dict( 
             showgrid=False,
-            titlefont=dict(   color="purple"  ) 
+            titlefont=dict(   
+               color="purple"  
+            ) 
          ),
          legend_orientation="h"
       )  
 
          
-      fig.update_yaxes(title_text="<b>7D Avg. Tests</b>", secondary_y=False)
-      fig.update_yaxes(title_text="<b>New Cases</b>", secondary_y=True)
+   fig.update_yaxes(title_text="<b>"+dataset1['name']+"</b>", secondary_y=False)
+   fig.update_yaxes(title_text="<b>"+dataset2['name']+"</b>", secondary_y=True)
 
+   # Create file
+   fig.write_image(folder + os.sep + state + output_ext) 
+   print(folder + os.sep + state + output_ext + " Created")
  
-
-   if(large is True):
-      fig.write_image(folder + os.sep + state + "_blg.png") 
-   else:
-      fig.write_image(folder + os.sep + state + "_tac.png")  # Tac for test & cases
-
+   
 # Generate a graph based on state, type (like deaths, cases, mortality etc.) & color
 # For states & county
 def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
@@ -511,12 +547,29 @@ def main_menu():
 
 
 if __name__ == "__main__":
-   os.system("clear")
+   #os.system("clear")
    #main_menu()
    #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
    #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy')
    #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
 
    #generate_large_graph_with_avg("CA",  "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)
-   generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, True)
-   generate_dual_graph_test_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, False)
+   
+   
+   #generate_dual_graph_X_and_cases("FL", "r", PATH_TO_STATES_FOLDER + os.sep + "FL" , 
+   #          {'_type':'test','name':'Tests','raw_line':True},  
+   #          {'_type':'cases','name':'Cases','avg':[7,3], 'raw_line':False}, 
+   #          output_ext = '_blg.png', # Just for Mike
+   #          large=True)
+
+   #generate_dual_graph_X_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep, 
+   #         {'_type':'test','name':'7D. Avg Tests','avg':[7],'raw_line':False},  
+   #         {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
+   #         output_ext = '_tac.png', # TAC = test & case
+   #         large=False)
+   
+   generate_dual_graph_X_and_cases("FL", "r", PATH_TO_STATES_FOLDER + os.sep + "FL", 
+            {'_type':'deaths','name':'7D. Avg Deaths','avg':[7],'raw_line':False},  
+            {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
+            output_ext = '_deaths_and_cases.png',  
+            large=False)
