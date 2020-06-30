@@ -236,14 +236,14 @@ def generate_gbu_graphs_and_main_page(groups):
             large=True)
  
          # Create the dual axis cases/tests small form for the gbu_testing page
-         generate_dual_graph_X_and_cases(state, "r", PATH_TO_STATES_FOLDER + os.sep +state, 
+         generate_dual_graph_X_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep +state, 
             {'_type':'test','name':'7D. Avg Tests','avg':[7],'raw_line':False},  
             {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
             output_ext = '_tac.png', # TAC = test & cases
             large=False)
 
          # Create the dual axis cases/deaths small form for the gbu_death page
-         generate_dual_graph_X_and_cases(state, "r", PATH_TO_STATES_FOLDER + os.sep + state, 
+         generate_dual_graph_X_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state, 
             {'_type':'deaths','name':'7D. Avg Deaths','avg':[7],'raw_line':False},  
             {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
             output_ext = '_deaths_and_cases.png',  
@@ -301,13 +301,13 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
                <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_tac.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Tests: '+ display_us_format(all_state_details['total_test'],0) +'</small></div>' 
    elif _type=="death" :
-      return '<div class="graph_g">\
+      return '<div class="graph_g ft">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New Deaths on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_deaths'],0)  + '</small>\
                <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_deaths_and_cases.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
    elif _type=="case_fatality" :
-      return '<div class="graph_g ft">\
+      return '<div class="graph_g ">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>Case Fatality Rate on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['total_average_fatality'],2)  + '%</small>\
                <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'mortality.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
