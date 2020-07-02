@@ -248,7 +248,14 @@ def generate_gbu_graphs_and_main_page(groups):
             {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
             output_ext = '_deaths_and_cases.png',  
             large=False)
- 
+
+         # Create the dual axis cases/hospi small form for the gbu_death page
+         generate_dual_graph_X_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep + state, 
+            {'_type':'act_hosp','name':'7D. Avg Hospitalization','avg':[7],'raw_line':False},  
+            {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
+            output_ext = '_hospi_and_cases.png',  
+            large=False)
+
  
          # Get Extra Data to display (above the graphs)
          all_state_details = get_state_extra_info(state)
@@ -288,10 +295,10 @@ def create_state_DOM_el(st,all_state_details,rand) :
 # Create State HTML Element when not cases
 def create_state_type_DOM_el(st,all_state_details,rand,_type):
    if _type=="hospi" :
-      return '<div class="graph_g">\
+      return '<div class="graph_g ft">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New hospi. on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_hospi'],0)  + '</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'act_hosp.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_hospi_and_cases.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0)   +'</small></div>' 
                #- Total Hospi.: '+ display_us_format(all_state_details['total_hospi'],0)
    elif _type=="test" :

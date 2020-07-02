@@ -568,8 +568,8 @@ if __name__ == "__main__":
    #         output_ext = '_tac.png', # TAC = test & case
    #         large=False)
    
-   generate_dual_graph_X_and_cases("FL", "r", PATH_TO_STATES_FOLDER + os.sep + "FL", 
-            {'_type':'deaths','name':'7D. Avg Deaths','avg':[7],'raw_line':False},  
+   generate_dual_graph_X_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA", 
+            {'_type':'act_hosp','name':'7D. Avg Hospitalization','avg':[7],'raw_line':False},  
             {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
-            output_ext = '_deaths_and_cases.png',  
+            output_ext = '_hospi_and_cases.png',  
             large=False)

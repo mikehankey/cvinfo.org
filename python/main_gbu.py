@@ -14,7 +14,7 @@ def main_menu():
    print("1) Update data source")  
    print("2) Clean all states data")  
    print("3) Clean all counties data")  
-   print("4) Create Main GBU Page")  
+   print("4) Create Main GBU Page and All States Graphics")  
    print("5) Create Other Main GBU Page (showing Case Fatality, Hospi, Tests, Deaths)")
    print("6) Create All States GBU Pages")  
    print("7) Create Hotspots & Alerts")
@@ -46,7 +46,7 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
          
    elif cmd==4:
-      print("CREATING MAIN GBU PAGES")
+      print("CREATING MAIN GBU PAGES AND ALL STATES GRAPHICS")
       states_ranked_by_cases = rank_states('cases')
       generate_gbu_graphs_and_main_page(states_ranked_by_cases)
       print("\n>>>TASK DONE \n\n") 
