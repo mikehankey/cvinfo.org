@@ -36,3 +36,4 @@ corona-calc/json/*.json
 data/key-dates.txt
 corona-calc/covid-19-intl-data/
 *.mp4
+uwash/python/tmp_data/
