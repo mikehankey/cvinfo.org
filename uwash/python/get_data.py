@@ -11,12 +11,12 @@ def update_data_sources(remove_previous = True):
    # We remove everything from the folder 
    # so we don't keep files & folders for nothing
    if os.path.exists(TMP_DATA_PATH): 
-      os.system('rm -rf ' + TMP_DATA_PATH) 
-   
-   os.makedirs(TMP_DATA_PATH, exist_ok=True) 
-   
+      os.system('rm -rf ' + "."+os.sep+TMP_DATA_PATH) 
+    
+   os.makedirs(TMP_DATA_PATH, exist_ok=True)  
     
    print("Updating Data Sources")
+ 
 
    for src_file in SOURCES:
       os.system("wget -N " + src_file['url'] + "  -P " + TMP_DATA_PATH)
@@ -25,11 +25,11 @@ def update_data_sources(remove_previous = True):
          zip_ref.extractall(TMP_DATA_PATH)
 
       print(src_file['name'] + " unzipped")
-   
+ 
    # We delete all the zip files in the folder to 
    # avoid keeping unecessary files
    all_zip_files = glob.glob(os.path.join(TMP_DATA_PATH, '*.zip'))
-   for zip_file in all_zip_files:
+   for zip_file in all_zip_files:   
       os.remove(zip_file)
   
    print("---------------------------------")
