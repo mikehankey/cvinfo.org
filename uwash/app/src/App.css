@@ -1,0 +1,90 @@
+html, body {
+   width: 100%;
+   height: 100%;
+ }
+
+body { 
+    font-family: 'Open-sans', Helvetica, sans-serif;
+    font-weight: 300;
+    color: #506784;
+}
+
+.Pane1 {
+    background-color: #F3F6FA;
+    border-right-color: #DFE8F3 !important;
+}
+
+.controls-panel {
+    background: #f3f6fa;
+    padding: 10px;
+}
+
+.Select-control {
+    border-color: #DFE8F3 !important;
+}
+
+.jsoneditor-menu {
+    background-color: #F3F6FA !important;
+    border-bottom: none !important;
+}
+
+.jsoneditor {
+    border-color: #DFE8F3 !important;
+    margin-top: 13px;
+    color: #506784;
+}
+
+a {
+    color: #119dff;
+    font-weight: normal;
+}
+
+a:hover {
+    color: #0d76bf;
+}
+
+.jsoneditor-expand-all, 
+.jsoneditor-collapse-all {
+    background-color: #00cc96 !important;
+    cursor: pointer;
+}
+
+.jsoneditor-undo, jsoneditor-redo {
+    background-color: #00cc96 !important;
+    cursor: pointer; 
+}
+
+.jsoneditor-treepath-seperator {
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.Resizer {
+    background-color: #DFE8F3 !important;
+    opacity: 1;
+}
+
+
+.graph-container {
+   margin:2rem;
+}
+
+.js-plotly-plot { 
+    width: 100%;
+    height: 100%;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none !important;
+}
+
+ 
+input {
+    color: #506784 !important;
+}

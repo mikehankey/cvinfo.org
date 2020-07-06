@@ -1,0 +1,30 @@
+{
+  "name": "uwash-app",
+  "version": "0.1.0",
+  "license": "CC-BY-NC-SA-4.0", 
+  "private": false,
+  "dependencies": {
+    "babel-plugin-root-import": "^6.5.0",
+    "emotion": "^10.0.27",
+    "jsoneditor": "^5.11.0",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "prop-types": "^15.7.2",
+    "qs": "^6.5.0",
+    "react": "^16.3.1",
+    "react-app-rewired": "^2.1.6",
+    "react-dom": "^16.3.1",
+    "react-plotly.js": "^1.0.4",
+    "react-select": "^3.1.0",
+    "react-split-pane": "^0.1.71"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.11"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+} 
