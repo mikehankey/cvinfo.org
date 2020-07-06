@@ -37,3 +37,9 @@ data/key-dates.txt
 corona-calc/covid-19-intl-data/
 *.mp4
 uwash/python/tmp_data/
+uwash/uwash-app/node_modules
+uwash/python/__pycache__/
+uwash/__pycache__/
+uwash/react/
+uwash/react2/
+uwash/real_react/
