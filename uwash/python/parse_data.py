@@ -7,7 +7,7 @@ from utils import TMP_DATA_PATH, SOURCE_TO_USE,DATA_PATH, US_STATES_INV
 
 # Return the float value from a string if string is not empty
 # foz = float or zero (fonz = the cool guy from Happy Days... it's totally different)
-def foz(st):
+def foz(st): 
    try:
       return float(st)
    except:      
@@ -57,6 +57,7 @@ def get_us_data(state):
          for row in reversed(rows):
 
             if(row["location_name"] in US_STATES_INV):
+ 
                loc_name = US_STATES_INV[row["location_name"]]
       
                # Does the location_name already exists in all_stats_per_state?
@@ -65,18 +66,20 @@ def get_us_data(state):
                      all_stats_per_state[loc_name] = {'stats' : [], 'projected': []}
                   elif(state == ''):
                      all_stats_per_state[loc_name] = {'stats' : [], 'projected': []}
+                    
 
                   # Used to compute the daily data (as we only have totals here)
                   last_data[loc_name] = {'deaths':0,'total_d':0, 'date':''}
-   
-   
+                  print(row['location_name'])
+
                # We put the current data in the state dict
                if((state!='' and loc_name == state) or (state == '')):
-                    
+                   
+
                   # Create Row date to save in json 
                   last_data[loc_name] = {
-                        'deaths'    : round(foz(float(row['deaths_mean'])),0),
-                        'total_d'   : round(foz(float(row['totdea_mean'])),0), 
+                        'deaths'    : round((foz(row['deaths_mean'])),0),
+                        'total_d'   : round((foz(row['totdea_mean'])),0), 
                         'date'      : row['date']
                   } 
                   
@@ -106,10 +109,10 @@ def get_us_data(state):
          json.dump(all_stats_per_state[state],csv_file)
       
 
-      print(state + ".json updated")
+      print(state_folder + os.sep +  state + ".json" + " updated")
  
 
 
 if __name__ == "__main__":
    os.system("clear")
-   get_us_data('FL')
+   get_us_data('')
