@@ -5,7 +5,7 @@ var max_index;
 
 // Update Date in title based
 function update_title_date(id) {
-   // Transform id to date & display
+   // Transform id to date & display 
    var _date = id.slice(-8);
    $('#anim_date').fadeOut(25, function() {
       $('#anim_date').text(_date.substring(0,4)+"-"+_date.substring(4,6)+"-"+_date.substring(6,10));
@@ -190,7 +190,7 @@ function init_all_actions() {
 $(function() {
 
    // Init Cur_index
-   if(typeof default_anim_view != 'undefined') {
+    
       var data_array = window[default_anim_view+'_vals'];  
       cur_index = data_array.length-1;  
       max_index = cur_index;
@@ -200,10 +200,7 @@ $(function() {
       update_current_state_data(data_array.length-1,default_anim_view);
    
       init_anim_selector();
-      init_all_actions();
-   }
-
-
+      init_all_actions(); 
 
    
 })

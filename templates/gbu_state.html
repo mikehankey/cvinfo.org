@@ -39,6 +39,17 @@
    <link rel="manifest" href="../site.webmanifest">
    <link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
    <style>
+      .anim svg {
+    height: 500px;
+}
+.legend svg {
+    max-width: 580px;
+    height: auto!important;
+    margin: 1rem auto 0;
+}
+svg {
+    width: 100%;
+}
       .cl_10 {
    background:#8f0912;
    fill:#8f0912;
@@ -288,8 +299,8 @@
 
 
 <script src="../js/shared/framework_plugs.js"></script>   
-<script>
-      var cur_st = '{STATE}';
+<script> 
+      var cur_state =  '{STATE}';
       var cpm_vals = {CPM_VALS};
       var dpm_vals = {DPM_VALS};
       var cases_vals = {CASES_VALS};
@@ -299,6 +310,7 @@
       var mortality_vals = {MORTALITY_VALS};
       var new_cases_vals = {NEW_CASES_VALS};
       var new_deaths_vals = {NEW_DEATHS_VALS};
+      var default_anim_view = "{DEFAULT_ANIM_VIEW}";
       $(function() {
          $('#state_selector').removeAttr('disabled');
          $('#md_county_selector').removeAttr('disabled');

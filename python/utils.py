@@ -96,6 +96,11 @@ def get_avg_data(max_day,state,_type):
    json_ftmp.close()
  
    return get_X_day_avg(max_day, data['stats'],_type) 
- 
+
+# String YYYYMMDD to YYYY-MM-DD
+def st_date_readable_st_date(tmp_date):
+   return  tmp_date[0:4]+'-'+tmp_date[4:6]+'-'+tmp_date[6:8] 
+
+
 if __name__ == "__main__":
    print(display_us_format(46854684864653.5665,2))

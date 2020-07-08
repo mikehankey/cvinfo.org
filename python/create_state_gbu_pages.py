@@ -181,7 +181,8 @@ def generate_gbu_graphs_and_state_page(state,groups):
    svg_anim_for_template, max_date = add_svg_images("",ALL_OPTIONS_CODE[DEFAULT_OPTION], ALL_OPTIONS[DEFAULT_OPTION],state, US_STATES[state])
    template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
    
-   template = template.replace("{LAST_UPDATE_MAP}",str(max_date))
+   template = template.replace("{LAST_UPDATE_MAP}",st_date_readable_st_date(max_date))
+   template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
 
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')

@@ -2035,7 +2035,6 @@ def make_state_page(this_state):
    template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION])   
 
    template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
-   template = template.replace("{LAST_UPDATE_MAP}",str())
 
    # VERSIONING
    template= template.replace("{VERSION}",str(CUR_VERSION))
