@@ -21,6 +21,8 @@ HOTSPOTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'hotspots.html'
 ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts.html'
 ALERTS_TEMPLATE_DELTA = '..' + os.sep + 'templates' + os.sep + 'alerts-d.html'
 
+COUNTY_POP =  '..' + os.sep + 'DATA' + os.sep + 'pop_est_2019.csv'
+
 
 # KEY DATES (lockdown)
 KEY_DATES =   TMP_DATA_PATH + os.sep + 'key-dates.csv'
@@ -31,6 +33,9 @@ MD_ZIP_CODES      = "MD_ZIP_REL_DATA"
 MD_ZIPS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'gbu_MD_zip.html'
 MD_ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts_MD.html'
 MD_MOST_ACTIVE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'most_active_MD.html'
+
+############  SVG
+SVG_TEMPLATES = '..' + os.sep + 'templates' + os.sep + 'states' + os.sep
 
 
 ###############

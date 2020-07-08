@@ -257,11 +257,13 @@ def rank_counties(st):
       last_val_perc = 0
       tmp_avg_cases = []
       tmp_cases = []
+      
+      county_stat = reversed(list(county_data['stats']))
 
       # Get county name from path
       county_name = os.path.basename(county).replace('.json','')
- 
-      for day in reversed(list(county_data)):  
+
+      for day in county_stat:  
          for date in reversed(list(day)): 
                
             tmp_cases.append(float(day[date]['cases']))  
@@ -324,7 +326,7 @@ def create_large_graph_DOM_el(_file,st,title,rand) :
 
 # CREATE SELECT FOR SVG ANIM OPTIONS
 def create_svg_anim_select():
-   select = "<select class='select-css' id='anim_selector'>"
+   select = "<select id='anim_selector'>"
    for i,code in enumerate(ALL_OPTIONS_CODE):
       if(code == ALL_OPTIONS_CODE[DEFAULT_OPTION]):
          select += "<option value='"+code+"'  selected>"+ALL_OPTIONS[i]+"</option>"

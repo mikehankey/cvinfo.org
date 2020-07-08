@@ -247,7 +247,7 @@ svg {
                <div id="state_level" class="anim">
                      <div class="anim_header">
                         <div>
-                           <h4>{STATE_FULL} - <span id="anim_date">{LAST_UPDATE_MAP}</span></h4>
+                           <h4><span id="anim_date">{LAST_UPDATE_MAP}</span></h4>
                            <p><span id="cur_type_st">{CUR_TYPE}</span>: <span id="cur_type_val"></span></p>
                         </div>
                         <div>{ANIM_VIEW_SELECT}</div>
@@ -314,7 +314,7 @@ svg {
       $(function() {
          $('#state_selector').removeAttr('disabled');
          $('#md_county_selector').removeAttr('disabled');
-         $('#state_selector').val(cur_st);
+         $('#state_selector').val(cur_state);
          $('#state_selector').change(function() {
             var v = $('#state_selector').val();
            

@@ -371,7 +371,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
    if(county=="" or 'for_a_state' in county):
       all_data = data['stats']
    else:
-      all_data = data
+      all_data = data['stats']
       # We sort the data by inverse date for counties
       all_data = list(reversed(all_data))
    

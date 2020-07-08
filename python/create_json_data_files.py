@@ -139,12 +139,30 @@ def create_states_data(state):
  
       csv_state_file.close()
 
+# Search for the population of a given county (as FIPS)
+# based on a county FIPS & a list from a DictReader (see create_county_state_data)
+def get_county_pop(fips,pop_rows):
+   for r in pop_rows:
+      if(r['fips']==fips):
+         return int(r['population'])
+   
+   return 0
+
+
 # Create JSON file for all counties
 def create_county_state_data(_state):
    all_stats_per_county = {}
   
    print("Parsing counties data...")
-  
+
+   # We open DATA/county-pop.txt/
+   # to search the population of each county
+   county_pop = open(COUNTY_POP, mode='r')
+   pop_reader = csv.DictReader(county_pop)
+   pop_rows = list(pop_reader)
+   county_pop.close() 
+
+
    # Open history file (https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv)
    # Headers:
    # date,county,state,fips,cases,deaths
@@ -165,10 +183,11 @@ def create_county_state_data(_state):
             if(cur_state is not None and row['county'] != 'Unknown'):
             
                cur_county = row['county']
+               cur_county_fips = row['fips']
    
                # Does the state already exists in all_stats_per_county?
                if(cur_state not in all_stats_per_county):
-                  all_stats_per_county[cur_state] = {'stats' : {}} 
+                  all_stats_per_county[cur_state] = {'stats' : {},'sum':{'fips':'','pop':''}} 
    
                # Does the county already exists in the related state stats dict?
                if(cur_county not in all_stats_per_county[cur_state]['stats']):
@@ -184,7 +203,10 @@ def create_county_state_data(_state):
    
                # Create data for the given date 
                all_stats_per_county[cur_state]['stats'][cur_county].append(row_data)
-   
+               all_stats_per_county[cur_state]['sum'][cur_county] = {
+                  'fips': cur_county_fips,
+                  'pop' : get_county_pop(cur_county_fips,pop_rows)
+               }  
          line_count+=1
  
    print("Sorting counties data...") 
@@ -216,14 +238,17 @@ def create_county_state_data(_state):
             # Create County Folder if doesnt exits
             if not os.path.exists(county_folder):
                os.makedirs(county_folder) 
+            
+        
+            
 
             # Create JSON File in folder
             with open(county_folder +  os.sep + county + ".json", mode='w+') as csv_file:
-               json.dump(all_stats_per_county[state]['stats'][county],csv_file)
+               json.dump({'stats':all_stats_per_county[state]['stats'][county],'sum': all_stats_per_county[state]['sum'][county]},csv_file)
 
          print( state + "'s counties done")
 
 if __name__ == "__main__":
    os.system("clear")
-   create_states_data('FL') 
-   #create_county_state_data('')
+   #create_states_data('FL') 
+   create_county_state_data('FL')
