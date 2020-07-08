@@ -141,48 +141,20 @@ def generate_gbu_graphs_and_state_page(state,groups):
       template = template.replace('{INSTRUCTION}',"")
       template = template.replace('{MD_BUTTONS}',"")
 
-   # We get the data for the anim map in 
-   # "./json/" + this_state + ".json" (AT THE ROOT SINCE IT COMES FROM cvinfo.org)
-   js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
-
-   if os.path.isfile("../json/" + state + ".json")==False:
-      print("JSON File missing for this state.")
-      sys.exit()
-
- 
-   sjs = open("../json/" + state + ".json",'r')
-   sjs_data = json.load(sjs)
-   sjs.close()
-
- 
-
-   # Add all data for map anim
-   for js_field in js_vals:
-      if 'js_vals' not in sjs_data:
-         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data " + state  )
-         exit()
-      else:
-         if js_field in sjs_data['js_vals']:
-            js_ar = sjs_data['js_vals'][js_field]
-         else:
-            js_ar = []
-      js_tag = js_field.upper() 
-      template = template.replace("{" + js_tag + "}", str(js_ar))
-
+    
    # Map Animation
    # Add select for Anim
-   template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select())
+   #template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select())
    
    # Default type in title
-   template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION]) 
- 
-   
+   #template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION]) 
+  
    # Add All images for SVG aims 
-   svg_anim_for_template, max_date = add_svg_images("",ALL_OPTIONS_CODE[DEFAULT_OPTION], ALL_OPTIONS[DEFAULT_OPTION],state, US_STATES[state])
-   template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
+   #svg_anim_for_template, max_date = add_svg_images("",ALL_OPTIONS_CODE[DEFAULT_OPTION], ALL_OPTIONS[DEFAULT_OPTION],state, US_STATES[state])
+   #template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
    
-   template = template.replace("{LAST_UPDATE_MAP}",st_date_readable_st_date(max_date))
-   template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
+   #template = template.replace("{LAST_UPDATE_MAP}",st_date_readable_st_date(max_date))
+   #template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
 
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')

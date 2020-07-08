@@ -301,8 +301,9 @@ svg {
 
 <script src="../js/shared/framework_plugs.js"></script>   
 <script> 
+
       var cur_state =  '{STATE}';
-      var cpm_vals = {CPM_VALS};
+   /*      var cpm_vals = {CPM_VALS};
       var dpm_vals = {DPM_VALS};
       var cases_vals = {CASES_VALS};
       var deaths_vals = {DEATHS_VALS};
@@ -312,6 +313,7 @@ svg {
       var new_cases_vals = {NEW_CASES_VALS};
       var new_deaths_vals = {NEW_DEATHS_VALS};
       var default_anim_view = "{DEFAULT_ANIM_VIEW}";
+      */
       $(function() {
          $('#state_selector').removeAttr('disabled');
          $('#md_county_selector').removeAttr('disabled');
@@ -330,7 +332,7 @@ svg {
 
 
         
-	
+         /*
          // Variables
          var clickedTab = $(".tabs > .active");
          var tabWrapper = $(".tab__content");
@@ -383,17 +385,19 @@ svg {
                });
             });
          });
-
-         /** MAPS */
+         */
+         /** MAPS 
          var default_anim_view = "cpm"; 
          if($('#state').length!=0) {
             // State
             actionOnSVGCounty();
          }
- 
+            */
       })
    </script>
+   <!--
    <script src="../js/clean/svg_anim.js"></script>   
    <script>init_all_actions()</script>
+   -->
 </body>
 </html>
