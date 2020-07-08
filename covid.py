@@ -1922,8 +1922,6 @@ def make_state_page(this_state):
       return()
       
    sjs = load_json_file("./json/" + this_state + ".json")
-
-
  
    county_table, state_svg_map, tool_tips_html = make_county_table(sjs)
    state_map = make_state_map(sjs) 
@@ -2037,6 +2035,7 @@ def make_state_page(this_state):
    template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION])   
 
    template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
+   template = template.replace("{LAST_UPDATE_MAP}",str())
 
    # VERSIONING
    template= template.replace("{VERSION}",str(CUR_VERSION))

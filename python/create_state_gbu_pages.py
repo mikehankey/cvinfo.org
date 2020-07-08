@@ -7,6 +7,16 @@ import random
 from utils import *
 from generate_graphs import *
 
+# For Map Animation
+ALL_OPTIONS = ['Cases','Deaths','Cases per Million','Deaths per Million','New Deaths','New Cases','Mortality','Case Growth']
+ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm','new_deaths','new_cases','mortality','cg_med']
+DEFAULT_OPTION = 2 # Index in the arrays above 
+# WARNING ONLY THE "DEFAULT_OPTION" is INCLUDED IN THE HTML PAGE
+# THE OTHER SVG ANIMS WILL BE LOADED ON DEMAND VIA  AJAX CALL 
+
+# ANIM SVG  
+ORG_PATH = ".." + os.sep 
+ANIM_PATH =  ORG_PATH + "anim" + os.sep 
 
 def generate_gbu_graphs_and_state_page(state,groups): 
    
@@ -130,7 +140,49 @@ def generate_gbu_graphs_and_state_page(state,groups):
       template = template.replace('{MD_COUNTY_SELECT}', '')
       template = template.replace('{INSTRUCTION}',"")
       template = template.replace('{MD_BUTTONS}',"")
+
+   # We get the data for the anim map in 
+   # "./json/" + this_state + ".json" (AT THE ROOT SINCE IT COMES FROM cvinfo.org)
+   js_vals = [ 'cpm_vals', 'dpm_vals', 'cases_vals', 'deaths_vals', 'cg_med_vals', 'dg_med_vals', 'mortality_vals', 'new_cases_vals', 'new_deaths_vals'] 
+
+   if os.path.isfile("../json/" + state + ".json")==False:
+      print("JSON File missing for this state.")
+      sys.exit()
+
  
+   sjs = open("../json/" + state + ".json",'r')
+   sjs_data = json.load(sjs)
+   sjs.close()
+
+ 
+
+   # Add all data for map anim
+   for js_field in js_vals:
+      if 'js_vals' not in sjs_data:
+         print("JS_VALS MISSING FROM STATE PAGE. MUST RUN PREV FIRST. ./cvsvg_vince.py prev_data " + state  )
+         exit()
+      else:
+         if js_field in sjs_data['js_vals']:
+            js_ar = sjs_data['js_vals'][js_field]
+         else:
+            js_ar = []
+      js_tag = js_field.upper() 
+      template = template.replace("{" + js_tag + "}", str(js_ar))
+
+   # Map Animation
+   # Add select for Anim
+   template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select())
+   
+   # Default type in title
+   template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION]) 
+ 
+   
+   # Add All images for SVG aims 
+   svg_anim_for_template, max_date = add_svg_images("",ALL_OPTIONS_CODE[DEFAULT_OPTION], ALL_OPTIONS[DEFAULT_OPTION],state, US_STATES[state])
+   template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
+   
+   template = template.replace("{LAST_UPDATE_MAP}",str(max_date))
+
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)
@@ -138,6 +190,51 @@ def generate_gbu_graphs_and_state_page(state,groups):
 
    print("State gbu page (../corona-calc/states/"+state+"/index.html) created")
 
+
+
+# ADD ALL THE SVG IMAGES FOR A GIVE PLAYER
+def add_svg_images(code,_type,_type_string,state, state_name):
+   
+   # We add all the svgs for CPM
+   all_svg = sorted(glob.glob( ANIM_PATH + "frames/" + state + "/" + state + "-" + _type + "*" + "svg"))
+   all_svg_code = ""
+   max_date = None
+ 
+   for i,svg in enumerate(all_svg):
+      # Get date from the path
+      svg_date = svg[-12:].replace('.svg','')
+
+      #print(svg_date)
+  
+      # Load svg map
+      with open(svg, 'r') as f:  
+         svg_code = f.read()  
+
+      # We can add svg_date inside anim_svg for debug purpose
+      if(i==len(all_svg)-1):
+         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg'>"+svg_code+"</div>"
+      else:
+         all_svg_code += "<div id='"+_type+"_"+ svg_date+"' class='anim_svg' style='display:none'>"+svg_code+"</div>"
+
+      max_date = svg_date
+
+   buttons_holder= "<div class='cont_svg'><a class='btn-anim btn-fastbackward'><span></span></a><a class='btn-anim btn-backward'><span></span></a><a class='btn-anim btn-play m'><span></span></a><a class='btn-anim btn-forward'><span></span></a><a class='btn-anim btn-fastforward'><span></span></a></div>";
+
+   # Insert the legend
+   legend_file_name = ORG_PATH + '/anim/legends/'+_type+'.svg'
+   legend_code = ''
+   try: 
+      with open(legend_file_name, 'r') as f:  
+            legend_code = f.read()  
+   except:
+      print("LEGEND " + legend_file_name + " not found. Generate the legends first.")
+
+   if(_type==ALL_OPTIONS_CODE[DEFAULT_OPTION]):
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"'>" +  buttons_holder  + all_svg_code + '<div class="legend">' + legend_code  + '</div></div>'
+   else:
+      all_svg_code = "<div class='image_player' data-rel='"+_type+"' style='display:none'>"+ buttons_holder + all_svg_code + '<div class="legend">' +legend_code + '</div></div>'
+
+   return code  + all_svg_code, max_date
 
 
 # Rank counties for a given state
@@ -196,7 +293,6 @@ def rank_counties(st):
  
    return groups
 
-
 # Create County HTML Element with image
 def create_county_DOM_el(st,ct,rand) :
    if(st == 'MD'):
@@ -224,6 +320,16 @@ def create_large_graph_DOM_el(_file,st,title,rand) :
       p = ''
    return '<div class="graph_lg"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'"  alt="'+title+'"/>'+p+'</div>' 
 
+
+# CREATE SELECT FOR SVG ANIM OPTIONS
+def create_svg_anim_select():
+   select = "<select class='select-css' id='anim_selector'>"
+   for i,code in enumerate(ALL_OPTIONS_CODE):
+      if(code == ALL_OPTIONS_CODE[DEFAULT_OPTION]):
+         select += "<option value='"+code+"'  selected>"+ALL_OPTIONS[i]+"</option>"
+      else:
+         select += "<option value='"+code+"' >"+ALL_OPTIONS[i]+"</option>"         
+   return select + "</select>"
 
 
 if __name__ == "__main__":

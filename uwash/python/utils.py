@@ -18,4 +18,4 @@ SOURCE_TO_USE = 'Reference_hospitalization_all_locs.csv'
 TMP_DATA_PATH = "." + os.sep + "tmp_data"
 
 # Folder for data
-DATA_PATH = ".." + os.sep + "uwash-app" + os.sep + "public" + os.sep + "data"
+DATA_PATH = ".." + os.sep + "app" + os.sep + "public" + os.sep + "data"

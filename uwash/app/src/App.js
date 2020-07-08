@@ -5,9 +5,13 @@ import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch'; 
 import Select from 'react-select'; 
 
+import { Box, Container } from '@material-ui/core';
+
 import createPlotlyComponent from 'react-plotly.js/factory'
-import {stateOptions, stateDataUrl} from './constants'
-import {getCurrentDate} from './utils'
+import {stateOptions, stateDataUrl} from '~/constants'
+import {getCurrentDate,generateProjectedData,generateObservedData,getTodayLine} from '~/utils'
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import {Header,Footer} from "~/components"; 
 
 import './App.css'; 
  
@@ -20,8 +24,7 @@ class App extends Component {
 
         this.handleJsonChange = this.handleJsonChange.bind(this); 
         this.handleNewPlot    = this.handleNewPlot.bind(this);
-        
-
+         
         // Init Data
         const plotJSON = {
          data: [
@@ -43,6 +46,8 @@ class App extends Component {
                plotUrl: ''
            }
         };
+
+        this.state.visible = 'hidden'
     }
     
     handleJsonChange = newJSON => {
@@ -59,49 +64,29 @@ class App extends Component {
         
       fetch(cur_stateDataUrl)
          .then((response) => response.json())
-         .then((newJSON) => {
+         .then((newJSON) => { 
+            
+            const todayLine = getTodayLine()
 
-            const tmp = generateObservedData(newJSON.stats,'total_d','Total Deaths') 
-             
             const newJSONDataObserved_TOTALDEATH =  generateObservedData(newJSON.stats,'total_d','Total Deaths') 
             const newJSONDataProjected_TOTALDEATH = generateProjectedData(newJSON.projected,'total_d','Total Deaths') 
             
-            const todayLine =  [{
-               type: 'line',
-               x0:   getCurrentDate(),
-               y0: 0,
-               x1:   getCurrentDate(),
-               yref: 'paper',
-               y1: 1.2,
-               line: {
-                  color: 'grey',
-                  width: 1.5,
-                  dash: 'dot'
-               }
-            }]
-
-            const todayAnnotation = [
-               {
-                 x: getCurrentDate(),
-                 y: Math.max(...[newJSONDataObserved_TOTALDEATH.y,newJSONDataProjected_TOTALDEATH.y]),
-                 xref: 'x',
-                 yref: 'y',
-                 text: 'Today', 
-                 ax: -40,
-                 ay: -20,
-                 showarrow: false
-               }
-             ];
+            
+ 
   
             const newJSON_TOTALDEATH =  {
                 data: [newJSONDataObserved_TOTALDEATH,newJSONDataProjected_TOTALDEATH],
-                layout: {
-                  title:  "Total Deaths",
+                layout: { 
                   autosize: true, 
                   showlegend: true,
                   legend: {"orientation": "h"},
-                  shapes: todayLine,
-                  annotations: todayAnnotation
+                  shapes: todayLine.line,
+                  annotations: todayLine.annotation,
+                  xaxis: {
+                     title: {
+                       text: 'Total Deaths',
+                     },
+                  },
                 },
                 useResizeHandler: true,
                 style: { width: "100%", height: "100%"}
@@ -113,13 +98,17 @@ class App extends Component {
             const newJSON_DAILYDEATH =  {
                data: [newJSONDataObserved_DAILYDEATHS,newJSONDataProjected_DAILYDEATHS],
                layout: {
-                 title:  "Daily Deaths",
                  autosize: true, 
                  showlegend: true,
                  legend: {"orientation": "h"},
-                 shapes: todayLine,
-                 annotations: todayAnnotation
-               },
+                 shapes: todayLine.line,
+                 annotations: todayLine.annotation,
+                 xaxis: {
+                     title: {
+                     text: 'Daily Deaths',
+                     },
+                  },
+               }, 
                useResizeHandler: true,
                style: { width: "100%", height: "100%"}
            }; 
@@ -134,12 +123,22 @@ class App extends Component {
          });  
     }
      
-    getMocks = () => {
+   getMocks = () => {
       return stateOptions[0]; 
    };
     
-    render() { 
-        return (
+   render() { 
+      return (
+         <Container>
+            <Header />
+            <Router>
+               <Switch>
+                  <Route path="/" exact component={() => <Home />} />
+                  <Route path="/about" exact component={() => <About />} />
+                  <Route path="/contact" exact component={() => <Contact />} />
+                  <Route component={Notfound} />
+               </Switch>
+            </Router>
             <div className="App">
                   <div>
                      <div className='controls-panel'>
@@ -152,67 +151,55 @@ class App extends Component {
                            />
                      </div> 
                      <div className='graph-container'>  
-                        <Plot 
-                            data={this.state.total_deaths.json.data}
-                            layout={this.state.total_deaths.json.layout}
-                            config={{displayModeBar: false}}
-                        />  
+                        <Box>
+                           <h2>Total Deaths</h2>
+                           <Plot 
+                              data={this.state.total_deaths.json.data}
+                              layout={this.state.total_deaths.json.layout} 
+                              className={this.state.visible}
+                           />  
+                        </Box>
+                       
+                        <h2>Daily Deaths</h2>
                         <Plot 
                            data={this.state.daily_deaths.json.data}
-                           layout={this.state.daily_deaths.json.layout}
-                           config={{displayModeBar: false}}
+                           layout={this.state.daily_deaths.json.layout} 
+                           className={this.state.visible}
                         />
+                        <h2>Cases &amp; Testing</h2>
+                       
                      </div>
                   </div>
             </div>
+            <Footer />
+         </Container>
         );
     }
 }
  
 
-function generateObservedData(data,type,type_name) {  
-   var all_dates = [];
-   var all_values = [];
+export default App;
 
-   for(const d of data){
-      all_dates.push(d['date']);
-      all_values.push(d[type]);
-   }
 
-   return  { 
-            
-               'type': 'scatter',
-               'mode': 'lines+points',
-               'hovertemplate': '<b>Date</b>: %{x}<br><i>Observed</i>: %{y} '  + type_name,
-               'x': all_dates,
-               'y': all_values,
-               'marker': {color: 'red'},
-               'name': 'Observerd ' + type_name
-            } 
-   } 
-
-function generateProjectedData(data,type,type_name) {  
-   var all_dates = [];
-   var all_values = [];
-
-   for(const d of data){
-      all_dates.push(d['date']);
-      all_values.push(d[type]);
-   }
-
-   return  {
-      'mode': 'lines',
-      'x': all_dates,
-      'y': all_values, 
-      'hovertemplate': '<b>Date</b>: %{x}<br><i>Projected</i>: %{y} '  + type_name,
-      'marker': {color: 'darkgrey'}, 
-      'name': 'Projected ' + type_name,
-      'line': {
-         'dash': 'dash',
-         'width': 2
-       }
-   }   
- 
+/*
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Navigation, Footer, Home, About, Contact } from "./components";
+function App() {
+  return (
+    <div className="App">
+      <Router>
+        <Navigation />
+        <Switch>
+          <Route path="/" exact component={() => <Home />} />
+          <Route path="/about" exact component={() => <About />} />
+          <Route path="/contact" exact component={() => <Contact />} />
+        </Switch>
+        <Footer />
+      </Router>
+    </div>
+  );
 }
 
-export default App;
+export default App; 
+*/
