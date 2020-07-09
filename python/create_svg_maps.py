@@ -49,6 +49,13 @@ def get_color_based_on_rank_and_value(value,rank,_max):
       return 0
 
 
+# Split a list (used for css rules - see function below)
+def chunks(lst, n): 
+   toReturn = []
+   for i in range(0, len(lst), n):
+       toReturn.append(lst[i:i + n])
+   return toReturn
+
 # Get the css colors on each day for the given type
 def make_svg_state_map_css(state_code, _type):
  
@@ -127,13 +134,17 @@ def make_svg_state_map_css(state_code, _type):
       else:
          # The maj of the rules are for index 0
          # to avoir any css limtation
-         # I split the rule into two
+         # I split the rule into 8
          if(len(color)>0):
-            css +=  ', '.join(color[:int(len(color)/2)])
-            css += " { fill: " + MAP_COLORS[index] + " } "
 
-            css +=  ', '.join(color[int(len(color)/2):])
-            css += " { fill: " + MAP_COLORS[index] + " } "
+            chunks_of_list = chunks(color,int(len(color)/8))
+
+            for chunk in chunks_of_list:
+               css +=  ', '.join(chunk)
+               css += " { fill: " + MAP_COLORS[index] + " } "
+ 
+
+ 
   
 
 
@@ -160,4 +171,4 @@ def make_svg_state_map_css(state_code, _type):
 
  
 if __name__ == "__main__":
-   make_svg_state_map_css("FL","total_c") 
+   make_svg_state_map_css("DE","total_c") 
