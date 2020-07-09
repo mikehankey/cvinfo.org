@@ -61,6 +61,39 @@ function init_play_button() {
 }
  
 
+// Init slider based on how many days between the max and min date
+function init_slider() {
+
+   // Get type
+   var type = $('#anim_selector').val();
+   
+   // Get Min/Max Dates
+   var min_date = str_to_date(dates[type]['min']);
+   var max_date = str_to_date(dates[type]['max']);
+
+   // How many days between the two days?
+   var res = Math.abs(max_date - min_date) / 1000;
+   var days = Math.floor(res / 86400);
+
+   $('#dateSlider').attr('min',0);
+   $('#dateSlider').attr('max',days);
+   $('#dateSlider').val(days);
+
+   $('#dateSlider').change(function(e) {
+      console.log($(this).val())
+
+      // Pause if it's playing
+      if($('.btn-anim.m').hasClass('play')) {
+         $('.btn-anim.m').click();
+      }
+
+      // Go to the proper address
+      // min_date + $(this).val()days
+
+   })
+}
+
+
 // Add a zero 
 function addZ(n){return n<10? '0'+n:''+n;}
 
@@ -127,4 +160,5 @@ function str_to_date(str) {
 $(function() {
    init_type_select();
    init_play_button();
+   init_slider();
 })
