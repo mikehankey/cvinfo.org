@@ -95,7 +95,7 @@
     
    <ul class="tabs">
       <li class="active">State Graphs</li>
-      <li>Map</li> 
+      <li>County Map</li> 
    </ul> 
    <ul class="tab__content">
       <li class="active">
@@ -112,9 +112,10 @@
                         <div>
                            <h4><span id="anim_date">{LAST_UPDATE_MAP}</span></h4>
                            <div>{ANIM_VIEW_SELECT}</div>
+                           <div class="cont_svg"><a class="btn-anim btn-fastbackward"><span></span></a><a class="btn-anim btn-backward"><span></span></a><a class="btn-anim btn-play m"><span></span></a><a class="btn-anim btn-forward"><span></span></a><a class="btn-anim btn-fastforward"><span></span></a></div>
                         </div>
                      </div>
-                     {SVG_MAP}
+                     <div id="svg_map">{SVG_MAP}</div>
                      {LEGEND}
                </div> 
          </div>
@@ -165,6 +166,7 @@
 <script> 
 
       var cur_state =  '{STATE}';
+      var cur_date  = '{LAST_UPDATE_MAP}';
       {EXTRA_JS_DATA}
 
       $(function() {
@@ -185,7 +187,7 @@
 
 
    
-         // Variables
+         // Tabs
          var clickedTab = $(".tabs > .active");
          var tabWrapper = $(".tab__content");
          var activeTab = tabWrapper.find(".active");
@@ -237,8 +239,10 @@
                });
             });
          }); 
+
       })
    </script>
+   <script src="../js/clean/map_anim.js"></script>
     
 </body>
 </html>

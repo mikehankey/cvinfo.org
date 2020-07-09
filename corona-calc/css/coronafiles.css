@@ -9,7 +9,7 @@ body{margin:0;font-family:LatoX,sans-serif;color:#484b4c;background:url(../img/b
 }
 
 .anim_header {
-   justify-content: space-between!important;
+   justify-content: center;
    display: flex
 }
 
@@ -35,13 +35,19 @@ body{margin:0;font-family:LatoX,sans-serif;color:#484b4c;background:url(../img/b
 
 .btn-anim {
    background-color: #cecece;
-   border-radius: 50%;
-   border: 2px solid #000;
+   border-radius: 3px;
+   border: 1px solid #000;
    transition: all .15s;
    width: 33px;
    height: 33px;
    padding: 2px;
-   vertical-align: middle
+   vertical-align: middle;
+   margin: 0 .2rem;
+}
+
+.cont_svg {
+   margin-top: .3rem;
+   margin-bottom: 1rem;
 }
 
 .btn-anim span {

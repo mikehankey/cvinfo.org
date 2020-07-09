@@ -42,7 +42,7 @@ def get_color_based_on_rank_and_value(value,rank,_max):
       counter_color+=1
     
    if(value>_max):
-      return LEGEND_PARTITION
+      return len(MAP_COLORS)-1
    else:
       return 0
 
@@ -98,7 +98,7 @@ def make_svg_state_map_css(state_code, _type):
    all_css_colors = []
    for color in MAP_COLORS:
       all_css_colors.append([])
-
+   
    # Now we need to know for each day the color of each FIPS
    for d in all_counties_per_day:
       current_date = d  
@@ -110,7 +110,6 @@ def make_svg_state_map_css(state_code, _type):
             current_fips = f
             #print("CURRENT FIPS ", current_fips)
             color = get_color_based_on_rank_and_value(fips[f][_type],legend['intervals'],legend['max'])
-            #print("CURRENT COLOR ", str(color))
             #css+=   ".map_" + d.replace('-','') + " #FIPS_" +  current_fips + " { fill:" + MAP_COLORS[color] + "; }\n"
             all_css_colors[color].append(".map_" + d.replace('-','') + " #FIPS_" +  current_fips)
 
@@ -145,4 +144,4 @@ def make_svg_state_map_css(state_code, _type):
 
  
 if __name__ == "__main__":
-   make_svg_state_map_css("MD","cases") 
+   make_svg_state_map_css("MT","total_c") 
