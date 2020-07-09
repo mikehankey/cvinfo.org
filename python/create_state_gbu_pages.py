@@ -6,11 +6,12 @@ import numpy as np
 import random
 from utils import *
 from generate_graphs import *
+from create_svg_maps import make_svg_state_map_css
 
 # For Map Animation
-ALL_OPTIONS = ['Cases','Deaths','Cases per Million','Deaths per Million','New Deaths','New Cases','Mortality','Case Growth']
-ALL_OPTIONS_CODE = ['cases','deaths','cpm','dpm','new_deaths','new_cases','mortality','cg_med']
-DEFAULT_OPTION = 2 # Index in the arrays above 
+ALL_OPTIONS = ['Total Cases','Total Deaths', 'Daily Deaths','Daily Cases']
+ALL_OPTIONS_CODE = ['total_c','total_d','deaths','cases']
+DEFAULT_OPTION = 0 # Index in the arrays above 
 # WARNING ONLY THE "DEFAULT_OPTION" is INCLUDED IN THE HTML PAGE
 # THE OTHER SVG ANIMS WILL BE LOADED ON DEMAND VIA  AJAX CALL 
 
@@ -141,21 +142,42 @@ def generate_gbu_graphs_and_state_page(state,groups):
       template = template.replace('{INSTRUCTION}',"")
       template = template.replace('{MD_BUTTONS}',"")
 
-    
-   # Map Animation
-   # Add select for Anim
-   #template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select())
-   
-   # Default type in title
-   #template = template.replace("{CUR_TYPE}",ALL_OPTIONS[DEFAULT_OPTION]) 
-  
-   # Add All images for SVG aims 
-   #svg_anim_for_template, max_date = add_svg_images("",ALL_OPTIONS_CODE[DEFAULT_OPTION], ALL_OPTIONS[DEFAULT_OPTION],state, US_STATES[state])
-   #template = template.replace("{ALL_SVG_ANIM}", svg_anim_for_template)
-   
-   #template = template.replace("{LAST_UPDATE_MAP}",st_date_readable_st_date(max_date))
-   #template = template.replace("{DEFAULT_ANIM_VIEW}",ALL_OPTIONS_CODE[DEFAULT_OPTION])
 
+   # Maps (we only care of the css_total_cases here as we'll load the other css via Ajax)
+   legend_total_c, css_total_cases, min_total_c_date, max_total_c_date     =  make_svg_state_map_css(state,"total_c")
+   legend_cases, cc, min_cases_date, max_cases_date   =  make_svg_state_map_css(state,"cases")
+   legend_deaths, cc, min_deaths_date, max_deaths_date       =  make_svg_state_map_css(state,"deaths")
+   legend_total_d, cc, min_total_d_date, max_total_d_date     =  make_svg_state_map_css(state,"total_d")
+
+   # Get the SVG Map
+   with open(SVG_TEMPLATES + state + '.svg',mode='r') as svg_map:
+      svg_map_as_text = svg_map.read() 
+
+   # Add the proper class to the svg cases map (default)
+   svg_map_as_text = svg_map_as_text.replace('<svg id="','<svg class="map_'+max_total_c_date.replace('-','')+'" id="')
+
+   template = template.replace('{SVG_MAP}',svg_map_as_text)
+   template = template.replace('{EXTRA_JS_DATA}',\
+      "var dates =\
+      {'cases': {'min':'"+ min_cases_date +"', 'max':'"+max_cases_date+"'},\
+       'deaths': {'min':'"+min_deaths_date+"', 'max':'"+max_deaths_date+"'},\
+       'total_d': {'min':'"+min_total_d_date+"', 'max':'"+max_total_c_date+"'},\
+       'total_c': {'min':'"+min_total_c_date+"', 'max':'"+max_total_c_date+"'},\
+   }") 
+   
+   # Default Value is Cases 
+
+   # We show the total_c legend (default)
+   legend_total_c = legend_total_c.replace('style="display:none"','')
+
+   template = template.replace('{LEGEND}',legend_cases+legend_deaths+legend_total_d+legend_total_c)
+   template = template.replace('{MAP_CSS}',"total_c.css")
+   template = template.replace('{LAST_UPDATE_MAP}',max_total_c_date)
+   template = template.replace('{CUR_TYPE}','<b>Total cases</b>')
+    
+   # Add select for Anim
+   template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select()) 
+   
    # Save Template as main state page
    main_gbu_page = open('../corona-calc/states/'+state+'/index.html','w+')
    main_gbu_page.write(template)

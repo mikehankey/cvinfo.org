@@ -35,11 +35,29 @@ MD_ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts_MD.html'
 MD_MOST_ACTIVE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'most_active_MD.html'
 
 ############  SVG
-SVG_TEMPLATES = '..' + os.sep + 'templates' + os.sep + 'states' + os.sep
+SVG_TEMPLATES = '..' + os.sep + 'templates' + os.sep + 'states' + os.sep 
 
+# How many legend partition for the svg maps 
+MAP_COLORS = [
+   '#fee7dc',
+   '#fdd4c2',
+   '#fcbaa0',
+   '#fc9f81',
+   '#fb8464',
+   '#fa6949',
+   '#f24a35',
+   '#e32f27',
+   '#ca171c',
+   '#b11117',
+   '#8f0912'
+]
+    
+ 
 
 ###############
 LARGE_NUMBER = 99999999999999999
+
+
 
 
 def display_us_format(_float,prec): 
@@ -104,8 +122,10 @@ def get_avg_data(max_day,state,_type):
 
 # String YYYYMMDD to YYYY-MM-DD
 def st_date_readable_st_date(tmp_date):
-   return  tmp_date[0:4]+'-'+tmp_date[4:6]+'-'+tmp_date[6:8] 
-
+   if(tmp_date is not None):
+      return  tmp_date[0:4]+'-'+tmp_date[4:6]+'-'+tmp_date[6:8] 
+   else:
+      return '1979-01-01'
 
 if __name__ == "__main__":
    print(display_us_format(46854684864653.5665,2))

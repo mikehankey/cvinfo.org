@@ -38,144 +38,9 @@
    <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
    <link rel="manifest" href="../site.webmanifest">
    <link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
-   <style>
-      .anim svg {
-    height: 500px;
-}
-.legend svg {
-    max-width: 580px;
-    height: auto!important;
-    margin: 1rem auto 0;
-}
-svg {
-    width: 100%;
-}
-      .cl_10 {
-   background:#8f0912;
-   fill:#8f0912;
-}
-.cl_9 {
-   background:#b11117;
-   fill:#b11117;
-}
-.cl_8 {
-   background:#ca171c; 
-   fill:#ca171c;
-}
-.cl_7 { 
-   background:#e32f27;
-   fill:#e32f27;
-}
-.cl_6 {
-   background:#f24a35;
-   fill:#f24a35;
-}
-.cl_5 {
-   background:#fa6949;
-   fill:#fa6949;
-}
-.cl_4 {
-   background:#fb8464;
-   fill:#fb8464;
-}
-.cl_3 {
-   background:#fc9f81;
-   fill:#fc9f81;
-}
-.cl_2 {
-   background:#fcbaa0;
-   fill:#fcbaa0;
-}
-.cl_1 {
-   background:#fdd4c2;
-   fill:#fdd4c2;
-}
-.cl_0 {
-   background:#fee7dc;
-   fill:#fee7dc;
-}
-.cl_n {
-   background:#ccc;
-   fill:#ccc;
-} 
-   .tabs {
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  -webkit-transform: translateY(5px);
-  transform: translateY(5px);
-  margin-bottom: 0;
-  padding:0;
-}
-.tabs > li {
-  transition-duration: .25s;
-  display: table-cell;
-  list-style: none;
-  text-align: center;
-  padding: 20px 20px 25px 20px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer; 
-  font-weight: bold;
-}
-.tabs > li:before {
-  z-index: -1;
-  position: absolute;
-  content: "";
-  width: 100%;
-  height: 120%;
-  top: 0;
-  left: 0;
-  background-color: rgba(255, 255, 255, 0.3);
-  -webkit-transform: translateY(100%);
-  transform: translateY(100%);
-  transition-duration: .25s;
-  border-radius: 5px 5px 0 0;
-}
-.tabs > li:hover:before {
-  -webkit-transform: translateY(70%);
-  transform: translateY(70%);
-}
-.tabs > li.active { 
-  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}
-.tabs > li.active:before {
-  transition-duration: .5s;
-  background-color: white;
-  -webkit-transform: translateY(0);
-  transform: translateY(0);
-}
 
-.tab__content {
-  background-color: white;
-  position: relative;
-  width: 100%;
-  border-radius: 5px;
-  margin:0;
-  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}
-.tab__content > li {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: none;
-  list-style: none;
-}
-.tab__content > li .content__wrapper {
-  text-align: center;
-  border-radius: 5px;
-  width: 100%;
-  padding: 45px 40px 40px 40px;
-  background-color: white;
-}
-
-.tab_in {
-   margin: 2rem .5rem;
-}
-
-   </style> 
-
+   <link id="map_css" href="../states/{STATE}/maps/{MAP_CSS}?v={RAND_CSS}" rel="stylesheet">
+   
 </head>
 <body >
 
@@ -227,14 +92,11 @@ svg {
       </div>
 
    </div> 
-   
-   
-   <!-- 
+    
    <ul class="tabs">
       <li class="active">State Graphs</li>
       <li>Map</li> 
-   </ul>
-   -->
+   </ul> 
    <ul class="tab__content">
       <li class="active">
          <div class="tab_in">
@@ -249,11 +111,11 @@ svg {
                      <div class="anim_header">
                         <div>
                            <h4><span id="anim_date">{LAST_UPDATE_MAP}</span></h4>
-                           <p><span id="cur_type_st">{CUR_TYPE}</span>: <span id="cur_type_val"></span></p>
+                           <div>{ANIM_VIEW_SELECT}</div>
                         </div>
-                        <div>{ANIM_VIEW_SELECT}</div>
                      </div>
-                     {ALL_SVG_ANIM}
+                     {SVG_MAP}
+                     {LEGEND}
                </div> 
          </div>
       </li>
@@ -303,17 +165,8 @@ svg {
 <script> 
 
       var cur_state =  '{STATE}';
-   /*      var cpm_vals = {CPM_VALS};
-      var dpm_vals = {DPM_VALS};
-      var cases_vals = {CASES_VALS};
-      var deaths_vals = {DEATHS_VALS};
-      var cg_med_vals = {CG_MED_VALS};
-      var dg_med_vals = {DG_MED_VALS};
-      var mortality_vals = {MORTALITY_VALS};
-      var new_cases_vals = {NEW_CASES_VALS};
-      var new_deaths_vals = {NEW_DEATHS_VALS};
-      var default_anim_view = "{DEFAULT_ANIM_VIEW}";
-      */
+      {EXTRA_JS_DATA}
+
       $(function() {
          $('#state_selector').removeAttr('disabled');
          $('#md_county_selector').removeAttr('disabled');
@@ -331,8 +184,7 @@ svg {
          });
 
 
-        
-         /*
+   
          // Variables
          var clickedTab = $(".tabs > .active");
          var tabWrapper = $(".tab__content");
@@ -384,20 +236,9 @@ svg {
                   
                });
             });
-         });
-         */
-         /** MAPS 
-         var default_anim_view = "cpm"; 
-         if($('#state').length!=0) {
-            // State
-            actionOnSVGCounty();
-         }
-            */
+         }); 
       })
    </script>
-   <!--
-   <script src="../js/clean/svg_anim.js"></script>   
-   <script>init_all_actions()</script>
-   -->
+    
 </body>
 </html>

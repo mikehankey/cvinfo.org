@@ -36,11 +36,11 @@ def get_hotspots_and_alerts():
 
          tempValForAvg = []
          tempValFormax_day = []
-
+  
          # We get the avg cases 
          # Get the DATA
          max_day = 7
-         for d in reversed(county_data):
+         for d in reversed(county_data['stats']):
          
             for day in d: 
                all_y.append(d[day]['cases']) 
