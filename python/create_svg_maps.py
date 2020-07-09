@@ -1,5 +1,6 @@
 import json, sys, math
 import glob
+import numpy as np
 from utils import *
 
 
@@ -7,6 +8,7 @@ from utils import *
 # so the legend is adapative to the data of the end (and not the beginning)
 def create_legend(all_data,_type):
    max_d = max(all_data)
+   min_d = np.nonzero(np.array(all_data))[0][0]
 
    # We'll have len(MAP_COLORS) partitions
    steps  =  int(math.ceil((max_d/len(MAP_COLORS)) / 10.0)) * 10
@@ -34,8 +36,8 @@ def create_legend(all_data,_type):
 def get_color_based_on_rank_and_value(value,rank,_max):
  
    # We need to get the right color based on the right legend['intervals']
-   counter_color = 0
- 
+   counter_color = 0 
+   
    for low,high in rank: 
       if(value>=low and value<high):
          return  counter_color
@@ -117,9 +119,23 @@ def make_svg_state_map_css(state_code, _type):
   
    # Create the code of the css for all the dates
    for index,color in enumerate(all_css_colors):
-      if(len(color)>0):
-         css +=  ', '.join(color)
-         css += " { fill: " + MAP_COLORS[index] + " } "
+
+      if(index>0):
+         if(len(color)>0):
+            css +=  ', '.join(color)
+            css += " { fill: " + MAP_COLORS[index] + " } "
+      else:
+         # The maj of the rules are for index 0
+         # to avoir any css limtation
+         # I split the rule into two
+         if(len(color)>0):
+            css +=  ', '.join(color[:int(len(color)/2)])
+            css += " { fill: " + MAP_COLORS[index] + " } "
+
+            css +=  ', '.join(color[int(len(color)/2):])
+            css += " { fill: " + MAP_COLORS[index] + " } "
+  
+
 
    # We save the css file where it belongs
    maps_dir = PATH_TO_STATES_FOLDER + os.sep + state_code + os.sep + 'maps' 
@@ -144,4 +160,4 @@ def make_svg_state_map_css(state_code, _type):
 
  
 if __name__ == "__main__":
-   make_svg_state_map_css("MT","total_c") 
+   make_svg_state_map_css("FL","total_c") 

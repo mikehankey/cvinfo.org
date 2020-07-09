@@ -34,9 +34,9 @@ body{margin:0;font-family:LatoX,sans-serif;color:#484b4c;background:url(../img/b
 }
 
 .btn-anim {
-   background-color: #cecece;
+   background-color: #e6e6e6;
    border-radius: 3px;
-   border: 1px solid #000;
+   border: 1px solid #adacac;
    transition: all .15s;
    width: 33px;
    height: 33px;
