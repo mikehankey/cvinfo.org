@@ -12,6 +12,8 @@ function init_type_select() {
       // Switch the legend
       $('.legend').css('display','none');
       $('#leg_'+ $(this).val()).attr('style','')
+      // Update the slider date
+      init_slider();
    });   
 }
 
@@ -79,18 +81,31 @@ function init_slider() {
    $('#dateSlider').attr('max',days);
    $('#dateSlider').val(days);
 
-   $('#dateSlider').change(function(e) {
-      console.log($(this).val())
+   $('#dateSlider').on('input',function(e) {
+       
+      var m_date = str_to_date(dates[type]['min']);
 
       // Pause if it's playing
-      if($('.btn-anim.m').hasClass('play')) {
+      if($('.btn-anim.m').hasClass('btn-pause')) {
          $('.btn-anim.m').click();
       }
 
       // Go to the proper address
       // min_date + $(this).val()days
+ 
+      m_date.setDate( m_date.getDate() + parseInt($(this).val()));
+ 
 
-   })
+      new_date_formatted = m_date.getFullYear() + '-' + addZ(m_date.getMonth()+1) + '-' +  addZ(m_date.getDate());
+      new_date = m_date.getFullYear() + '' + addZ(m_date.getMonth()+1) + '' +  addZ(m_date.getDate());
+      
+      $('#anim_date').text(new_date_formatted);
+      // We change the class of the map accordingly
+      $('#svg_map svg').removeClass().addClass('map_'+new_date);
+      
+      // Update main var
+      cur_date = new_date_formatted;
+   });
 }
 
 
@@ -146,7 +161,13 @@ function anim_play(type, dir, max) {
    
    // Update main var
    cur_date = next_date_formatted;
-      
+
+   // How many days since min_date?
+   var res  = Math.abs(str_to_date(cur_date) - min_date) / 1000;
+   var days = Math.floor(res / 86400);
+   // Move the slider accordingly
+   $('#dateSlider').val(days);
+
 }
 
 // Transform a US format date to a javascript date
