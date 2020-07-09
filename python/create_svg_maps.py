@@ -9,10 +9,20 @@ from utils import *
 def create_legend(all_data,_type):
    max_d = max(all_data)
    min_d = np.nonzero(np.array(all_data))[0][0]
+ 
+   #print('IN CREATED LEGEND ')
+   #print("MAX_D " , str(max_d))
+
+   #print("MIN_D " , str( min_d))
 
    # We'll have len(MAP_COLORS) partitions
    steps  =  int(math.ceil((max_d/len(MAP_COLORS)) / 10.0)) * 10
+   
+   if(steps<=len(MAP_COLORS)):
+      steps = 1
 
+   #print("STEP ", str(steps))
+   
    # HTML for legend
    html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 552 74.3">'
 
@@ -24,8 +34,9 @@ def create_legend(all_data,_type):
 
       html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='25'><title>" + str(start) + " - " + str(start+steps) + "</title></rect>" 
       html_legend +="<text class='l' x='" + str(i*50+2) + "' y='40' width='50'>" + str(start) + " - " + str(start+steps) + "</text>" 
-
+      #print("START ", str(start))
       start += steps 
+      #print("END ", str(start))
 
    html_legend += "</svg></div>"
 
@@ -171,4 +182,4 @@ def make_svg_state_map_css(state_code, _type):
 
  
 if __name__ == "__main__":
-   make_svg_state_map_css("DE","total_c") 
+   make_svg_state_map_css("GA","deaths") 
