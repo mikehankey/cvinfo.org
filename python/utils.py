@@ -21,7 +21,7 @@ HOTSPOTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'hotspots.html'
 ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts.html'
 ALERTS_TEMPLATE_DELTA = '..' + os.sep + 'templates' + os.sep + 'alerts-d.html'
 
-COUNTY_POP =  '..' + os.sep + 'DATA' + os.sep + 'pop_est_2019.csv'
+COUNTY_POP =  '..' + os.sep + 'data' + os.sep + 'pop_est_2019.csv'
 
 
 # KEY DATES (lockdown)
