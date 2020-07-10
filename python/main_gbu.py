@@ -18,7 +18,8 @@ def main_menu():
    print("5) Create Other Main GBU Page (showing Case Fatality, Hospi, Tests, Deaths)")
    print("6) Create All States GBU Pages")  
    print("7) Create Hotspots & Alerts")
-   print("8) Do it all")  
+   print("8) Create Json files to get access to the daily data from the state/counties maps")
+   print("9) Do it all")  
    
    cmd = input("Run: ")
 
@@ -79,8 +80,16 @@ def main_menu():
       create_alert_page(alerts)
       print("\n>>>TASK DONE \n\n") 
 
+   
    elif cmd==8:
-      print("CREATE ALL GBU PAGES & ALERTS & HOTSPOTS")
+      print("CREATE JSON FILES TO ACCESS DAILY DETAILS FROM THE STATE MAPS")
+      for st in US_STATES:
+         create_daily_county_state_data(st)
+         print(st + " done.")
+      print("\n>>>TASK DONE \n\n") 
+
+   elif cmd==9:
+      print("CREATE ALL GBU PAGES & ALERTS & HOTSPOTS & JSON FILES & MORE!")
        
       update_data_sources()
       create_states_data('') 
@@ -96,6 +105,8 @@ def main_menu():
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
+         create_daily_county_state_data(st)
+
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
       create_alert_page(alerts)

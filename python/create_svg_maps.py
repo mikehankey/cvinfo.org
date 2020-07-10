@@ -7,10 +7,11 @@ from utils import *
 # Create legend based on all_data
 # so the legend is adapative to the data of the end (and not the beginning)
 def create_legend(all_data,_type,number_of_county):
-    
+   
    max_d = max(all_data)
    min_d = np.nonzero(np.array(all_data))[0][0]
-  
+
+   
    # HTML for legend
    html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 74.3">'
 
@@ -224,7 +225,7 @@ def make_svg_state_map_css(state_code, _type):
  
 if __name__ == "__main__":
    
-   make_svg_state_map_css("TX","cases") 
+   make_svg_state_map_css("CA","deaths") 
    #make_svg_state_map_css("TX","total_c") 
    #make_svg_state_map_css("TX","total_d") 
    #make_svg_state_map_css("TX","deaths") 

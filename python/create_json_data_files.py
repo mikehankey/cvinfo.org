@@ -166,6 +166,94 @@ def get_county_pop(fips,pop_rows):
    
    return 0
 
+# Search for the name of a given county based on a FIPS 
+def get_county_name(fips,rows):
+  
+   for r in rows:
+      if(r['fips']==fips):
+         return r['county_name'].replace(' County','').replace(' Borough','').replace(' Census Area','').replace(' Municipality','')
+   
+   return ''
+
+
+
+# Create JSON file per dates and all_counties
+# used by ajax call for the map details ("Load daily data")
+def create_daily_county_state_data(_state):
+
+   # We open DATA/county-pop.txt/
+   # to search the population of each county
+   county_pop = open(COUNTY_POP, mode='r')
+   pop_reader = csv.DictReader(county_pop)
+   pop_rows = list(pop_reader)
+   county_pop.close() 
+ 
+   # We open DATA/county-fips_master.csv to retrieve
+   # the name of each county based on the fips 
+   c_name = open(COUNTY_NAMES, mode='r')
+   c_name_reader = csv.DictReader(c_name)
+   c_name_rows = list(c_name_reader)
+   c_name.close() 
+ 
+
+   all_dates_per_state = {}
+
+   with open(TMP_DATA_PATH + os.sep +  "us-counties.csv", mode='r') as csv_file:
+      csv_reader = csv.DictReader(csv_file) 
+      rows = list(csv_reader)
+      line_count = 0
+      last_data = {}
+ 
+      for row in reversed(rows): 
+          
+         # Get Code from full name
+         cur_state = get_state_code(row["state"])
+         cur_date  = row['date']
+         cur_county_fips = row['fips']
+ 
+         if(cur_state == _state or _state == ""):
+
+            # We have "none" states for Guam, Virgin Islands...
+            if(cur_state is not None and row['county'] != 'Unknown'):
+               
+               # Do we already have the state in all_dates_per_state
+               if(cur_state not in all_dates_per_state):
+                  all_dates_per_state[cur_state] = {}
+
+               # Do we already have the date in all_dates[cur_state]
+               if(cur_date not in all_dates_per_state[cur_state]):
+                  all_dates_per_state[cur_state][cur_date] = []
+
+               all_dates_per_state[cur_state][cur_date].append({
+                  'fips'      : cur_county_fips,
+                  'pop'       : get_county_pop(cur_county_fips,pop_rows),
+                  'total_c'   : foz(row['cases']),
+                  'total_d'   : foz(row['deaths']),
+                  'name'      : get_county_name(cur_county_fips,c_name_rows)
+               })
+   
+ 
+
+
+   # Now we create all the files we need 
+   for state in all_dates_per_state:
+
+      for date in all_dates_per_state[state]:
+
+         # If the folder to store the data doesn't exist...
+         county_folder =  PATH_TO_STATES_FOLDER + os.sep + state + os.sep +  "daily"  
+            
+         # Create County Folder if doesnt exits
+         if not os.path.exists(county_folder):
+            os.makedirs(county_folder)   
+
+         # Create JSON File in folder
+         with open(county_folder +  os.sep + date + ".json", mode='w+') as json_file:
+            json.dump(all_dates_per_state[state][date],json_file)
+
+ 
+
+
 
 # Create JSON file for all counties
 def create_county_state_data(_state):
@@ -263,6 +351,7 @@ def create_county_state_data(_state):
          print( state + "'s counties done")
 
 if __name__ == "__main__":
-   os.system("clear")
-   create_states_data('FL') 
-   create_county_state_data('FL')
+   #os.system("clear")
+   #create_states_data('FL') 
+   #create_county_state_data('FL')
+   create_daily_county_state_data('FL')

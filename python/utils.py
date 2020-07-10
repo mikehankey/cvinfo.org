@@ -22,7 +22,7 @@ ALERTS_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'alerts.html'
 ALERTS_TEMPLATE_DELTA = '..' + os.sep + 'templates' + os.sep + 'alerts-d.html'
 
 COUNTY_POP =  '..' + os.sep + 'data' + os.sep + 'pop_est_2019.csv'
-
+COUNTY_NAMES =  '..' + os.sep + 'data' + os.sep + 'county_fips_master.csv'
 
 # KEY DATES (lockdown)
 KEY_DATES =   TMP_DATA_PATH + os.sep + 'key-dates.csv'
