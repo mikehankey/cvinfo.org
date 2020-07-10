@@ -4,7 +4,7 @@ import sys
 import json 
 from update_data_src import *
 from utils import *
-
+from datetime import datetime, timedelta
 
 # Return the float value from a string if string is not empty
 # foz = float or zero (fonz = the cool guy from Happy Days... it's totally different)
@@ -204,11 +204,11 @@ def create_daily_county_state_data(_state):
       line_count = 0
       last_data = {}
  
-      for row in reversed(rows): 
+      for row in rows: 
           
          # Get Code from full name
          cur_state = get_state_code(row["state"])
-         cur_date  = row['date']
+         cur_date  = row['date'] 
          cur_county_fips = row['fips']
  
          if(cur_state == _state or _state == ""):
@@ -224,16 +224,34 @@ def create_daily_county_state_data(_state):
                if(cur_date not in all_dates_per_state[cur_state]):
                   all_dates_per_state[cur_state][cur_date] = []
 
+               # Get previous date to have the daily values
+               cur_date_vals     = cur_date.split("-")
+               cur_date_datetime = datetime(int(cur_date_vals[0]), int(cur_date_vals[1]), int(cur_date_vals[2]))
+               previous_date     = cur_date_datetime   - timedelta(days=1)
+               previous_date     = previous_date.strftime("%Y-%m-%d") 
+
+               prev_tdeaths = 0
+               prev_tcases  = 0
+
+               if(previous_date in all_dates_per_state[cur_state]):
+                
+                  # Retrieve the record for the previous date
+                  for data in all_dates_per_state[cur_state][previous_date]:
+                     if(data['fips']==cur_county_fips):
+                        prev_tcases  = data['total_c']
+                        prev_tdeaths = data['total_d']
+ 
                all_dates_per_state[cur_state][cur_date].append({
                   'fips'      : cur_county_fips,
                   'pop'       : get_county_pop(cur_county_fips,pop_rows),
                   'total_c'   : foz(row['cases']),
                   'total_d'   : foz(row['deaths']),
+                  'deaths'    : foz(row['cases'])- prev_tdeaths,
+                  'cases'     : foz(row['deaths'])- prev_tcases,
                   'name'      : get_county_name(cur_county_fips,c_name_rows)
                })
    
  
-
 
    # Now we create all the files we need 
    for state in all_dates_per_state:
@@ -354,4 +372,4 @@ if __name__ == "__main__":
    #os.system("clear")
    #create_states_data('FL') 
    #create_county_state_data('FL')
-   create_daily_county_state_data('FL')
+   create_daily_county_state_data('DE')
