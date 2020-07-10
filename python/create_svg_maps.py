@@ -76,7 +76,7 @@ def create_legend(all_data,_type,number_of_county):
 
    html_legend += "</svg></div>"
 
-   print(html_legend)
+   #print(html_legend)
 
    return {"html_legend": html_legend, "intervals": all_intervals, "max": start-steps}
 
