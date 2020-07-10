@@ -24,16 +24,16 @@ def create_legend(all_data,_type):
    #print("STEP ", str(steps))
    
    # HTML for legend
-   html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 552 74.3">'
+   html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 74.3">'
 
    # Create the related intervals
    all_intervals = []
    start = 0 
    for i in range(len(MAP_COLORS)):
       all_intervals.append((start,start+steps)) 
-
-      html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='25'><title>" + str(start) + " - " + str(start+steps) + "</title></rect>" 
-      html_legend +="<text class='l' x='" + str(i*50+2) + "' y='40' width='50'>" + str(start) + " - " + str(start+steps) + "</text>" 
+      # str(start+steps) 
+      html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='25'><title>" + str(start) + " - ...</title></rect>" 
+      html_legend +="<text class='l' x='" + str(i*50+2) + "' y='40' width='50'>" + str(start) +  " - ...</text>" 
       #print("START ", str(start))
       start += steps 
       #print("END ", str(start))
@@ -182,4 +182,4 @@ def make_svg_state_map_css(state_code, _type):
 
  
 if __name__ == "__main__":
-   make_svg_state_map_css("GA","deaths") 
+   make_svg_state_map_css("TX","total_c") 

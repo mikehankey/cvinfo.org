@@ -1,7 +1,7 @@
 # Create the data files for US / States & Counties
 import csv
 import sys
-import json
+import json 
 from update_data_src import *
 from utils import *
 
@@ -25,6 +25,10 @@ def get_state_code(state_full_name):
 # Create JSON files for all states (or just a given state)
 def create_states_data(state):
    
+   # First we completely empty the states folder so 
+   # we don't keep old data that aren't in the data sources files anymore
+   os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep+"*")
+
    all_stats_per_state = {}
 
    # We open us_states_pop.csv to get the state population
@@ -161,8 +165,7 @@ def create_county_state_data(_state):
    pop_reader = csv.DictReader(county_pop)
    pop_rows = list(pop_reader)
    county_pop.close() 
-
-
+ 
    # Open history file (https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv)
    # Headers:
    # date,county,state,fips,cases,deaths
@@ -237,10 +240,7 @@ def create_county_state_data(_state):
             
             # Create County Folder if doesnt exits
             if not os.path.exists(county_folder):
-               os.makedirs(county_folder) 
-            
-        
-            
+               os.makedirs(county_folder)   
 
             # Create JSON File in folder
             with open(county_folder +  os.sep + county + ".json", mode='w+') as csv_file:
@@ -250,5 +250,5 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    os.system("clear")
-   #create_states_data('FL') 
+   create_states_data('FL') 
    create_county_state_data('FL')
