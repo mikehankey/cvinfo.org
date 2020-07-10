@@ -10,7 +10,11 @@ def create_legend(all_data,_type,number_of_county):
     
    max_d = max(all_data)
    min_d = np.nonzero(np.array(all_data))[0][0]
- 
+  
+   # HTML for legend
+   html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 74.3">'
+
+
    if(_type != 'cases'):
 
       # WE REMOVE THE 10 HIGHEST VALUES (ZIPF LAW EFFECT)
@@ -39,13 +43,12 @@ def create_legend(all_data,_type,number_of_county):
          html_legend +="<text class='l' x='" + str(i*50+2) + "' y='25' width='50'>" + str(start) +  " - ...</text>" 
          start += steps  
    else:
-
+       
       all_intervals = [(0,10),(10,20),(20,30),(40,50),(50,100)]
 
       # We'll have len(MAP_COLORS) partitions
       steps  =  int(math.ceil(((max_d-101)/len(MAP_COLORS)) / 10.0)) * 10
-
-
+ 
       if(steps<=len(MAP_COLORS)):
          steps = int(max_d/len(MAP_COLORS))
       
@@ -54,21 +57,26 @@ def create_legend(all_data,_type,number_of_county):
 
       start = int(1) #min(all_data)
 
+      counter = 0
+      for interval in all_intervals: 
+         st = interval[0]
+         html_legend +="<rect class='cl_" + str(counter) + "' x='" + str(counter*50) + "' width='50' height='15'><title>" + str(st) + " - ...</title></rect>" 
+         html_legend +="<text class='l' x='" + str(counter*50+2) + "' y='25' width='50'>" + str(st) +  " - ...</text>" 
+         counter += 1
+
+
+      start = int(101)
       for i in range(len(MAP_COLORS)-5):
          all_intervals.append((start,start+steps))  
-         html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='15'><title>" + str(start) + " - ...</title></rect>" 
-         html_legend +="<text class='l' x='" + str(i*50+2) + "' y='25' width='50'>" + str(start) +  " - ...</text>" 
+         html_legend +="<rect class='cl_" + str(counter) + "' x='" + str(counter*50) + "' width='50' height='15'><title>" + str(start) + " - ...</title></rect>" 
+         html_legend +="<text class='l' x='" + str(counter*50+2) + "' y='25' width='50'>" + str(start) +  " - ...</text>" 
          start += steps  
-
-
-
-   # HTML for legend
-   html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 74.3">'
-
-  
-  
+         counter += 1
+ 
 
    html_legend += "</svg></div>"
+
+   print(html_legend)
 
    return {"html_legend": html_legend, "intervals": all_intervals, "max": start-steps}
 
@@ -217,9 +225,9 @@ def make_svg_state_map_css(state_code, _type):
 if __name__ == "__main__":
    
    make_svg_state_map_css("TX","cases") 
-   make_svg_state_map_css("TX","total_c") 
-   make_svg_state_map_css("TX","total_d") 
-   make_svg_state_map_css("TX","deaths") 
+   #make_svg_state_map_css("TX","total_c") 
+   #make_svg_state_map_css("TX","total_d") 
+   #make_svg_state_map_css("TX","deaths") 
 
    # make_svg_state_map_css("DE","total_c") 
    # make_svg_state_map_css("DE","total_d") 
