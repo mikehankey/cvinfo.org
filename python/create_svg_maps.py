@@ -6,37 +6,67 @@ from utils import *
 
 # Create legend based on all_data
 # so the legend is adapative to the data of the end (and not the beginning)
-def create_legend(all_data,_type):
+def create_legend(all_data,_type,number_of_county):
+    
    max_d = max(all_data)
    min_d = np.nonzero(np.array(all_data))[0][0]
  
-   #print('IN CREATED LEGEND ')
-   #print("MAX_D " , str(max_d))
+   if(_type != 'cases'):
 
-   #print("MIN_D " , str( min_d))
-
-   # We'll have len(MAP_COLORS) partitions
-   steps  =  int(math.ceil((max_d/len(MAP_COLORS)) / 10.0)) * 10
+      # WE REMOVE THE 10 HIGHEST VALUES (ZIPF LAW EFFECT)
+      tmp_all_data = sorted(all_data,reverse=True)
+      
+      if(len(tmp_all_data)>number_of_county):
+         tmp_all_data = tmp_all_data[number_of_county:]
+         max_d = max(tmp_all_data)
    
-   if(steps<=len(MAP_COLORS)):
-      steps = 1
+      # We'll have len(MAP_COLORS) partitions
+      steps  =  int(math.ceil(((max_d-min_d)/len(MAP_COLORS)) / 10.0)) * 10
+      
+      if(steps<=len(MAP_COLORS)):
+         steps = int(max_d/len(MAP_COLORS))
+      
+      if(steps<=0):
+         steps = 1
 
-   #print("STEP ", str(steps))
-   
+      # Create the related intervals
+      all_intervals = []
+      start = int(1) #min(all_data)
+
+      for i in range(len(MAP_COLORS)):
+         all_intervals.append((start,start+steps))  
+         html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='15'><title>" + str(start) + " - ...</title></rect>" 
+         html_legend +="<text class='l' x='" + str(i*50+2) + "' y='25' width='50'>" + str(start) +  " - ...</text>" 
+         start += steps  
+   else:
+
+      all_intervals = [(0,10),(10,20),(20,30),(40,50),(50,100)]
+
+      # We'll have len(MAP_COLORS) partitions
+      steps  =  int(math.ceil(((max_d-101)/len(MAP_COLORS)) / 10.0)) * 10
+
+
+      if(steps<=len(MAP_COLORS)):
+         steps = int(max_d/len(MAP_COLORS))
+      
+      if(steps<=0):
+         steps = 1
+
+      start = int(1) #min(all_data)
+
+      for i in range(len(MAP_COLORS)-5):
+         all_intervals.append((start,start+steps))  
+         html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='15'><title>" + str(start) + " - ...</title></rect>" 
+         html_legend +="<text class='l' x='" + str(i*50+2) + "' y='25' width='50'>" + str(start) +  " - ...</text>" 
+         start += steps  
+
+
+
    # HTML for legend
    html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 74.3">'
 
-   # Create the related intervals
-   all_intervals = []
-   start = 0 
-   for i in range(len(MAP_COLORS)):
-      all_intervals.append((start,start+steps)) 
-      # str(start+steps) 
-      html_legend +="<rect class='cl_" + str(i) + "' x='" + str(i*50) + "' width='50' height='25'><title>" + str(start) + " - ...</title></rect>" 
-      html_legend +="<text class='l' x='" + str(i*50+2) + "' y='40' width='50'>" + str(start) +  " - ...</text>" 
-      #print("START ", str(start))
-      start += steps 
-      #print("END ", str(start))
+  
+  
 
    html_legend += "</svg></div>"
 
@@ -83,7 +113,7 @@ def make_svg_state_map_css(state_code, _type):
    all_counties_per_day = {}
 
    # For the max
-   _all  = []
+   _all  = [] 
      
    for county_file in all_counties:
 
@@ -109,11 +139,9 @@ def make_svg_state_map_css(state_code, _type):
 
             _all.append(float( d[day][_type])) 
    
-   # Get legends & ranks for the coloring
-   legend   = create_legend(_all,_type) 
-
-  
-   
+   # Get legends & ranks for the coloring 
+   legend   = create_legend(_all,_type,len(county_file)) 
+ 
    all_dates = []
    all_css_colors = []
    for color in MAP_COLORS:
@@ -148,7 +176,12 @@ def make_svg_state_map_css(state_code, _type):
          # I split the rule into 8
          if(len(color)>0):
 
-            chunks_of_list = chunks(color,int(len(color)/8))
+            t = int(len(color)/8)
+            
+            if(t==0):
+               t = 1
+            
+            chunks_of_list = chunks(color,t)
 
             for chunk in chunks_of_list:
                css +=  ', '.join(chunk)
@@ -182,4 +215,13 @@ def make_svg_state_map_css(state_code, _type):
 
  
 if __name__ == "__main__":
+   
+   make_svg_state_map_css("TX","cases") 
    make_svg_state_map_css("TX","total_c") 
+   make_svg_state_map_css("TX","total_d") 
+   make_svg_state_map_css("TX","deaths") 
+
+   # make_svg_state_map_css("DE","total_c") 
+   # make_svg_state_map_css("DE","total_d") 
+   # make_svg_state_map_css("DE","deaths") 
+   # make_svg_state_map_css("DE","cases") 

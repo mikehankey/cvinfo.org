@@ -27,7 +27,8 @@ def create_states_data(state):
    
    # First we completely empty the states folder so 
    # we don't keep old data that aren't in the data sources files anymore
-   os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep+"*")
+   # as sometimes counties disapear from the data source
+   os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep+state+os.sep)
 
    all_stats_per_state = {}
 
@@ -76,6 +77,19 @@ def create_states_data(state):
                   'total_t'         : foz(row['totalTestResults']),
                   'test'            : foz(row['totalTestResults'])- int(last_data[row["state"]]['test']),
             }
+
+
+            # Since we don't have the data from the really beginning of the pandemic anymore 
+            # we correct the first day!
+            #if(row_data['total_c']==row_data['cases']):
+            #   row_data['cases'] = 0
+
+            #if(row_data['total_t']==row_data['test']):
+            #   row_data['test'] = 0
+            
+            #if(row_data['total_d']==row_data['deaths']):
+            #   row_data['deaths'] = 0
+
 
             last_data[row["state"]] = {
                'deaths': row_data['total_d'],

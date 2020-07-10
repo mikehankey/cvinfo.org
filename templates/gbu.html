@@ -80,12 +80,14 @@
          </div>
    </div> 
 
-   <p class="large">
-      <a class="btn disabled" style="font-weight:nomal">New Cases</a>
-      <a href="./gbu_hospitalizations.html" style="font-weight:nomal" class="btn">Hospitalizations &amp; Cases</a>
-      <a href="./gbu_case_fatality.html" style="font-weight:nomal" class="btn">Case Fatality</a>
-      <a href="./gbu_death.html" style="font-weight:nomal" class="btn">Deaths &amp; Cases</a>
-      <a href="./gbu_testing.html" style="font-weight:nomal" class="btn">Testing &amp; Cases</a>
+   <p>
+         <select id="com_us_nav">
+               <option value="./" selected>New Cases</option>
+               <option value="./gbu_hospitalizations.html">Hospitalizations &amp; Cases</option>
+               <option value="./gbu_case_fatality.html">Case Fatality</option>
+               <option value="./gbu_death.html">Deaths &amp; Cases</option>
+               <option value="./gbu_testing.html">Testing &amp; Cases</option> 
+         </select> 
    </p>
    
    <p>Last update: {LAST_UPDATE}</p>
@@ -120,7 +122,7 @@
 </div>
 
 
-<script src="../js/shared/framework_plugs.js"></script>   
+<script src="../js/shared/framework_plugs.js?v={RAND_CSS}"></script>   
 <script>
       $(function() { 
          $('#state_selector').change(function() {
@@ -128,6 +130,9 @@
             if(v!='ALL')  window.location = '/states/'+ $('#state_selector').val()
             else          window.location = '/states/'
          });
+         $('#com_us_nav').change(function() {
+            window.location = $(this).val();
+         })
       })
       </script>
 </body>
