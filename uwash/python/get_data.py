@@ -3,8 +3,7 @@
 import os, glob, sys, shutil
 import zipfile
 from utils import TMP_DATA_PATH, SOURCES
-
-
+ 
 # Update Data Sources
 def update_data_sources(remove_previous = True):
    
@@ -16,8 +15,7 @@ def update_data_sources(remove_previous = True):
    os.makedirs(TMP_DATA_PATH, exist_ok=True)  
     
    print("Updating Data Sources")
- 
-
+  
    for src_file in SOURCES:
       os.system("wget -N " + src_file['url'] + "  -P " + TMP_DATA_PATH)
 

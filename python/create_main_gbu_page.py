@@ -177,7 +177,7 @@ def  create_gbu_main_page(_type,groups):
          # Add to the template 
    
       template = template.replace('{'+group.upper()+'}',domEl)
-      #template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
+      template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
 
    # Save Template as main gbu page
    main_gbu_page.write(template)
