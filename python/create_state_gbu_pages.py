@@ -333,4 +333,4 @@ def create_svg_anim_select():
 
 
 if __name__ == "__main__":
-   generate_gbu_graphs_and_state_page("FL",rank_counties("FL"))
+   generate_gbu_graphs_and_state_page("TX",rank_counties("TX"))

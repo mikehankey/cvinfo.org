@@ -26,7 +26,7 @@ function init_play_button() {
       if($(this).hasClass('btn-play')) {
          $(this).removeClass('btn-play').addClass('btn-pause');
          //anim_play(cur_type,'next');
-         ANIM_INTER = setInterval(function(){  anim_play(cur_type,'next'); }, ANIM_SPEED);
+         ANIM_INTER = setInterval(function(){ anim_play(cur_type,'next'); }, ANIM_SPEED);
       } else {
          $(this).removeClass('btn-pause').addClass('btn-play');
          clearInterval(ANIM_INTER);

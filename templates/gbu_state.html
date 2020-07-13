@@ -120,8 +120,9 @@
                {LEGEND}
                <button id="load_daily" class="btn">Load daily data for <span class="anim_date">{LAST_UPDATE_MAP}</span></button>
 
-               <div style="margin:0 2rem">
-                  <table id="daily_details" class="tablesorter-bootstrap tablesorter" style="width: 100%; max-width: 100%; display: none">
+               <div id="daily_details"  style="margin:0 2rem;  display: none">
+                  <h5>DATA FOR <span id="loaded_data_date"></span></h5>
+                  <table class="tablesorter-bootstrap tablesorter" style="width: 100%; max-width: 100%;">
                      <thead>
                         <tr>
                            <th style="text-align: left">County</th> 
@@ -232,7 +233,7 @@
                $.each(response,function(i,v) {
                   all_rows += fill_daily_table_row(v);
                });
-               
+                
                $('#daily_details tbody').html(all_rows);
   
                $('.swal2-container').remove();
@@ -246,8 +247,8 @@
                // Set height of wrapper on page load
                tabWrapper.height(activeTabHeight);
 
-               $(".tablesorter").tablesorter();
-
+               $(".tablesorter").trigger("destroy").tablesorter();
+               $('#loaded_data_date').text(d);
                $('#load_daily').removeAttr('disabled');
 
             });

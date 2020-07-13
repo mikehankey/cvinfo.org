@@ -371,4 +371,4 @@ if __name__ == "__main__":
    #os.system("clear")
    #create_states_data('FL') 
    #create_county_state_data('FL')
-   create_daily_county_state_data('DE')
+   create_daily_county_state_data('TX')
