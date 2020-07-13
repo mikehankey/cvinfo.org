@@ -461,6 +461,7 @@ def create_rank_files_county():
             all_data_for_the_day_for_rank = {}
 
 def main_menu():
+ 
 
    print("---------------")
    print("Select Function")
@@ -470,10 +471,13 @@ def main_menu():
    print("2) Parse International Data") 
    print("3) Clean Up US Data (use covid update first to get the latest data)") 
    print("4) DO ALL ABOVE (1,2 and 3)")
-   print("5) Create Rank Files for Counties (long)") 
-   
-   cmd = input("Run: ")
-   cmd = int(cmd) 
+   #print("5) Create Rank Files for Counties (long)") 
+     
+   if(len(sys.argv)>1):
+      cmd = int(sys.argv[1])
+   else:
+      cmd = input("Run: ")
+      cmd = int(cmd) 
 
    if cmd == 1:
       print ("UPDATING DATA.")

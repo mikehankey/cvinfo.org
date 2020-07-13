@@ -21,7 +21,11 @@ def main_menu():
    print("8) Create Json files to get access to the daily data from the state/counties maps")
    print("9) Do it all")  
    
-   cmd = input("Run: ")
+   if(len(sys.argv)>1):
+      cmd = int(sys.argv[1])
+   else:
+      cmd = input("Run: ")
+      cmd = int(cmd) 
 
    try:
       cmd = int(cmd) 
