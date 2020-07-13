@@ -13,9 +13,8 @@ def create_legend(all_data,_type,number_of_county):
 
    
    # HTML for legend
-   html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 74.3">'
-
-
+   html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 40">'
+ 
    if(_type != 'cases'):
 
       # WE REMOVE THE 10 HIGHEST VALUES (ZIPF LAW EFFECT)
@@ -49,7 +48,8 @@ def create_legend(all_data,_type,number_of_county):
 
       # We'll have len(MAP_COLORS) partitions
       steps  =  int(math.ceil(((max_d-101)/len(MAP_COLORS)) / 10.0)) * 10
- 
+  
+
       if(steps<=len(MAP_COLORS)):
          steps = int(max_d/len(MAP_COLORS))
       
@@ -66,7 +66,7 @@ def create_legend(all_data,_type,number_of_county):
          counter += 1
 
 
-      start = int(101)
+      start = int(100)
       for i in range(len(MAP_COLORS)-5):
          all_intervals.append((start,start+steps))  
          html_legend +="<rect class='cl_" + str(counter) + "' x='" + str(counter*50) + "' width='50' height='15'><title>" + str(start) + " - ...</title></rect>" 
@@ -225,7 +225,7 @@ def make_svg_state_map_css(state_code, _type):
  
 if __name__ == "__main__":
    
-   make_svg_state_map_css("CA","deaths") 
+   make_svg_state_map_css("FL","cases") 
    #make_svg_state_map_css("TX","total_c") 
    #make_svg_state_map_css("TX","total_d") 
    #make_svg_state_map_css("TX","deaths") 

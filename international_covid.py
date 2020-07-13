@@ -79,7 +79,7 @@ def create_files_per_country(all_countries):
 def parse_all_data(): 
    all_countries = "No country found"
 
-   # Create  get All Countries from the first file
+   # Create get All Countries from the first file
    all_countries = get_all_countries(DATA_PATH + os.sep + FILE_TYPES[0] + ".csv"); 
  
    all_data = {}
@@ -188,11 +188,10 @@ def clean_us_data():
 
       # We open the related JSON file created by covid.py
       tmp_json = open(US_STATES_ORG_DATA_PATH + os.sep + state + ".json",  'r')
+      
       state_data = json.load(tmp_json)
 
-      clean_data_state = {}
-
-  
+      clean_data_state = {} 
 
       # We need to recompute the cpm & dpm with floats!
       cur_pop = state_data['summary_info']['state_population']*1000000 
@@ -204,13 +203,10 @@ def clean_us_data():
          real_date = daily_state['date'] 
          date_time_object = datetime.strptime(real_date,'%Y%m%d')
          real_date = date_time_object.strftime('%Y-%m-%d')
-
-         
+ 
 
          if(daily_state['new_cases']/cur_pop):
-           
             ncpm = str("%.3f" % round(daily_state['new_cases']*1000000/cur_pop, 3))
-           
          else:
             ncpm = "0"
          

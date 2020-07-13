@@ -58,7 +58,7 @@ def main_menu():
 
    elif cmd==5:
       print("CREATING ALL OTHER MAIN GBU PAGES (showing Case Fatality, Hospi, Tests, Deaths)")
-      states_ranked_by_cases = rank_states('cases')
+      states_ranked_by_cases = rank_states('cases') 
       create_gbu_main_page('hospi',states_ranked_by_cases)
       create_gbu_main_page('test',states_ranked_by_cases)
       create_gbu_main_page('death',states_ranked_by_cases)
@@ -109,7 +109,7 @@ def main_menu():
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
-         create_daily_county_state_data(st)
+         #create_daily_county_state_data(st)
 
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)

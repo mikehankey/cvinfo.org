@@ -166,6 +166,8 @@ def  create_gbu_main_page(_type,groups):
 
       all_groups =  sort_width_dc(sorted(groups[group]))
 
+      all_state_details = {'last_update':"Undefined"}
+
       for state in all_groups: 
          # Get Extra Data to display (above the graphs)
          all_state_details = get_state_extra_info(state)
@@ -175,13 +177,12 @@ def  create_gbu_main_page(_type,groups):
          # Add to the template 
    
       template = template.replace('{'+group.upper()+'}',domEl)
-      template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
+      #template = template.replace('{LAST_UPDATE}',all_state_details['last_update'])
 
    # Save Template as main gbu page
    main_gbu_page.write(template)
    main_gbu_page.close()
-
-   print(f + " created")
+ 
 
 
 # Create Graphics for all states 

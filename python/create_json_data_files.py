@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 # Return the float value from a string if string is not empty
 # foz = float or zero (fonz = the cool guy from Happy Days... it's totally different)
 def foz(st):
-   if(st!=''):
+   if(st!='' and st is not None):
       return float(st)
    else:      
       return 0
@@ -77,8 +77,7 @@ def create_states_data(state):
                   'total_t'         : foz(row['totalTestResults']),
                   'test'            : foz(row['totalTestResults'])- int(last_data[row["state"]]['test']),
             }
-
-
+ 
             # Since we don't have the data from the really beginning of the pandemic anymore 
             # we correct the first day!
             #if(row_data['total_c']==row_data['cases']):
@@ -194,8 +193,7 @@ def create_daily_county_state_data(_state):
    c_name_reader = csv.DictReader(c_name)
    c_name_rows = list(c_name_reader)
    c_name.close() 
- 
-
+  
    all_dates_per_state = {}
 
    with open(TMP_DATA_PATH + os.sep +  "us-counties.csv", mode='r') as csv_file:
@@ -238,20 +236,22 @@ def create_daily_county_state_data(_state):
                   # Retrieve the record for the previous date
                   for data in all_dates_per_state[cur_state][previous_date]:
                      if(data['fips']==cur_county_fips):
-                        prev_tcases  = data['total_c']
-                        prev_tdeaths = data['total_d']
+                        prev_tcases  = foz(data['total_c'])
+                        prev_tdeaths = foz(data['total_d'])
+ 
  
                all_dates_per_state[cur_state][cur_date].append({
                   'fips'      : cur_county_fips,
                   'pop'       : get_county_pop(cur_county_fips,pop_rows),
                   'total_c'   : foz(row['cases']),
                   'total_d'   : foz(row['deaths']),
-                  'deaths'    : foz(row['cases'])- prev_tdeaths,
-                  'cases'     : foz(row['deaths'])- prev_tcases,
+                  'deaths'    : foz(row['deaths'])-prev_tdeaths,
+                  'cases'     : foz(row['cases'])-prev_tcases,
                   'name'      : get_county_name(cur_county_fips,c_name_rows)
                })
-   
- 
+               
+               
+
 
    # Now we create all the files we need 
    for state in all_dates_per_state:
@@ -267,8 +267,7 @@ def create_daily_county_state_data(_state):
 
          # Create JSON File in folder
          with open(county_folder +  os.sep + date + ".json", mode='w+') as json_file:
-            json.dump(all_dates_per_state[state][date],json_file)
-
+            json.dump(all_dates_per_state[state][date],json_file) 
  
 
 

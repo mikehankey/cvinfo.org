@@ -95,7 +95,7 @@
     
    <ul class="tabs">
       <li class="active">State Graphs</li>
-      <li>County Map</li> 
+      <li>County Details</li> 
    </ul> 
    <ul class="tab__content">
       <li class="active">
@@ -107,18 +107,37 @@
       </li>
       <li>
          <div class="tab_in">
-               <div id="state_level" class="anim">
-                     <div class="anim_header">
-                        <div>
-                           <h4><span id="anim_date">{LAST_UPDATE_MAP}</span></h4>
-                           <div>{ANIM_VIEW_SELECT}</div>
-                           <div><input type="range"  class="slider" id="dateSlider"></div>
-                           <div class="cont_svg"><a class="btn-anim btn-fastbackward"><span></span></a><a class="btn-anim btn-backward"><span></span></a><a class="btn-anim btn-play m"><span></span></a><a class="btn-anim btn-forward"><span></span></a><a class="btn-anim btn-fastforward"><span></span></a></div>
-                        </div>
-                     </div>
-                     <div id="svg_map">{SVG_MAP}</div>
-                     {LEGEND}
-               </div> 
+            <div id="state_level" class="anim">
+               <div class="anim_header">
+                  <div>
+                     <h4><span class="anim_date">{LAST_UPDATE_MAP}</span></h4>
+                     <div>{ANIM_VIEW_SELECT}</div>
+                     <div><input type="range"  class="slider" id="dateSlider"></div>
+                     <div class="cont_svg"><a class="btn-anim btn-fastbackward"><span></span></a><a class="btn-anim btn-backward"><span></span></a><a class="btn-anim btn-play m"><span></span></a><a class="btn-anim btn-forward"><span></span></a><a class="btn-anim btn-fastforward"><span></span></a></div>
+                  </div>
+               </div>
+               <div id="svg_map">{SVG_MAP}</div>
+               {LEGEND}
+               <button id="load_daily" class="btn">Load daily data for <span class="anim_date">{LAST_UPDATE_MAP}</span></button>
+
+               <div style="margin:0 2rem">
+                  <table id="daily_details" class="tablesorter-bootstrap tablesorter" style="width: 100%; max-width: 100%; display: none">
+                     <thead>
+                        <tr>
+                           <th style="text-align: left">County</th> 
+                           <th>FIPS</th>
+                           <th>Population</th>
+                           <th>Total Cases</th>
+                           <th>Total Deaths</th> 
+                           <th>New Cases</th>
+                           <th>New Deaths</th> 
+                        </tr>
+                     </thead>
+                     <tbody></tbody>
+                  </table>
+               </div>
+               
+            </div> 
          </div>
       </li>
    </ul>
@@ -163,12 +182,79 @@
 </div>
 
 
-<script src="../js/shared/framework_plugs.js?v={RAND_CSS}"></script>   
+<script src="../js/clean/framework_plugs.js?v={RAND_CSS}"></script>   
+<script src="../js/shared/tablesorter.js"></script>
 <script> 
 
       var cur_state =  '{STATE}';
+      var full_state =  '{FULL_STATE}';
       var cur_date  = '{LAST_UPDATE_MAP}';
       {EXTRA_JS_DATA}
+ 
+      function formatNumber(num) {
+         return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+      }
+
+
+      function fill_daily_table_row(f) { 
+         return '<tr><td style="text-align: left"><b>' + f.name + '</b></td>\
+                     <td>' + f.fips + '</td>\
+                     <td>' + formatNumber(f.pop)  + '</td>\
+                     <td>' + formatNumber(f.total_c)  + '</td>\
+                     <td>' + formatNumber(f.total_d)  + '</td>\
+                     <td>' + formatNumber(f.cases)  + '</td>\
+                     <td>' + formatNumber(f.deaths)  + '</td></tr>';
+      } 
+
+      function load_daily() {
+
+         $('#load_daily').click(function() {
+            var d = $($('.anim_date').get(0)).text();
+
+            $('#daily_details tbody').html('');
+            $('#load_daily').attr('disabled','disabled');
+
+            Swal.fire({  
+               title: '<div class="lds-hourglass"></div>',
+               html: "<b>Retrieving data for "+ d +"...</b>",
+               showConfirmButton: false,
+               toast: true 
+            });
+
+            var settings = {
+                  "url": "./" +  cur_state +  "/daily/" + d + ".json",
+                  "method": "GET",
+                  "timeout": 0,
+            }; 
+
+            $.ajax(settings).done(function (response) {
+               var all_rows = '';
+               $.each(response,function(i,v) {
+                  all_rows += fill_daily_table_row(v);
+               });
+               
+               $('#daily_details tbody').html(all_rows);
+  
+               $('.swal2-container').remove();
+               $('#daily_details').show();
+ 
+               // Tabs 
+               var tabWrapper = $(".tab__content");
+               var activeTab = tabWrapper.find(".active");
+               var activeTabHeight = activeTab.outerHeight();
+          
+               // Set height of wrapper on page load
+               tabWrapper.height(activeTabHeight);
+
+               $(".tablesorter").tablesorter();
+
+               $('#load_daily').removeAttr('disabled');
+
+            });
+
+
+         });
+      }
 
       $(function() {
          $('#state_selector').removeAttr('disabled');
@@ -187,7 +273,9 @@
          });
 
 
-   
+         // Action Button
+         load_daily();
+  
          // Tabs
          var clickedTab = $(".tabs > .active");
          var tabWrapper = $(".tab__content");
@@ -232,12 +320,13 @@
                // Animate height of wrapper to new tab height
                tabWrapper.stop().delay(50).animate({
                   height: activeTabHeight
-               }, 500, function() {
+               }, 250, function() {
                   
                   // Fade in active tab
                   activeTab.delay(50).fadeIn(250);
                   
                });
+
             });
          }); 
 

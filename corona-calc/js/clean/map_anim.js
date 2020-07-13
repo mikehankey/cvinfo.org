@@ -99,7 +99,7 @@ function init_slider() {
       new_date_formatted = m_date.getFullYear() + '-' + addZ(m_date.getMonth()+1) + '-' +  addZ(m_date.getDate());
       new_date = m_date.getFullYear() + '' + addZ(m_date.getMonth()+1) + '' +  addZ(m_date.getDate());
       
-      $('#anim_date').text(new_date_formatted);
+      $('.anim_date').text(new_date_formatted);
       // We change the class of the map accordingly
       $('#svg_map svg').removeClass().addClass('map_'+new_date);
       
@@ -151,7 +151,7 @@ function anim_play(type, dir, max) {
    next_date_formatted = next_date.getFullYear() + '-' + addZ(next_date.getMonth()+1) + '-' +  addZ(next_date.getDate())
  
    // Update Date (text)
-   $('#anim_date').text(next_date_formatted);
+   $('.anim_date').text(next_date_formatted);
 
    // Get next_date as a string (YYYYMMDD)
    next_date = next_date.getFullYear() + '' + addZ(next_date.getMonth()+1) + '' +  addZ(next_date.getDate());

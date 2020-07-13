@@ -70,7 +70,10 @@ def generate_gbu_graphs_and_state_page(state,groups):
 
    # Flag
    template = template.replace('{STATE_l}',state.lower())  
-
+   
+   # For JS
+   template = template.replace('{FULL_STATE}',US_STATES[state])
+   
    # We open the related state .json for additional info
    state_json_file = open('../corona-calc/states/'+state+'/'+state+'.json','r')
    state_data = json.load(state_json_file)
@@ -174,7 +177,7 @@ def generate_gbu_graphs_and_state_page(state,groups):
    template = template.replace('{MAP_CSS}',"total_c.css")
    template = template.replace('{LAST_UPDATE_MAP}',max_total_c_date)
    template = template.replace('{CUR_TYPE}','<b>Total cases</b>')
-    
+
    # Add select for Anim
    template = template.replace("{ANIM_VIEW_SELECT}", create_svg_anim_select()) 
    
@@ -330,4 +333,4 @@ def create_svg_anim_select():
 
 
 if __name__ == "__main__":
-   generate_gbu_graphs_and_state_page("TX",rank_counties("TX"))
+   generate_gbu_graphs_and_state_page("FL",rank_counties("FL"))

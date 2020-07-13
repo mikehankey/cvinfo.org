@@ -19,7 +19,7 @@ def get_hotspots_and_alerts():
       # Get all the county json files 
       all_countries_json_file = glob.glob(PATH_TO_STATES_FOLDER + os.sep + st + os.sep + "counties"  + os.sep  + "*.json")
 
-      print(st + "'s counties'data")
+      print(st + "'s counties' data")
 
       for county_json_file in all_countries_json_file:
 
