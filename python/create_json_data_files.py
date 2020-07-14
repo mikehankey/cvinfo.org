@@ -350,7 +350,7 @@ def create_county_state_data(_state):
    # {'WA': {'stats': {'Snohomish|53061': [{'2020-01-22': {'cases': 1.0, 'deaths': 0.0}}, {'2020-01-23': {'cases': 1.0, 'deaths': 0.0}}...
    # We now create a JSON per county (and we compute the daily cases & deaths at the same time)
    for state in all_stats_per_county:
-
+  
       if(_state=="" or _state == state):
 
          # FOR JS (see below)
@@ -363,8 +363,7 @@ def create_county_state_data(_state):
             
             # The population of the county is already there!
             cur_pop =  all_stats_per_county[state]['sum'][county]['pop']
-             
-         
+ 
             for day in list(reversed(all_stats_per_county[state]['stats'][county])):
                
                for d in day: 
@@ -374,15 +373,18 @@ def create_county_state_data(_state):
 
                   last_county_deaths   =  day[d]['total_d']
                   last_county_cases    =  day[d]['total_c'] 
-
-                  if(day[d]['cases']/cur_pop):
+                  
+                  # With the pop, we can have the ppm values
+                  if(cur_pop>0):
                      day[d]['ncpm'] = float(str("%.3f" % round(day[d]['cases']*1000000/cur_pop, 3))) 
-                  if(day[d]['deaths']/cur_pop):
                      day[d]['ndpm'] = float(str("%.3f" % round(day[d]['deaths']*1000000/cur_pop, 3))) 
-                  if(day[d]['total_c']/cur_pop):
                      day[d]['tcpm'] = float(str("%.3f" % round(day[d]['total_c']*1000000/cur_pop, 3))) 
-                  if(day[d]['total_d']/cur_pop):
                      day[d]['tdpm'] = float(str("%.3f" % round(day[d]['total_d']*1000000/cur_pop, 3))) 
+                  else:
+                     day[d]['ncpm'] = 0
+                     day[d]['ndpm'] = 0
+                     day[d]['tcpm'] = 0
+                     day[d]['tdpm'] = 0
             
             # We put all the JSON under the State folder / County
             county_folder =  PATH_TO_STATES_FOLDER + os.sep + state + os.sep +  "counties"  
