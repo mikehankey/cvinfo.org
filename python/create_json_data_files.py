@@ -360,6 +360,10 @@ def create_county_state_data(_state):
   
             last_county_deaths = 0
             last_county_cases  = 0
+            
+            # The population of the county is already there!
+            cur_pop =  all_stats_per_county[state]['sum'][county]['pop']
+             
          
             for day in list(reversed(all_stats_per_county[state]['stats'][county])):
                
@@ -370,6 +374,15 @@ def create_county_state_data(_state):
 
                   last_county_deaths   =  day[d]['total_d']
                   last_county_cases    =  day[d]['total_c'] 
+
+                  if(day[d]['cases']/cur_pop):
+                     day[d]['ncpm'] = float(str("%.3f" % round(day[d]['cases']*1000000/cur_pop, 3))) 
+                  if(day[d]['deaths']/cur_pop):
+                     day[d]['ndpm'] = float(str("%.3f" % round(day[d]['deaths']*1000000/cur_pop, 3))) 
+                  if(day[d]['total_c']/cur_pop):
+                     day[d]['tcpm'] = float(str("%.3f" % round(day[d]['total_c']*1000000/cur_pop, 3))) 
+                  if(day[d]['total_d']/cur_pop):
+                     day[d]['tdpm'] = float(str("%.3f" % round(day[d]['total_d']*1000000/cur_pop, 3))) 
             
             # We put all the JSON under the State folder / County
             county_folder =  PATH_TO_STATES_FOLDER + os.sep + state + os.sep +  "counties"  
