@@ -17,29 +17,45 @@ function compare( a, b ) {
 function getInitDataCountry(data,country) {
    var toReturn;
    var country_stats = [], all_dates = [];
-    
+     
+   $.each(data['stats'],function(i,v) { 
 
-   $.each(data,function(i,v) { 
+      console.log("V ",v )
+
+     
+      date  = Object.keys(v)
+      date  = date[0]
+      vv    = v[date]
+
+      // Create javascript date
+      d_s = date.split('-') 
+      t = new Date(d_s[0], d_s[1]-1, d_s[2])
+
       country_stats.push({
-         'date':                    i,
-         'new_cases_per_million':   parseFloat(v.ncpm), //>=0?parseFloat(v.ncpm):0,
-         'new_deaths_per_million':  parseFloat(v.ndpm), //>=0?parseFloat(v.ndpm):0,
-         'total_cases_per_million': parseFloat(v.tcpm), //>=0?parseFloat(v.tcpm):0,
-         'total_deaths_per_million':parseFloat(v.tdpm)  //>=0?parseFloat(v.tdpm):0 
+         'date':                    date,
+         'new_cases_per_million':   parseFloat(vv.ncpm), //>=0?parseFloat(v.ncpm):0,
+         'new_deaths_per_million':  parseFloat(vv.ndpm), //>=0?parseFloat(v.ndpm):0,
+         'total_cases_per_million': parseFloat(vv.tcpm), //>=0?parseFloat(v.tcpm):0,
+         'total_deaths_per_million':parseFloat(vv.tdpm)  //>=0?parseFloat(v.tdpm):0 
       });
-      all_dates.push(new Date(i));
+      all_dates.push(t );
    })
- 
+    
    // Sort country states per date
    country_stats.sort(compare);
- 
+   
+   max_date = new Date(Math.max.apply(null,all_dates))
+   
+   console.log("COUNTRY ", country)
+   console.log(country_stats)
 
    // State Data
    toReturn =  { 
       name:       country, 
       stats:      country_stats,
-      last_date:  new Date(Math.max.apply(null,all_dates))
+      last_date:  max_date.getFullYear() + '-' + (max_date.getMonth()+1) + '-' + max_date.getDate()
    };    
+ 
 
    return toReturn;
 }
@@ -83,9 +99,7 @@ function prepareData(data) {
 
  
 
-
-
-
+ 
 
 /**
  * Draw one single graph 
@@ -149,6 +163,7 @@ function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2
    domElRef = document.getElementById(domEl); 
  
    // Hover
+   /*
    domElRef.on('plotly_hover', function(data){
  
       var info = data.points.map(function(d){
@@ -184,6 +199,7 @@ function draw_comparison_graph(rightDate,name1,data1,name2,data2,x_axis1,x_axis2
 
      
    }); 
+   */
 
 
    // Reset on mouseout
@@ -228,8 +244,10 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
 
       var color1 = 'rgba(200, 0 , 0,.8)';
       var color2 = 'rgba(50, 0, 50,.8)';
-  
+
+       
       // Remove the fips from the county names
+      /*
       if(init_data1.name.indexOf("--")!==-1) {
          if(init_data1.name.indexOf(",")!==-1) {
             tmp =  init_data1.name.split(",") 
@@ -249,6 +267,7 @@ function draw_country_graph(init_data1,graph_data1,init_data2,graph_data2) {
             }
          }
       } 
+      */
 
       var maxDateData1 = new Date(Math.max.apply(null, graph_data1.x_axis.map(function(e) {
          return new Date(e);

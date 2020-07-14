@@ -26,7 +26,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta name="keywords" content="corona virus, covid 19, comparison, forecast, prediction, predicted outcome, calculator">
 
-	<title>COVID-19 Countries Stats</title>   
+	<title>COVID-19 Countries Comparison</title>   
  
    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico"> 
    <link href="./css/coronafiles.css" rel="stylesheet">
@@ -132,7 +132,7 @@
             cs += "<option value='United States'>United States</option>";
          }
 
-         $.each(response['countries'], function(i,v) {
+         $.each(response['countries'].sort(), function(i,v) {
             if(v!=='International' && v!=='World')  {
                if(usFirst && v!=='United States') {
                   cs += "<option value='"+v+"'>"+v +"</option>";
@@ -149,7 +149,7 @@
       function fillCountryList($parent, callback, usFirst) {
           
          var settings = {
-            "url": "../covid-19-intl-data/all_countries.json",
+            "url": "./data/all_countries.json",
             "method": "GET",
             "timeout": 0,
          };
@@ -172,7 +172,7 @@
       // Get list of counties for a given state
       function fillCountyList($parent,state,callback) {
          var settings = {
-            "url": "../covid-19-intl-data/US/"+state+"_counties.json",
+            "url": "./data/"+state+"_counties.json",
             "method": "GET",
             "timeout": 0,
          };
@@ -180,10 +180,10 @@
          $.ajax(settings).done(function (response) {
          
             var cs = "<option value='0'>All counties</option>";
-            
-            $.each(response['counties'].sort(), function(i,v) {
+            response['counties'].sort(function(a,b) { return b['name']-a['name']});
+            $.each(response['counties'], function(i,v) {
                if(v!="Unknown") {
-                  cs += '<option value="'+v["name"]+"--"+v["fips"]+'">'+v["name"]+'</option>';
+                  cs += '<option value="'+v["name"]+'">'+v["name"]+'</option>';
                } 
             });
              
@@ -196,21 +196,26 @@
       // Get JSON data based on state, county, country
       function getJSONPath(country,state,county) {
          var url = "", name = ""; 
+ 
 
          if(country === "United States" && state === "US") {
             // Country Level
-            url = "../covid-19-intl-data/country/United States.json";
+            url = "./countries/United States.json";
             name = "USA";
 
          } else if(country == "United States" && state != "US") {
            
             if(county === "0" || county === null)  {
+               
                // State Level
-               url = "../covid-19-intl-data/US/" +  state + ".json";
+               url = "./states/"+ state + "/" +  state + ".json";
                name = $('#pa1 .us_state_selector option[value=' + state + ']').text();
+
+
             } else {
+
                // County LEvel
-               url = "../covid-19-intl-data/US/" + state  + "/"+ county + ".json";
+               url = "./states/" + state  + "/counties/" + county + ".json";
                if (county.toLowerCase().indexOf("city") === -1) {   
                   name = county + " County, " + state;  
                } else {   
@@ -219,14 +224,12 @@
   
             }
          } else {
-            url = "../covid-19-intl-data/country/" +  country + ".json";
+            url = "./countries/" +  country + ".json";
             name = country;
          }
-
+          
          return {'url':url, 'name': name}
       }
-
- 
  
 
       function getDataForCountry(country1, state1, county1, country2, state2, county2,  callback) {

@@ -1,0 +1,12 @@
+--2020-07-14 12:51:59--  https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/ecdc/new_cases_per_million.csv
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.120.133
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.120.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 178704 (175K) [text/plain]
+Saving to: ‘./tmp_json_data/new_cases_per_million.csv’
+
+new_cases_per_million.csv      65%[===============================>                  ] 113.80K   283KB/s               new_cases_per_million.csv     100%[=================================================>] 174.52K   295KB/s    in 0.6s    
+
+Last-modified header missing -- time-stamps turned off.
+2020-07-14 12:51:59 (295 KB/s) - ‘./tmp_json_data/new_cases_per_million.csv’ saved [178704/178704]
+

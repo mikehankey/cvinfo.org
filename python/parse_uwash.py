@@ -1,8 +1,16 @@
 import sys,glob,os,csv
-from utils import *
-from create_json_data_files import *
+from utils import * 
 from datetime import datetime 
-  
+
+
+# Return the float value from a string if string is not empty
+# foz = float or zero (fonz = the cool guy from Happy Days... it's totally different)
+def foz(st):
+   if(st!='' and st is not None):
+      return float(st)
+   else:      
+      return 0
+
 def get_uwash_data(state, max_date): 
    # We first need to get the folder (which is a date like YYYY_MM_DD under TMP_DATA_PATH)
    uwash_folder = glob.glob(TMP_DATA_PATH + os.sep + "[0-9]*" + os.sep)

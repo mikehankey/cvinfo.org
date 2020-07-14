@@ -39,10 +39,8 @@ def main_menu():
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 2:
-      print ("CLEANING STATES DATA.")
-      #print("**************************DEBUG MODE *************************")
-      #create_states_data('CA') 
-      create_states_data('') 
+      print ("CLEANING STATES DATA.") 
+      create_states_data() 
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 3:

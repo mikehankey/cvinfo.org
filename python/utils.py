@@ -2,10 +2,15 @@ import os
 import json
 import numpy as np
 
-# REPO FOR LOCAL TMP DATA
+# FOLDER FOR LOCAL TMP DATA (erased at each update)
 TMP_DATA_PATH = "." + os.sep + "tmp_json_data"
 
+# REPO FOR STATIC DATA
+STATIC_DATA_PATH = "." + os.sep + "static_json_data"
+
 US_STATES = { 'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California', 'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'DC': 'Washington DC', 'FL': 'Florida', 'GA': 'Georgia', 'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa', 'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland', 'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri', 'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey', 'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio', 'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina', 'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont', 'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming', }
+US_STATES_INV = { 'Alabama':'AL', 'Alaska':'AK','Arizona':'AZ', 'Arkansas':'AR', 'California':'CA', 'Colorado':'CO', 'Connecticut':'CT', 'Delaware':'DE', 'Florida':'FL', 'Georgia':'GA', 'Hawaii':'HI','Idaho':'ID','Illinois':'IL', 'Indiana':'IN', 'Iowa':'IA','Kansas':'KS','Kentucky':'KY', 'Louisiana':'LA', 'Maine':'ME','Maryland':'MD', 'Massachusetts':'MA', 'Michigan':'MI', 'Minnesota':'MN', 'Mississippi':'MS', 'Missouri':'MO', 'Montana':'MT', 'Nebraska':'NE', 'Nevada':'NV','New Hampshire':'NH', 'New Jersey':'NJ', 'New Mexico':'NM', 'New York':'NY', 'North Carolina':'NC', 'North Dakota':'ND', 'Ohio':'OH','Oklahoma':'OK', 'Oregon':'OR','Pennsylvania':'PA', 'Rhode Island':'RI', 'South Carolina':'SC', 'South Dakota':'SD', 'Tennessee':'TN', 'Texas':'TX','Utah':'UT','Vermont':'VT', 'Virginia':'VA', 'Washington':'WA', 'Washington DC':'DC', 'West Virginia':'WV', 'Wisconsin':'WI', 'Wyoming':'WY'}
+
 PATH_TO_STATES_FOLDER = '..' +  os.sep + 'corona-calc' + os.sep + 'states'
  
 
@@ -25,8 +30,20 @@ COUNTY_POP =  '..' + os.sep + 'data' + os.sep + 'pop_est_2019.csv'
 COUNTY_NAMES =  '..' + os.sep + 'data' + os.sep + 'county_fips_master.csv'
 
 # KEY DATES (lockdown)
-KEY_DATES =   TMP_DATA_PATH + os.sep + 'key-dates.csv'
+KEY_DATES =   STATIC_DATA_PATH + os.sep + 'key-dates.csv'
+
+# US POPULATION
+US_POPULATION = STATIC_DATA_PATH + os.sep + 'us_states_pop.csv'
  
+############# INTERNATIONAL
+INTL_TMP_DATA_PATH = TMP_DATA_PATH + os.sep + 'intl' 
+INTL_DATA_URL = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/ecdc/"
+INTL_FILE_TYPES = ['new_cases_per_million','new_deaths_per_million','total_cases_per_million','total_deaths_per_million']
+INT_DATA = '..' +  os.sep + 'corona-calc' + os.sep + 'data'
+
+############## UWASH
+UWASH_FILE_TO_USE = "Reference_hospitalization_all_locs.csv"
+
 ############# FOR MD ONLY
 MD_LOCAL_CSV_FILE = "MD_ZIP_DATA"
 MD_ZIP_CODES      = "MD_ZIP_REL_DATA"

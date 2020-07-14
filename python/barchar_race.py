@@ -29,7 +29,7 @@ def prepare_data(_type,_7avg,per_pop):
 
    # per_pop = we need the population of each state
    if(per_pop==True):
-      with open(TMP_DATA_PATH + os.sep + 'us_states_pop.csv', newline='') as csvPopfile:
+      with open(US_POPULATION, newline='') as csvPopfile:
          pop_rows = csv.reader(csvPopfile)
          popDict = {rows[0]:rows[1] for rows in pop_rows}
           

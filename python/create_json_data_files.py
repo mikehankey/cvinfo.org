@@ -31,13 +31,13 @@ def get_state_pop(state,state_population_rows):
       if(state_data['state']==state):
          return int(state_data['pop'])
 
-# Create JSON files for all states (or just a given state)
-def create_states_data(state):
+# Create JSON files for all states  
+def create_states_data():
   
    # First we completely empty the states folder so 
    # we don't keep old data that aren't in the data sources files anymore
    # as sometimes counties disapear from the data source
-   os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep+state+os.sep)
+   os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep)
 
    all_stats_per_state = {}
 
@@ -56,29 +56,24 @@ def create_states_data(state):
    with open(TMP_DATA_PATH + os.sep +  "daily.csv", mode='r') as csv_file:
       
       csv_reader = csv.DictReader(csv_file)
-      rows = list(csv_reader)
-      line_count = 0
-
+      rows = list(csv_reader) 
       last_data = {}
 
       # Use to get the max date so we have the projection data ONLY after the max date of the non-projected data
-      all_dates = []  
+      all_dates = {}  
 
       for row in reversed(rows):
  
-         # Does the state already exists in all_stats_per_state?
-         if(row["state"] not in all_stats_per_state):
-            if(state != '' and row["state"] == state):
+         if(row['state'] in US_STATES):
+ 
+            # Does the state already exists in all_stats_per_state?
+            if(row["state"] not in all_stats_per_state):
                all_stats_per_state[row["state"]] = {'stats' : []}
-            elif(state == ''):
-               all_stats_per_state[row["state"]] = {'stats' : []}
+               
+               # Used to compute the daily data (as we only have totals here)
+               last_data[row["state"]] = {'deaths':0,'cases':0,'test':0}
 
-            # Used to compute the daily data (as we only have totals here)
-            last_data[row["state"]] = {'deaths':0,'cases':0,'test':0}
-
-         # We put the current data in the state dict
-         if((state!='' and row["state"] == state) or (state == '')):
-
+            # We put the current data in the state dict
             # Create Row date to save in json
             row_data =  {
                   'act_hosp'        : foz(row['hospitalizedCurrently']),
@@ -98,19 +93,19 @@ def create_states_data(state):
             # "ncpm": New Cases Per Million
             # "ndpm": New Deaths Per Million
             # "tcpm": Total Cases Per Million
-            # "tdpm": Total Deaths Per Million
-            cur_pop = get_state_pop(state,state_population_rows)
-  
-            if(row_data['cases']/cur_pop):
+            # "tdpm": Total Deaths Per Million  
+            cur_pop = get_state_pop(row["state"],state_population_rows)
+
+            if(foz(row_data['cases'])/cur_pop):
                row_data['ncpm'] = float(str("%.3f" % round(row_data['cases']*1000000/cur_pop, 3)))
             
-            if(row_data['deaths']/cur_pop):
+            if(foz(row_data['deaths'])/cur_pop):
                row_data['ndpm'] = float(str("%.3f" % round(row_data['deaths']*1000000/cur_pop, 3)))
             
-            if(row_data['total_c']/cur_pop):
+            if(foz(row_data['total_c'])/cur_pop):
                row_data['tcpm'] = float(str("%.3f" % round(row_data['total_c']*1000000/cur_pop, 3)))
             
-            if(row_data['total_d']/cur_pop):
+            if(foz(row_data['total_d'])/cur_pop):
                row_data['tdpm'] = float(str("%.3f" % round(row_data['total_d']*1000000/cur_pop, 3)))
             
             last_data[row["state"]] = {
@@ -118,7 +113,7 @@ def create_states_data(state):
                'cases' : row_data['total_c'],
                'test'  : row_data['total_t']
             }
-  
+
             # Positive test %  
             if(foz(row['totalTestResultsIncrease'])>0):
                row_data['test_pos_p'] = round( (foz(row_data['cases'])*100) / foz(row['totalTestResultsIncrease']), 3 )
@@ -128,30 +123,23 @@ def create_states_data(state):
                   row_data['test_pos_p'] = 0
             else:
                row_data['test_pos_p'] = 0
- 
+
 
             # We transform the date YYYYMMDD to a real date YYYY
             date =  row["date"][0:4]+'-'+row["date"][4:6]+'-'+row["date"][6:8]
  
-
-            all_dates.append( datetime(int(row["date"][0:4]), int(row["date"][4:6]), int(row["date"][6:8])))
-
-
+            all_dates[row["state"]] = datetime(int(row["date"][0:4]), int(row["date"][4:6]), int(row["date"][6:8]))
+ 
             all_stats_per_state[row["state"]]['stats'].append({
                date : row_data
             })
-
-         line_count+=1
- 
- 
-   # We add the projected values from UWASH after max(all_dates)
-   all_stats_per_state[state]['proj'] =  get_uwash_data(state,  max(all_dates)) 
- 
-   # We now create the JSON files for each state 
+     
+   #We now create the JSON files for each state 
    for state in all_stats_per_state:
 
       state_folder = PATH_TO_STATES_FOLDER + os.sep + state 
-    
+ 
+
       # Create State Folder if doesnt exits
       if not os.path.exists(state_folder):
          os.makedirs(state_folder) 
@@ -166,6 +154,9 @@ def create_states_data(state):
 
       # We search the population
       cur_pop = get_state_pop(state,state_population_rows)
+
+      # We had the UWASH Projection
+      all_stats_per_state[state]['proj'] =  get_uwash_data(row["state"],  all_dates[state]) 
 
       all_stats_per_state[state]['sum'] = {
          'last_update'        :  last_update,
@@ -354,14 +345,19 @@ def create_county_state_data(_state):
  
    print("Sorting counties data...") 
 
+   
    # We now have all stats in all_stats_per_county
    # {'WA': {'stats': {'Snohomish|53061': [{'2020-01-22': {'cases': 1.0, 'deaths': 0.0}}, {'2020-01-23': {'cases': 1.0, 'deaths': 0.0}}...
    # We now create a JSON per county (and we compute the daily cases & deaths at the same time)
    for state in all_stats_per_county:
 
       if(_state=="" or _state == state):
- 
+
+         # FOR JS (see below)
+         cur_state_all_counties = {"counties":[]}
+          
          for county in all_stats_per_county[state]['stats']:
+  
             last_county_deaths = 0
             last_county_cases  = 0
          
@@ -386,10 +382,23 @@ def create_county_state_data(_state):
             with open(county_folder +  os.sep + county + ".json", mode='w+') as csv_file:
                json.dump({'stats':all_stats_per_county[state]['stats'][county],'sum': all_stats_per_county[state]['sum'][county]},csv_file)
 
+            # For the json that contains all the counties of a given state
+            # (used on the International Comparison Page)
+            # {"counties": [{"name": "Anchorage", "fips": "02020"}, 
+            cur_state_all_counties["counties"].append(
+               {"name":county,"fips":all_stats_per_county[state]['sum'][county]['fips']}
+            ) 
+
+
+         # We save the related [state]_counties.json under /data
+         with open(INT_DATA +  os.sep + state + "_counties.json", mode='w+') as all_counties:
+            json.dump(cur_state_all_counties,all_counties)
+
          print( state + "'s counties done")
+         
 
 if __name__ == "__main__":
    #os.system("clear")
-   create_states_data('FL') 
-   #create_county_state_data('FL')
+   #create_states_data() 
+   create_county_state_data('DE')
    #create_daily_county_state_data('TX')
