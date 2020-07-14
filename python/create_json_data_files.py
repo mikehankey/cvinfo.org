@@ -1,9 +1,10 @@
 # Create the data files for US / States & Counties
 import csv
 import sys
-import json 
+import json, glob
 from update_data_src import *
 from utils import *
+from parse_uwash import *
 from datetime import datetime, timedelta
 
 # Return the float value from a string if string is not empty
@@ -22,9 +23,17 @@ def get_state_code(state_full_name):
    elif(state_full_name in US_STATES.values()): 
       return list(US_STATES.keys())[list(US_STATES.values()).index(state_full_name)]
 
+
+# Return the state population
+# for a given state
+def get_state_pop(state,state_population_rows):
+   for state_data in state_population_rows:
+      if(state_data['state']==state):
+         return int(state_data['pop'])
+
 # Create JSON files for all states (or just a given state)
 def create_states_data(state):
-   
+  
    # First we completely empty the states folder so 
    # we don't keep old data that aren't in the data sources files anymore
    # as sometimes counties disapear from the data source
@@ -33,7 +42,7 @@ def create_states_data(state):
    all_stats_per_state = {}
 
    # We open us_states_pop.csv to get the state population
-   with open(TMP_DATA_PATH + os.sep +  "us_states_pop.csv", mode='r') as csv_state_file:
+   with open(US_POPULATION, mode='r') as csv_state_file:
       csv_state_file_reader = csv.DictReader(csv_state_file)
       state_population_rows = list(csv_state_file_reader)
       csv_state_file.close()
@@ -51,6 +60,9 @@ def create_states_data(state):
       line_count = 0
 
       last_data = {}
+
+      # Use to get the max date so we have the projection data ONLY after the max date of the non-projected data
+      all_dates = []  
 
       for row in reversed(rows):
  
@@ -76,20 +88,31 @@ def create_states_data(state):
                   'deaths'          : foz(row['death'])    - int(last_data[row["state"]]['deaths']),
                   'total_t'         : foz(row['totalTestResults']),
                   'test'            : foz(row['totalTestResults'])- int(last_data[row["state"]]['test']),
-            }
- 
-            # Since we don't have the data from the really beginning of the pandemic anymore 
-            # we correct the first day!
-            #if(row_data['total_c']==row_data['cases']):
-            #   row_data['cases'] = 0
+                  "ncpm"            : 0,
+                  "ndpm"            : 0,
+                  "tcpm"            : 0,
+                  "tdpm"            : 0
+            } 
 
-            #if(row_data['total_t']==row_data['test']):
-            #   row_data['test'] = 0
+            # We search the population to be able to get the ncpm, ndpm, tcpm & tdpm
+            # "ncpm": New Cases Per Million
+            # "ndpm": New Deaths Per Million
+            # "tcpm": Total Cases Per Million
+            # "tdpm": Total Deaths Per Million
+            cur_pop = get_state_pop(state,state_population_rows)
+  
+            if(row_data['cases']/cur_pop):
+               row_data['ncpm'] = float(str("%.3f" % round(row_data['cases']*1000000/cur_pop, 3)))
             
-            #if(row_data['total_d']==row_data['deaths']):
-            #   row_data['deaths'] = 0
-
-
+            if(row_data['deaths']/cur_pop):
+               row_data['ndpm'] = float(str("%.3f" % round(row_data['deaths']*1000000/cur_pop, 3)))
+            
+            if(row_data['total_c']/cur_pop):
+               row_data['tcpm'] = float(str("%.3f" % round(row_data['total_c']*1000000/cur_pop, 3)))
+            
+            if(row_data['total_d']/cur_pop):
+               row_data['tdpm'] = float(str("%.3f" % round(row_data['total_d']*1000000/cur_pop, 3)))
+            
             last_data[row["state"]] = {
                'deaths': row_data['total_d'],
                'cases' : row_data['total_c'],
@@ -109,13 +132,21 @@ def create_states_data(state):
 
             # We transform the date YYYYMMDD to a real date YYYY
             date =  row["date"][0:4]+'-'+row["date"][4:6]+'-'+row["date"][6:8]
+ 
+
+            all_dates.append( datetime(int(row["date"][0:4]), int(row["date"][4:6]), int(row["date"][6:8])))
+
 
             all_stats_per_state[row["state"]]['stats'].append({
                date : row_data
             })
 
          line_count+=1
-      
+ 
+ 
+   # We add the projected values from UWASH after max(all_dates)
+   all_stats_per_state[state]['proj'] =  get_uwash_data(state,  max(all_dates)) 
+ 
    # We now create the JSON files for each state 
    for state in all_stats_per_state:
 
@@ -134,10 +165,7 @@ def create_states_data(state):
          last_update = d
 
       # We search the population
-      cur_pop = 0
-      for state_data in state_population_rows:
-         if(state_data['state']==state):
-            cur_pop = state_data['pop']
+      cur_pop = get_state_pop(state,state_population_rows)
 
       all_stats_per_state[state]['sum'] = {
          'last_update'        :  last_update,
@@ -173,9 +201,7 @@ def get_county_name(fips,rows):
          return r['county_name'].replace(' County','').replace(' Borough','').replace(' Census Area','').replace(' Municipality','')
    
    return ''
-
-
-
+ 
 # Create JSON file per dates and all_counties
 # used by ajax call for the map details ("Load daily data")
 def create_daily_county_state_data(_state):
@@ -249,10 +275,7 @@ def create_daily_county_state_data(_state):
                   'cases'     : foz(row['cases'])-prev_tcases,
                   'name'      : get_county_name(cur_county_fips,c_name_rows)
                })
-               
-               
-
-
+                 
    # Now we create all the files we need 
    for state in all_dates_per_state:
 
@@ -268,9 +291,7 @@ def create_daily_county_state_data(_state):
          # Create JSON File in folder
          with open(county_folder +  os.sep + date + ".json", mode='w+') as json_file:
             json.dump(all_dates_per_state[state][date],json_file) 
- 
-
-
+  
 
 # Create JSON file for all counties
 def create_county_state_data(_state):
@@ -369,6 +390,6 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    #os.system("clear")
-   #create_states_data('FL') 
+   create_states_data('FL') 
    #create_county_state_data('FL')
-   create_daily_county_state_data('TX')
+   #create_daily_county_state_data('TX')
