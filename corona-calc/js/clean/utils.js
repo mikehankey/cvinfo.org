@@ -6,6 +6,7 @@
 function getAllCounties(json_data) {
    var counties = json_data['county_stats'];
    var county_list = {}, all_cases;
+ 
 
    $.each(counties, function(key,vals) { 
       if(key!=='Unknown') {

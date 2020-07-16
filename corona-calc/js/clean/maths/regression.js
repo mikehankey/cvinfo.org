@@ -76,7 +76,7 @@ function compute_regression_with_dates(xdata,ydata,start_day_minus,endDate,type)
          // We got a result, we now compute the corresponding day
          n_first_day = new Date(first_day); 
          n_first_day.setDate(n_first_day.getDate() +   Math.round(res_first_deg_equ));   
-         reach_0 = dateFormatMITFromDate(n_first_day); 
+         reach_0 = n_first_day; 
       }
       
       

@@ -12,13 +12,13 @@ function change_state() {
    load_data();
 }
 
+// Change COunty
 function change_county() {  
    show_loader(false);
    $('#calc_mortality').val(""); 
    setTimeout(function() {load_data();},150);
 }
-
-
+ 
 // Load data based on urlInfo or selected values on the state & county select
 function load_data(urlInfo, reload) {
    
@@ -35,7 +35,7 @@ function load_data(urlInfo, reload) {
       cur_county = county;
       show_loader();
       if(cur_json_data=="") { 
-         getJSONData("../json/" + state + ".json",$.trim(state),$.trim(county));
+         getJSONData("./states/" + state +   "/" + state + ".json",$.trim(state),$.trim(county));
       } else { 
          new_display_data(cur_json_data,state,county);
          hide_loader();
@@ -59,7 +59,8 @@ function getJSONData(url,state,county,reload) {
    if(typeof reload == 'undefined') {
       show_loader();	
    }
-  
+   
+
    $.ajax({
       type: "get",
       url:  url,
@@ -73,15 +74,16 @@ function getJSONData(url,state,county,reload) {
             change_county();
             return false;
          })
- 
+         
+         
          cur_json_data = result;
          cur_county     = county;   
          cur_state      = state;
-         new_display_data(result,state,county)  
+         //new_display_data(result,state,county)  
          hide_loader();	 
          $('#recalculate').html($('#recalculate').attr('data-htmlx'));
          $('#recalculate').removeAttr('data-htmlx');
-         
+           
  
       },
       error: function (xhr, status, error) {

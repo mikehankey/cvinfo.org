@@ -32,13 +32,9 @@ def get_state_pop(state,state_population_rows):
          return int(state_data['pop'])
 
 # Create JSON files for all states  
-def create_states_data():
+def create_states_data(st):
+ 
   
-   # First we completely empty the states folder so 
-   # we don't keep old data that aren't in the data sources files anymore
-   # as sometimes counties disapear from the data source
-   os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep)
-
    all_stats_per_state = {}
 
    # We open us_states_pop.csv to get the state population
@@ -64,7 +60,7 @@ def create_states_data():
 
       for row in reversed(rows):
  
-         if(row['state'] in US_STATES):
+         if(row['state'] in US_STATES and row['state']==st):
  
             # Does the state already exists in all_stats_per_state?
             if(row["state"] not in all_stats_per_state):
@@ -138,8 +134,7 @@ def create_states_data():
    for state in all_stats_per_state:
 
       state_folder = PATH_TO_STATES_FOLDER + os.sep + state 
- 
-
+  
       # Create State Folder if doesnt exits
       if not os.path.exists(state_folder):
          os.makedirs(state_folder) 
@@ -155,9 +150,12 @@ def create_states_data():
       # We search the population
       cur_pop = get_state_pop(state,state_population_rows)
 
-      # We had the UWASH Projection
-      all_stats_per_state[state]['proj'] =  get_uwash_data(row["state"],  all_dates[state]) 
-
+      # We had the UWASH Projection  
+      project = get_uwash_data(state)  
+      # We don't have the projection data for certain states (like NH for instance)
+      if(project is not None ):
+         all_stats_per_state[state]['proj'] =  project
+       
       all_stats_per_state[state]['sum'] = {
          'last_update'        :  last_update,
          'cur_total_deaths'   :  all_stats_per_state[state]['stats'][len(all_stats_per_state[state]['stats'])-1][last_update]['total_d'],
@@ -414,6 +412,9 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    #os.system("clear")
-   #create_states_data() 
-   create_county_state_data('DE')
+   create_states_data('FL') 
+    #create_states_data('AK') 
+    #create_states_data('DC')
+    #create_states_data('TX') 
+   #create_county_state_data('DE')
    #create_daily_county_state_data('TX')

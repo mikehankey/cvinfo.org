@@ -1,12 +1,14 @@
 from main_gbu import *
 from md_flashcard import *
+from utils import *
 
 
 
 if __name__ == "__main__":
    os.system("clear")
    update_data_sources()
-   create_states_data('') 
+   for st in US_STATES:
+      create_states_data('st') 
    create_county_state_data('')
 
    states_ranked_by_cases = rank_states('cases')

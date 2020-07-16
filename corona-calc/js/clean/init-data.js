@@ -32,7 +32,7 @@ function getInitJSONData(state,county) {
                }
                   
                cur_json_data = result;
-               new_display_data(result,state,county);
+               new_display_data(result,state,county, $("#state_selector option:selected").text(), cur_county);
                hide_loader();	 
                
        

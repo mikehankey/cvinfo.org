@@ -40,7 +40,8 @@ def main_menu():
 
    elif cmd== 2:
       print ("CLEANING STATES DATA.") 
-      create_states_data() 
+      for st in US_STATES:
+         create_states_data(st) 
       print("\n>>>TASK DONE \n\n") 
 
    elif cmd== 3:
@@ -94,9 +95,12 @@ def main_menu():
       print("CREATE ALL GBU PAGES & ALERTS & HOTSPOTS & JSON FILES & MORE!")
        
       update_data_sources()
-      create_states_data('') 
+
+      for st in US_STATES:
+         create_states_data(st) 
+
       create_county_state_data('')
-      
+       
       states_ranked_by_cases = rank_states('cases')
       generate_gbu_graphs_and_main_page(states_ranked_by_cases)
       create_gbu_main_page('hospi',states_ranked_by_cases)
@@ -107,6 +111,7 @@ def main_menu():
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
+      
          #create_daily_county_state_data(st)
 
       hotspots,alerts = get_hotspots_and_alerts()
@@ -126,3 +131,10 @@ def main_menu():
 if __name__ == "__main__":
    os.system("clear")
    main_menu()
+
+
+# WARNING IF IT DOESN'T WORK:
+#   # First we completely empty the states folder so 
+# we don't keep old data that aren't in the data sources files anymore
+# as sometimes counties disapear from the data source (what a waist of time!)
+#os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep)

@@ -6,7 +6,7 @@ from utils import MD_LOCAL_CSV_FILE, MD_ZIP_CODES, TMP_DATA_PATH
 # the original name of the file is MDCOVID19_MASTER_ZIP_CODE_CASES.csv
 MD_DATA_SRC = {
    MD_LOCAL_CSV_FILE :  'https://opendata.arcgis.com/datasets/5f459467ee7a4ffda968139011f06c46_0.csv',
-   MD_ZIP_CODES:           'https://www.downloadexcelfiles.com/sites/default/files/docs/usa_zipcode_of_md-1537j.csv' # Link Between Counties, Cities & Zip codes
+   MD_ZIP_CODES:        'https://www.downloadexcelfiles.com/sites/default/files/docs/usa_zipcode_of_md-1537j.csv' # Link Between Counties, Cities & Zip codes
 }
  
  

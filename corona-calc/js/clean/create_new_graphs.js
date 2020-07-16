@@ -2,22 +2,26 @@
 /**
  * Return the proper data based on county or state
  */
-function getInitData(data,county) {
+function getInitData(data,county,full_state_name,full_county_name) {
    var name, toReturn;
- 
-   if($.trim(county)=='') { 
 
+   /**
+    * Here we changed the format of the json
+    * so instead of rebuilding everything, we're building what we need without changing anything else
+    */  
+   if($.trim(county)=='') { 
+      
       // State Data
       toReturn =  {
          type:       'state',
-         name:       data['summary_info'].state_name,
-         pop:        data['summary_info'].state_population * 1000000,
-         stats:      data['state_stats'],
-         last_day_number_data: data['js_vals']['dates'].length,
-         last_day_data: new Date(dateFormatMIT(data['js_vals']['dates'][data['js_vals']['dates'].length-1])),
-         last_mortality_rate:  data['js_vals']['mortality_vals'][data['js_vals']['mortality_vals'].length-1],
-         total_death: data['summary_info'].deaths,
-         total_case:  data['summary_info'].cases
+         name:       full_state_name,
+         pop:        data['sum']['pop'],
+         stats:      data['stats'],
+         last_day_number_data: data['stats'].length, // How many days
+         last_day_data: new Date(data['sum']['last_update']), // TO CORERECT!!!
+         //last_mortality_rate:  data['js_vals']['mortality_vals'][data['js_vals']['mortality_vals'].length-1],
+         total_death: data['sum']['cur_total_deaths'],
+         total_case:  data['sum']['cur_total_cases']
       }; 
  
       // Do we have State Model Data ?
@@ -28,7 +32,9 @@ function getInitData(data,county) {
       }
 
    } else {
- 
+      
+      console.log("NOT WORKING")
+
       // County Name to Display
       if (county.toLowerCase().indexOf("city") === -1) {   
          name = county + " County, " + data['summary_info'].state_code;  
@@ -253,16 +259,18 @@ function prepareData(data) {
 /**
  * Display all data
  */
-function new_display_data(data,state,county) {
+function new_display_data(data,state,county,state_full_name,county_full_name) {
    var all_data = {}, all_graph_data, type = "state"; 
    var data_for_summary = {}; // Bases on new cases trends
     
+ 
+
    // Get data based on state and/or county
    if(county !== undefined && $.trim(county)!== ''  && $.trim(county) !== "ALL") {
-      all_data = getInitData(data,county);  
+      all_data = getInitData(data,county,state_full_name,county_full_name);  
       type = "county"; 
    } else {
-      all_data = getInitData(data);   
+      all_data = getInitData(data,undefined,state_full_name,county_full_name);   
    } 
  
    // Prepare data 

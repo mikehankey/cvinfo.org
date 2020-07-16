@@ -1,0 +1,174 @@
+// Return the mean of an array
+function mean(ar) {
+   if( ar.length>0) {
+      var total = 0;
+      for(var i = 0; i < ar.length; i++) {
+         total += ar[i];
+      }
+      return  total / ar.length;
+   } else {
+      return 0;
+   }
+}
+
+// Get a sub array from an array
+var last = function(array, n) {
+   return array.slice(Math.max(array.length-n,0));
+}
+
+
+// Compute the Daily Case Growth
+function compute_daily_case_growth(data) {
+   var date, all_x=[],all_y=[]; 
+   $.each(data,function(i,v){
+      date = Object.keys(v)[0];
+      if(i==0) {
+         
+      }
+   });
+   return {'x': [], 'y': []};
+}
+
+// Return the X day averages values (X and Y)
+// ex: get_X_day_average(7,data,'cases') => the 7 day average data
+function get_X_day_average(max_day,data,_type) {
+   var tempValForAvg = [], tempValFormax_day = [], all_x_avg = [], all_y_avg = [];
+ 
+   $.each(data,function(d,v) {
+  
+      var date = Object.keys(v)[0];
+      tempValForAvg.push(v[date][_type]); 
+ 
+      if(tempValForAvg.length < max_day ) {
+         tempValFormax_day = tempValForAvg; 
+      } else {
+         tempValFormax_day = last(tempValForAvg,max_day)
+         
+      }
+
+      all_x_avg.push(date);
+      all_y_avg.push(mean(tempValFormax_day))
+
+   }) 
+
+   return {'x': all_x_avg, 'y': all_y_avg }
+}
+
+
+// Return all the keys / val of a set of data for a given type
+function get_split_data(data, _type) {
+   var all_x = [], all_y= [];
+   $.each(data,function(i,v) {
+      var x = Object.keys(v)[0]
+      all_x.push(new Date(x));
+      if(v[x][_type]<0) {
+         v[x][_type] = 0;
+      }
+      all_y.push(v[x][_type])
+   });
+   return {'x': all_x, 'y': all_y }
+}
+
+// Return all they dates / val of a set of data for proj data
+// WARNING: we return ym, yl, yu (lower, mean, upper)
+function get_split_data_proj(data, _type, nonzero) {
+   var all_x = [], all_ym= [], all_yu= [], all_yl=[];
+ 
+   $.each(data,function(i,v) {
+      var date = Object.keys(v)[0]
+
+      if((nonzero && v[date][_type+'m']>0 && v[date][_type+'u']>0 && v[date][_type+'l']>0) || !nonzero ) {
+         all_x.push(new Date(date));
+         all_ym.push(v[date][_type+'m'])
+         all_yu.push(v[date][_type+'u'])
+         all_yl.push(v[date][_type+'l'])
+      }
+   });
+ 
+   return {'x': all_x, 'ym': all_ym, 'yu': all_yu, 'yl': all_yl }
+}
+ 
+
+   // We compute the 14 & 7-Day Trend lines
+   // cases['7d_trend']  = compute_regression_with_dates(cases['norm']['x'],cases['norm']['y'],7,new Date(cases['norm']['x'][cases['norm']['x']-1]),'linear');
+   // cases['14d_trend'] = compute_regression_with_dates(cases['norm']['x'],cases['norm']['y'],14,new Date(cases['norm']['x'][cases['norm']['x']-1]),'linear');
+
+
+
+
+
+/**
+ * 
+ * Input is a JSON:
+ *    data 
+ *    state_code 
+ *    state_name 
+ *    county 
+ */
+function prepare_data(all_data) {
+  
+   // For New Cases a day, 
+   // we need to the 7  & 14 days average
+   // as well as  Normalize data (x,y)
+   var cases = {
+      'domGraph'  : 'newcases_graph',
+      'domTitle'  : 'newcases_graph_details',
+      'domOptions': 'newcases_graph_options',
+      'title'     : 'Daily Cases',
+      '7d_avg'    : get_X_day_average(7, all_data['data']['stats'],'cases'),
+      'norm'      : get_split_data(all_data['data']['stats'],'cases') 
+   };
+
+   var deaths = {
+      'domGraph'  : 'deaths_graph',
+      'domTitle'  : 'deaths_graph_details',
+      'domOptions': 'deaths_graph_options',
+      'title'     : 'Daily Deaths',
+      '7d_avg'    : get_X_day_average(7, all_data['data']['stats'],'deaths'),
+      'norm'      : get_split_data(all_data['data']['stats'],'deaths') 
+   }
+
+
+   // Do we have projected data?
+   if( all_data['data']['proj'] !== undefined) { 
+      cases['proj'] = []
+      cases['proj']['estimation']  = get_split_data_proj(all_data['data']['proj']['estimation'],'c',false); // We use 'c' for case for smaller json files
+      cases['proj']['masks']       = get_split_data_proj(all_data['data']['proj']['masks'],'c',true);
+      cases['proj']['easing']      = get_split_data_proj(all_data['data']['proj']['easing'],'c',true);
+
+      deaths['proj'] = []
+      deaths['proj']['estimation']  = get_split_data_proj(all_data['data']['proj']['estimation'],'d',false); // We use 'd' for deaths for smaller json files
+      deaths['proj']['masks']       = get_split_data_proj(all_data['data']['proj']['masks'],'d',true);
+      deaths['proj']['easing']      = get_split_data_proj(all_data['data']['proj']['easing'],'d',true);
+   }
+
+   // Daily Cases Growth
+   var cases_growth = {
+      'domGraph'  : 'cases_growth_graph',
+      'domTitle'  : 'cases_growth_graph_details',
+      'domOptions': 'cases_growth_graph_options',
+      'title'     : 'Daily Cases Growth',
+      '7d_avg'    : [],
+      'norm'      : []
+   }
+
+   // Compute the daily cases growth
+   cases_growth['norm'] = compute_daily_case_growth(all_data['data']['stats'])
+   
+
+
+
+   // Default options
+   var options = { uncertainty : false,  easing : true,  estimation  : true, masks       : true,  norm        : true, sevend_avg  : true, }
+   
+   // We Draw the Graph
+   if(all_data['county'] !== "0") {
+      // It's a county
+      alert("COUNTY")
+   } else {
+      // It's a state
+      draw_graph(all_data['state_name'],cases,'cases',options);
+      draw_graph(all_data['state_name'],deaths,'deaths',options);
+   }
+   
+}    

@@ -42,7 +42,11 @@ INTL_FILE_TYPES = ['new_cases_per_million','new_deaths_per_million','total_cases
 INT_DATA = '..' +  os.sep + 'corona-calc' + os.sep + 'data'
 
 ############## UWASH
-UWASH_FILE_TO_USE = "Reference_hospitalization_all_locs.csv"
+UWASH_FILE_TO_USE = {
+  "estimation" : "Reference_hospitalization_all_locs.csv",
+  "masks"      : "Best_mask_hospitalization_all_locs.csv",
+  "easing"     : "Worse_hospitalization_all_locs.csv"
+}
 
 ############# FOR MD ONLY
 MD_LOCAL_CSV_FILE = "MD_ZIP_DATA"

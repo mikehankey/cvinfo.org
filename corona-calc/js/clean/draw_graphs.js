@@ -81,9 +81,7 @@ function draw_graph(data,option) {
    } else {
       maxDayModel =  new Date(Math.max.apply(null,data.x1));
    }
-
  
-    
    var maxDate1, minDate1, maxDate2, minDate2, min, max;
    var dataSet1,dataSet2,dataSet3,dataSet4,dataSet5, dataSet6;
  

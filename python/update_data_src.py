@@ -1,4 +1,6 @@
-import os, zipfile, glob
+import os, zipfile, glob, sys
+import shutil
+from clean_uwash_csv import clean_uwash_csv
 from utils import TMP_DATA_PATH, INTL_TMP_DATA_PATH, INTL_FILE_TYPES, INTL_DATA_URL
 
 # Update DATA SOURCES for coronafiles.us 
@@ -16,7 +18,11 @@ def update_data_sources():
    if not os.path.exists(TMP_DATA_PATH):
       os.makedirs(TMP_DATA_PATH) 
   
-   print("Updating US Data Sources")
+   # We delete all the folders that are a date (for the UWASH DATA unzip folder)
+   all_folders =  glob.glob(TMP_DATA_PATH + os.sep + "[0-9]*" )
+   for folder in all_folders:
+      shutil.rmtree(folder, ignore_errors=True) # This fails on VM Vagrant / Windows !!
+ 
  
    for src_file in SOURCES:
       os.system("wget -N " + SOURCES[src_file] + "  -P " + TMP_DATA_PATH)
@@ -35,7 +41,7 @@ def update_data_sources():
    for zip_file in all_zip_files:   
       os.remove(zip_file)
 
-
+ 
    print("Updating Intl. Data Sources")
    
    # We create the intl subfold
@@ -46,6 +52,10 @@ def update_data_sources():
      os.system("wget -N "+INTL_DATA_URL+file_name+".csv  -P " + INTL_TMP_DATA_PATH)
 
    os.system("clear")
+
+
+   print("Cleaning UWASH Data")
+   #clean_uwash_csv()
    
    print("---------------------------------")
    print(" All Sources are now up to date  ")
