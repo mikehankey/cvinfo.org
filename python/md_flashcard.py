@@ -17,6 +17,12 @@ def main_menu():
    print("5) Do it all")   
    cmd = input("Run: ")
 
+   if(len(sys.argv)>1):
+      cmd = sys.argv[1]
+   else:
+      cmd = input("Run: ")
+
+
    try:
       cmd = int(cmd) 
    except ValueError:
