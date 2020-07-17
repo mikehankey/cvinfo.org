@@ -77,13 +77,14 @@ function data_updated() {
    if($('#county_selector').val()=="0") {
       // We load the data for the state
       url_to_load += $('#state_selector').val() + "/" + $('#state_selector').val() + ".json";
-      setShareLinks({state:$('#county_selector').val()+", "+ $('#state_selector').val(), state_code:$('#state_selector').val(),county:""});   
+      setShareLinks({state:$("#state_selector option[value='"+$('#state_selector').val()+"']").text(), state_code:$('#state_selector').val(),county:""});   
    } else {
       // We load the data for the county
       url_to_load += $('#state_selector').val() + "/counties/" + $('#county_selector').val() + ".json" ;
       setShareLinks({state:$("#state_selector option[value='"+$('#state_selector').val()+"']").text(), state_code:$('#state_selector').val(), county:$('#county_selector').val()});
    }
 
+  
    loading('Getting data...');
 
    $.ajax({
@@ -97,6 +98,7 @@ function data_updated() {
             state_name: $("#state_selector option[value='"+$('#state_selector').val()+"']").text(),
             county:  $('#county_selector').val()
          });
+         $('#forecast_container').css('visibility','visible');
          done();
       }
    });

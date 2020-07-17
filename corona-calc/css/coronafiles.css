@@ -783,6 +783,11 @@ input[type=range] {
       border-color: #1f77b4;
       outline-color: #1f77b4;
    }
+   .tests.selected,.tests.selected:focus,.tests.selected:active {
+      color:#c54cbb;
+      border-color: #c54cbb;
+      outline-color: #c54cbb;
+   }
    .bars {
       background-color:#deebf4;
    }

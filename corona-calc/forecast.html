@@ -65,14 +65,15 @@
    <div id="main-content">
 
       <div id="state_select"><select id="state_selector" disabled><option value="0">Select State</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="DC">Washington D.C.</option></select></div>
-      <div id="county_select"></div>
+      <div id="county_select" style="display:none"></div>
       <a href="#disclaimer" class="notice">IMPORTANT NOTICE</a>
       
       <div class="box">
-         <div style="text-align:left; padding: 1rem;">
+         <div style="text-align:left; padding: 0rem 1rem 1rem;">
+            <h3>IHME Data Projection &amp; Estimation Legend</h3>
             <p>
                <button class="choice selected estimation">Estimation</button>
-               Current projection - Mandates are re-imposed for 6 weekes whenever daily deaths reach 8 per million.
+               Current projection - Mandates are re-imposed for 6 weeks whenever daily deaths reach 8 per million.
             </p>
             <p>
                <button class="choice selected easing">Easing</button>
@@ -80,12 +81,12 @@
             </p>
             <p>
                <button class="choice selected masks">Masks</button>
-               95% mask usage in public in every location, reaching levels see in Singapore. Mandates are re-imposed for 6 weekes whenever daily deaths reach 8 per million.
+               95% mask usage in public in every location, reaching levels see in Singapore. Mandates are re-imposed for 6 weeks whenever daily deaths reach 8 per million.
             </p>
          </div>
       </div>
 
-      <div id="forecast_container"> <!--  style="visibility:hidden" -->
+      <div id="forecast_container" style="visibility:hidden"> 
  
  
       <div id="std">
@@ -104,29 +105,17 @@
       </div>
  
       <div class="box">
-            <div id="growth_graph_details"  class="graph_det"></div>
-            <div id="growth_graph"></div>
+            <div id="cases_growth_graph_details" class="graph_det"></div>
+            <div id="cases_growth_graph_options"></div>
+            <div id="cases_growth_graph"></div>
       </div>
 
       <div class="box">
-            <div id="tests_graph_details"  class="graph_det"></div>
-            <div id="tests_graph"></div>
+            <div id="fatal_graph_details" class="graph_det"></div>
+            <div id="fatal_graph_options"></div>
+            <div id="fatal_graph"></div>
       </div>
-
-      <div class="box">
-            <div id="death_growth_graph_details"  class="graph_det"></div>
-            <div id="death_growth_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="growth_decay_graph_details"  class="graph_det"></div>
-            <div id="growth_decay_graph"></div>
-      </div>
-
-      <div class="box">
-            <div id="mortality_details"  class="graph_det"></div>
-            <div id="mortality_graph"></div>
-      </div>
+       
         
    </div>
       
@@ -158,28 +147,11 @@
          <br/>contact: mike.hankey[@]gmail.com
    </div>
  
-   <script src="./js/clean/framework_plugs.js"></script>  
-   <script src="./js/clean/maths/numeric.js"></script>  
-   <script src="./js/clean/maths/regression.js"></script>   
-
+   <script src="./js/clean/framework_plugs.js"></script>    
    <script src="./js/clean/share.js"></script>
    <script src="./js/forecast/draw_graph.js"></script>
    <script src="./js/forecast/load_data.js"></script> 
    <script src="./js/forecast/prepare_data.js"></script> 
-
-   <!--
-
-   
-   <script src="./js/clean/share.js"></script>     
-
-   
-   <script src="./js/clean/create_new_graphs.js"></script>
-   <script src="./js/clean/summary.js"></script>
-    
-   <script src="./js/clean/corona-ui.js"></script>
-   <script src="./js/clean/init-data.js"></script>
-   <script src="./js/clean/load-data.js"></script>
-   -->
-
+  
 </body>
 </html>

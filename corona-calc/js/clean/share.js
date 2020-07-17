@@ -21,10 +21,11 @@ function setShareLinks(data) {
    var pageUrl;
    var title = $("meta[property='og:description']").attr("content");
    var initUrl =  $.trim($("meta[property='og:url']").attr("content"));
-  
+   
+ 
+
    if( data !== undefined  ) {
-
-
+ 
       // Update the UWASH Link
       uwash_state_link = 'https://covid19.healthdata.org/united-states-of-america/'+ data.state.replace(' ','-').toLowerCase();
       $('#UWASH_link').attr('href',uwash_state_link).text(uwash_state_link);
