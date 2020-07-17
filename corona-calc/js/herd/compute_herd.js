@@ -1,13 +1,14 @@
 
 // Compute & Display data for Herd Immunity Computation
 function compute_data_for_herd(state,county,name_to_display) {
-
+   
+ 
    var herd_met                  = false;
    var how_many_days_until_herd  = 0;
     
    var start_data = {
       deads:                     parseInt($('input[name=current_dead]').val()),
-      pop:                       parseInt($('#pop').val()),
+      pop:                       parseInt($('input[name=init_pop]').val()),
       total_infected:            parseInt($('#total_infected').val()),
       new_case_growth_per_day:   parseFloat($('#new_case_growth_per_day').val()),
       mortality_rate:            parseFloat($('#mortality_rate').val()),
@@ -19,7 +20,10 @@ function compute_data_for_herd(state,county,name_to_display) {
                                  -(parseInt($('#total_infected').val())*parseFloat($('#non_tracked_factor').val()))
    }; 
  
- 
+
+   console.log("START DATA");
+   console.log(start_data);
+  
    var end_data = {}; 
    var new_day_cases = start_data.total_infected;
    var non_tracked = 0;
@@ -50,7 +54,7 @@ function compute_data_for_herd(state,county,name_to_display) {
          { name: "New Cases growth per day", cur: start_data.new_case_growth_per_day, max: 100, min: 0 },
          { name: "Mortality rate", cur: start_data.mortality_rate, max: 100, min: 0 },
       ]
-   )) {
+   )) { 
       return false;
    };
  
@@ -64,7 +68,8 @@ function compute_data_for_herd(state,county,name_to_display) {
       max_non_tracked_factor_2 = (( start_data.herd_immunity_threshold*pop/100)- start_data.total_infected  -start_data.deads)/start_data.total_infected;
 
       max_non_tracked_factor_1 = Math.min(max_non_tracked_factor_1,max_non_tracked_factor_2);
- 
+         
+      
       Swal.fire({
          icon: 'info',
          title: 'Unrealistic Data',
@@ -72,11 +77,12 @@ function compute_data_for_herd(state,county,name_to_display) {
          If the non-tracked is " +  parseInt(max_non_tracked_factor_1) + " <b>it means 100% of the population is already infected</b>.\
          Since new cases are still being added, this value is not possible.<br><br><b>Please lower the Non-tracked Factor.</b>" 
       });
-
-      return false;
+       return false;
    } 
+
+ 
     
-   while(!herd_met) {
+   while(!herd_met) { 
 
       previous_data = {
          deads: deads,
@@ -108,7 +114,7 @@ function compute_data_for_herd(state,county,name_to_display) {
       impacted = ((total_infected + non_tracked + deads)/pop)*100;
 
       if(impacted>100) {
-
+         alert("IMPACTED")
          Swal.fire({
             icon: 'info',
             title: 'Unrealistic Data',
@@ -141,8 +147,8 @@ function compute_data_for_herd(state,county,name_to_display) {
       not_infected:           not_infected,
       non_tracked_infected:   non_tracked
    }
-
+   
+   console.log("display_top_results")
    display_top_results(state,county,how_many_days_until_herd,start_data,end_data,name_to_display, graph_data_y);
- 
- 
+  
 }

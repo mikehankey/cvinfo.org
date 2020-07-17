@@ -107,13 +107,63 @@ function get_mortality_rate(data) {
 }
 
 
+// County_version 
+// Fill the values on the form 
+// if they don't correspond to the initial value and they aren't valid
+function fill_data_for_county(data,county) {
+  
+   fill_values("pop",data['sum']['pop']); 
+   $('#pop_val').text(usFormat(data['sum']['pop']));
+
+   // Non-Tracked Factor
+   fill_values("non_tracked_factor",default_non_tracked_factor);
+
+   // What is the latest day with data for this county?
+   var all_dates = [];
+   $.each(data['stats'],function(i,v) {
+      all_dates.push(new Date(Object.keys(v)[0]));
+   });
+   var max_data_with_data = stringFormatFromDate(new Date(Math.max.apply(null,all_dates)));
+ 
+   var total_cases, total_deaths;
+   $.each(data['stats'],function(i,v) {
+      date = Object.keys(v)[0];
+      if(date == max_data_with_data) {
+         total_cases  = v[date]['total_c'];
+         total_deaths = v[date]['total_d'];
+         return false;
+      }
+   });
+   
+   fill_values("total_infected",parseInt(total_cases));  
+   $('#total_infected_val').val(total_cases);
+ 
+   $('input[name=last_day_of_data]').val(max_data_with_data);  
+
+   // Daily Case Growth
+   var daily_cg = get_daily_growth(data); 
+   fill_values("new_case_growth_per_day",daily_cg<=1?2:daily_cg.toFixed(2));
+   
+   // Mortality Rate
+   var mortality_rate = get_mortality_rate(data); 
+   fill_values("mortality_rate",parseFloat(mortality_rate)<=.5?.6:mortality_rate.toFixed(2));
+
+   fill_values("non_tracked_factor",default_non_tracked_factor);
+   fill_values("herd_immunity_threshold",default_herd_immunity_treshold);
+ 
+   $('input[name=last_day_of_data]').val(max_data_with_data);  
+   $('input[name=current_dead]').val(total_deaths);
+
+ }
+
 // Fill Form & Details values 
 // based on the user selected state
 function fill_data_for_state(data) {
 
    // Population
    fill_values("pop",data['sum']['pop']);
-   $('input[name=init_pop]').val(usFormat(data['sum']['pop']));
+   $('input[name=init_pop]').val(data['sum']['pop']);
+   $('#pop_val').text(usFormat(data['sum']['pop']));
 
    // Non-Tracked Factor
    fill_values("non_tracked_factor",default_non_tracked_factor);
@@ -169,25 +219,25 @@ function prepare_data(all_data) {
    var state_code = all_data['state_code'];
    var state_name = all_data['state_name'];
    var county     = all_data['county'];
+   var name_to_display ='';
+     
    
-
+   reset_reset_button();   // Reset button
+ 
    cur_all_data = all_data;
 
-   if(county=="0") {
+   if(county=="0") { 
       fill_data_for_state(json_data);
       name_to_display = $('#state_selector option:selected').text();
-   } else {
+   } else { 
       fill_data_for_county(json_data,county);
       if(county.toLowerCase().indexOf("city") !== -1) {
-         name_to_display+= county ;
+         name_to_display = county ;
       } else {
-         name_to_display+= county + ", " + state ;
+         name_to_display = county + ", " + state_code ;
       }
-   }
-
-   update_explained(); // UI
-   reset_reset_button();   // Reset button
-
+   } 
+ 
    // So nice to have the enter key working fine
    $('input').on("keypress", function(e) { 
       if (e.keyCode == 13) {
@@ -197,7 +247,7 @@ function prepare_data(all_data) {
    });
 
    compute_data_for_herd(state_code,county,name_to_display)
-
+   update_explained(); // UI
 }
 
  

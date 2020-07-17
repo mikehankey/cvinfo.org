@@ -1,10 +1,10 @@
 function display_top_results(state,county,how_many_days_until_herd,start_data,end_data, name_to_display, graph_data_y) {
+ 
    // We compute the herd_immunity day
    var herd_immunity_reached_day_start = new Date($('input[name=last_day_of_data]').val());
    var herd_immunity_reached_day; 
    herd_immunity_reached_day =  herd_immunity_reached_day_start.addDays(how_many_days_until_herd);
-
-
+ 
    herd_immunity_reached_day_start = new Date($('input[name=last_day_of_data]').val());
    var graph_x = [];
 
@@ -102,7 +102,7 @@ function fill_top_table(herd_immunity_reached_day,start_data,end_data) {
       perc_not_infected_end -= parseFloat(v);
    }); 
    
-
+   
    tbody += "<tr><th>Non-Infected people</th>\
                <td>"+usFormat(parseInt(start_data.not_infected))+"</td>\
                <td>"+perc_not_infected_start.toFixed(2)+"%</td>\
@@ -116,10 +116,9 @@ function fill_top_table(herd_immunity_reached_day,start_data,end_data) {
 
 
 function fill_top_sentence(state,county,herd_immunity_reached_day,end_data,name_to_display) {
+   $('#sum_main').html("");
    var top_sentence = "Based on the current data,<br><span class='ugly_t'>" + name_to_display;
- 
    top_sentence += " could reach herd immunity on <span class='wn'>"+dateFormatMITFromDate(herd_immunity_reached_day) + "</span></span>.";
-   
    $('#sum_main').html(top_sentence);
 }
 
@@ -258,6 +257,7 @@ function draw_graph_herd(data ) {
    $('#'+data.el_title).html("<h3>"+data.title +"</h3>");
 
 }
+
 
 
 

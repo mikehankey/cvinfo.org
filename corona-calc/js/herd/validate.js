@@ -22,7 +22,7 @@ function validate_start_data(data) {
       }
 
       error_text += all_errors_text.join('<br>');
-
+     
       Swal.fire({
          title: '<strong>Wrong data</strong>',
          icon: 'error',
