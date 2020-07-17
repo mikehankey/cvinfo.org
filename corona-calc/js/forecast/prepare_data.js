@@ -37,8 +37,7 @@ function compute_avg_fatality_rate(avg_deaths, avg_cases) {
       }
  
    });
- 
- 
+  
    return {'x': all_x, 'y': all_y};
     
 }

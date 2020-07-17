@@ -38,4 +38,13 @@ function dateFormatMITFromDate(s) {
    return A[mm-1] + " " + dd +  ", " +yyyy;
 }
 
+
+function pad(n){return n<10 ? '0'+n : n}
+
+function stringFormatFromDate(s) {
+   var dd = s.getDate();
+   var mm = s.getMonth()+1; 
+   var yyyy = s.getFullYear();
+   return yyyy + "-" + pad(mm) + "-" + pad(dd);
+}
  

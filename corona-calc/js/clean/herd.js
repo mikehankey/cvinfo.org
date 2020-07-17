@@ -183,8 +183,7 @@ function validate_start_data(data) {
    } else {
       return true;
    }
-
-
+ 
 }
 
 // Compute & Display data for Herd Immunity Computation
