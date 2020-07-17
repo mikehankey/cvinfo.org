@@ -111,10 +111,12 @@ function get_mortality_rate(data) {
 // Fill the values on the form 
 // if they don't correspond to the initial value and they aren't valid
 function fill_data_for_county(data,county) {
-  
+   
+   // Population
    fill_values("pop",data['sum']['pop']); 
-   $('#pop_val').text(usFormat(data['sum']['pop']));
-
+   $('#pop_val').text(data['sum']['pop']);
+   $('input[name=init_pop]').val(data['sum']['pop']);
+  
    // Non-Tracked Factor
    fill_values("non_tracked_factor",default_non_tracked_factor);
 
@@ -134,9 +136,13 @@ function fill_data_for_county(data,county) {
          return false;
       }
    });
-   
-   fill_values("total_infected",parseInt(total_cases));  
-   $('#total_infected_val').val(total_cases);
+
+  
+   // Current # of cases
+   console.log("TOTAL INFECTED ", total_cases)
+   fill_values("total_infected",parseInt(total_cases)); 
+   $('#total_infected').val(total_cases);
+ 
  
    $('input[name=last_day_of_data]').val(max_data_with_data);  
 
@@ -144,15 +150,19 @@ function fill_data_for_county(data,county) {
    var daily_cg = get_daily_growth(data); 
    fill_values("new_case_growth_per_day",daily_cg<=1?2:daily_cg.toFixed(2));
    
-   // Mortality Rate
+ 
    var mortality_rate = get_mortality_rate(data); 
-   fill_values("mortality_rate",parseFloat(mortality_rate)<=.5?.6:mortality_rate.toFixed(2));
+   if(mortality_rate>0) {
+      fill_values("mortality_rate",parseFloat(mortality_rate)<=.5?.6:mortality_rate.toFixed(2));
+      // Or we keep the value from the state level
+   }
 
    fill_values("non_tracked_factor",default_non_tracked_factor);
    fill_values("herd_immunity_threshold",default_herd_immunity_treshold);
  
    $('input[name=last_day_of_data]').val(max_data_with_data);  
    $('input[name=current_dead]').val(total_deaths);
+ 
 
  }
 
@@ -163,14 +173,14 @@ function fill_data_for_state(data) {
    // Population
    fill_values("pop",data['sum']['pop']);
    $('input[name=init_pop]').val(data['sum']['pop']);
-   $('#pop_val').text(usFormat(data['sum']['pop']));
+   $('#pop_val').text(data['sum']['pop']);
 
    // Non-Tracked Factor
    fill_values("non_tracked_factor",default_non_tracked_factor);
 
-   // Currently # of cases
+   // Current # of cases
    fill_values("total_infected",parseInt(data['sum']['cur_total_cases'])); 
-   $('#total_infected_val').text(usFormat(data['sum']['cur_total_cases']));
+   $('#total_infected').val(data['sum']['cur_total_cases']);
 
    // Daily Case Growth
    var daily_cg = get_daily_growth(data); 
@@ -186,6 +196,7 @@ function fill_data_for_state(data) {
  
    $('input[name=last_day_of_data]').val(data['sum']['last_update']);  
    $('input[name=current_dead]').val(data['sum']['cur_total_deaths']);
+ 
 
 }
 

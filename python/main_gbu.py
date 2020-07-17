@@ -96,24 +96,31 @@ def main_menu():
        
       update_data_sources()
 
+      print("Creating Json Files for states")
       for st in US_STATES:
          create_states_data(st) 
 
+      print("Creating County State Data")
       create_county_state_data('')
-       
+
+      print("Ranking states") 
       states_ranked_by_cases = rank_states('cases')
+
+      print("Generating GBU Main page & Graphs")
       generate_gbu_graphs_and_main_page(states_ranked_by_cases)
+
+      print("Generating seconday GBU pages")
       create_gbu_main_page('hospi',states_ranked_by_cases)
       create_gbu_main_page('test',states_ranked_by_cases)
       create_gbu_main_page('death',states_ranked_by_cases)
       create_gbu_main_page('case_fatality',states_ranked_by_cases)
 
+      print("Creating State Gbu Pages")
       for st in US_STATES:
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
-      
-         #create_daily_county_state_data(st)
-
+         create_daily_county_state_data(st)
+      print("Create Hotspots & Alerts pages")
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
       create_alert_page(alerts)

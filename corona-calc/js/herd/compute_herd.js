@@ -19,11 +19,10 @@ function compute_data_for_herd(state,county,name_to_display) {
                                  -parseInt($('#total_infected').val())
                                  -(parseInt($('#total_infected').val())*parseFloat($('#non_tracked_factor').val()))
    }; 
- 
-
-   console.log("START DATA");
-   console.log(start_data);
   
+   console.log("START DATA ", start_data)
+
+
    var end_data = {}; 
    var new_day_cases = start_data.total_infected;
    var non_tracked = 0;

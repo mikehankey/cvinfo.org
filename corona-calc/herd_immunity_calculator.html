@@ -98,10 +98,12 @@
                <input class="inttv" type="hidden" name="init_mortality_rate"/>
                <input class="inttv" type="hidden" name="init_non_tracked_factor"/>
                <input class="inttv" type="hidden" name="init_herd_immunity_threshold"/>
+
+               
                <input class="inttv" type="hidden" name="current_dead"/>
                <input class="inttv" type="hidden" name="last_day_of_data"/>
-
-                
+               <input type="hidden" name="total_infected" id="total_infected"/>
+                <input type="hidden" name="pop" id="pop" /> 
                <p class="to">Adjust the variable below to obtain a new prediction.</p>
 
                   <div class="form-group clearfix">
@@ -109,7 +111,7 @@
                      <span>For each confirmed case, there are <span class="explained"></span> non-tracked cases.</span></label>
                      <div class="form-input"> 
                         <div class="group">
-                           <input type="number" id="non_tracked_factor" /> 
+                           <input type="number" id="non_tracked_factor"  name="non_tracked_factor"/> 
                         </div>
                      </div>
                   </div>  
