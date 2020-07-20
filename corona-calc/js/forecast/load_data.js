@@ -87,7 +87,7 @@ function data_updated() {
    }
 
   
-   loading('Getting data...');
+   loading('Updating data...');
 
  
    $.ajax({
