@@ -225,13 +225,7 @@ function draw_graph(name,data,type,opts) {
    $('#'+data['domGraph']).html('');
    done(); 
 
-
-      
-
-   console.log("DATA PROJ")
-   console.log(data['proj'])
-   console.log(opts)
-
+ 
 
 
    // Compute Range of the Graph

@@ -16,7 +16,7 @@ var last = function(array, n) {
    return array.slice(Math.max(array.length-n,0));
 }
 
-// Compute the Daily Case Growth
+// Compute the AVG Fatality Rate based on avg_deaths & avg_cases
 function compute_avg_fatality_rate(avg_deaths, avg_cases) {
 
    var fatal, all_x=[], all_y=[], first_zero_past = false;
@@ -29,7 +29,7 @@ function compute_avg_fatality_rate(avg_deaths, avg_cases) {
          all_x.push(avg_cases.x[i]);
 
          if(avg_deaths.y[i]!==0) {
-            fatal = (avg_cases.y[i]) / avg_deaths.y[i];
+            fatal =  avg_cases.y[i] / avg_deaths.y[i];
          } else {
             fatal = 0;
          } 
@@ -40,6 +40,27 @@ function compute_avg_fatality_rate(avg_deaths, avg_cases) {
   
    return {'x': all_x, 'y': all_y};
     
+}
+
+
+// Compute the Daily Fatality Rate based on total_deaths & total_cases
+function compute_fatality_rate(deaths,cases) { 
+   var all_x = [], all_y = [];
+
+   $.each(deaths['x'], function(i,v) {
+     
+      all_x.push(deaths['x'][i]);
+   
+      if(cases['y'][i]>0) {
+         all_y.push(deaths['y'][i]/cases['y'][i])
+      } else {
+         all_y.push(0);
+      }
+
+   })
+ 
+
+   return {'x': all_x, 'y': all_y }
 }
 
  
@@ -188,14 +209,16 @@ function prepare_data(all_data) {
       'norm'      : get_split_data(all_data['data']['stats'],'deaths'),
       'tests'     : tests 
    }
+
+ 
  
    var fatality_rate = {
       'domGraph'  : 'fatal_graph',
       'domTitle'  : 'fatal_graph_details',
       'domOptions': 'fatal_graph_options',
       'title'     : 'Average Fatality Rate',
-      'norm'      : compute_avg_fatality_rate(cases['7d_avg'], deaths['7d_avg']),
-   };
+      'norm'      : compute_fatality_rate(get_split_data(all_data['data']['stats'],'total_d'),get_split_data(all_data['data']['stats'],'total_c'))
+    };
 
    // 7-d avg 
    fatality_rate['7d_avg'] =  get_X_day_average_2sets(7,fatality_rate['norm']); 
