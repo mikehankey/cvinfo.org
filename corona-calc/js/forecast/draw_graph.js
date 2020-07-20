@@ -225,6 +225,15 @@ function draw_graph(name,data,type,opts) {
    $('#'+data['domGraph']).html('');
    done(); 
 
+
+      
+
+   console.log("DATA PROJ")
+   console.log(data['proj'])
+   console.log(opts)
+
+
+
    // Compute Range of the Graph
    var min, max;
    min = new Date(Math.min.apply(null,data['norm']['x']))    
@@ -401,13 +410,11 @@ function draw_graph_sing(name,data,type,opts) {
 
    // Reset the Graph
    $('#'+data['domGraph']).html('');
-   done(); 
+   done();  
 
    // We draw the UWASH Projections
    if(data['proj'] !== undefined) {
-
- 
-      
+  
       // We build the array of projected data based on the options
       var all_projected_data = [];
       if(opts.easing==true)         all_projected_data.push('easing');
@@ -473,7 +480,7 @@ function draw_graph_sing(name,data,type,opts) {
          })
       })
           
-   }
+   }  
    
    // We draw bars
    if(data['norm'] !== undefined && opts.norm) {

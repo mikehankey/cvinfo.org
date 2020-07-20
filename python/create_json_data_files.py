@@ -416,7 +416,7 @@ def create_county_state_data(_state):
             county_pop = 100*cur_pop/state_json_data['sum']['pop']
 
             # State projection
-            if('proj' in county_res): 
+            if('proj' in state_json_data): 
                county_res['proj'] = create_county_proj(state_json_data['proj'],county_pop)
                
             # We put all the JSON under the State folder / County
@@ -447,9 +447,9 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    #os.system("clear")
-   create_states_data('FL') 
+   #create_states_data('FL') 
    #create_states_data('AK') 
    #create_states_data('DC')
    #create_states_data('TX') 
-   #create_county_state_data('MD')
+   create_county_state_data('DE')
    #create_daily_county_state_data('TX')
