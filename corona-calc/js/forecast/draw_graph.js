@@ -379,6 +379,7 @@ function draw_graph(name,data,type,opts) {
       layout.margin.r = 80;
    }
 
+   Plotly.purge(data['domGraph']);
    Plotly.newPlot(data['domGraph'], all_set, layout);
 
    // Add title info
@@ -405,8 +406,7 @@ function draw_graph_sing(name,data,type,opts) {
    // We draw the UWASH Projections
    if(data['proj'] !== undefined) {
 
-
-      console.log(data['proj'])
+ 
       
       // We build the array of projected data based on the options
       var all_projected_data = [];

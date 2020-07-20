@@ -31,6 +31,21 @@ def get_state_pop(state,state_population_rows):
       if(state_data['state']==state):
          return int(state_data['pop'])
 
+# Return the projection data of a county
+# based on the prorjection data of the state & the % of pop of the county compare to the state
+# state_json_data['proj'],county_pop
+def create_county_proj(proj, county_pop_p):
+   toReturn = proj 
+ 
+   for type_of_proj in proj: 
+      for day in proj[type_of_proj]:
+         for d in day: 
+            for value in day[d]:
+               day[d][value] =  float(str("%.3f" % round(day[d][value]*county_pop_p/100, 3))) 
+
+   return toReturn
+ 
+
 # Create JSON files for all states  
 def create_states_data(st):
  
@@ -373,17 +388,37 @@ def create_county_state_data(_state):
                   last_county_cases    =  day[d]['total_c'] 
                   
                   # With the pop, we can have the ppm values
-                  if(cur_pop>0):
-                     day[d]['ncpm'] = float(str("%.3f" % round(day[d]['cases']*1000000/cur_pop, 3))) 
-                     day[d]['ndpm'] = float(str("%.3f" % round(day[d]['deaths']*1000000/cur_pop, 3))) 
-                     day[d]['tcpm'] = float(str("%.3f" % round(day[d]['total_c']*1000000/cur_pop, 3))) 
-                     day[d]['tdpm'] = float(str("%.3f" % round(day[d]['total_d']*1000000/cur_pop, 3))) 
-                  else:
-                     day[d]['ncpm'] = 0
-                     day[d]['ndpm'] = 0
-                     day[d]['tcpm'] = 0
-                     day[d]['tdpm'] = 0
-            
+                  #if(cur_pop>0):
+                  #   day[d]['ncpm'] = float(str("%.3f" % round(day[d]['cases']*1000000/cur_pop, 3))) 
+                  #   day[d]['ndpm'] = float(str("%.3f" % round(day[d]['deaths']*1000000/cur_pop, 3))) 
+                  #   day[d]['tcpm'] = float(str("%.3f" % round(day[d]['total_c']*1000000/cur_pop, 3))) 
+                  #   day[d]['tdpm'] = float(str("%.3f" % round(day[d]['total_d']*1000000/cur_pop, 3))) 
+                  #else:
+                  #   day[d]['ncpm'] = 0
+                  #   day[d]['ndpm'] = 0
+                  #   day[d]['tcpm'] = 0
+                  #   day[d]['tdpm'] = 0
+         
+            # Now we add the UWASH projection data of the state 
+            # reduced to the county population county
+
+            # Read the State.json
+            state_json = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state +".json","r")
+            state_json_data = json.load(state_json)
+            state_json.close()
+ 
+            county_res = {
+                  'stats'  : all_stats_per_county[state]['stats'][county],
+                  'sum'    : all_stats_per_county[state]['sum'][county]
+            }
+
+             # Compute the % of pop of the county compare to the state
+            county_pop = 100*cur_pop/state_json_data['sum']['pop']
+
+            # State projection
+            if('proj' in county_res): 
+               county_res['proj'] = create_county_proj(state_json_data['proj'],county_pop)
+               
             # We put all the JSON under the State folder / County
             county_folder =  PATH_TO_STATES_FOLDER + os.sep + state + os.sep +  "counties"  
             
@@ -393,7 +428,7 @@ def create_county_state_data(_state):
 
             # Create JSON File in folder
             with open(county_folder +  os.sep + county + ".json", mode='w+') as csv_file:
-               json.dump({'stats':all_stats_per_county[state]['stats'][county],'sum': all_stats_per_county[state]['sum'][county]},csv_file)
+               json.dump(county_res, csv_file)
 
             # For the json that contains all the counties of a given state
             # (used on the International Comparison Page)
@@ -413,8 +448,8 @@ def create_county_state_data(_state):
 if __name__ == "__main__":
    #os.system("clear")
    create_states_data('FL') 
-    #create_states_data('AK') 
-    #create_states_data('DC')
-    #create_states_data('TX') 
-   #create_county_state_data('DE')
+   #create_states_data('AK') 
+   #create_states_data('DC')
+   #create_states_data('TX') 
+   #create_county_state_data('MD')
    #create_daily_county_state_data('TX')

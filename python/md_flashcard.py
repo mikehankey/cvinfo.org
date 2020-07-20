@@ -14,15 +14,13 @@ def main_menu():
    print("2) Create JSON files per ZIP code")   
    print("3) Create Graphs per ZIP code & County Pages")   
    print("4) Create MD Zip Watchlists Pages")   
-   print("5) Do it all")   
-   cmd = input("Run: ")
+   print("5) Do it all")     
 
    if(len(sys.argv)>1):
       cmd = sys.argv[1]
    else:
-      cmd = input("Run: ")
-
-
+      cmd = input("Run:  
+      
    try:
       cmd = int(cmd) 
    except ValueError:

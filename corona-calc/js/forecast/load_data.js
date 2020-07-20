@@ -1,3 +1,5 @@
+var state_pop; // Use for county level (% of pop)
+
 // Change State
 function state_select_action_setup() {
    $('#state_selector').change(function(e){ 
@@ -87,11 +89,13 @@ function data_updated() {
   
    loading('Getting data...');
 
+ 
    $.ajax({
       type: "get",
       url:  url_to_load,
       dataType: "json",
       success: function (result, status, xhr) {
+         
          prepare_data({
             data:  result,
             state_code: $('#state_selector').val(),

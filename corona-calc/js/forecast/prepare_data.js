@@ -138,6 +138,17 @@ function get_split_data_proj(data, _type, nonzero) {
 
 
 
+/**
+ * Clean All DomEl
+ */
+function cleanAll() {
+   $(['newcases','deaths','cases','fatal']).each(function(i,v) {
+      $(['_graph_details','_graph_options','_graph']).each(function(x,vv) {
+         $('#'+v+'vv').html('');
+      });
+   });
+}
+
  
 
 
@@ -150,7 +161,8 @@ function get_split_data_proj(data, _type, nonzero) {
  *    county 
  */
 function prepare_data(all_data) {
-   
+    
+
    // We get the tests values to add the possibility to add the tests on every graphs (2nd y-axis)
    var tests = get_X_day_average(7,all_data['data']['stats'],'test');
 
@@ -200,10 +212,9 @@ function prepare_data(all_data) {
       deaths['proj']['estimation']         = get_split_data_proj(all_data['data']['proj']['estimation'],'d',false); // We use 'd' for deaths for smaller json files
       deaths['proj']['masks']              = get_split_data_proj(all_data['data']['proj']['masks'],'d',true);
       deaths['proj']['easing']             = get_split_data_proj(all_data['data']['proj']['easing'],'d',true);
- 
    }
 
-    
+ 
    // Default options
    var options = { 
       uncertainty : false,  
@@ -214,17 +225,21 @@ function prepare_data(all_data) {
       sevend_avg  : true,
       tests       : false
    }
-   
-   // We Draw the Graph
-   if(all_data['county'] !== "0") {
-      // It's a county
-      alert("COUNTY")
-   } else { 
-      // It's a state
-      draw_graph(all_data['state_name'],cases,'cases',options);
-      draw_graph(all_data['state_name'],deaths,'deaths',options);
-      draw_graph_sing(all_data['state_name'],fatality_rate,'fatality_rate',options);
+
+   var name = all_data['state_name'];
+
+   cleanAll();
+  
+   // We Draw the Graph1
+   if(all_data['county'] !== 0 && all_data['county'] !== "0"  ) {
+      name = all_data['county'] +', '+all_data['state_code'];
    }
+   
+   // It's a state
+   draw_graph(name,cases,'cases',options);
+   draw_graph(name,deaths,'deaths',options);
+   draw_graph_sing(name,fatality_rate,'fatality_rate',options);
+
    
 }    
 
