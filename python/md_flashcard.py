@@ -19,7 +19,7 @@ def main_menu():
    if(len(sys.argv)>1):
       cmd = sys.argv[1]
    else:
-      cmd = input("Run:  
+      cmd = input("Run: ") 
       
    try:
       cmd = int(cmd) 
