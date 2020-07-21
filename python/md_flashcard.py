@@ -53,6 +53,7 @@ def main_menu():
       print ("CREATING MD WATCHLISTS")
       create_MD_watchlists()
       print("\n>>>TASK DONE \n\n") 
+      sys.exit()
 
    main_menu()
 

@@ -368,7 +368,7 @@ def main_menu():
       print("PARSING DATA.")
       parse_all_data()
       print("\n>>>TASK DONE \n\n") 
-      
+      sys.exit()
   
    elif cmd== 0:
       print("Exit.")

@@ -448,7 +448,7 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    #os.system("clear")
-   create_states_data('GA') 
+   #create_states_data('GA') 
    #create_states_data('AK') 
    #create_states_data('DC')
    #create_states_data('TX') 
