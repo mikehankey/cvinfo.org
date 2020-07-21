@@ -308,11 +308,12 @@ function prepare_data(all_data) {
       deaths['proj']['masks']              = get_split_data_proj(all_data['data']['proj']['masks'],'d',true);
       deaths['proj']['easing']             = get_split_data_proj(all_data['data']['proj']['easing'],'d',true);
  
-      
+      /*
       fatality_rate['proj'] = []
       fatality_rate['proj']['estimation']  =  get_fatality_rate_from_2_sets(cases['proj']['estimation'],deaths['proj']['estimation']) 
       fatality_rate['proj']['masks']       =  get_fatality_rate_from_2_sets(cases['proj']['masks'],deaths['proj']['masks']) 
       fatality_rate['proj']['easing']      =  get_fatality_rate_from_2_sets(cases['proj']['easing'],deaths['proj']['easing']) 
+      */
       
    }
 
