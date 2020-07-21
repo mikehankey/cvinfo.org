@@ -120,13 +120,15 @@ def main_menu():
          g = rank_counties(st)
          generate_gbu_graphs_and_state_page(st,g)
          create_daily_county_state_data(st)
+
       print("Create Hotspots & Alerts pages")
       hotspots,alerts = get_hotspots_and_alerts()
       create_hotspot_page(hotspots)
       create_alert_page(alerts)
      
       print("\n>>>TASK DONE \n\n") 
-
+      sys.exit(0) 
+      
    elif cmd== 0:
       print("Exit.")
       sys.exit(0) 
@@ -134,6 +136,7 @@ def main_menu():
       print("\n*>>>ERROR: Command Not Found \n\n")
       
    main_menu()
+ 
 
 if __name__ == "__main__":
    os.system("clear")
@@ -141,7 +144,7 @@ if __name__ == "__main__":
 
 
 # WARNING IF IT DOESN'T WORK:
-#   # First we completely empty the states folder so 
+# First we completely empty the states folder so 
 # we don't keep old data that aren't in the data sources files anymore
 # as sometimes counties disapear from the data source (what a waist of time!)
 #os.system( "rm -rf " + PATH_TO_STATES_FOLDER+os.sep)

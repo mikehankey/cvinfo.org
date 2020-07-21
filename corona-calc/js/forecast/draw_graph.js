@@ -436,9 +436,8 @@ function draw_graph_sing(name,data,type,opts) {
                y: data['proj'][set_of_data]['y' + v],
                legendgroup: ind,
                styles: [{target:'UWASH Projection & Estimation'}],
-               hovertemplate: '%{y:.2f}',
-               xaxis: 'x2',
-               type: "scatter", 
+               //hovertemplate: '%{y:.2f}%', 
+               //type: "scatter", 
                mode: "lines" 
             }
 
@@ -513,9 +512,6 @@ function draw_graph_sing(name,data,type,opts) {
       },
       yaxis: {
          tickformat: ',.2%' 
-      },
-      xaxis2: {
-        overlaying: 'x',
       } 
    };  
 

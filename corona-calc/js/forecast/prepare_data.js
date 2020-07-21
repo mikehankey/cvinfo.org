@@ -96,8 +96,7 @@ function get_X_day_average(max_day,data,_type) {
 
 // Same tham above but with a set of x and y
 function get_X_day_average_2sets(max_day, all) {
- 
-
+  
    var tempValForAvg = [], tempValFormax_day = [], all_x_avg = [], all_y_avg = [];
    $.each(all['y'],function(i,v) {
 
@@ -157,6 +156,79 @@ function get_split_data_proj(data, _type, nonzero) {
    return {'x': all_x, 'ym': all_ym, 'yu': all_yu, 'yl': all_yl }
 }
 
+
+/**
+ * get_fatality_rate_from_2_sets
+ */
+function get_fatality_rate_from_2_sets(cases,deaths) {
+   var all_x = [], all_ym= [], all_yu= [], all_yl=[];
+
+   // In the Proj data we have the daily new data
+   // but for the fatality rate we need to the TOTAL DATA...
+   var prev_data_l = 0, prev_data_m = 0, prev_data_u = 0;
+
+   // We reverse all the arrays
+   $.each(cases,function(i,v){cases[i].reverse()})
+   $.each(deaths,function(i,v){deaths[i].reverse()})
+   
+   new_cases = cases;
+   new_deaths = deaths;
+
+   // We add the daily data to have a "total"
+   $.each(new_cases['x'], function(i,v) {
+      y = prev_data_l;
+      m = prev_data_m;
+      u = prev_data_u;
+      prev_data_l =  new_cases['yl'][i];
+      prev_data_m =  new_cases['ym'][i];
+      prev_data_u =  new_cases['yu'][i];
+      new_cases['yl'][i] = y;
+      new_cases['ym'][i] = m;
+      new_cases['yu'][i] = u;
+   })
+
+   prev_data_l = 0, prev_data_m = 0, prev_data_u = 0;
+ 
+   $.each(new_deaths['x'], function(i,v) {
+      y = prev_data_l;
+      m = prev_data_m;
+      u = prev_data_u;
+      prev_data_l =  new_deaths['yl'][i];
+      prev_data_m =  new_deaths['ym'][i];
+      prev_data_u =  new_deaths['yu'][i];
+      new_deaths['yl'][i] = y;
+      new_deaths['ym'][i] = m;
+      new_deaths['yu'][i] = u;
+   })
+ 
+ 
+   $.each(new_cases['x'],function(i,v) {
+      all_x.push(new_cases['x'][i]);
+
+      if(new_deaths['yl'][i]>0) {
+         all_yl.push(new_deaths['yl'][i]/new_cases['yl'][i])
+      } else {
+         all_yl.push(0);
+      }
+      if(new_deaths['yu'][i]>0) {
+         all_yu.push(new_deaths['yl'][i]/new_cases['yu'][i])
+      } else {
+         all_yu.push(0);
+      }
+      if(new_deaths['ym'][i]>0) {
+         all_ym.push(new_deaths['yl'][i]/new_cases['ym'][i])
+      } else {
+         all_ym.push(0);
+      }
+
+
+   });
+
+
+   console.log({'x': all_x, 'ym': all_ym, 'yu': all_yu, 'yl': all_yl })
+
+   return {'x': all_x, 'ym': all_ym, 'yu': all_yu, 'yl': all_yl }
+}
 
 
 /**
@@ -235,8 +307,16 @@ function prepare_data(all_data) {
       deaths['proj']['estimation']         = get_split_data_proj(all_data['data']['proj']['estimation'],'d',false); // We use 'd' for deaths for smaller json files
       deaths['proj']['masks']              = get_split_data_proj(all_data['data']['proj']['masks'],'d',true);
       deaths['proj']['easing']             = get_split_data_proj(all_data['data']['proj']['easing'],'d',true);
+ 
+      
+      fatality_rate['proj'] = []
+      fatality_rate['proj']['estimation']  =  get_fatality_rate_from_2_sets(cases['proj']['estimation'],deaths['proj']['estimation']) 
+      fatality_rate['proj']['masks']       =  get_fatality_rate_from_2_sets(cases['proj']['masks'],deaths['proj']['masks']) 
+      fatality_rate['proj']['easing']      =  get_fatality_rate_from_2_sets(cases['proj']['easing'],deaths['proj']['easing']) 
+      
    }
 
+ 
  
    // Default options
    var options = { 
