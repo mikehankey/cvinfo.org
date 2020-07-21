@@ -13,7 +13,9 @@ def clean_uwash_csv():
       how_many_files = num_files = len([f for f in os.listdir(date_f) if os.path.isfile(os.path.join(date_f, f))])
       if(how_many_files>0):
          break
+
    
+
    for files in UWASH_FILE_TO_USE:
 
       uwash_file = date_f + UWASH_FILE_TO_USE[files]
@@ -33,9 +35,12 @@ def clean_uwash_csv():
                   # Tests
                   'total_tests'
       ]
+      
+
+      # WARNING THERE ARE 2 GEORGIA IN THE SRC FILES  (the state & the country)
+      # ALL location_id for the US states are > 500 (above 523 actually)
+      df = df[(df.location_id > 500) & ((df.location_name == 'District of Columbia') | (df.location_name == 'Alabama') | (df.location_name == 'Alaska') | (df.location_name == 'Arizona') | (df.location_name == 'Arkansas') | (df.location_name == 'California') | (df.location_name == 'Colorado') | (df.location_name == 'Connecticut') | (df.location_name == 'Delaware') | (df.location_name == 'Florida') | (df.location_name == 'Georgia') | (df.location_name == 'Hawaii') | (df.location_name == 'Idaho') | (df.location_name == 'Illinois') | (df.location_name == 'Indiana') | (df.location_name == 'Iowa') | (df.location_name == 'Kansas') | (df.location_name == 'Kentucky') | (df.location_name == 'Louisiana') | (df.location_name == 'Maine') | (df.location_name == 'Maryland') | (df.location_name == 'Massachusetts') | (df.location_name == 'Michigan') | (df.location_name == 'Minnesota') | (df.location_name == 'Mississippi') | (df.location_name == 'Missouri') | (df.location_name == 'Montana') | (df.location_name == 'Nebraska') | (df.location_name == 'Nevada') | (df.location_name == 'New Hampshire') | (df.location_name == 'New Jersey') | (df.location_name == 'New Mexico') | (df.location_name == 'New York') | (df.location_name == 'North Carolina') | (df.location_name == 'North Dakota') | (df.location_name == 'Ohio') | (df.location_name == 'Oklahoma') | (df.location_name == 'Oregon') | (df.location_name == 'Pennsylvania') | (df.location_name == 'Rhode Island') | (df.location_name == 'South Carolina') | (df.location_name == 'South Dakota') | (df.location_name == 'Tennessee') | (df.location_name == 'Texas') | (df.location_name == 'Utah') | (df.location_name == 'Vermont') | (df.location_name == 'Virginia') | (df.location_name == 'Washington') | (df.location_name == 'Washington DC') | (df.location_name == 'West Virginia') | (df.location_name == 'Wisconsin') | (df.location_name == 'Wyoming')) ]
       df = df[col_list]
-      df = df[(df.location_name == 'District of Columbia') | (df.location_name == 'Alabama') | (df.location_name == 'Alaska') | (df.location_name == 'Arizona') | (df.location_name == 'Arkansas') | (df.location_name == 'California') | (df.location_name == 'Colorado') | (df.location_name == 'Connecticut') | (df.location_name == 'Delaware') | (df.location_name == 'Florida') | (df.location_name == 'Georgia') | (df.location_name == 'Hawaii') | (df.location_name == 'Idaho') | (df.location_name == 'Illinois') | (df.location_name == 'Indiana') | (df.location_name == 'Iowa') | (df.location_name == 'Kansas') | (df.location_name == 'Kentucky') | (df.location_name == 'Louisiana') | (df.location_name == 'Maine') | (df.location_name == 'Maryland') | (df.location_name == 'Massachusetts') | (df.location_name == 'Michigan') | (df.location_name == 'Minnesota') | (df.location_name == 'Mississippi') | (df.location_name == 'Missouri') | (df.location_name == 'Montana') | (df.location_name == 'Nebraska') | (df.location_name == 'Nevada') | (df.location_name == 'New Hampshire') | (df.location_name == 'New Jersey') | (df.location_name == 'New Mexico') | (df.location_name == 'New York') | (df.location_name == 'North Carolina') | (df.location_name == 'North Dakota') | (df.location_name == 'Ohio') | (df.location_name == 'Oklahoma') | (df.location_name == 'Oregon') | (df.location_name == 'Pennsylvania') | (df.location_name == 'Rhode Island') | (df.location_name == 'South Carolina') | (df.location_name == 'South Dakota') | (df.location_name == 'Tennessee') | (df.location_name == 'Texas') | (df.location_name == 'Utah') | (df.location_name == 'Vermont') | (df.location_name == 'Virginia') | (df.location_name == 'Washington') | (df.location_name == 'Washington DC') | (df.location_name == 'West Virginia') | (df.location_name == 'Wisconsin') | (df.location_name == 'Wyoming') ]
-   
       # We replace the CSV 
       df.to_csv(uwash_file)
       print(uwash_file , " cleaned")

@@ -48,8 +48,7 @@ def create_county_proj(proj, county_pop_p):
 
 # Create JSON files for all states  
 def create_states_data(st):
- 
-  
+   
    all_stats_per_state = {}
 
    # We open us_states_pop.csv to get the state population
@@ -167,6 +166,8 @@ def create_states_data(st):
 
       # We had the UWASH Projection  
       project = get_uwash_data(state)  
+  
+
       # We don't have the projection data for certain states (like NH for instance)
       if(project is not None ):
          all_stats_per_state[state]['proj'] =  project
@@ -447,9 +448,9 @@ def create_county_state_data(_state):
 
 if __name__ == "__main__":
    #os.system("clear")
-   #create_states_data('FL') 
+   create_states_data('GA') 
    #create_states_data('AK') 
    #create_states_data('DC')
    #create_states_data('TX') 
-   create_county_state_data('DE')
+   #create_county_state_data('DE')
    #create_daily_county_state_data('TX')

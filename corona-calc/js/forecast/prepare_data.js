@@ -237,7 +237,7 @@ function get_fatality_rate_from_2_sets(cases,deaths) {
 function cleanAll() {
    $(['newcases','deaths','cases','fatal']).each(function(i,v) {
       $(['_graph_details','_graph_options','_graph']).each(function(x,vv) {
-         $('#'+v+'vv').html('');
+         $('#'+v+vv).html('');
       });
    });
 }
@@ -315,9 +315,7 @@ function prepare_data(all_data) {
       fatality_rate['proj']['easing']      =  get_fatality_rate_from_2_sets(cases['proj']['easing'],deaths['proj']['easing']) 
       */
       
-   }
-
- 
+   } 
  
    // Default options
    var options = { 

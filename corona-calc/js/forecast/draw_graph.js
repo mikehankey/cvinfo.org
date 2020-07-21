@@ -57,8 +57,10 @@ function setSingGraphOptions(domOptions,_type,opts,name,callback) {
 /**
  * Setup Options buttons and input checkbox 
  */
-function setupGraphOptions(domOptions,_type, opts, name, callback) {
-  
+function setupGraphOptions(domOptions,_type, opts, name, hasProj, callback) {
+   
+   console.log( " hasProj ", hasProj)
+
    // Add Button for norm (bars)
    if($('#norm'+_type).length==0) {
       selected = opts.norm?"selected":"";
@@ -121,94 +123,98 @@ function setupGraphOptions(domOptions,_type, opts, name, callback) {
       return false;
    });
 
-
-   // Add Button for easing
-   if($('#easing'+_type).length==0) {
-      selected = opts.easing?"selected":"";
-      $('<br/><button class="choice '+selected+' easing" name="easing'+_type+'" id="easing'+_type+'">Easing</button>').appendTo($('#'+domOptions));
-   }
-
-   // Action on Easing button
-   $('#easing'+_type).click(function(e) {
-      var t = $(this);
-      e.stopImmediatePropagation();
-      if(t.hasClass('selected')) {
-         opts.easing = false;
-      } else {
-         opts.easing = true;
-      }
-      t.toggleClass('selected');
-      callback();
-      return false;
-   });
-
-   // Add Button for estimation
-   if($('#estimation'+_type).length==0) {
-      selected = opts.estimation?"selected":"";
-      $('<button class="choice '+selected+' estimation" name="estimation'+_type+'" id="estimation'+_type+'">Estimation</button>').appendTo($('#'+domOptions));
-   }
-
-   // Action on estimation button
-   $('#estimation'+_type).click(function(e) {
-      var t = $(this);
-      e.stopImmediatePropagation();
-      if(t.hasClass('selected')) {
-         opts.estimation = false;
-      } else {
-         opts.estimation = true;
-      }
-      t.toggleClass('selected');
-      callback();
-      return false;
-   });
-
-   // Add Button for masks
-   if($('#masks'+_type).length==0) {
-      selected = opts.masks?"selected":"";
-      $('<button class="choice '+selected+' masks" name="masks'+_type+'" id="masks'+_type+'">Masks</button>').appendTo($('#'+domOptions));
-   }
-
-   // Action on estimation button
-   $('#masks'+_type).click(function(e) {
-      var t = $(this);
-      e.stopImmediatePropagation();
-      if(t.hasClass('selected')) {
-         opts.masks = false;
-      } else {
-         opts.masks = true;
-      }
-      t.toggleClass('selected');
-      callback();
-      return false;
-   });
    
+   if(hasProj) {
 
-   // Add Switcher for Uncertainty (first time only)
-   if($('#uncertainty'+_type+'').length==0) {
-      checked = opts.uncertainty?"checked":"";
-      $('<div class="choice-like"><label ' + checked + ' for="uncertainty'+_type+'"><input name="uncertainty'+_type+'" type="checkbox" id="uncertainty'+_type+'" value=""> Uncertainty</label></div>').appendTo($('#'+domOptions))
-      if(opts.uncertainty) {
-         $("#uncertainty"+_type).attr('checked');
-      } else {
-         $("#uncertainty"+_type).removeAttr('checked');
+      // Add Button for easing
+      if($('#easing'+_type).length==0) {
+         selected = opts.easing?"selected":"";
+         $('<br/><button class="choice '+selected+' easing" name="easing'+_type+'" id="easing'+_type+'">Easing</button>').appendTo($('#'+domOptions));
       }
-   }
 
-   // Action on Switcher
-   $("#uncertainty"+_type).rcSwitcher().on({
-      'turnon.rcSwitcher':function( e, dataObj ){
+      // Action on Easing button
+      $('#easing'+_type).click(function(e) {
+         var t = $(this);
          e.stopImmediatePropagation();
-         opts.uncertainty = true;
+         if(t.hasClass('selected')) {
+            opts.easing = false;
+         } else {
+            opts.easing = true;
+         }
+         t.toggleClass('selected');
          callback();
          return false;
-      },
-      'turnoff.rcSwitcher':function( e, dataObj ){
+      });
+
+      // Add Button for estimation
+      if($('#estimation'+_type).length==0) {
+         selected = opts.estimation?"selected":"";
+         $('<button class="choice '+selected+' estimation" name="estimation'+_type+'" id="estimation'+_type+'">Estimation</button>').appendTo($('#'+domOptions));
+      }
+
+      // Action on estimation button
+      $('#estimation'+_type).click(function(e) {
+         var t = $(this);
          e.stopImmediatePropagation();
-         opts.uncertainty = false;
+         if(t.hasClass('selected')) {
+            opts.estimation = false;
+         } else {
+            opts.estimation = true;
+         }
+         t.toggleClass('selected');
          callback();
          return false;
-      },
-   });
+      });
+
+      // Add Button for masks
+      if($('#masks'+_type).length==0) {
+         selected = opts.masks?"selected":"";
+         $('<button class="choice '+selected+' masks" name="masks'+_type+'" id="masks'+_type+'">Masks</button>').appendTo($('#'+domOptions));
+      }
+
+      // Action on estimation button
+      $('#masks'+_type).click(function(e) {
+         var t = $(this);
+         e.stopImmediatePropagation();
+         if(t.hasClass('selected')) {
+            opts.masks = false;
+         } else {
+            opts.masks = true;
+         }
+         t.toggleClass('selected');
+         callback();
+         return false;
+      });
+      
+
+      // Add Switcher for Uncertainty (first time only)
+      if($('#uncertainty'+_type+'').length==0) {
+         checked = opts.uncertainty?"checked":"";
+         $('<div class="choice-like"><label ' + checked + ' for="uncertainty'+_type+'"><input name="uncertainty'+_type+'" type="checkbox" id="uncertainty'+_type+'" value=""> Uncertainty</label></div>').appendTo($('#'+domOptions))
+         if(opts.uncertainty) {
+            $("#uncertainty"+_type).attr('checked');
+         } else {
+            $("#uncertainty"+_type).removeAttr('checked');
+         }
+      }
+
+      // Action on Switcher
+      $("#uncertainty"+_type).rcSwitcher().on({
+         'turnon.rcSwitcher':function( e, dataObj ){
+            e.stopImmediatePropagation();
+            opts.uncertainty = true;
+            callback();
+            return false;
+         },
+         'turnoff.rcSwitcher':function( e, dataObj ){
+            e.stopImmediatePropagation();
+            opts.uncertainty = false;
+            callback();
+            return false;
+         },
+      });
+
+   }
 
 }
 
@@ -220,14 +226,13 @@ function draw_graph(name,data,type,opts) {
    var dataSetBars = {};
    var all_set = [];  
    var doubleYAxis = false;
+   var hasProj = false;
  
    // Reset the Graph
    $('#'+data['domGraph']).html('');
    done(); 
 
- 
-
-
+  
    // Compute Range of the Graph
    var min, max;
    min = new Date(Math.min.apply(null,data['norm']['x']))    
@@ -306,6 +311,8 @@ function draw_graph(name,data,type,opts) {
             all_set.push(tmpDataSet);
          })
       })
+
+      hasProj = true;
           
    }
 
@@ -389,7 +396,7 @@ function draw_graph(name,data,type,opts) {
    $('#'+data.domTitle).html("<h3>"+name +", " +data.title +"</h3>");
 
    // Setup Options
-   setupGraphOptions(data['domOptions'],type, opts, data.title ,function() {  draw_graph(name,data,type,opts); });
+   setupGraphOptions(data['domOptions'],type, opts, data.title ,hasProj, function() {  draw_graph(name,data,type,opts); }  );
  
 }
 

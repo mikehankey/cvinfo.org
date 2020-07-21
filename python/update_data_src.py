@@ -55,7 +55,7 @@ def update_data_sources():
 
 
    print("Cleaning UWASH Data")
-   #clean_uwash_csv()
+   clean_uwash_csv()
    
    print("---------------------------------")
    print(" All Sources are now up to date  ")
