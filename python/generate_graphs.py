@@ -384,10 +384,8 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
    all_y = []
 
    # Special to get % on the graphs
-   if(_type != 'test_pos_p'):
-      
-      print("YES !!!")
-
+   if(_type == 'test_pos_p'):
+       
       for d in all_data:
          for day in d:
             # Org Data
@@ -417,25 +415,25 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
             else:
                all_y.append(0)
 
-      # Compute the 7d avg for mortality
-      tempValForAvg = []
-      tempValFormax_day = []
-      all_x_avg = []
-      all_y_avg = []
-      max_day = 7
+   # Compute the 7d avg for mortality
+   tempValForAvg = []
+   tempValFormax_day = []
+   all_x_avg = []
+   all_y_avg = []
+   max_day = 7
 
-      for c,y in enumerate(all_y): 
+   for c,y in enumerate(all_y): 
 
-         # For average of _type
-         tempValForAvg.append(y)
+      # For average of _type
+      tempValForAvg.append(y)
 
-         if(len(tempValForAvg) <  max_day):
-            tempValFormax_day = tempValForAvg 
-         else: 
-            tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
-                 
-         all_x_avg.append(all_x[c])
-         all_y_avg.append(np.mean(tempValFormax_day))   
+      if(len(tempValForAvg) <  max_day):
+         tempValFormax_day = tempValForAvg 
+      else: 
+         tempValFormax_day = tempValForAvg[len(tempValForAvg)-max_day:len(tempValForAvg)] 
+               
+      all_x_avg.append(all_x[c])
+      all_y_avg.append(np.mean(tempValFormax_day))   
  
    if(_color=="r"):
       _color = "red"
@@ -513,7 +511,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
    )  
 
    
-   if('test_pos_p' in county or 'mortality' in county):
+   if(_type == 'test_pos_p' or _type == 'mortality'):
       fig.update_layout(yaxis=dict(tickformat="%"))
    
 
