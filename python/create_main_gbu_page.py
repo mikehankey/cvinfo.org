@@ -214,12 +214,12 @@ def generate_gbu_graphs_and_main_page(groups):
       for state in all_groups: 
 
          # Create the Summary Graphs for all the sub pages for the state
-         generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '') # DISPLAY ON THE DEFAULT GBU PAGE
-         generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths')           # New Deaths per Day
-         generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p')   # Positive Tests
-         generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test')               # New Test per day  
-         generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
-         generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality')     # Mortality (WARNING: computed not in JSON)
+         #generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '') # DISPLAY ON THE DEFAULT GBU PAGE
+         #generate_graph_with_avg(state, 'deaths', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|deaths')           # New Deaths per Day
+         #generate_graph_with_avg(state, 'test_pos_p', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test_pos_p')   # Positive Tests
+         #generate_graph_with_avg(state, 'test', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|test')               # New Test per day  
+         #generate_graph_with_avg(state, 'act_hosp', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|act_hosp')       # Active Hospi
+         #generate_graph_with_avg(state, 'mortality', color, PATH_TO_STATES_FOLDER + os.sep + state, 'for_a_state|mortality')     # Mortality (WARNING: computed not in JSON)
  
          # Create the Summary Graphs larger version
          generate_graph_with_avg(state, 'cases', color, PATH_TO_STATES_FOLDER + os.sep + state, '', True)
@@ -235,7 +235,7 @@ def generate_gbu_graphs_and_main_page(groups):
             {'_type':'cases','name':'Cases','avg':[7,3], 'raw_line':False}, 
             output_ext = '_blg.png',  
             large=True)
- 
+  
          # Create the dual axis cases/tests small form for the gbu_testing page
          generate_dual_graph_X_and_cases(state, color, PATH_TO_STATES_FOLDER + os.sep +state, 
             {'_type':'test','name':'7D. Avg Tests','avg':[7],'raw_line':False},  
@@ -290,7 +290,7 @@ def create_state_DOM_el(st,all_state_details,rand) :
             <h3 class="nmb">'+US_STATES[st]+'</h3>\
             <h4>&Delta;14: '+ str(all_state_details['delta14']) +' -  &Delta;7: '+ str(all_state_details['delta7']) +'</small><br>\
             <small>New cases on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_cases'],0)  + '</small>\
-            <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+            <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'.png?v='+rand+'"  alt="'+US_STATES[st]+'"/></a>\
             <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
 
 # Create State HTML Element when not cases
@@ -299,26 +299,26 @@ def create_state_type_DOM_el(st,all_state_details,rand,_type):
       return '<div class="graph_g ft">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New hospi. on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_hospi'],0)  + '</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_hospi_and_cases.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_hospi_and_cases.png?v='+rand+'"  alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0)   +'</small></div>' 
                #- Total Hospi.: '+ display_us_format(all_state_details['total_hospi'],0)
    elif _type=="test" :
       return '<div class="graph_g ft">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New Tests on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_test'],0)  + '</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_tac.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_tac.png?v='+rand+'"  alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Tests: '+ display_us_format(all_state_details['total_test'],0) +'</small></div>' 
    elif _type=="death" :
       return '<div class="graph_g ft">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>New Deaths on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['last_new_deaths'],0)  + '</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_deaths_and_cases.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+st+'_deaths_and_cases.png?v='+rand+'"  alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +' - Total Deaths: '+ display_us_format(all_state_details['total_death'],0) +'</small></div>' 
    elif _type=="case_fatality" :
       return '<div class="graph_g ">\
                <h3 class="nmb">'+US_STATES[st]+'</h3>\
                <small>Case Fatality Rate on '+all_state_details['last_update']+': ' +  display_us_format(all_state_details['total_average_fatality'],2)  + '%</small>\
-               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'mortality.png?v='+rand+'" width="345" alt="'+US_STATES[st]+'"/></a>\
+               <a href="./'+st+'/index.html"><img src=".'+os.sep+st+os.sep+'mortality.png?v='+rand+'"  alt="'+US_STATES[st]+'"/></a>\
                <small>Total Cases: '+display_us_format(all_state_details['total_case'],0) +'</small></div>' 
                #+' - Average CFR: '+ display_us_format(all_state_details['last_new_fatality'],2) +'%
 

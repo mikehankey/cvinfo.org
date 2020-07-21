@@ -186,7 +186,7 @@ def create_alert_page(alerts):
    alert_page.close()
 
 def create_hotspotgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state):
-   return '<div class="graph_g"><h3 class="nmb">'+title+'</h3><h4>&Delta;7-Day:'+ str(delta7) +' &Delta;14-Day:'+ str(delta14) +'<br><small>Last cases number '+ str(display_us_format(last_cases,0)) +'</small></h4><img  src="./'+ state + '/counties'+os.sep+county+'.png" width="345" alt="'+county+'"/></div>' 
+   return '<div class="graph_g"><h3 class="nmb">'+title+'</h3><h4>&Delta;7-Day:'+ str(delta7) +' &Delta;14-Day:'+ str(delta14) +'<br><small>Last cases number '+ str(display_us_format(last_cases,0)) +'</small></h4><img  src="./'+ state + '/counties'+os.sep+county+'.png"  alt="'+county+'"/></div>' 
 
 def create_alertgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state):
    return create_hotspotgraph_DOM_el(last_cases,img,title,delta7,delta14,county,state)

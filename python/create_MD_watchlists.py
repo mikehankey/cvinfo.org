@@ -215,7 +215,7 @@ def get_MD_select():
 
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_MD_zip_DOM_el(_zip,city_name,county_name,total_case,rand,last_7day):  
-   return '<div class="graph_g"><h3 class="nmb">Zip: '+str(_zip)+'<br>'+  city_name +'</h3><p style="margin-top:0"><small>Total Cases: '+display_us_format(total_case,0)+' - Last 7-Day avg cases: '+display_us_format(last_7day,0)+'</small></p><img  src="./MD/counties/' + county_name + os.sep + str(_zip)+'.png?v='+rand+'" width="345" alt="'+str(_zip)+'"/></div>' 
+   return '<div class="graph_g"><h3 class="nmb">Zip: '+str(_zip)+'<br>'+  city_name +'</h3><p style="margin-top:0"><small>Total Cases: '+display_us_format(total_case,0)+' - Last 7-Day avg cases: '+display_us_format(last_7day,0)+'</small></p><img  src="./MD/counties/' + county_name + os.sep + str(_zip)+'.png?v='+rand+'"  alt="'+str(_zip)+'"/></div>' 
 
 
 

@@ -296,10 +296,10 @@ def rank_counties(st):
 # Create County HTML Element with image
 def create_county_DOM_el(st,ct,rand) :
    if(st == 'MD'):
-      link =  '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><a href="./'+ st + '/counties'+os.sep + ct + '/"><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></a></div>' 
+      link =  '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><a href="./'+ st + '/counties'+os.sep + ct + '/"><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'"  alt="'+ct+'"/></a></div>' 
       return link
    else:
-      return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'" width="345" alt="'+ct+'"/></div>' 
+      return '<div class="graph_g"><h3 class="nmb">'+ct+', ' + st +'</h3><img  src="./'+ st + '/counties'+os.sep+ct+'.png?v='+rand+'"  alt="'+ct+'"/></div>' 
 
 # Create Graph HTML Element with image (the graph, dumbass)
 def create_graph_DOM_el(_file,st,title,rand,hide_mobile=False) :
@@ -310,7 +310,7 @@ def create_graph_DOM_el(_file,st,title,rand,hide_mobile=False) :
       p = '<p style="margin: 1rem 2rem;text-align: left;">The case fatality rate shown above represents total deaths divided by total cases to date. Technically, cases that have not completed should not be included since their outcomes are currently unknown. We have no effective way to do this with current data, so we show CFR through the current day. The true CFR will be slightly higher. States with recent increases in new cases, will naturally drive down the current CFR rate, until these cases come to term.'
    else: 
       p = ''
-   return '<div class="'+cl+'"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'" width="345" alt="'+title+'"/>'+p+'</div>' 
+   return '<div class="'+cl+'"><h3 class="nmb">'+  title +'</h3><img  src="'+ _file +'?v='+rand+'"  alt="'+title+'"/>'+p+'</div>' 
 
 # Create Large Graph HTML Element with image
 def create_large_graph_DOM_el(_file,st,title,rand) :

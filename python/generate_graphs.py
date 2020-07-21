@@ -488,34 +488,30 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
 
    fig.update_xaxes(rangemode="nonnegative")
    fig.update_yaxes(rangemode="nonnegative")
- 
-
+    
    fig.update_layout(
-      width=350,
-      height=350, 
-      margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
+      margin=dict(l=30, r=20, t=5, b=20),   # Top 0 with no title
       paper_bgcolor='rgba(255,255,255,1)',
       plot_bgcolor='rgba(255,255,255,1)',
       showlegend= False,
+      autosize=False 
    )  
  
    if(county ==""):
-      fig.write_image(folder + os.sep + state + ".png") 
+      fig.write_image(folder + os.sep + state + ".png", width=350, height=350) 
       print("Graph for " + state + ' Cases (' +  _color + ') created')
    elif('for_a_state' in county):
       tmp = county.split('|')[1]
-      fig.write_image(folder + os.sep + tmp + ".png") 
+      fig.write_image(folder + os.sep + tmp + ".png", width=350, height=350) 
       print("Graph for " + state + '  ' +  tmp + '  created')
    else:
-      fig.write_image(folder + os.sep + county + ".png") 
+      fig.write_image(folder + os.sep + county + ".png", width=350, height=350) 
       print("Graph for " + county + ", " + state + ' Cases (' +  _color + ') created')
-  
-
+   
+    
    if(large is True):
       # We also save the larger version of the graph
-      fig.update_layout(
-         width=1000,
-         height=350, 
+      fig.update_layout( 
          margin=dict(l=30, r=20, t=0, b=20),   # Top 0 with no title
          paper_bgcolor='rgba(255,255,255,1)',
          plot_bgcolor='rgba(255,255,255,1)',
@@ -523,14 +519,14 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
       )  
 
       if(county ==""):
-         fig.write_image(folder + os.sep + state + "_lg.png") 
+         fig.write_image(folder + os.sep + state + "_lg.png", width=1084, height=450) 
          print("Graph for " + state + ' Cases (' +  _color + ') Larger Version created')
       elif('for_a_state' in county):
          tmp = county.split('|')[1]
-         fig.write_image(folder + os.sep + tmp + "_lg.png") 
+         fig.write_image(folder + os.sep + tmp + "_lg.png", width=1084, height=450) 
          print("Graph for " + state + '  ' +  tmp + ' Larger Version created')
       else:
-         fig.write_image(folder + os.sep + county + "_lg.png") 
+         fig.write_image(folder + os.sep + county + "_lg.png", width=1084, height=450) 
          print("Graph for " + county + ", " + state + ' Cases (' +  _color + ') Larger Version created')
 
 
@@ -549,7 +545,9 @@ def main_menu():
 if __name__ == "__main__":
    #os.system("clear")
    #main_menu()
-   #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
+   generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
+   generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p', True)
+
    #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy')
    #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
 
@@ -568,8 +566,8 @@ if __name__ == "__main__":
    #         output_ext = '_tac.png', # TAC = test & case
    #         large=False)
    
-   generate_dual_graph_X_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA", 
-            {'_type':'act_hosp','name':'7D. Avg Hospitalization','avg':[7],'raw_line':False},  
-            {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
-            output_ext = '_hospi_and_cases.png',  
-            large=False)
+   # generate_dual_graph_X_and_cases("CA", "r", PATH_TO_STATES_FOLDER + os.sep + "CA", 
+   #          {'_type':'act_hosp','name':'7D. Avg Hospitalization','avg':[7],'raw_line':False},  
+   #          {'_type':'cases','name':'7D. Avg Cases','avg':[7],'raw_line':False}, 
+   #          output_ext = '_hospi_and_cases.png',  
+   #          large=False)
