@@ -45,4 +45,4 @@ uwash/react2/
 uwash/real_react/
 corona-calc/data/
 .__pycache__
-.pyc 
+*.pyc 
