@@ -10,6 +10,7 @@ import numpy as np
 from plotly.subplots import make_subplots
 from datetime import *
 from utils import *
+ 
 
 # Generate a graph (cases) for Maryland Zip Code
 # Here we pass all the data

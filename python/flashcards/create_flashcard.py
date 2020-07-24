@@ -1,5 +1,6 @@
 import sys, os, glob 
 import numpy as np
+import tinycss
 import cv2 
 
 from flash_utils import *
@@ -207,5 +208,37 @@ def add_big_number(img_pil,draw,template_img,x,y,title,number,font_big_numbers,f
    return template_img
  
 
+# Get SVG Template + Css and create the corresponding png
+def create_state_map(state,_type, last_date):
 
-print (create_flashcard('MD',7,'cases'))
+   # Get last date as css format
+   last_date = last_date.replace("-","")
+
+   # Get Template
+   svg_code = open(SVG_TEMPLATES + state + ".svg")
+   
+   # Get the CSS File
+   css_file =  open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + "maps" + os.sep + _type + ".css")
+   css = css_file.read()
+   css_file.close()
+
+   selectors = []
+   rules = []
+ 
+   for part in css.split("{"):
+      selectors.append(part)
+      print(part)
+      sys.exit()
+     
+      t = part.split("}")
+      print(t[1])
+      sys.exit()
+      rules.append(t[0])
+
+   print(selectors)
+   #print(parts[1])
+
+
+  
+create_flashcard('MD',7,'cases')
+#create_state_map("MD","cases","2020-07-23")
