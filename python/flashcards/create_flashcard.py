@@ -1,6 +1,5 @@
 import sys, os, glob 
-import numpy as np
-import tinycss
+import numpy as np 
 import cv2 
 
 from flash_utils import *
@@ -28,10 +27,10 @@ def get_top_counties(st,_type,x_day_avg):
          county_data = json.load(tmp_json)
 
          # Get the AVG _type
-         avg_x,avg_y,delta = get_X_day_avg(x_day_avg,county_data['stats'],_type)
-
+         avg_x,avg_y,delta  = get_X_day_avg(x_day_avg,reversed(county_data['stats']),_type)
+         
          # We only need the delta
-         all_counties_to_return.append({'name':county_name,'delta':round(float(delta), 2)})
+         all_counties_to_return.append({'name':county_name,'delta':round(float(delta), 2),'avg':avg_y[len(avg_y)-1]})
 
    return all_counties_to_return
 
@@ -69,8 +68,10 @@ def create_flashcard(state,X_Day_avg,_type):
       # Get the counties ranked with 7day-avg
       counties = get_top_counties(state,_type,X_Day_avg)
 
-      # We sort the counties by delta
-      sorted_counties = sorted(counties, key = lambda i: i['delta'], reverse = True)
+      # We sort the counties by last avg 7days#delta
+      #sorted_counties = sorted(counties, key = lambda i: i['delta'], reverse = True)
+      sorted_counties = sorted(counties, key = lambda i: i['avg'], reverse = True)
+
 
       # Template
       template = FLASH_TEMPLATES_FOLDER + state + "_flash_cases.png" 
@@ -95,18 +96,17 @@ def create_flashcard(state,X_Day_avg,_type):
       font_info            = font_small_numbers
       text_height = 30
  
-      hor_margin = 35
+      hor_margin  = 35
       vert_margin = 45
-      x_start  = 20 
-      y_start  = 110
+      x_start     = 20 
+      y_start     = 110
 
       cur_col  = 0
       cur_row  = 0
 
       x = x_start
       y = y_start
- 
-       
+  
  
       # We get all the png of the counties
       # the ones at the root for "cases"
@@ -127,7 +127,7 @@ def create_flashcard(state,X_Day_avg,_type):
          draw.text((x, y-text_height), county['name'] +', '+ state, font = font_titles, fill = (40,40,40,1))
 
          # Compute the width of the delta text
-         delta_text = "7-Days " + chr(948) + ": " + str(county['delta']) # 948  = delta
+         delta_text = str(X_Day_avg) + "-Days " + chr(948) + ": " + str(county['delta']) # 948  = delta
          size = draw.textsize(delta_text,font_info)
          draw.text(
             (x+GRAPH_FLASH_1[0]-size[0], y-text_height + 2),  # +2 for the diff between the title & info font size
@@ -175,6 +175,7 @@ def create_flashcard(state,X_Day_avg,_type):
       # CASES PER MILLION
       template_img = add_big_number(img_pil,draw,template_img,1611,228,"CASE PER MILLION", cur_cpm, font_big_numbers,font_small_titles,font_small_numbers, increase_cpm)
 
+      print("Test.png created")
       cv2.imwrite('test.png',template_img)
 
 
@@ -194,8 +195,7 @@ def add_big_number(img_pil,draw,template_img,x,y,title,number,font_big_numbers,f
    # Number
    y2 = y+14
    draw.text((x,y2),  text, font = font_big_numbers, fill = (25,25,215,1))
-   
-   
+    
    if(increase>0):
        increase = "(+"+ display_us_format(increase,0) + "*)"
    else: 
@@ -210,35 +210,14 @@ def add_big_number(img_pil,draw,template_img,x,y,title,number,font_big_numbers,f
 
 # Get SVG Template + Css and create the corresponding png
 def create_state_map(state,_type, last_date):
-
-   # Get last date as css format
-   last_date = last_date.replace("-","")
-
+  
    # Get Template
    svg_code = open(SVG_TEMPLATES + state + ".svg")
-   
-   # Get the CSS File
-   css_file =  open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + "maps" + os.sep + _type + ".css")
-   css = css_file.read()
-   css_file.close()
-
-   selectors = []
-   rules = []
- 
-   for part in css.split("{"):
-      selectors.append(part)
-      print(part)
-      sys.exit()
-     
-      t = part.split("}")
-      print(t[1])
-      sys.exit()
-      rules.append(t[0])
-
-   print(selectors)
-   #print(parts[1])
+      
+    
 
 
-  
+
+#print(get_top_counties("MD","cases",7)) 
 create_flashcard('MD',7,'cases')
-#create_state_map("MD","cases","2020-07-23")
+#create_state_map("MD","cases","2020-07-27")

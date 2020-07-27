@@ -10,8 +10,7 @@ def create_legend(all_data,_type,number_of_county):
    
    max_d = max(all_data)
    min_d = np.nonzero(np.array(all_data))[0][0]
-
-   
+ 
    # HTML for legend
    html_legend = '<div class="legend" style="display:none" id="leg_'+_type+'"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+ str(len(MAP_COLORS)*50) +' 40">'
  
@@ -76,9 +75,7 @@ def create_legend(all_data,_type,number_of_county):
  
 
    html_legend += "</svg></div>"
-
-   #print(html_legend)
-
+  
    return {"html_legend": html_legend, "intervals": all_intervals, "max": start-steps}
 
   
@@ -121,7 +118,7 @@ def make_svg_state_map_css(state_code, _type):
    # We combine all the counties data per day
    all_counties_per_day = {}
 
-   # For the max
+   # For the max (only float values)
    _all  = [] 
      
    for county_file in all_counties:
@@ -155,19 +152,16 @@ def make_svg_state_map_css(state_code, _type):
    all_css_colors = []
    for color in MAP_COLORS:
       all_css_colors.append([])
-   
+    
    # Now we need to know for each day the color of each FIPS
    for d in all_counties_per_day:
-      current_date = d  
-      #print("CURRENT DATE ", d)
+      current_date = d   
       all_dates.append(d)
     
       for fips in all_counties_per_day[d]:
          for f in fips:
-            current_fips = f
-            #print("CURRENT FIPS ", current_fips)
+            current_fips = f 
             color = get_color_based_on_rank_and_value(fips[f][_type],legend['intervals'],legend['max'])
-            #css+=   ".map_" + d.replace('-','') + " #FIPS_" +  current_fips + " { fill:" + MAP_COLORS[color] + "; }\n"
             all_css_colors[color].append(".map_" + d.replace('-','') + " #FIPS_" +  current_fips)
 
    css = ''
@@ -196,11 +190,7 @@ def make_svg_state_map_css(state_code, _type):
                css +=  ', '.join(chunk)
                css += " { fill: " + MAP_COLORS[index] + " } "
  
-
  
-  
-
-
    # We save the css file where it belongs
    maps_dir = PATH_TO_STATES_FOLDER + os.sep + state_code + os.sep + 'maps' 
    if not os.path.exists(maps_dir):
@@ -220,12 +210,100 @@ def make_svg_state_map_css(state_code, _type):
 
    # We return the css here for the default type 
    # so we can include the css directly while creating the initial page
-   return legend['html_legend'],   css, str(min_date), str(max_date)
+   return legend['html_legend'], css, str(min_date), str(max_date)
+
+
+
+# Create a map as a svg file (with legend and NO CSS)
+# This function is used to create the flashcards
+def make_static_svg_state_map(state_code,_type,date):
+   
+   # Open State Json Data file
+   tmp_json    = open(PATH_TO_STATES_FOLDER + os.sep + state_code + os.sep + state_code + '.json',  'r')
+   data        = json.load(tmp_json)
+   tmp_json.close()
+   pop = data['sum']['pop']  # for case per 100,000
+
+   # We need all the counties json files of the state
+   all_counties = glob.glob(PATH_TO_STATES_FOLDER + os.sep + state_code + os.sep + "counties" + os.sep + "*.json")
+  
+   # We combine all the counties data per day
+   all_counties_per_day = {}
+
+   # For the max (only float values)
+   _all  = [] 
+     
+   for county_file in all_counties:
+
+      # We read the file
+      county_file_content =  open(county_file, mode='r')
+      json_content = json.load(county_file_content)
+      county_file_content.close()
+
+      cur_fips = json_content['sum']['fips']
+      cur_pop  = json_content['sum']['pop']
+
+      for d in json_content['stats']:
+         for day in d:
+            
+            if(day == date):
+               if day not in all_counties_per_day:
+                  all_counties_per_day[day] = []
+               
+               if cur_fips not in all_counties_per_day[day]:
+                  all_counties_per_day[day].append(
+                     {cur_fips:{
+                        _type     : d[day][_type]
+                     }})
+
+               _all.append(float( d[day][_type])) 
+   
+   # Get legends & ranks for the coloring 
+   legend   = create_legend(_all,_type,len(county_file)) 
+
+   all_dates = []
+   all_css_colors = []
+   for color in MAP_COLORS:
+      all_css_colors.append([])
+    
+   # Now we need to know for each day the color of each FIPS
+   for d in all_counties_per_day:
+      current_date = d   
+      all_dates.append(d)
+    
+      for fips in all_counties_per_day[d]:
+         for f in fips:
+            current_fips = f 
+            color = get_color_based_on_rank_and_value(fips[f][_type],legend['intervals'],legend['max'])
+            all_css_colors[color].append(" #FIPS_" +  current_fips)
+   
+   # Open the SVG template
+   with open(SVG_TEMPLATES + state_code + '.svg',mode='r') as svg_map:
+      svg_map_as_text = svg_map.read() 
+
+
+   # Colors come from the css:  
+   # .cl_0 { fill:#fee7dc;}
+   # .cl_1 { fill:#fdd4c2;}
+   # .cl_2 { fill:#fcbaa0;}
+   # .cl_3 { fill:#fc9f81;}
+   # .cl_4 { fill:#fb8464;}
+   # .cl_5 { fill:#fa6949;}
+   # .cl_6 { fill:#f24a35;}
+   # .cl_7 { fill:#e32f27;}
+   # .cl_8 { fill:#ca171c;}
+   # .cl_9 { fill:#b11117;}
+   # .cl_10 { fill:#8f0912;}
+   for color in all_css_colors:
+      print("COLOR ")
+      print(color)
+   
+   #print(all_css_colors)
 
  
 if __name__ == "__main__":
    
-   make_svg_state_map_css("FL","cases") 
+   make_static_svg_state_map("MD","cases","2020-07-26") 
    #make_svg_state_map_css("TX","total_c") 
    #make_svg_state_map_css("TX","total_d") 
    #make_svg_state_map_css("TX","deaths") 

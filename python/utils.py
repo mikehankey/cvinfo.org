@@ -94,6 +94,7 @@ def display_us_format(_float,prec):
 
 # Compute X day average on set of data
 def get_X_day_avg(max_day,data,_type):
+ 
    # X days average 
    tempValForAvg = []
    tempValFormax_day = []
@@ -105,7 +106,7 @@ def get_X_day_avg(max_day,data,_type):
       for day in d:
  
          # For average of _type
-         tempValForAvg.append(float(d[day][_type]))
+         tempValForAvg.append(d[day][_type])
 
          if(len(tempValForAvg) <  max_day):
             tempValFormax_day = tempValForAvg 
@@ -127,7 +128,8 @@ def get_X_day_avg(max_day,data,_type):
       last_new_cases = all_y_avg[max_day] 
    except IndexError:
       last_new_cases = 0
- 
+    
+
    
    if last_new_cases  > 0:
       delta = cur_new_cases / last_new_cases
