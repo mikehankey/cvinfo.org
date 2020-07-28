@@ -321,7 +321,7 @@ def make_static_svg_state_map(state_code,_type,date):
    return {'map': SVG_FLASHCARD_OUT1 + os.sep + state_code + "_map.png", 'legend': SVG_FLASHCARD_OUT1 + os.sep + state_code + "_leg.png" }
 
 
-
+# Replace the transparent color of a png by white
 def png_to_white_bg(_input_path):
    _input  = Image.open(_input_path)
    _output = Image.new("RGB",_input.size,"WHITE")

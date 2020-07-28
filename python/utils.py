@@ -58,6 +58,8 @@ MD_MOST_ACTIVE_TEMPLATE = '..' + os.sep + 'templates' + os.sep + 'most_active_MD
 ############  SVG
 SVG_TEMPLATES = '..' + os.sep + 'templates' + os.sep + 'states' + os.sep 
 
+SVG_FLASHCARD_OUT1 =  "." + os.sep + "flashcards_data" 
+
 # How many legend partition for the svg maps 
 MAP_COLORS = [
    '#fee7dc',

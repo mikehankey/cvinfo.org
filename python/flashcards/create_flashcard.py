@@ -207,8 +207,8 @@ def create_flashcard(state,X_Day_avg,_type):
       draw.text((x_title,y_title), (US_STATES[state] + " daily " + _type + " " + state_data['sum']['last_update']).title() , font = font_titles, fill = (80,80,80,1))
       template_img = np.array(img_pil)
   
-      cv2.imwrite('test.png',template_img)
-      print("Test.png created")
+      cv2.imwrite(PATH_TO_STATES_FOLDER + os.sep + state + os.sep  +  state +"_flashcard.png",template_img)
+      print(PATH_TO_STATES_FOLDER + os.sep + state + os.sep  +  state +"_flashcard.png" + " created")
 
 
 
