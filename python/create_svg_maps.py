@@ -1,8 +1,10 @@
 import json, sys, math
 import glob
 import numpy as np
-from utils import *
 
+from PIL import Image
+from utils import *
+from cairosvg import svg2png
 
 # Create legend based on all_data
 # so the legend is adapative to the data of the end (and not the beginning)
@@ -284,26 +286,51 @@ def make_static_svg_state_map(state_code,_type,date):
 
    # Colors come from the css:  
    # .cl_0 { fill:#fee7dc;}
-   # .cl_1 { fill:#fdd4c2;}
-   # .cl_2 { fill:#fcbaa0;}
-   # .cl_3 { fill:#fc9f81;}
-   # .cl_4 { fill:#fb8464;}
-   # .cl_5 { fill:#fa6949;}
-   # .cl_6 { fill:#f24a35;}
-   # .cl_7 { fill:#e32f27;}
-   # .cl_8 { fill:#ca171c;}
-   # .cl_9 { fill:#b11117;}
-   # .cl_10 { fill:#8f0912;}
-   for color in all_css_colors:
-      print("COLOR ")
-      print(color)
-   
-   #print(all_css_colors)
+   # .cl_1 { fill:#fdd4c2;} ...
+   the_colors = ['#fee7dc','#fdd4c2','#fcbaa0','#fc9f81','#fb8464','#fa6949','#f24a35','#e32f27','#ca171c','#b11117','#8f0912']
+   color_counter = 0
+   for colors in all_css_colors:
+         for c in colors: 
+            svg_map_as_text = svg_map_as_text.replace('id="'+c[2:]+'"',"fill='" +  the_colors[color_counter] + "'")
+         color_counter+=1
 
+   legend = legend['html_legend'].replace('<div class="legend" style="display:none" id="leg_'+_type+'">',"")
+   legend = legend.replace('</div>','')
+
+   # Replace the css classes by fills in the legend
+   # class='cl_0' => fill='#fee7dc'
+   for i,c in enumerate(the_colors):
+      legend = legend.replace("class='cl_"+str(i)+"'","fill='"+c+"'")
+
+   # The font
+   legend = legend.replace("class='l'","font-family='Lato' font-size='9px' fill='#656565'")
+    
+   # We put the 2 files under 
+   # SVG_FLASHCARD_OUT
+   if not os.path.exists(SVG_FLASHCARD_OUT1):
+      os.makedirs(SVG_FLASHCARD_OUT1)  
+    
+   # BUT IN PNG!
+   svg2png(bytestring=svg_map_as_text,write_to=SVG_FLASHCARD_OUT1 + os.sep + state_code + "_map.png")
+   svg2png(bytestring=legend,write_to=SVG_FLASHCARD_OUT1 + os.sep + state_code + "_leg.png")
+
+   # AND WE NEED A WHITE BACKGROUND
+   png_to_white_bg(SVG_FLASHCARD_OUT1 + os.sep + state_code + "_map.png")
+   png_to_white_bg(SVG_FLASHCARD_OUT1 + os.sep + state_code + "_leg.png")
+
+   return {'map': SVG_FLASHCARD_OUT1 + os.sep + state_code + "_map.png", 'legend': SVG_FLASHCARD_OUT1 + os.sep + state_code + "_leg.png" }
+
+
+
+def png_to_white_bg(_input_path):
+   _input  = Image.open(_input_path)
+   _output = Image.new("RGB",_input.size,"WHITE")
+   _output.paste(_input,(0,0),_input)
+   _output.save(_input_path)
  
 if __name__ == "__main__":
    
-   make_static_svg_state_map("MD","cases","2020-07-26") 
+   print(make_static_svg_state_map("MD","cases","2020-07-26"))
    #make_svg_state_map_css("TX","total_c") 
    #make_svg_state_map_css("TX","total_d") 
    #make_svg_state_map_css("TX","deaths") 

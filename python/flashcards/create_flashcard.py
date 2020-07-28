@@ -7,6 +7,7 @@ from PIL import ImageFont, ImageDraw, Image
 
 sys.path.append(os.path.join(os.path.dirname(sys.path[0]),''))
 from utils import *
+from create_svg_maps import make_static_svg_state_map
  
 # Get the top X counties ranked by 7day-avg
 def get_top_counties(st,_type,x_day_avg):
@@ -84,6 +85,16 @@ def create_flashcard(state,X_Day_avg,_type):
          max_graph = 14
          how_many_per_line = [4,4,6]
 
+         # Position of the map
+         x_map = 1316 
+         y_map = 290
+         # Legend
+         x_legend = 1316
+         y_legend = 630
+         # Map Title (based on map position)
+         x_title = x_map - 5
+         y_title = y_map + 8
+
       # If we have too many graphs to display
       if(len(sorted_counties)>= max_graph):
          sorted_counties = sorted_counties[:max_graph]
@@ -127,7 +138,7 @@ def create_flashcard(state,X_Day_avg,_type):
          draw.text((x, y-text_height), county['name'] +', '+ state, font = font_titles, fill = (40,40,40,1))
 
          # Compute the width of the delta text
-         delta_text = str(X_Day_avg) + "-Days " + chr(948) + ": " + str(county['delta']) # 948  = delta
+         delta_text = str(X_Day_avg) + "-Days " + chr(916) + ": " + str(county['delta']) # 948  = delta lower case
          size = draw.textsize(delta_text,font_info)
          draw.text(
             (x+GRAPH_FLASH_1[0]-size[0], y-text_height + 2),  # +2 for the diff between the title & info font size
@@ -175,8 +186,29 @@ def create_flashcard(state,X_Day_avg,_type):
       # CASES PER MILLION
       template_img = add_big_number(img_pil,draw,template_img,1611,228,"CASE PER MILLION", cur_cpm, font_big_numbers,font_small_titles,font_small_numbers, increase_cpm)
 
-      print("Test.png created")
+      # Add the PNG MAP
+      map_and_legend = make_static_svg_state_map(state,_type,state_data['sum']['last_update'])
+ 
+      # Open the map & place it  
+      _map = cv2.imread(map_and_legend['map'])
+      
+      # Add Map
+      template_img[y_map:y_map+_map.shape[0], x_map:x_map+_map.shape[1]] =  _map 
+
+      # Open legend
+      legend = cv2.imread(map_and_legend['legend'])
+
+      # Add Legend
+      template_img[y_legend:y_legend+legend.shape[0], x_legend:x_legend+legend.shape[1]] =  legend 
+
+      # Add Map Title
+      img_pil  = Image.fromarray(template_img)
+      draw     = ImageDraw.Draw(img_pil)
+      draw.text((x_title,y_title), (US_STATES[state] + " daily " + _type + " " + state_data['sum']['last_update']).title() , font = font_titles, fill = (80,80,80,1))
+      template_img = np.array(img_pil)
+  
       cv2.imwrite('test.png',template_img)
+      print("Test.png created")
 
 
 
@@ -207,15 +239,7 @@ def add_big_number(img_pil,draw,template_img,x,y,title,number,font_big_numbers,f
 
    return template_img
  
-
-# Get SVG Template + Css and create the corresponding png
-def create_state_map(state,_type, last_date):
-  
-   # Get Template
-   svg_code = open(SVG_TEMPLATES + state + ".svg")
-      
-    
-
+ 
 
 
 #print(get_top_counties("MD","cases",7)) 
