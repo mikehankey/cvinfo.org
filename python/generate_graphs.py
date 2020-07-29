@@ -352,10 +352,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
       cur_json_file = open(PATH_TO_STATES_FOLDER + os.sep + state + os.sep + state + ".json", 'r')
    
    data = json.load(cur_json_file)
-
-
-
-
+ 
  
    # Do we have a period in key-dates.txt
    # for the current state?
@@ -448,8 +445,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
    fig = go.Figure()
    fig.add_trace(go.Bar(x=all_x, y=all_y, marker_color='rgba(158,158,158,.4)'))
    fig.add_trace(go.Scatter(x=all_x_avg, y=all_y_avg, marker_color=_color))
-   
- 
+    
    # Add line to every 1s & 15th of all months
    for date in all_x:
       if(date.endswith('15') or date.endswith('01')):
@@ -463,7 +459,6 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
             line=dict(
                 color="rgba(0,0,0,.5)",
                 width=1,
-
             )
          )
 
@@ -513,7 +508,7 @@ def generate_graph_with_avg(state, _type, _color, folder, county, large=False):
 
    
    if(_type == 'test_pos_p' or _type == 'mortality'):
-      fig.update_layout(yaxis=dict(tickformat="%"))
+      fig.update_layout(yaxis=dict(tickformat=".2%"))
    
 
    if(county ==""):
@@ -564,10 +559,12 @@ def main_menu():
 if __name__ == "__main__":
    #os.system("clear")
    #main_menu()
-   generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
-   generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p'  , True)
+   #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p')
+   #generate_graph_with_avg("FL", 'test_pos_p', "r", PATH_TO_STATES_FOLDER + os.sep + "FL"  + os.sep , 'for_a_state|test_pos_p'  , True)
 
-   #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy')
+   generate_graph_with_avg("TX", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "TX"  + os.sep , 'for_a_state|mortaliy')
+   
+   generate_graph_with_avg("TX", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "TX"  + os.sep , 'for_a_state|mortaliy', True)
    #generate_graph_with_avg("CA", 'mortality', "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep , 'for_a_state|mortaliy', True)
 
    #generate_large_graph_with_avg("CA",  "r", PATH_TO_STATES_FOLDER + os.sep + "CA"  + os.sep)
